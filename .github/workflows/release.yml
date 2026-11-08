@@ -30,6 +30,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
 
+      - name: Build release tarballs
+        run: |
+          mkdir -p release-assets
+          (cd packages/plugin-trim && pnpm pack --pack-destination ../../release-assets)
+          (cd packages/plugin-recipe && pnpm pack --pack-destination ../../release-assets)
+
       # npm publishing is optional until the repository has an NPM_TOKEN secret.
       # Without it, the tag still produces a GitHub release.
       - name: Publish packages (skips without NPM_TOKEN)
@@ -51,5 +57,10 @@ jobs:
           else
             gh release create "$GITHUB_REF_NAME" --generate-notes
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Upload release tarballs
+        run: gh release upload "$GITHUB_REF_NAME" release-assets/*.tgz --clobber
         env:
           GH_TOKEN: ${{ github.token }}
