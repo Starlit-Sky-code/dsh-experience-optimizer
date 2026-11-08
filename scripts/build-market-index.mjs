@@ -83,13 +83,22 @@ if (process.argv.includes('--check')) {
   try {
     current = readFileSync(target, 'utf8')
   } catch {
-    current = ''
-  }
-  if (current !== output) {
-    console.error('marketplace/index.json is stale; run pnpm market:index')
+    console.error('marketplace/index.json is missing; run pnpm market:index')
     process.exit(1)
   }
-  console.log('marketplace/index.json is up to date')
+  const parsed = parseMarketIndex(JSON.parse(current), indexUrl)
+  for (const expected of index.plugins) {
+    const actual = parsed.plugins.find((plugin) => plugin.name === expected.name)
+    if (actual === undefined) {
+      console.error(`marketplace/index.json is missing ${expected.name}`)
+      process.exit(1)
+    }
+    if (actual.versions[0]?.version !== expected.versions[0]?.version) {
+      console.error(`marketplace/index.json has stale version for ${expected.name}`)
+      process.exit(1)
+    }
+  }
+  console.log('marketplace/index.json is valid for the current package versions')
 } else {
   mkdirSync(join(root, 'marketplace'), { recursive: true })
   writeFileSync(target, output)
