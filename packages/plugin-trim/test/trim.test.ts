@@ -203,7 +203,7 @@ describe('draft schema', () => {
 describe('protection policy', () => {
   it('honors extra protect and preset module names', async () => {
     const { buildProtection } = await import('../src/protect.ts')
-    const custom = bundle({ name: 'custom-plugin' })
+    const custom = { ...bundle({ name: 'custom-plugin' }), rows: [], overrides: [] }
     const protection = buildProtection({
       bundles: [custom],
       entries: [],
