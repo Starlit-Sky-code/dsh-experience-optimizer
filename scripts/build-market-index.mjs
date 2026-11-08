@@ -121,7 +121,7 @@ function resolveRepo() {
   } catch {
     // Fall through to the configured default.
   }
-  return 'StarlitSky/dsh-experience-optimizer'
+  return 'Starlit-Sky-code/dsh-experience-optimizer'
 }
 
 function git(args) {
@@ -138,7 +138,7 @@ function pluginEntry({ pkg, directory, title, description, keywords, labels }) {
     title,
     description,
     icon: `${rawBase}/${directory}/icon.png`,
-    author: pkg.author ?? 'StarlitSky',
+    author: pkg.author ?? 'Starlit-Sky-code',
     homepage: `${repoUrl}/tree/main/${directory}#readme`,
     repository: { url: repoUrl, directory },
     metadata: {

@@ -2,7 +2,7 @@
 
 **提交对象**
 
-仓库：`https://github.com/StarlitSky/dsh-experience-optimizer`
+仓库：`https://github.com/Starlit-Sky-code/dsh-experience-optimizer`
 
 发布 npm 后也可以分别提交：
 

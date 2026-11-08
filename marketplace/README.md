@@ -15,7 +15,7 @@ pnpm market:index
 
 生成后托管到 GitHub：
 
-- `https://raw.githubusercontent.com/StarlitSky/dsh-experience-optimizer/main/marketplace/index.json`
+- `https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/marketplace/index.json`
 - 或在 GitHub Pages 上提供同样的 JSON 文件。
 
 在 DSH 的「设置 → 插件市场」中加入该索引 URL，用户即可搜索并安装

@@ -27,14 +27,14 @@
     "vitest": "^5.1.0",
     "@deepseek-ai/dsh-plugin-market-index": "0.2.2-rc.1"
   },
-  "author": "StarlitSky",
+  "author": "Starlit-Sky-code",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StarlitSky/dsh-experience-optimizer.git"
+    "url": "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git"
   },
-  "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer#readme",
+  "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer#readme",
   "bugs": {
-    "url": "https://github.com/StarlitSky/dsh-experience-optimizer/issues"
+    "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues"
   },
   "keywords": [
     "dsh",

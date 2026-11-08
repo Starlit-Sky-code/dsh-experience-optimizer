@@ -6,7 +6,7 @@ set -euo pipefail
 #   REPO=owner/name VISIBILITY=public ./scripts/github-bootstrap.sh
 #   REPO=owner/name VISIBILITY=private ./scripts/github-bootstrap.sh
 
-REPO="${REPO:-StarlitSky/dsh-experience-optimizer}"
+REPO="${REPO:-Starlit-Sky-code/dsh-experience-optimizer}"
 VISIBILITY="${VISIBILITY:-public}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"

@@ -2,7 +2,7 @@
 
 ![dsh-experience-optimizer banner](assets/banner.png)
 
-[![CI](https://github.com/StarlitSky/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/StarlitSky/dsh-experience-optimizer/actions/workflows/ci.yml)
+[![CI](https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **少一点插件负担，多一点兼容确定性。**
@@ -40,7 +40,7 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
 套件提供格式 1 市场索引：
 
 ```text
-https://raw.githubusercontent.com/StarlitSky/dsh-experience-optimizer/main/marketplace/index.json
+https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/marketplace/index.json
 ```
 
 在 DSH「设置 → 插件市场」中加入该地址即可。索引生成与社区市场提交说明见

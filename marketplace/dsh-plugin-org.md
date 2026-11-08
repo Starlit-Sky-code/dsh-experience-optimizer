@@ -3,7 +3,7 @@
 **仓库**
 
 ```text
-https://github.com/StarlitSky/dsh-experience-optimizer
+https://github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```
 
 **建议 Topics**
@@ -59,4 +59,4 @@ DSH `>=0.2.2-rc.1 <0.3.0`；Node `>=20`。
 
 **维护者**
 
-StarlitSky
+Starlit-Sky-code

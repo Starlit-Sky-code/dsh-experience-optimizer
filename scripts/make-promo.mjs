@@ -10,7 +10,7 @@ mkdirSync(assets, { recursive: true })
 
 const icon = readFileSync(join(root, 'icon.png')).toString('base64')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
-const repo = (process.env.GITHUB_REPOSITORY || 'StarlitSky/dsh-experience-optimizer').replace(/^https?:\/\/github\.com\//, '')
+const repo = (process.env.GITHUB_REPOSITORY || 'Starlit-Sky-code/dsh-experience-optimizer').replace(/^https?:\/\/github\.com\//, '')
 const font = 'Noto Sans CJK SC, Noto Sans CJK JP, sans-serif'
 const mono = 'JetBrains Maple Mono, monospace'
 

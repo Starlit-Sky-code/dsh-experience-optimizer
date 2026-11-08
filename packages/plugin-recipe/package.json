@@ -64,15 +64,15 @@
     "tsdown": "^0.23.7",
     "typescript": "^5.9.3"
   },
-  "author": "StarlitSky",
+  "author": "Starlit-Sky-code",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StarlitSky/dsh-experience-optimizer.git",
+    "url": "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git",
     "directory": "packages/plugin-recipe"
   },
-  "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
+  "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
   "bugs": {
-    "url": "https://github.com/StarlitSky/dsh-experience-optimizer/issues"
+    "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues"
   },
   "publishConfig": {
     "access": "public"
