@@ -4,3 +4,9 @@ coverage/
 *.log
 .DS_Store
 .tmp/
+
+# Commit built plugin bundles so git-source installs work without a build step.
+!packages/plugin-trim/dist/
+!packages/plugin-trim/dist/**
+!packages/plugin-recipe/dist/
+!packages/plugin-recipe/dist/**
