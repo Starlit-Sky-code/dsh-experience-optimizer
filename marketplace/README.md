@@ -60,7 +60,7 @@ pnpm market:index
 首次发布需要：
 
 1. 在 GitHub 仓库 Settings → Secrets 中配置 `NPM_TOKEN`；
-2. 推送 `v0.2.0` tag；
+2. 推送 `v0.2.1` tag；
 3. 工作流运行 `pnpm verify` 后依次发布 `dsh-plugin-trim`、`dsh-plugin-recipe`。
 
 发布后，dsh-plugin.org / dsh.so 可以直接用 npm 包名收录，用户也可以：
@@ -74,5 +74,5 @@ dsh plugin --profile web add dsh-plugin-recipe
 
 当前未发布 npm 时，推荐直接安装 release tarball：
 
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-trim-0.2.0.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-recipe-0.2.0.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.1/dsh-plugin-trim-0.2.1.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.1/dsh-plugin-recipe-0.2.1.tgz"

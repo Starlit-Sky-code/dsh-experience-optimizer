@@ -3,6 +3,16 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-11-08
+
+### Fixed
+
+- The Web console's slim-suggestion list now hides protected `keep` rows, so a
+  profile with many protected plugins shows only actionable suggestions; an empty
+  state explains when nothing can be trimmed.
+- Metric cards use `auto-fit` columns so four cards do not get cramped inside the
+  Settings modal.
+
 ## [0.2.0] - 2026-11-08
 
 ### Added

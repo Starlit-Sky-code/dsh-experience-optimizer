@@ -42,7 +42,7 @@ window.__ModuleLoader__.load({
 .eo-tab-active:after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--eo-accent),var(--eo-blue))}
 .eo-stack{display:flex;flex-direction:column;gap:14px}
 .eo-grid{display:grid;gap:12px}
-.eo-metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px}
+.eo-metrics{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-top:16px}
 .eo-metric{padding:14px 15px;border-radius:16px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.06));border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.16));position:relative;overflow:hidden}
 .eo-metric:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--eo-accent);opacity:.55}
 .eo-metric[data-tone="blue"]:before{background:var(--eo-blue)}
@@ -378,7 +378,9 @@ window.__ModuleLoader__.load({
       const selectedIds = Object.keys(selected).filter((id) => selected[id])
       const selectedCount = selectedIds.length
       const draftItems = draft ? draft.items : []
-      const selectedItems = draftItems.filter((item) => selected[item.id])
+      const actionableDraftItems = draftItems.filter(
+        (item) => item.action !== 'keep' && item.protected !== true,
+      )
 
       const generateDraft = useCallback(async () => {
         setDraftBusy(true)
@@ -861,11 +863,16 @@ window.__ModuleLoader__.load({
                     h(Badge, { tone: 'neutral' }, '受保护 ' + draft.summary.protected),
                     h(Badge, { tone: 'warn' }, 'task: ' + draft.task.tag),
                   ),
-                  h(
+                  actionableDraftItems.length === 0
+                    ? h(
+                        'div',
+                        { className: 'eo-empty' },
+                        '当前没有可裁剪项：所有插件均受保护，或与当前任务匹配。',
+                      )
+                    : h(
                     'div',
                     { className: 'eo-list' },
-                    draftItems
-                      .filter((item) => item.action !== 'keep' || item.protected)
+                    actionableDraftItems
                       .slice(0, 60)
                       .map((item) =>
                         h(
@@ -919,7 +926,7 @@ window.__ModuleLoader__.load({
                           ),
                         ),
                       ),
-                  ),
+                    ),
                   h(
                     'div',
                     { className: 'eo-applybar' },

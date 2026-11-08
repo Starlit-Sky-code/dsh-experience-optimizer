@@ -7,7 +7,7 @@ DSH 插件生态的**减负**与**兼容性体检**插件。
 从 GitHub Release 安装（当前推荐，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-trim-0.2.0.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.1/dsh-plugin-trim-0.2.1.tgz"
 ```
 
 发布到 npm 后：
