@@ -1,0 +1,4 @@
+# dsh-plugin-recipe bundle patch: insert the host half into the profile layer stack.
+- insert:
+    - id: dsh-plugin-recipe
+      name: dsh-plugin-recipe

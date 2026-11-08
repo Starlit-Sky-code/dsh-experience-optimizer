@@ -1,0 +1,15 @@
+{
+  "capabilities": [
+    {
+      "id": "dingtalk-send",
+      "name": "发送到钉钉",
+      "purpose": "把周报推送到钉钉群",
+      "tools": ["notify_ding"],
+      "trigger": "manual",
+      "permissions": ["external-send"],
+      "needsConfirm": true,
+      "keywords": ["钉钉", "发送", "通知"],
+      "pluginIds": ["dsh-notify-ding"]
+    }
+  ]
+}

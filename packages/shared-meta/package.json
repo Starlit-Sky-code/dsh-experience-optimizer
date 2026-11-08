@@ -1,0 +1,27 @@
+{
+  "name": "dsh-shared-meta",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared types, local storage, audit, and text helpers for dsh-experience-optimizer",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsdown": "^0.23.7",
+    "typescript": "^5.9.3"
+  }
+}

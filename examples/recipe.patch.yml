@@ -1,0 +1,6 @@
+# Example overlay for a profile that already selects dsh-plugin-recipe.
+- id: dsh-plugin-recipe
+  config:
+    maxSteps: 12
+    allowExport: true
+    defaultDelivery: present

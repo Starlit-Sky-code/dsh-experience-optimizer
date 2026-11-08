@@ -1,0 +1,49 @@
+{
+  "name": "dsh-experience-optimizer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH plugin ecosystem diet, compatibility analysis, and workflow planning suite",
+  "license": "MIT",
+  "packageManager": "pnpm@12.8.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r --workspace-concurrency=1 build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "verify": "pnpm build && node scripts/verify-packages.mjs && vitest run",
+    "smoke:profile": "node scripts/smoke-profile.mjs",
+    "report": "node scripts/acceptance-report.mjs",
+    "promo": "node scripts/make-promo.mjs",
+    "market:index": "node scripts/build-market-index.mjs",
+    "market:check": "node scripts/build-market-index.mjs --check"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsdown": "^0.23.7",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0",
+    "@deepseek-ai/dsh-plugin-market-index": "0.2.2-rc.1"
+  },
+  "author": "StarlitSky",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StarlitSky/dsh-experience-optimizer.git"
+  },
+  "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer#readme",
+  "bugs": {
+    "url": "https://github.com/StarlitSky/dsh-experience-optimizer/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "plugin-manager",
+    "compatibility",
+    "workflow",
+    "context",
+    "plugin-suite"
+  ]
+}

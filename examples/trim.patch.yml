@@ -1,0 +1,11 @@
+# Example overlay for a profile that already selects dsh-plugin-trim.
+# Apply with: dsh --profile web --patch ./examples/trim.patch.yml
+- id: dsh-plugin-trim
+  config:
+    mode: advise
+    protect:
+      - my-important-plugin
+    pinned:
+      - my-pinned-plugin
+    compatScanAllProfiles: true
+    compatIncludeInfo: false
