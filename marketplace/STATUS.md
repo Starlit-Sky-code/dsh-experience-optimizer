@@ -45,7 +45,7 @@ pnpm market:check
 ## npm
 
 - 未发布（用户选择暂缓）。
-- 发布前需要在 GitHub 仓库配置 `NPM_TOKEN` secret，然后推送 `v0.1.0` tag 或手动执行：
+- 发布前需要在 GitHub 仓库配置 `NPM_TOKEN` secret，然后推送 `v0.2.1` tag 或手动执行：
   ```bash
   pnpm --filter dsh-plugin-trim publish --access public --no-git-checks
   pnpm --filter dsh-plugin-recipe publish --access public --no-git-checks
