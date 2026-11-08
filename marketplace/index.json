@@ -1,0 +1,154 @@
+{
+  "format": 1,
+  "title": {
+    "en": "DSH Experience Optimizer",
+    "zh": "DSH 体验优化套件"
+  },
+  "description": {
+    "en": "Plugin diet, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.",
+    "zh": "DSH 插件减负、兼容性体检与工作流蓝图套件。"
+  },
+  "metadata": {
+    "categories": {
+      "plugin-suite": {
+        "title": {
+          "en": "Plugin Suite",
+          "zh": "插件套件"
+        }
+      },
+      "compatibility": {
+        "title": {
+          "en": "Compatibility",
+          "zh": "兼容性"
+        }
+      },
+      "workflow": {
+        "title": {
+          "en": "Workflow",
+          "zh": "工作流"
+        }
+      }
+    },
+    "labels": {
+      "compatibility": {
+        "title": {
+          "en": "Compatibility diagnostics",
+          "zh": "兼容性诊断"
+        }
+      },
+      "diet": {
+        "title": {
+          "en": "Context diet",
+          "zh": "上下文减负"
+        }
+      },
+      "workflow": {
+        "title": {
+          "en": "Workflow planning",
+          "zh": "工作流规划"
+        }
+      }
+    },
+    "sortKeys": {}
+  },
+  "plugins": [
+    {
+      "name": "dsh-plugin-trim",
+      "title": {
+        "en": "DSH Plugin Trim",
+        "zh": "DSH 插件减负与兼容性体检"
+      },
+      "description": {
+        "en": "Scan plugin context cost, detect plugin/plugin, plugin/runtime, and profile/workspace conflicts, then apply low-risk reversible trimming only after confirmation.",
+        "zh": "扫描插件上下文成本，检测插件↔插件、插件↔DSH、Profile/工作区冲突；只在用户确认后应用低风险、可回滚的精简项。"
+      },
+      "icon": "https://raw.githubusercontent.com/StarlitSky/dsh-experience-optimizer/5bc46db2f3d8ce3ab7e35349af14e824af168c33/packages/plugin-trim/icon.png",
+      "author": "StarlitSky",
+      "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer/tree/main/packages/plugin-trim#readme",
+      "repository": {
+        "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
+        "directory": "packages/plugin-trim"
+      },
+      "metadata": {
+        "category": "plugin-suite",
+        "keywords": [
+          "dsh",
+          "dsh-plugin",
+          "compatibility",
+          "plugin-manager",
+          "context",
+          "diet"
+        ],
+        "labels": [
+          "compatibility",
+          "diet"
+        ],
+        "sortKeys": {}
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1794104868,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
+            "commit": "5bc46db2f3d8ce3ab7e35349af14e824af168c33",
+            "path": "packages/plugin-trim"
+          },
+          "engines": {
+            "dsh": ">=0.2.2-rc.1 <0.3.0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dsh-plugin-recipe",
+      "title": {
+        "en": "DSH Workflow Recipe",
+        "zh": "DSH 工作流配方"
+      },
+      "description": {
+        "en": "Turn a business goal into a validated workflow blueprint with steps, capabilities, minimum plugin set, permissions, failure policy, acceptance, and rollback.",
+        "zh": "把业务目标翻译成可校验的工作流蓝图，包含步骤、能力、最小插件集、权限、失败策略、验收与回滚。"
+      },
+      "icon": "https://raw.githubusercontent.com/StarlitSky/dsh-experience-optimizer/5bc46db2f3d8ce3ab7e35349af14e824af168c33/packages/plugin-recipe/icon.png",
+      "author": "StarlitSky",
+      "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
+      "repository": {
+        "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
+        "directory": "packages/plugin-recipe"
+      },
+      "metadata": {
+        "category": "plugin-suite",
+        "keywords": [
+          "dsh",
+          "dsh-plugin",
+          "workflow",
+          "planning",
+          "automation",
+          "compatibility"
+        ],
+        "labels": [
+          "workflow",
+          "compatibility"
+        ],
+        "sortKeys": {}
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1794104868,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
+            "commit": "5bc46db2f3d8ce3ab7e35349af14e824af168c33",
+            "path": "packages/plugin-recipe"
+          },
+          "engines": {
+            "dsh": ">=0.2.2-rc.1 <0.3.0"
+          }
+        }
+      ]
+    }
+  ]
+}
