@@ -4,6 +4,7 @@ import type { Config as TrimConfig } from './config.ts'
 import { registerTrimTools } from './tools.ts'
 import { registerCompatTool } from './compat/tool.ts'
 import { UsageLedger } from './usage.ts'
+import { registerTrimApi } from './api.ts'
 
 export const name = 'dsh-plugin-trim'
 export const inject = ['tools']
@@ -33,6 +34,7 @@ export function apply(ctx: Context, config?: Partial<Config>): void {
 
   registerTrimTools(ctx, { config: resolved, ledger })
   registerCompatTool(ctx, resolved)
+  registerTrimApi(ctx, resolved, ledger)
 }
 
 export { scanPlugins } from './scan.ts'

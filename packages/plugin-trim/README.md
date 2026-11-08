@@ -7,13 +7,7 @@ DSH 插件生态的**减负**与**兼容性体检**插件。
 从 GitHub Release 安装（当前推荐，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-trim-0.1.0.tgz"
-```
-
-从源码安装（pinned commit）：
-
-```bash
-dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#63ec29f3ccf69b192bca0a91f0072632e73972c0&path:/packages/plugin-trim"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-trim-0.2.0.tgz"
 ```
 
 发布到 npm 后：
@@ -27,6 +21,17 @@ dsh plugin --profile web add dsh-plugin-trim
 ```bash
 dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 ```
+
+## Web 控制台
+
+安装后在 DSH **设置 → 插件 → 体验优化** 打开：
+
+- 上下文成本与兼容性矩阵；
+- 按任务生成精简方案，勾选低风险项后显式应用；
+- 一键回滚；
+- 工作流配方页签（由 `dsh-plugin-recipe` 提供 Host API）。
+
+界面只调用同源 JSON API；API 校验 DSH 浏览器会话与 `Origin`。
 
 ## 工具
 

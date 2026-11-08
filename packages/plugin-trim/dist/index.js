@@ -350,6 +350,49 @@ var AuditLog = class {
 		} catch {}
 	}
 };
+// ../shared-meta/src/http.ts
+/** Reject cross-site browser requests; allow same-origin and non-browser callers without Origin. */
+function isSameOrigin(req) {
+	if (req.headers["sec-fetch-site"] === "cross-site") return false;
+	const origin = req.headers.origin;
+	if (origin === void 0 || origin.length === 0) return true;
+	try {
+		return new URL(origin).host === req.headers.host;
+	} catch {
+		return false;
+	}
+}
+/** Read and parse a JSON request body with a bounded size. */
+async function readJsonBody(req, maxBytes = 65536) {
+	const chunks = [];
+	let size = 0;
+	for await (const chunk of req) {
+		const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+		size += buffer.length;
+		if (size > maxBytes) throw new Error(`request body exceeds ${maxBytes} bytes`);
+		chunks.push(buffer);
+	}
+	const text = Buffer.concat(chunks).toString("utf8").trim();
+	if (text.length === 0) return {};
+	return JSON.parse(text);
+}
+/** Write a JSON response. */
+function sendJson(res, status, body) {
+	const text = JSON.stringify(body);
+	res.writeHead(status, {
+		"content-type": "application/json; charset=utf-8",
+		"cache-control": "no-store",
+		"content-length": Buffer.byteLength(text)
+	});
+	res.end(text);
+}
+/** Write a structured error response. */
+function sendError(res, status, message) {
+	sendJson(res, status, {
+		ok: false,
+		error: { message }
+	});
+}
 // src/compat/loader-graph.ts
 /** Normalize Cordis `inject` declarations (array or object) to service names. */
 function normalizeInject(value) {
@@ -3895,7 +3938,7 @@ async function latestToken(profileName) {
 	}
 }
 // src/tools.ts
-const TASK_TAGS = [
+const TASK_TAGS$1 = [
 	"bugfix",
 	"feature",
 	"review",
@@ -3947,7 +3990,7 @@ function registerScanTool(ctx, deps) {
 				config: deps.config,
 				compat,
 				pluginManager: getPluginManager(ctx),
-				inventory: await inventoryOf(ctx),
+				inventory: await inventoryOf$1(ctx),
 				usageLedger: deps.ledger,
 				agent: exec.agent,
 				sessionToolNames
@@ -3969,7 +4012,7 @@ function registerSuggestTool(ctx, deps) {
 		parameters: {
 			taskTag: {
 				type: "string",
-				enum: TASK_TAGS,
+				enum: TASK_TAGS$1,
 				description: "Optional explicit task tag; overrides text detection."
 			},
 			goal: {
@@ -4009,7 +4052,7 @@ function registerSuggestTool(ctx, deps) {
 				config: deps.config,
 				compat,
 				pluginManager: getPluginManager(ctx),
-				inventory: await inventoryOf(ctx),
+				inventory: await inventoryOf$1(ctx),
 				usageLedger: deps.ledger,
 				task,
 				agent: exec.agent
@@ -4136,7 +4179,7 @@ function registerRollbackTool(ctx, deps) {
 		})
 	}));
 }
-async function inventoryOf(ctx) {
+async function inventoryOf$1(ctx) {
 	const adapter = getInventory(ctx);
 	if (adapter === void 0) return void 0;
 	try {
@@ -4384,6 +4427,217 @@ function registerCompatTool(ctx, config) {
 		})
 	}));
 }
+// src/api.ts
+const API_PREFIX = "/api/dsh-experience-optimizer";
+const TASK_TAGS = [
+	"bugfix",
+	"feature",
+	"review",
+	"docs",
+	"release",
+	"report",
+	"research",
+	"unknown"
+];
+/** Register the same-origin JSON API used by the Web client panel. */
+function registerTrimApi(ctx, config, ledger) {
+	if (typeof ctx.inject !== "function") return;
+	ctx.inject(["webServer"], (webCtx) => {
+		const server = webCtx.get("webServer");
+		if (server === void 0) return;
+		webCtx.effect(() => server.register({
+			kind: "prefix",
+			path: API_PREFIX,
+			handler: (req, res) => handle(req, res, ctx, config, ledger)
+		}), "trim.webApi");
+	});
+}
+async function handle(req, res, ctx, config, ledger) {
+	const rejection = ctx.get("connection")?.requestRejection?.({ headers: req.headers });
+	if (rejection !== void 0) {
+		sendError(res, rejection, "authentication required");
+		return;
+	}
+	if (!isSameOrigin(req)) {
+		sendError(res, 403, "cross-site request rejected");
+		return;
+	}
+	const path = new URL(req.url ?? "/", "http://localhost").pathname.slice(29) || "/";
+	try {
+		if (req.method === "GET" && path === "/overview") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await overview(ctx, config, ledger)
+			});
+			return;
+		}
+		if (req.method === "POST" && path === "/suggest") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await suggest(ctx, config, ledger, await readJsonBody(req))
+			});
+			return;
+		}
+		if (req.method === "POST" && path === "/apply") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await apply$1(ctx, config, await readJsonBody(req))
+			});
+			return;
+		}
+		if (req.method === "POST" && path === "/rollback") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await rollback(ctx, config, await readJsonBody(req))
+			});
+			return;
+		}
+		sendError(res, 404, `unknown endpoint ${path}`);
+	} catch (error) {
+		sendError(res, 500, error instanceof Error ? error.message : String(error));
+	}
+}
+async function overview(ctx, config, ledger) {
+	const compat = await analyzeCompatibility(ctx, config, {
+		scope: "current",
+		includeInfo: true,
+		writeReport: false
+	});
+	const scan = await scanPlugins({
+		config,
+		compat,
+		pluginManager: getPluginManager(ctx),
+		inventory: await inventoryOf(ctx),
+		usageLedger: ledger
+	});
+	const byOwner = Object.entries(scan.context.byOwner).map(([owner, tokens]) => ({
+		owner,
+		tokens
+	})).sort((a, b) => b.tokens - a.tokens).slice(0, 12);
+	return {
+		runtime: compat.report.runtime,
+		profile: compat.report.profile,
+		compat: compat.report.summary,
+		findings: compat.findings.map(toFinding),
+		context: {
+			totalTokens: scan.context.totalTokens,
+			unattributedTokens: scan.context.unattributedTokens,
+			topSections: [...scan.context.sections].sort((a, b) => b.tokens - a.tokens).slice(0, 12),
+			topTools: [...scan.context.tools].sort((a, b) => b.tokens - a.tokens).slice(0, 12),
+			byOwner
+		},
+		bundles: [...scan.bundles].sort((a, b) => b.contextTokens - a.contextTokens).slice(0, 80).map((bundle) => ({
+			name: bundle.name,
+			version: bundle.version,
+			enabled: bundle.enabled,
+			protected: bundle.protected,
+			guardStatus: bundle.guardStatus,
+			contextTokens: bundle.contextTokens,
+			usage: bundle.usage,
+			description: bundle.description
+		})),
+		entries: [...scan.entries].sort((a, b) => b.contextTokens - a.contextTokens).slice(0, 60).map((entry) => ({
+			entryId: entry.entryId,
+			moduleName: entry.moduleName,
+			bundleName: entry.bundleName,
+			enabled: entry.enabled,
+			fiberPhase: entry.fiberPhase,
+			guardStatus: entry.guardStatus,
+			contextTokens: entry.contextTokens
+		})),
+		dedupe: scan.dedupe,
+		managementAvailable: scan.managementAvailable,
+		diagnostics: scan.diagnostics
+	};
+}
+async function suggest(ctx, config, ledger, body) {
+	const task = detectTask({
+		explicit: typeof body.taskTag === "string" && TASK_TAGS.includes(body.taskTag) ? body.taskTag : void 0,
+		goal: typeof body.goal === "string" ? body.goal : void 0
+	});
+	const compat = await analyzeCompatibility(ctx, config, {
+		scope: "current",
+		includeInfo: true,
+		writeReport: true
+	});
+	const scan = await scanPlugins({
+		config,
+		compat,
+		pluginManager: getPluginManager(ctx),
+		inventory: await inventoryOf(ctx),
+		usageLedger: ledger,
+		task
+	});
+	let profile = buildSlimProfile(scan, task, config, {
+		includeReview: body.includeReview !== false,
+		maxDisable: typeof body.maxDisable === "number" ? body.maxDisable : void 0
+	});
+	profile = attachFindings(profile, scan);
+	await saveDraft(profile, config.maxDrafts);
+	return {
+		profile,
+		compat: compat.report.summary,
+		scan: {
+			totalTokens: scan.context.totalTokens,
+			unattributedTokens: scan.context.unattributedTokens,
+			managementAvailable: scan.managementAvailable
+		},
+		findings: compat.findings.map(toFinding)
+	};
+}
+async function apply$1(ctx, config, body) {
+	if (body.confirm !== true) throw new ApplyRefusedError("confirm must be true");
+	const profileId = typeof body.profileId === "string" ? body.profileId : "";
+	if (profileId.length === 0) throw new Error("profileId is required");
+	const manager = getPluginManager(ctx);
+	if (manager === void 0) throw new Error("pluginManager is unavailable");
+	const items = Array.isArray(body.items) ? body.items.filter((item) => typeof item === "string") : void 0;
+	const compat = await analyzeCompatibility(ctx, config, {
+		scope: "current",
+		includeInfo: true,
+		writeReport: true,
+		force: true
+	});
+	return applySlimProfile(profileId, {
+		confirm: true,
+		items,
+		manager,
+		maxDrafts: config.maxDrafts,
+		findings: compat.findings,
+		profileName: resolveProfileFacts(ctx).name
+	});
+}
+async function rollback(ctx, config, body) {
+	const manager = getPluginManager(ctx);
+	if (manager === void 0) throw new Error("pluginManager is unavailable");
+	return rollbackSlimProfile({
+		token: typeof body.token === "string" && body.token.length > 0 ? body.token : void 0,
+		manager,
+		maxDrafts: config.maxDrafts,
+		profileName: resolveProfileFacts(ctx).name
+	});
+}
+async function inventoryOf(ctx) {
+	const adapter = getInventory(ctx);
+	if (adapter === void 0) return void 0;
+	try {
+		return await adapter.list();
+	} catch {
+		return;
+	}
+}
+function toFinding(finding) {
+	return {
+		code: finding.code,
+		severity: finding.severity,
+		domain: finding.domain,
+		title: finding.title,
+		subjects: finding.subjects,
+		confidence: finding.confidence,
+		fix: finding.fix,
+		evidence: finding.evidence
+	};
+}
 // src/index.ts
 const name = "dsh-plugin-trim";
 const inject = ["tools"];
@@ -4406,5 +4660,6 @@ function apply(ctx, config) {
 		ledger
 	});
 	registerCompatTool(ctx, resolved);
+	registerTrimApi(ctx, resolved, ledger);
 }
 export { Config, analyzeCompatibility, apply, applySlimProfile, buildReport, buildSlimProfile, collectCompatContext, detectTask, inject, name, renderReport, rollbackSlimProfile, runCompatibilityRules, scanPlugins };

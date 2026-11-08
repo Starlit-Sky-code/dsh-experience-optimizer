@@ -3,6 +3,39 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-08
+
+### Added
+
+- Web console for `dsh-plugin-trim`, registered as the **Settings → Plugins → 体验优化**
+  tab:
+  - context and compatibility overview;
+  - explainable slim suggestions with low-risk selection and a confirmation modal;
+  - apply result, rollback token, and one-click rollback;
+  - workflow recipe form, blueprint preview, validation issues, and Markdown/JSON export.
+- Same-origin host APIs:
+  - `/api/dsh-experience-optimizer/overview|suggest|apply|rollback`;
+  - `/api/dsh-experience-optimizer/recipe/plan|export`.
+- `dsh-shared-meta/http.ts` for origin checks, bounded JSON bodies, and JSON responses.
+- `dsh.client` / `exports["./client"]` packaging for the browser half; packaging
+  verification now checks the client bundle.
+
+### Security
+
+- UI APIs validate the DSH browser session through Connection `requestRejection()`
+  and reject cross-site requests; unauthenticated calls return 401.
+- Apply still requires `confirm: true`, low-risk items only, snapshots, and automatic
+  rollback on failure.
+
+### Changed
+
+- Release workflow now builds and uploads both release tarballs automatically.
+- Install docs and market copy use the 0.2.0 release assets.
+
+### Tests
+
+- 65 tests, including HTTP helper coverage and client packaging checks.
+
 ## [0.1.0] - 2026-11-08
 
 ### Added

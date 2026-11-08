@@ -2,6 +2,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import { Config, normalizeConfig } from './config.ts'
 import type { Config as RecipeConfig } from './config.ts'
 import { registerRecipeTools } from './tools.ts'
+import { registerRecipeApi } from './api.ts'
 
 export const name = 'dsh-plugin-recipe'
 export const inject = ['tools']
@@ -10,7 +11,9 @@ export type { RecipeConfig }
 
 /** Register the workflow planner tools. */
 export function apply(ctx: Context, config?: Partial<Config>): void {
-  registerRecipeTools(ctx, normalizeConfig(config))
+  const resolved = normalizeConfig(config)
+  registerRecipeTools(ctx, resolved)
+  registerRecipeApi(ctx, resolved)
 }
 
 export { loadCapabilities, BUILT_IN_CAPABILITIES } from './capabilities.ts'

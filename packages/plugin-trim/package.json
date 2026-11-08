@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-trim",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DSH plugin ecosystem diet and compatibility analyzer",
   "type": "module",
   "main": "dist/index.js",
@@ -10,10 +10,12 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./client": "./client.js"
   },
   "files": [
     "dist",
+    "client.js",
     "cordis.patch.yml",
     "README.md",
     "LICENSE",
@@ -35,6 +37,12 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings-plugins"
+      ]
     }
   },
   "scripts": {

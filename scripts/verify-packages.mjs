@@ -39,6 +39,25 @@ for (const directory of plugins) {
   if (!Array.isArray(manifest.files) || !manifest.files.includes('dist')) {
     fail('files must include dist')
   }
+  if (manifest.dsh?.client !== undefined) {
+    if (manifest.dsh.client.platform !== 'web') fail('dsh.client.platform must be web')
+    const clientExport = manifest.exports?.['./client']
+    if (typeof clientExport !== 'string') fail('missing exports["./client"]')
+    const clientPath = join(packageDir, typeof clientExport === 'string' ? clientExport : '')
+    try {
+      await access(clientPath)
+      const clientText = await readFile(clientPath, 'utf8')
+      if (!clientText.includes('__ModuleLoader__.load')) {
+        fail('client bundle does not call __ModuleLoader__.load')
+      }
+      if (!/exports\.apply\s*=/.test(clientText)) fail('client bundle does not export apply')
+    } catch {
+      fail(`client bundle does not exist: ${clientExport}`)
+    }
+    if (!Array.isArray(manifest.files) || !manifest.files.includes('client.js')) {
+      fail('files must include client.js when dsh.client is declared')
+    }
+  }
   if (!Array.isArray(manifest.files) || !manifest.files.includes('icon.png')) {
     fail('files must include icon.png')
   }

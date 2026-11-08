@@ -7,13 +7,7 @@
 从 GitHub Release 安装（当前推荐，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-recipe-0.1.0.tgz"
-```
-
-从源码安装（pinned commit）：
-
-```bash
-dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#63ec29f3ccf69b192bca0a91f0072632e73972c0&path:/packages/plugin-recipe"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-recipe-0.2.0.tgz"
 ```
 
 发布到 npm 后：
@@ -27,6 +21,11 @@ dsh plugin --profile web add dsh-plugin-recipe
 ```bash
 dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
 ```
+
+## Web 控制台
+
+`dsh-plugin-trim` 的 Web 控制台包含「工作流配方」页签；本插件提供其 Host API，
+用于生成和导出蓝图。安装两个插件后即可在 **设置 → 插件 → 体验优化** 使用。
 
 ## 工具
 

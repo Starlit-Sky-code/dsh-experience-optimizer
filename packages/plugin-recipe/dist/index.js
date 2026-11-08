@@ -42,7 +42,7 @@ function truncate(text, max) {
 function slugify(text, max = 48) {
 	return text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, "").slice(0, max) || "untitled";
 }
-function isRecord(value) {
+function isRecord$1(value) {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 function uniq(values) {
@@ -199,6 +199,49 @@ var AuditLog = class {
 		} catch {}
 	}
 };
+// ../shared-meta/src/http.ts
+/** Reject cross-site browser requests; allow same-origin and non-browser callers without Origin. */
+function isSameOrigin(req) {
+	if (req.headers["sec-fetch-site"] === "cross-site") return false;
+	const origin = req.headers.origin;
+	if (origin === void 0 || origin.length === 0) return true;
+	try {
+		return new URL(origin).host === req.headers.host;
+	} catch {
+		return false;
+	}
+}
+/** Read and parse a JSON request body with a bounded size. */
+async function readJsonBody(req, maxBytes = 65536) {
+	const chunks = [];
+	let size = 0;
+	for await (const chunk of req) {
+		const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+		size += buffer.length;
+		if (size > maxBytes) throw new Error(`request body exceeds ${maxBytes} bytes`);
+		chunks.push(buffer);
+	}
+	const text = Buffer.concat(chunks).toString("utf8").trim();
+	if (text.length === 0) return {};
+	return JSON.parse(text);
+}
+/** Write a JSON response. */
+function sendJson(res, status, body) {
+	const text = JSON.stringify(body);
+	res.writeHead(status, {
+		"content-type": "application/json; charset=utf-8",
+		"cache-control": "no-store",
+		"content-length": Buffer.byteLength(text)
+	});
+	res.end(text);
+}
+/** Write a structured error response. */
+function sendError(res, status, message) {
+	sendJson(res, status, {
+		ok: false,
+		error: { message }
+	});
+}
 // src/capabilities.ts
 /** Built-in capability seams. Tools are checked against the current agent scope at planning time. */
 const BUILT_IN_CAPABILITIES = [
@@ -377,7 +420,7 @@ async function loadCapabilities(path) {
 		diagnostics.push(`capabilities file unreadable: ${error instanceof Error ? error.message : String(error)}`);
 	});
 	if (custom !== void 0) {
-		const list = Array.isArray(custom) ? custom : isRecord(custom) && Array.isArray(custom.capabilities) ? custom.capabilities : [];
+		const list = Array.isArray(custom) ? custom : isRecord$1(custom) && Array.isArray(custom.capabilities) ? custom.capabilities : [];
 		if (list.length === 0) diagnostics.push(`capabilities file has no capabilities array: ${file}`);
 		for (const raw of list) {
 			const capability = normalizeCapability(raw);
@@ -394,7 +437,7 @@ async function loadCapabilities(path) {
 	};
 }
 function normalizeCapability(value) {
-	if (!isRecord(value)) return void 0;
+	if (!isRecord$1(value)) return void 0;
 	if (typeof value.id !== "string" || typeof value.name !== "string") return void 0;
 	return {
 		id: value.id,
@@ -861,9 +904,9 @@ function registerRecipeTools(ctx, config) {
 			if (question !== null) return renderQuestion(goal, question, partial);
 			const catalog = await loadCapabilities(config.capabilitiesFile);
 			const toolExists = (name) => ctx.tools.get(name, exec.agent) !== void 0;
-			const known = await knownPlugins(ctx, catalog.capabilities, toolExists);
-			const compat = await readCompatReport();
-			const blocked = blockedSubjects(compat);
+			const known = await knownPlugins$1(ctx, catalog.capabilities, toolExists);
+			const compat = await readCompatReport$1();
+			const blocked = blockedSubjects$1(compat);
 			const capabilities = availableCapabilities(catalog.capabilities, toolExists).filter((capability) => !capability.pluginIds.some((plugin) => blocked.has(plugin)) && !capability.tools.some((tool) => blocked.has(tool)));
 			const available = new Set(capabilities.map((capability) => capability.id));
 			const filled = defaultsFor(goal, {
@@ -911,11 +954,11 @@ function registerRecipeTools(ctx, config) {
 			}]
 		},
 		async execute(args, exec) {
-			if (!isWorkflowBlueprint(args.blueprint)) return "❌ blueprint 缺少必要字段（schemaVersion/id/goal/steps）。";
+			if (!isWorkflowBlueprint$1(args.blueprint)) return "❌ blueprint 缺少必要字段（schemaVersion/id/goal/steps）。";
 			const catalog = await loadCapabilities(config.capabilitiesFile);
 			const toolExists = (name) => ctx.tools.get(name, exec.agent) !== void 0;
-			const known = await knownPlugins(ctx, catalog.capabilities, toolExists);
-			const compat = await readCompatReport();
+			const known = await knownPlugins$1(ctx, catalog.capabilities, toolExists);
+			const compat = await readCompatReport$1();
 			const issues = validateBlueprint(args.blueprint, {
 				toolExists,
 				pluginKnown: (name) => known.has(name),
@@ -961,7 +1004,7 @@ function registerRecipeTools(ctx, config) {
 		},
 		async execute(args) {
 			if (config.allowExport !== true) return "❌ 当前配置禁止导出蓝图（allowExport: false）。";
-			if (!isWorkflowBlueprint(args.blueprint)) return "❌ blueprint 缺少必要字段（schemaVersion/id/goal/steps）。";
+			if (!isWorkflowBlueprint$1(args.blueprint)) return "❌ blueprint 缺少必要字段（schemaVersion/id/goal/steps）。";
 			const format = args.format ?? "both";
 			const result = await exportBlueprint(args.blueprint, format);
 			await audit("export_workflow", "ok", `exported ${args.blueprint.id}`);
@@ -1040,7 +1083,7 @@ function renderBlueprint(blueprint, issues) {
 	return lines.join("\n");
 }
 function readAnswers(raw) {
-	if (!isRecord(raw)) return {};
+	if (!isRecord$1(raw)) return {};
 	const out = {};
 	if (typeof raw.scope === "string") out.scope = raw.scope;
 	if (typeof raw.frequency === "string") out.frequency = raw.frequency;
@@ -1051,14 +1094,14 @@ function readAnswers(raw) {
 	if (Array.isArray(raw.acceptance)) out.acceptance = raw.acceptance.filter((item) => typeof item === "string");
 	return out;
 }
-function isWorkflowBlueprint(value) {
-	if (!isRecord(value)) return false;
+function isWorkflowBlueprint$1(value) {
+	if (!isRecord$1(value)) return false;
 	return value.schemaVersion === 1 && typeof value.id === "string" && typeof value.goal === "string" && Array.isArray(value.steps);
 }
-async function readCompatReport() {
+async function readCompatReport$1() {
 	return readJson(dataDir("compat", "report.json")).catch(() => void 0);
 }
-async function knownPlugins(ctx, capabilities, toolExists) {
+async function knownPlugins$1(ctx, capabilities, toolExists) {
 	const known = /* @__PURE__ */ new Set();
 	for (const capability of capabilities) {
 		if (!capability.tools.some((tool) => toolExists(tool))) continue;
@@ -1070,7 +1113,7 @@ async function knownPlugins(ctx, capabilities, toolExists) {
 	} catch {}
 	return known;
 }
-function blockedSubjects(report) {
+function blockedSubjects$1(report) {
 	const set = /* @__PURE__ */ new Set();
 	for (const finding of report?.findings ?? []) {
 		if (finding.severity !== "error") continue;
@@ -1094,11 +1137,150 @@ async function audit(action, result, summary) {
 		summary
 	}).catch(() => void 0);
 }
+// src/api.ts
+const API_PREFIX = "/api/dsh-experience-optimizer/recipe";
+/** Register the recipe panel API used by the Web client. */
+function registerRecipeApi(ctx, config) {
+	if (typeof ctx.inject !== "function") return;
+	ctx.inject(["webServer"], (webCtx) => {
+		const server = webCtx.get("webServer");
+		if (server === void 0) return;
+		webCtx.effect(() => server.register({
+			kind: "prefix",
+			path: API_PREFIX,
+			handler: (req, res) => handle(req, res, ctx, config)
+		}), "recipe.webApi");
+	});
+}
+async function handle(req, res, ctx, config) {
+	const rejection = ctx.get("connection")?.requestRejection?.({ headers: req.headers });
+	if (rejection !== void 0) {
+		sendError(res, rejection, "authentication required");
+		return;
+	}
+	if (!isSameOrigin(req)) {
+		sendError(res, 403, "cross-site request rejected");
+		return;
+	}
+	const path = new URL(req.url ?? "/", "http://localhost").pathname.slice(36) || "/";
+	try {
+		if (req.method === "POST" && path === "/plan") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await plan(ctx, config, await readJsonBody(req))
+			});
+			return;
+		}
+		if (req.method === "POST" && path === "/export") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await exportRunbook(ctx, config, await readJsonBody(req))
+			});
+			return;
+		}
+		sendError(res, 404, `unknown endpoint ${path}`);
+	} catch (error) {
+		sendError(res, 500, error instanceof Error ? error.message : String(error));
+	}
+}
+async function plan(ctx, config, body) {
+	const goal = typeof body.goal === "string" ? body.goal.trim() : "";
+	if (goal.length === 0) throw new Error("goal is required");
+	const rawAnswers = isRecord(body.answers) ? body.answers : {};
+	const answers = defaultsFor(goal, {
+		goal,
+		scope: stringValue(rawAnswers.scope),
+		frequency: stringValue(rawAnswers.frequency),
+		sources: stringArray(rawAnswers.sources),
+		outputFormat: stringValue(rawAnswers.outputFormat),
+		delivery: stringValue(rawAnswers.delivery),
+		onFailure: stringValue(rawAnswers.onFailure),
+		acceptance: stringArray(rawAnswers.acceptance)
+	});
+	const catalog = await loadCapabilities(config.capabilitiesFile);
+	const toolExists = (name) => catalog.capabilities.some((capability) => capability.tools.includes(name)) || ctx.tools.get(name) !== void 0;
+	const compat = await readCompatReport();
+	const blocked = blockedSubjects(compat);
+	const capabilities = availableCapabilities(catalog.capabilities, toolExists).filter((capability) => !capability.pluginIds.some((plugin) => blocked.has(plugin)) && !capability.tools.some((tool) => blocked.has(tool)));
+	const available = new Set(capabilities.map((capability) => capability.id));
+	const blueprint = translateGoal(goal, answers, catalog.capabilities, {
+		available,
+		suggestedDisable: []
+	});
+	if (blocked.size > 0) blueprint.uncertainties.push(`兼容性报告存在 error，以下主体被排除：${[...blocked].slice(0, 10).join(", ")}`);
+	for (const diagnostic of catalog.diagnostics) blueprint.uncertainties.push(diagnostic);
+	blueprint.uncertainties = [...new Set(blueprint.uncertainties)];
+	const known = await knownPlugins(ctx, catalog.capabilities, toolExists);
+	const issues = validateBlueprint(blueprint, {
+		toolExists,
+		pluginKnown: (name) => known.has(name),
+		scheduleAvailable: ctx.get("schedule") !== void 0,
+		maxSteps: config.maxSteps,
+		capabilities: catalog.capabilities,
+		compatFindings: compat?.findings
+	});
+	return {
+		goal,
+		isWorkflow: isWorkflowGoal(goal),
+		blueprint,
+		issues,
+		capabilities: capabilities.map((capability) => ({
+			id: capability.id,
+			name: capability.name,
+			tools: capability.tools,
+			permissions: capability.permissions
+		})),
+		note: "UI 预览按内置能力目录判断工具可用性；精确的 agent-scope 校验以 recipe_plan_workflow 工具为准。"
+	};
+}
+async function exportRunbook(ctx, config, body) {
+	if (!config.allowExport) throw new Error("export is disabled by config");
+	if (!isWorkflowBlueprint(body.blueprint)) throw new Error("blueprint is invalid");
+	const format = body.format === "markdown" || body.format === "json" || body.format === "both" ? body.format : "both";
+	return exportBlueprint(body.blueprint, format);
+}
+async function readCompatReport() {
+	return readJson(dataDir("compat", "report.json")).catch(() => void 0);
+}
+function blockedSubjects(report) {
+	const set = /* @__PURE__ */ new Set();
+	for (const finding of report?.findings ?? []) {
+		if (finding.severity !== "error") continue;
+		for (const subject of finding.subjects) set.add(subject);
+	}
+	return set;
+}
+async function knownPlugins(ctx, capabilities, toolExists) {
+	const known = /* @__PURE__ */ new Set();
+	for (const capability of capabilities) {
+		if (!capability.tools.some((tool) => toolExists(tool))) continue;
+		for (const plugin of capability.pluginIds) known.add(plugin);
+	}
+	const manager = ctx.get("pluginManager");
+	if (typeof manager?.listBundles === "function") try {
+		for (const bundle of await manager.listBundles()) if (typeof bundle.name === "string") known.add(bundle.name);
+	} catch {}
+	return known;
+}
+function isWorkflowBlueprint(value) {
+	return typeof value === "object" && value !== null && value.schemaVersion === 1 && typeof value.id === "string" && typeof value.goal === "string" && Array.isArray(value.steps);
+}
+function isRecord(value) {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+function stringValue(value) {
+	return typeof value === "string" ? value : void 0;
+}
+function stringArray(value) {
+	return Array.isArray(value) ? value.filter((item) => typeof item === "string") : void 0;
+}
 // src/index.ts
 const name = "dsh-plugin-recipe";
 const inject = ["tools"];
 /** Register the workflow planner tools. */
 function apply(ctx, config) {
-	registerRecipeTools(ctx, normalizeConfig(config));
+	const resolved = normalizeConfig(config);
+	registerRecipeTools(ctx, resolved);
+	registerRecipeApi(ctx, resolved);
 }
 export { BUILT_IN_CAPABILITIES, Config, apply, defaultsFor, exportBlueprint, inject, isWorkflowGoal, loadCapabilities, name, nextQuestion, renderBlueprintMarkdown, renderValidation, translateGoal, validateBlueprint };

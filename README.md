@@ -15,24 +15,25 @@ DSH 插件生态的**减负**、**兼容性体检**与**工作流翻译**套件�
 - `dsh-plugin-recipe`：把业务目标翻译成可校验、可导出的工作流蓝图。
 - `dsh-shared-meta`：私有共享包，构建时内联进两个插件，不增加运行时安装负担。
 
-> 本仓库目前处于代码实现阶段。详细设计见 [`docs/architecture.md`](docs/architecture.md)，
-> 兼容性规则见 [`docs/compatibility.md`](docs/compatibility.md)，宣传素材与市场文案见
-> [`docs/marketing.md`](docs/marketing.md)。
+> 已提供可安装的 **DSH Web 控制台**：设置 → 插件 → 体验优化。
+> 详细设计见 [`docs/architecture.md`](docs/architecture.md)，兼容性规则见
+> [`docs/compatibility.md`](docs/compatibility.md)，界面说明见 [`docs/ui.md`](docs/ui.md)，
+> 宣传素材与市场文案见 [`docs/marketing.md`](docs/marketing.md)。
 
 ## 安装
 
 ### 从 GitHub Release 安装（当前推荐，无需 npm）
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-trim-0.1.0.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-recipe-0.1.0.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-trim-0.2.0.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.0/dsh-plugin-recipe-0.2.0.tgz"
 ```
 
-### 从 GitHub 源码安装
+### 从 GitHub 源码安装（开发版，跟随 main）
 
 ```bash
-dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#63ec29f3ccf69b192bca0a91f0072632e73972c0&path:/packages/plugin-trim"
-dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#63ec29f3ccf69b192bca0a91f0072632e73972c0&path:/packages/plugin-recipe"
+dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
+dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-recipe"
 ```
 
 ### 从 npm 安装（发布后）
@@ -48,6 +49,19 @@ dsh plugin --profile web add dsh-plugin-recipe
 dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
 ```
+
+## Web 控制台
+
+安装后在 **设置 → 插件 → 体验优化** 打开。控制台包含两个页签：
+
+- **减负与兼容**：上下文成本总览、兼容性矩阵、按任务生成精简方案、勾选低风险项后显式应用、一键回滚。
+- **工作流配方**：业务目标与范围/频率/来源/交付/验收表单，生成可校验的工作流蓝图，并可导出 Markdown + JSON 运行手册。
+
+![体验优化控制台](assets/ui-preview.png)
+
+控制台是 `dsh-plugin-trim` 的 Web 客户端半身；Host 端通过同源 JSON API 提供数据。
+API 同时校验 DSH 浏览器会话与 `Origin`，未登录请求返回 401；只读分析与草稿生成不会修改插件，
+应用操作必须经过确认弹窗并写入回滚快照。界面状态、API 路由和维护方式见 [`docs/ui.md`](docs/ui.md)。
 
 ## DSH 自定义插件市场索引
 
