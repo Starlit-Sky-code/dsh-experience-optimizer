@@ -24,126 +24,135 @@ window.__ModuleLoader__.load({
     ]
 
     const CSS = `
-.eo-root{--eo-accent:#f2a33a;--eo-blue:#8fb7ff;--eo-green:#63d6a3;--eo-red:#ff6b6b;--eo-radius:18px;max-width:1060px;color:var(--dsw-alias-label-primary,#e8eefb);font-size:13px;line-height:1.55}
+.eo-root{--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
 .eo-root *{box-sizing:border-box}
-.eo-hero{position:relative;display:flex;align-items:center;gap:18px;padding:22px;border-radius:24px;overflow:hidden;background:radial-gradient(900px 260px at 8% 0%,rgba(242,163,58,.16),transparent 60%),radial-gradient(700px 260px at 100% 0%,rgba(143,183,255,.13),transparent 62%),var(--dsw-alias-bg-layer-2,rgba(127,127,127,.06));border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.18));box-shadow:0 18px 50px rgba(0,0,0,.12)}
-.eo-orb{position:relative;flex:0 0 66px;width:66px;height:66px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,#f2a33a,#ffcf7a 45%,#8fb7ff);box-shadow:0 10px 30px rgba(242,163,58,.28);color:#17120a;font:800 20px/1 "Noto Sans CJK SC",system-ui,sans-serif;letter-spacing:.5px}
-.eo-orb:after{content:"";position:absolute;right:-7px;top:-7px;width:18px;height:18px;background:var(--eo-accent);clip-path:polygon(50% 0,62% 36%,100% 50%,62% 64%,50% 100%,38% 64%,0 50%,38% 36%);filter:drop-shadow(0 0 8px rgba(242,163,58,.55))}
-.eo-hero-copy{min-width:0;flex:1}
-.eo-eyebrow{font:600 10px/1.2 "JetBrains Maple Mono",monospace;letter-spacing:.16em;color:var(--eo-accent);text-transform:uppercase;margin-bottom:7px}
-.eo-title{margin:0;font-size:24px;line-height:1.25;letter-spacing:-.01em}
-.eo-sub{margin:6px 0 0;color:var(--dsw-alias-label-tertiary,#9aa8bd);font-size:13px}
-.eo-hero-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:0 0 auto}
-.eo-status{font:500 10px/1 "JetBrains Maple Mono",monospace;color:var(--dsw-alias-label-tertiary,#8b9bb0);border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.2));border-radius:999px;padding:5px 9px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.eo-tabs{display:flex;gap:6px;margin:18px 0 14px;border-bottom:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.18));padding-bottom:0}
-.eo-tab{appearance:none;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#9aa8bd);font:inherit;font-size:13px;padding:9px 12px 11px;cursor:pointer;position:relative;border-radius:8px 8px 0 0}
-.eo-tab:hover{color:var(--dsw-alias-label-primary,#e8eefb);background:rgba(127,127,127,.07)}
-.eo-tab-active{color:var(--dsw-alias-label-primary,#e8eefb);font-weight:600}
-.eo-tab-active:after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--eo-accent),var(--eo-blue))}
+.eo-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:0 0 2px}
+.eo-hero-copy{min-width:0}
+.eo-title{margin:0;font-size:18px;line-height:26px;font-weight:600;letter-spacing:-.01em}
+.eo-sub{margin:4px 0 0;color:var(--eo-tertiary);font-size:13px;line-height:20px}
+.eo-hero-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.eo-status{font:400 11px/1 var(--eo-code);color:var(--eo-tertiary);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eo-tabs{display:flex;gap:18px;border-bottom:.5px solid var(--eo-border);margin:0}
+.eo-tab{appearance:none;border:0;background:transparent;color:var(--eo-tertiary);font:inherit;font-size:13px;line-height:20px;padding:7px 1px 9px;cursor:pointer;position:relative;border-radius:0}
+.eo-tab:hover{color:var(--eo-primary)}
+.eo-tab-active{color:var(--eo-primary);font-weight:500}
+.eo-tab-active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1.5px;background:var(--eo-primary);border-radius:1px}
 .eo-stack{display:flex;flex-direction:column;gap:14px}
-.eo-grid{display:grid;gap:12px}
-.eo-metrics{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-top:16px}
-.eo-metric{padding:14px 15px;border-radius:16px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.06));border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.16));position:relative;overflow:hidden}
-.eo-metric:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--eo-accent);opacity:.55}
-.eo-metric[data-tone="blue"]:before{background:var(--eo-blue)}
-.eo-metric[data-tone="green"]:before{background:var(--eo-green)}
-.eo-metric[data-tone="red"]:before{background:var(--eo-red)}
-.eo-metric-label{font-size:11px;color:var(--dsw-alias-label-tertiary,#93a3b8);letter-spacing:.02em}
-.eo-metric-value{font:700 21px/1.25 "JetBrains Maple Mono",monospace;margin-top:7px;letter-spacing:-.03em}
-.eo-metric-hint{font-size:10.5px;color:var(--dsw-alias-label-tertiary,#8292a6);margin-top:5px}
-.eo-card{padding:16px;border-radius:var(--eo-radius);background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.06));border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.17));box-shadow:0 8px 30px rgba(0,0,0,.05)}
-.eo-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:13px}
-.eo-card-title{margin:0;font-size:14px;font-weight:650;letter-spacing:-.01em}
-.eo-card-sub{margin:4px 0 0;font-size:11.5px;color:var(--dsw-alias-label-tertiary,#93a3b8)}
-.eo-btn{appearance:none;border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.22));border-radius:10px;padding:8px 13px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:transform .12s ease,background .16s ease,border-color .16s ease,opacity .16s ease;background:var(--dsw-alias-bg-layer-3,rgba(127,127,127,.1));color:var(--dsw-alias-label-primary,#e8eefb);white-space:nowrap}
-.eo-btn:hover:not(:disabled){transform:translateY(-1px);border-color:rgba(242,163,58,.5)}
-.eo-btn:disabled{opacity:.45;cursor:not-allowed}
-.eo-btn-accent{background:linear-gradient(135deg,#f2a33a,#ffd58a);border-color:transparent;color:#1a1408;box-shadow:0 6px 18px rgba(242,163,58,.24)}
-.eo-btn-accent:hover:not(:disabled){background:linear-gradient(135deg,#ffb54f,#ffe1a8)}
-.eo-btn-ghost{background:transparent;border-color:var(--dsw-alias-border-l2,rgba(127,127,127,.18));color:var(--dsw-alias-label-tertiary,#a3b1c4)}
-.eo-btn-danger{background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.35);color:#ffb3b3}
-.eo-badge{display:inline-flex;align-items:center;gap:5px;font:600 10px/1 "JetBrains Maple Mono",monospace;letter-spacing:.02em;padding:4px 7px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
-.eo-badge-neutral{background:rgba(127,127,127,.12);color:var(--dsw-alias-label-tertiary,#9aa8bd);border-color:rgba(127,127,127,.18)}
-.eo-badge-ok{background:rgba(99,214,163,.12);color:#7fe7ba;border-color:rgba(99,214,163,.28)}
-.eo-badge-warn{background:rgba(242,163,58,.13);color:#ffc76b;border-color:rgba(242,163,58,.3)}
-.eo-badge-danger{background:rgba(255,107,107,.12);color:#ff9c9c;border-color:rgba(255,107,107,.3)}
-.eo-badge-info{background:rgba(143,183,255,.13);color:#a9c8ff;border-color:rgba(143,183,255,.3)}
-.eo-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 auto}
-.eo-dot-error{background:var(--eo-red);box-shadow:0 0 0 3px rgba(255,107,107,.12)}
-.eo-dot-warn{background:var(--eo-accent);box-shadow:0 0 0 3px rgba(242,163,58,.12)}
-.eo-dot-info{background:var(--eo-blue);box-shadow:0 0 0 3px rgba(143,183,255,.12)}
+.eo-stack>.eo-metrics{order:0}
+.eo-stack>[data-section="draft"]{order:1}
+.eo-stack>[data-section="compat"]{order:2}
+.eo-stack>[data-section="context"]{order:3}
+.eo-stack>[data-section="result"]{order:4}
+.eo-stack>[data-section="dedupe"]{order:5}
+.eo-stack>[data-section="diagnostics"]{order:6}
+.eo-grid{display:grid;gap:10px}
+.eo-metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:.5px solid var(--eo-card-stroke);border-radius:var(--eo-radius);background:var(--eo-card-bg);overflow:hidden}
+.eo-metric{padding:12px 14px;border-right:.5px solid var(--eo-border);min-width:0}
+.eo-metric:last-child{border-right:0}
+.eo-metric-label{font-size:11px;line-height:16px;color:var(--eo-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eo-metric-value{font-size:18px;line-height:26px;font-weight:600;letter-spacing:-.02em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eo-metric-value[data-tone="danger"]{color:var(--eo-error)}
+.eo-metric-value[data-tone="warn"]{color:var(--dsw-alias-state-warning-primary,#9a6700)}
+.eo-metric-value[data-tone="ok"]{color:var(--eo-success)}
+.eo-metric-hint{font-size:11px;line-height:16px;color:var(--eo-tertiary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eo-card{padding:14px;border:.5px solid var(--eo-card-stroke);border-radius:var(--eo-radius);background:var(--eo-card-bg)}
+.eo-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.eo-card-title{margin:0;font-size:14px;line-height:22px;font-weight:500;letter-spacing:0}
+.eo-card-sub{margin:2px 0 0;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
+.eo-btn{appearance:none;height:32px;padding:0 12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:transparent;color:var(--eo-primary);font:inherit;font-size:13px;line-height:20px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;transition:background .14s ease,border-color .14s ease,opacity .14s ease}
+.eo-btn:hover:not(:disabled){background:var(--eo-hover)}
+.eo-btn:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary,#1a1a1a));outline-offset:2px}
+.eo-btn:disabled{opacity:.4;cursor:not-allowed}
+.eo-btn-accent{background:var(--dsw-alias-button-primary-fill,var(--eo-primary));border-color:var(--dsw-alias-button-primary-fill,var(--eo-primary));color:var(--dsw-alias-label-primary-inverted,#fff)}
+.eo-btn-accent:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover,var(--eo-primary));border-color:var(--dsw-alias-button-primary-hover,var(--eo-primary));opacity:1}
+.eo-btn-ghost{border-color:transparent;color:var(--eo-secondary);padding:0 8px}
+.eo-btn-ghost:hover:not(:disabled){background:var(--eo-hover);color:var(--eo-primary)}
+.eo-btn-danger{color:var(--eo-error);border-color:var(--dsw-alias-state-error-primary,var(--eo-error))}
+.eo-badge{display:inline-flex;align-items:center;gap:4px;font:400 11px/16px var(--eo-code);padding:0 6px;border-radius:var(--dsw-radius-xs,4px);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.08));color:var(--eo-secondary);border:0;white-space:nowrap}
+.eo-badge-ok{color:var(--eo-success)}
+.eo-badge-warn{color:var(--dsw-alias-state-warning-primary,#9a6700)}
+.eo-badge-danger{color:var(--eo-error)}
+.eo-badge-info{color:var(--dsw-alias-state-business-primary,#1a5fb4)}
+.eo-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.eo-dot-error{background:var(--eo-error)}
+.eo-dot-warn{background:var(--dsw-alias-state-warning-primary,#c98a00)}
+.eo-dot-info{background:var(--dsw-alias-state-business-primary,#4a7fd6)}
 .eo-toolbar{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
-.eo-toolbar .eo-field{min-width:150px;flex:1}
-.eo-field{display:flex;flex-direction:column;gap:5px;min-width:0}
-.eo-field-label{font-size:11px;font-weight:600;color:var(--dsw-alias-label-tertiary,#93a3b8)}
-.eo-field-hint{font-size:10.5px;color:var(--dsw-alias-label-tertiary,#7f90a6)}
-.eo-input,.eo-select,.eo-textarea{width:100%;border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.22));background:var(--dsw-alias-bg-layer-1,rgba(0,0,0,.12));color:var(--dsw-alias-label-primary,#e8eefb);border-radius:10px;padding:8px 10px;font:inherit;font-size:12.5px;outline:none;transition:border-color .15s ease,box-shadow .15s ease}
-.eo-input:focus,.eo-select:focus,.eo-textarea:focus{border-color:rgba(242,163,58,.6);box-shadow:0 0 0 3px rgba(242,163,58,.12)}
-.eo-textarea{resize:vertical;min-height:72px}
-.eo-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.eo-toolbar .eo-field{min-width:140px;flex:1}
+.eo-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.eo-field-label{font-size:12px;line-height:18px;font-weight:500;color:var(--eo-secondary)}
+.eo-field-hint{font-size:11px;line-height:16px;color:var(--eo-tertiary)}
+.eo-input,.eo-select,.eo-textarea{width:100%;height:36px;border:.5px solid var(--dsw-alias-border-l4,var(--eo-border-strong));border-radius:var(--dsw-radius-md,8px);background:var(--dsw-alias-bg-layer-1,transparent);color:var(--eo-primary);padding:0 10px;font:inherit;font-size:13px;line-height:20px;outline:none}
+.eo-input::placeholder,.eo-textarea::placeholder{color:var(--eo-tertiary)}
+.eo-input:focus,.eo-select:focus,.eo-textarea:focus{border-color:var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary,#1a1a1a));box-shadow:0 0 0 2px color-mix(in srgb,var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary,#1a1a1a)) 16%,transparent)}
+.eo-textarea{height:auto;min-height:76px;padding:8px 10px;resize:vertical}
+.eo-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .eo-form-grid .eo-wide{grid-column:1/-1}
-.eo-summary{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 12px}
-.eo-list{display:flex;flex-direction:column;gap:8px}
-.eo-item{display:flex;gap:11px;align-items:flex-start;padding:11px 12px;border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.14));border-radius:13px;background:var(--dsw-alias-bg-layer-1,rgba(0,0,0,.08));transition:border-color .15s ease,background .15s ease}
-.eo-item:hover{border-color:rgba(242,163,58,.28)}
-.eo-item-selected{border-color:rgba(242,163,58,.42);background:rgba(242,163,58,.055)}
-.eo-item input[type=checkbox]{margin-top:3px;accent-color:var(--eo-accent);width:14px;height:14px;cursor:pointer;flex:0 0 auto}
+.eo-summary{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.eo-list{display:flex;flex-direction:column;gap:0}
+.eo-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border:0;border-bottom:.5px solid var(--eo-border);border-radius:0;background:transparent}
+.eo-item:first-child{padding-top:0}
+.eo-item:last-child{border-bottom:0}
+.eo-item:hover{background:transparent}
+.eo-item input[type=checkbox]{margin-top:3px;accent-color:var(--eo-primary);width:14px;height:14px;cursor:pointer;flex:0 0 auto}
 .eo-item-main{min-width:0;flex:1}
-.eo-item-title{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.eo-item-name{font-weight:650;font-size:12.5px;word-break:break-all}
-.eo-item-reason{margin-top:4px;color:var(--dsw-alias-label-tertiary,#93a3b8);font-size:11.5px}
-.eo-item-evidence{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-.eo-evidence{font-size:10.5px;color:var(--dsw-alias-label-tertiary,#8292a6);background:rgba(127,127,127,.08);border:1px solid rgba(127,127,127,.12);border-radius:7px;padding:3px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.eo-item-side{flex:0 0 auto;text-align:right;color:var(--dsw-alias-label-tertiary,#8292a6);font:600 11px/1.3 "JetBrains Maple Mono",monospace}
-.eo-item-side small{display:block;font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
-.eo-lock{width:14px;height:14px;border-radius:50%;background:rgba(127,127,127,.16);display:inline-block;margin-top:2px;flex:0 0 auto}
-.eo-applybar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.14))}
-.eo-applybar-text{font-size:11.5px;color:var(--dsw-alias-label-tertiary,#93a3b8)}
-.eo-findings{display:flex;flex-direction:column;gap:7px}
-.eo-finding{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.1))}
-.eo-finding:last-child{border-bottom:0}
+.eo-item-title{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eo-item-name{font-size:13px;line-height:20px;font-weight:500;word-break:break-all}
+.eo-item-reason{margin-top:2px;color:var(--eo-tertiary);font-size:12px;line-height:18px}
+.eo-item-evidence{display:flex;flex-wrap:wrap;gap:8px;margin-top:3px}
+.eo-evidence{font-size:11px;line-height:16px;color:var(--eo-tertiary);background:transparent;border:0;padding:0}
+.eo-evidence:before{content:"·";margin-right:4px;color:var(--eo-tertiary)}
+.eo-item-side{display:none}
+.eo-lock{display:none}
+.eo-applybar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:.5px solid var(--eo-border)}
+.eo-applybar-text{font-size:12px;line-height:18px;color:var(--eo-tertiary)}
+.eo-findings{display:flex;flex-direction:column;gap:0}
+.eo-finding{display:flex;gap:8px;padding:10px 0;border-bottom:.5px solid var(--eo-border)}
+.eo-finding:first-child{padding-top:0}
+.eo-finding:last-child{border-bottom:0;padding-bottom:0}
 .eo-finding-body{min-width:0;flex:1}
-.eo-finding-title{font-size:12px;font-weight:600}
-.eo-finding-title code{font:600 10px/1.2 "JetBrains Maple Mono",monospace;color:var(--eo-accent);background:rgba(242,163,58,.08);border:1px solid rgba(242,163,58,.16);padding:2px 5px;border-radius:5px;margin-right:4px}
-.eo-finding-meta{font-size:10.5px;color:var(--dsw-alias-label-tertiary,#8292a6);margin-top:3px;word-break:break-word}
-.eo-finding-fix{font-size:11px;color:var(--dsw-alias-label-tertiary,#93a3b8);margin-top:4px}
-.eo-empty{padding:18px;text-align:center;color:var(--dsw-alias-label-tertiary,#93a3b8);font-size:12px;border:1px dashed var(--dsw-alias-border-l2,rgba(127,127,127,.18));border-radius:12px}
-.eo-table{width:100%;border-collapse:collapse;font-size:11.5px}
-.eo-table th{text-align:left;font-weight:600;color:var(--dsw-alias-label-tertiary,#8292a6);font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:0 8px 7px 0;border-bottom:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.14))}
-.eo-table td{padding:7px 8px 7px 0;border-bottom:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.08));vertical-align:top}
+.eo-finding-title{font-size:13px;line-height:20px;font-weight:500}
+.eo-finding-title code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.08));border:0;padding:0 5px;border-radius:var(--dsw-radius-xs,4px);margin-right:6px}
+.eo-finding-meta{font-size:12px;line-height:18px;color:var(--eo-tertiary);margin-top:1px;word-break:break-word}
+.eo-finding-fix{font-size:12px;line-height:18px;color:var(--eo-tertiary);margin-top:2px}
+.eo-empty{padding:16px;text-align:center;color:var(--eo-tertiary);font-size:12px;line-height:18px;border:.5px dashed var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px)}
+.eo-table{width:100%;border-collapse:collapse;font-size:12px;line-height:18px}
+.eo-table th{text-align:left;font-weight:500;color:var(--eo-tertiary);font-size:11px;line-height:16px;padding:0 8px 7px 0;border-bottom:.5px solid var(--eo-border)}
+.eo-table td{padding:7px 8px 7px 0;border-bottom:.5px solid var(--eo-border);vertical-align:top}
 .eo-table tr:last-child td{border-bottom:0}
-.eo-table code{font:500 10.5px/1.3 "JetBrains Maple Mono",monospace;color:var(--dsw-alias-label-tertiary,#a3b1c4)}
-.eo-owner-list{display:flex;flex-direction:column;gap:8px}
-.eo-owner-head{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--dsw-alias-label-tertiary,#93a3b8)}
-.eo-owner-head span:first-child{font-family:"JetBrains Maple Mono",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.eo-bar{height:4px;border-radius:4px;background:rgba(127,127,127,.12);margin-top:4px;overflow:hidden}
-.eo-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--eo-accent),var(--eo-blue))}
-.eo-issue{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:10px;font-size:11.5px;background:rgba(127,127,127,.06);border:1px solid rgba(127,127,127,.12)}
-.eo-issue-error{border-color:rgba(255,107,107,.25);background:rgba(255,107,107,.06)}
-.eo-issue-warn{border-color:rgba(242,163,58,.22);background:rgba(242,163,58,.05)}
-.eo-issue code{font:600 10px/1.2 "JetBrains Maple Mono",monospace;color:var(--eo-accent)}
-.eo-modal-backdrop{position:fixed;inset:0;background:rgba(2,6,16,.6);backdrop-filter:blur(4px);display:grid;place-items:center;z-index:80;padding:20px}
-.eo-modal{width:min(520px,100%);max-height:80vh;overflow:auto;border-radius:20px;background:var(--dsw-alias-bg-layer-2,#121a2a);border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.24));box-shadow:0 30px 90px rgba(0,0,0,.45);padding:20px}
-.eo-modal h3{margin:0 0 8px;font-size:17px}
-.eo-modal p{color:var(--dsw-alias-label-tertiary,#9aa8bd);font-size:12px;margin:0 0 12px}
-.eo-modal-list{display:flex;flex-direction:column;gap:6px;margin:10px 0 14px;max-height:34vh;overflow:auto}
-.eo-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-.eo-toast{position:fixed;right:22px;bottom:22px;z-index:90;max-width:380px;padding:11px 14px;border-radius:12px;font-size:12px;box-shadow:0 12px 40px rgba(0,0,0,.28);background:var(--dsw-alias-bg-layer-2,#141d2d);border:1px solid var(--dsw-alias-border-l2,rgba(127,127,127,.24));animation:eo-in .18s ease}
-.eo-toast-ok{border-color:rgba(99,214,163,.4)}
-.eo-toast-warn{border-color:rgba(242,163,58,.4)}
-.eo-toast-error{border-color:rgba(255,107,107,.4)}
-.eo-loading{display:flex;align-items:center;gap:9px;padding:30px;justify-content:center;color:var(--dsw-alias-label-tertiary,#93a3b8);font-size:12px}
-.eo-spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(242,163,58,.25);border-top-color:var(--eo-accent);animation:eo-spin .8s linear infinite}
-.eo-error{padding:12px 14px;border-radius:12px;background:rgba(255,107,107,.07);border:1px solid rgba(255,107,107,.25);color:#ffb3b3;font-size:12px;display:flex;gap:10px;align-items:center;justify-content:space-between}
-.eo-muted{color:var(--dsw-alias-label-tertiary,#93a3b8);font-size:11px}
-.eo-code{font:500 10.5px/1.4 "JetBrains Maple Mono",monospace;color:var(--dsw-alias-label-tertiary,#a3b1c4);word-break:break-all}
-.eo-inline{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.eo-spacer{height:2px}
+.eo-table code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary)}
+.eo-owner-list{display:flex;flex-direction:column;gap:7px}
+.eo-owner-head{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
+.eo-owner-head span:first-child{font-family:var(--eo-code);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eo-bar{height:3px;border-radius:3px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));margin-top:4px;overflow:hidden}
+.eo-bar i{display:block;height:100%;border-radius:3px;background:var(--eo-primary);opacity:.55}
+.eo-issue{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:var(--dsw-radius-md,8px);font-size:12px;line-height:18px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.06));border:.5px solid var(--eo-border)}
+.eo-issue-error{border-color:color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error)}
+.eo-issue-warn{border-color:color-mix(in srgb,var(--dsw-alias-state-warning-primary,#9a6700) 35%,transparent)}
+.eo-issue code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);margin-right:4px}
+.eo-modal-backdrop{position:fixed;inset:0;background:var(--dsw-alias-bg-mask-1,rgba(0,0,0,.36));display:grid;place-items:center;z-index:80;padding:20px}
+.eo-modal{width:min(520px,100%);max-height:80vh;overflow:auto;border-radius:var(--dsw-radius-xl,16px);background:var(--dsw-alias-bg-layer-1,#fff);border:.5px solid var(--eo-border-strong);box-shadow:0 16px 48px rgba(0,0,0,.18);padding:18px}
+.eo-modal h3{margin:0 0 6px;font-size:16px;line-height:24px;font-weight:600}
+.eo-modal p{color:var(--eo-tertiary);font-size:12px;line-height:18px;margin:0 0 10px}
+.eo-modal-list{display:flex;flex-direction:column;gap:0;margin:8px 0 12px;max-height:34vh;overflow:auto}
+.eo-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.eo-toast{position:fixed;right:20px;bottom:20px;z-index:90;max-width:360px;padding:9px 12px;border-radius:var(--dsw-radius-md,8px);font-size:12px;line-height:18px;background:var(--dsw-alias-bg-layer-1,#fff);border:.5px solid var(--eo-border-strong);box-shadow:0 8px 30px rgba(0,0,0,.16);animation:eo-in .16s ease}
+.eo-toast-ok{border-color:color-mix(in srgb,var(--eo-success) 45%,transparent)}
+.eo-toast-warn{border-color:color-mix(in srgb,var(--dsw-alias-state-warning-primary,#9a6700) 45%,transparent)}
+.eo-toast-error{border-color:color-mix(in srgb,var(--eo-error) 45%,transparent)}
+.eo-loading{display:flex;align-items:center;justify-content:center;gap:8px;padding:24px;color:var(--eo-tertiary);font-size:12px}
+.eo-spinner{width:13px;height:13px;border-radius:50%;border:2px solid var(--eo-border-strong);border-top-color:var(--eo-primary);animation:eo-spin .8s linear infinite}
+.eo-error{padding:10px 12px;border-radius:var(--dsw-radius-md,8px);background:color-mix(in srgb,var(--eo-error) 7%,transparent);border:.5px solid color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error);font-size:12px;line-height:18px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.eo-muted{color:var(--eo-tertiary);font-size:12px;line-height:18px}
+.eo-code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
+.eo-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.eo-spacer{height:0}
 @keyframes eo-spin{to{transform:rotate(360deg)}}
-@keyframes eo-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-@media(max-width:820px){.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-hero{align-items:flex-start}.eo-hero-actions{flex-direction:row;align-items:center}.eo-form-grid{grid-template-columns:1fr}}
-@media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-orb{width:54px;height:54px;flex-basis:54px;border-radius:18px}}
+@keyframes eo-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(max-width:820px){.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
+@media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-metric{border-right:0;border-bottom:.5px solid var(--eo-border)}.eo-metric:last-child{border-bottom:0}}
 `
+
 
     function injectCss() {
       if (typeof document === 'undefined') return
@@ -172,20 +181,20 @@ window.__ModuleLoader__.load({
       return h('span', { className: 'eo-badge eo-badge-' + tone }, children)
     }
 
-    function Metric({ label, value, hint, tone = 'accent' }) {
+    function Metric({ label, value, hint, tone = 'neutral' }) {
       return h(
         'div',
-        { className: 'eo-metric', 'data-tone': tone },
+        { className: 'eo-metric' },
         h('div', { className: 'eo-metric-label' }, label),
-        h('div', { className: 'eo-metric-value' }, value),
+        h('div', { className: 'eo-metric-value', 'data-tone': tone }, value),
         hint ? h('div', { className: 'eo-metric-hint' }, hint) : null,
       )
     }
 
-    function Card({ title, subtitle, extra, children, className = '' }) {
+    function Card({ title, subtitle, extra, children, className = '', section }) {
       return h(
         'section',
-        { className: 'eo-card ' + className },
+        { className: 'eo-card ' + className, 'data-section': section },
         title || extra
           ? h(
               'div',
@@ -315,6 +324,8 @@ window.__ModuleLoader__.load({
       const [error, setError] = useState('')
       const [toast, setToast] = useState(null)
       const [showInfo, setShowInfo] = useState(false)
+      const [showAllFindings, setShowAllFindings] = useState(false)
+      const [showContext, setShowContext] = useState(false)
       const [taskTag, setTaskTag] = useState('unknown')
       const [goal, setGoal] = useState('')
       const [draft, setDraft] = useState(null)
@@ -551,26 +562,24 @@ window.__ModuleLoader__.load({
         h(
           'div',
           { className: 'eo-hero' },
-          h('div', { className: 'eo-orb' }, 'EO'),
           h(
             'div',
             { className: 'eo-hero-copy' },
-            h('div', { className: 'eo-eyebrow' }, 'DSH EXPERIENCE OPTIMIZER'),
             h('h2', { className: 'eo-title' }, '体验优化'),
-            h('p', { className: 'eo-sub' }, '少一点插件负担，多一点兼容确定性。'),
+            h('p', { className: 'eo-sub' }, '插件减负、兼容性体检与工作流蓝图。'),
           ),
           h(
             'div',
             { className: 'eo-hero-actions' },
             h(
+              'span',
+              { className: 'eo-status', title: overview ? overview.profile.dir : '' },
+              overview ? 'profile: ' + overview.profile.name : '读取中',
+            ),
+            h(
               Button,
               { onClick: refresh, disabled: loading, variant: 'ghost' },
               loading ? '刷新中…' : '刷新',
-            ),
-            h(
-              'span',
-              { className: 'eo-status', title: overview ? overview.profile.dir : '' },
-              overview ? overview.profile.name : '读取中',
             ),
           ),
         ),
@@ -647,21 +656,20 @@ window.__ModuleLoader__.load({
               label: '启用插件',
               value: enabledBundles + ' / ' + totalBundles,
               hint: 'enabled / total bundles',
-              tone: 'blue',
             }),
             h(Metric, {
               key: 'compat',
               label: '兼容性',
               value: compat.error + 'E · ' + compat.warn + 'W',
               hint: 'error / warn · info ' + compat.info,
-              tone: compat.error > 0 ? 'red' : compat.warn > 0 ? 'accent' : 'green',
+              tone: compat.error > 0 ? 'danger' : compat.warn > 0 ? 'warn' : 'ok',
             }),
             h(Metric, {
               key: 'manage',
               label: '写操作',
               value: overview.managementAvailable ? '可应用' : '只读',
               hint: overview.managementAvailable ? 'pluginManager 可用' : '缺少 pluginManager',
-              tone: overview.managementAvailable ? 'green' : 'red',
+              tone: overview.managementAvailable ? 'ok' : 'danger',
             }),
           ]),
           h(
@@ -669,9 +677,20 @@ window.__ModuleLoader__.load({
             {
               title: '兼容性矩阵',
               subtitle: '插件 ↔ 插件 · 插件 ↔ DSH · Profile / 工作区',
+              section: 'compat',
               extra: h(
                 'div',
                 { className: 'eo-inline' },
+                findings.length > 5
+                  ? h(
+                      Button,
+                      {
+                        variant: 'ghost',
+                        onClick: () => setShowAllFindings((value) => !value),
+                      },
+                      showAllFindings ? '收起' : '查看全部 ' + findings.length,
+                    )
+                  : null,
                 h(
                   Button,
                   {
@@ -688,7 +707,7 @@ window.__ModuleLoader__.load({
               : h(
                   'div',
                   { className: 'eo-findings' },
-                  findings.slice(0, 24).map((finding, index) =>
+                  findings.slice(0, showAllFindings ? 60 : 5).map((finding, index) =>
                     h(
                       'div',
                       { className: 'eo-finding', key: finding.code + index },
@@ -727,11 +746,17 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: '上下文成本',
+              section: 'context',
               subtitle:
                 '总计 ' +
                 formatNumber(overview.context.totalTokens) +
                 ' tokens，未归属 ' +
                 formatNumber(overview.context.unattributedTokens),
+              extra: h(
+                Button,
+                { variant: 'ghost', onClick: () => setShowContext((value) => !value) },
+                showContext ? '收起明细' : '查看明细',
+              ),
             },
             h(
               'div',
@@ -756,8 +781,8 @@ window.__ModuleLoader__.load({
                 ),
               ),
             ),
-            h('div', { className: 'eo-spacer' }),
-            h(
+            showContext
+              ? h(
               'table',
               { className: 'eo-table' },
               h(
@@ -804,13 +829,15 @@ window.__ModuleLoader__.load({
                     ),
                   ),
               ),
-            ),
+            )
+              : null,
           ),
           h(
             Card,
             {
               title: '精简方案',
               subtitle: '先建议，后确认；受保护项永不改动',
+              section: 'draft',
             },
             h(
               'div',
@@ -969,6 +996,7 @@ window.__ModuleLoader__.load({
                 {
                   title: '应用结果',
                   subtitle: applyResult.rolledBack ? '中途失败，已自动回滚' : '变更已写入 profile',
+                  section: 'result',
                   extra: h(
                     Badge,
                     { tone: applyResult.rolledBack ? 'warn' : 'ok' },
@@ -1059,7 +1087,7 @@ window.__ModuleLoader__.load({
           draft && draft.dedupe && draft.dedupe.length > 0
             ? h(
                 Card,
-                { title: '跨插件 prompt 重复', subtitle: '只建议，不修改第三方源码' },
+                { title: '跨插件 prompt 重复', subtitle: '只建议，不修改第三方源码', section: 'dedupe' },
                 h(
                   'div',
                   { className: 'eo-list' },
@@ -1089,7 +1117,7 @@ window.__ModuleLoader__.load({
           overview.diagnostics && overview.diagnostics.length > 0
             ? h(
                 'details',
-                { className: 'eo-card' },
+                { className: 'eo-card', 'data-section': 'diagnostics' },
                 h(
                   'summary',
                   { className: 'eo-card-title', style: { cursor: 'pointer' } },

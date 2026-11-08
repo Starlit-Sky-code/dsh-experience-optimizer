@@ -7,10 +7,10 @@
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`、`workflow`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.2.1>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.2.2>
 - Release assets：
-  - `dsh-plugin-trim-0.2.1.tgz`
-  - `dsh-plugin-recipe-0.2.1.tgz`
+  - `dsh-plugin-trim-0.2.2.tgz`
+  - `dsh-plugin-recipe-0.2.2.tgz`
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（没有 `NPM_TOKEN` 时跳过 npm 发布，仅创建 GitHub release；自动上传 release tarball）
 - 安装验证：在临时 headless profile 中执行 `dsh plugin add <release tarball>` 与 `dsh plugin add <pinned git spec>` 均成功，`--dump-config` 出现 `dsh-plugin-trim` row
@@ -45,7 +45,7 @@ pnpm market:check
 ## npm
 
 - 未发布（用户选择暂缓）。
-- 发布前需要在 GitHub 仓库配置 `NPM_TOKEN` secret，然后推送 `v0.2.1` tag 或手动执行：
+- 发布前需要在 GitHub 仓库配置 `NPM_TOKEN` secret，然后推送 `v0.2.2` tag 或手动执行：
   ```bash
   pnpm --filter dsh-plugin-trim publish --access public --no-git-checks
   pnpm --filter dsh-plugin-recipe publish --access public --no-git-checks

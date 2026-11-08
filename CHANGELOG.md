@@ -3,6 +3,18 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.2] - 2026-11-08
+
+### Changed
+
+- Redesigned the Web console to follow the native DSH settings language:
+  - removed the orange hero/orb, gradient cards, and colored metric bars;
+  - native typography, `.5px` borders, card tokens, and primary-button tokens;
+  - action-first information architecture: suggestions before compatibility and context;
+  - compact metrics strip, collapsible context details, and top-5 findings by default;
+  - lighter, quieter badges and row separators;
+  - native light preview in the README.
+
 ## [0.2.1] - 2026-11-08
 
 ### Fixed
