@@ -47,8 +47,8 @@ DSH: `>=0.2.2-rc.1 <0.3.0`; Node: `>=20`.
 **安装命令**
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim
-dsh plugin --profile web add dsh-plugin-recipe
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-trim-0.1.0.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-recipe-0.1.0.tgz"
 ```
 
 **Topics**

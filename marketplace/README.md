@@ -69,3 +69,10 @@ pnpm market:index
 dsh plugin --profile web add dsh-plugin-trim
 dsh plugin --profile web add dsh-plugin-recipe
 ```
+
+## 5. GitHub Release tarball
+
+当前未发布 npm 时，推荐直接安装 release tarball：
+
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-trim-0.1.0.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.1.0/dsh-plugin-recipe-0.1.0.tgz"
