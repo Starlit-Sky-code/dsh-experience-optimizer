@@ -35,7 +35,8 @@ else
   git push -u origin main
 fi
 
-git push --tags
+# The v0.1.0 tag is intentionally left local: configure NPM_TOKEN before pushing it
+# so the release workflow can publish. Then run: git push origin v0.1.0
 
 gh repo edit "$REPO" \
   --add-topic dsh-plugin \
@@ -46,4 +47,5 @@ gh repo edit "$REPO" \
 
 echo "Repository: https://github.com/${REPO}"
 echo "Next: set the social preview to assets/promo.png in GitHub repository settings."
-echo "Next: configure NPM_TOKEN, then submit to dsh-plugin.org and dsh.so."
+echo "Next: configure NPM_TOKEN, then run: git push origin v0.1.0"
+echo "Next: submit to dsh-plugin.org and dsh.so."
