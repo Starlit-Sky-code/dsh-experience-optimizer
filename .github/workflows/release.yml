@@ -30,15 +30,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
 
-      - name: Publish dsh-plugin-trim
-        run: pnpm --filter dsh-plugin-trim publish --access public --no-git-checks
+      # npm publishing is optional until the repository has an NPM_TOKEN secret.
+      # Without it, the tag still produces a GitHub release.
+      - name: Publish packages (skips without NPM_TOKEN)
+        run: |
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "NPM_TOKEN is not configured; skipping npm publish."
+            exit 0
+          fi
+          pnpm --filter dsh-plugin-trim publish --access public --no-git-checks
+          pnpm --filter dsh-plugin-recipe publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish dsh-plugin-recipe
-        run: pnpm --filter dsh-plugin-recipe publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub release
         run: gh release create "$GITHUB_REF_NAME" --generate-notes
