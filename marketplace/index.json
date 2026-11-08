@@ -62,11 +62,11 @@
         "en": "Scan plugin context cost, detect plugin/plugin, plugin/runtime, and profile/workspace conflicts, then apply low-risk reversible trimming only after confirmation.",
         "zh": "扫描插件上下文成本，检测插件↔插件、插件↔DSH、Profile/工作区冲突；只在用户确认后应用低风险、可回滚的精简项。"
       },
-      "icon": "https://raw.githubusercontent.com/StarlitSky/dsh-experience-optimizer/5bc46db2f3d8ce3ab7e35349af14e824af168c33/packages/plugin-trim/icon.png",
-      "author": "StarlitSky",
-      "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer/tree/main/packages/plugin-trim#readme",
+      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/63ec29f3ccf69b192bca0a91f0072632e73972c0/packages/plugin-trim/icon.png",
+      "author": "Starlit-Sky-code",
+      "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/tree/main/packages/plugin-trim#readme",
       "repository": {
-        "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
+        "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
         "directory": "packages/plugin-trim"
       },
       "metadata": {
@@ -88,11 +88,11 @@
       "versions": [
         {
           "version": "0.1.0",
-          "publishTimestamp": 1794104868,
+          "publishTimestamp": 1794114561,
           "source": {
             "type": "git",
-            "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
-            "commit": "5bc46db2f3d8ce3ab7e35349af14e824af168c33",
+            "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
+            "commit": "63ec29f3ccf69b192bca0a91f0072632e73972c0",
             "path": "packages/plugin-trim"
           },
           "engines": {
@@ -111,11 +111,11 @@
         "en": "Turn a business goal into a validated workflow blueprint with steps, capabilities, minimum plugin set, permissions, failure policy, acceptance, and rollback.",
         "zh": "把业务目标翻译成可校验的工作流蓝图，包含步骤、能力、最小插件集、权限、失败策略、验收与回滚。"
       },
-      "icon": "https://raw.githubusercontent.com/StarlitSky/dsh-experience-optimizer/5bc46db2f3d8ce3ab7e35349af14e824af168c33/packages/plugin-recipe/icon.png",
-      "author": "StarlitSky",
-      "homepage": "https://github.com/StarlitSky/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
+      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/63ec29f3ccf69b192bca0a91f0072632e73972c0/packages/plugin-recipe/icon.png",
+      "author": "Starlit-Sky-code",
+      "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
       "repository": {
-        "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
+        "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
         "directory": "packages/plugin-recipe"
       },
       "metadata": {
@@ -137,11 +137,11 @@
       "versions": [
         {
           "version": "0.1.0",
-          "publishTimestamp": 1794104868,
+          "publishTimestamp": 1794114561,
           "source": {
             "type": "git",
-            "url": "https://github.com/StarlitSky/dsh-experience-optimizer",
-            "commit": "5bc46db2f3d8ce3ab7e35349af14e824af168c33",
+            "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
+            "commit": "63ec29f3ccf69b192bca0a91f0072632e73972c0",
             "path": "packages/plugin-recipe"
           },
           "engines": {
