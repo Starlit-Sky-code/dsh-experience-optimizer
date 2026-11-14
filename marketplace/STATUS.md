@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main
 ```
 
 索引为 format 1，包含两个插件，Git 源固定到提交
-`64ee5acfced68f611483fec8fc8944cbb53a2a22`。生成与校验：
+`ec49e78675e59e9886090472c213ad0086051e97`。生成与校验：
 
 ```bash
 pnpm market:index
