@@ -62,7 +62,7 @@
         "en": "Scan plugin context cost, detect plugin/plugin, plugin/runtime, and profile/workspace conflicts, then apply low-risk reversible trimming only after confirmation.",
         "zh": "扫描插件上下文成本，检测插件↔插件、插件↔DSH、Profile/工作区冲突；只在用户确认后应用低风险、可回滚的精简项。"
       },
-      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/64ee5acfced68f611483fec8fc8944cbb53a2a22/packages/plugin-trim/icon.png",
+      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/ec49e78675e59e9886090472c213ad0086051e97/packages/plugin-trim/icon.png",
       "author": "Starlit-Sky-code",
       "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/tree/main/packages/plugin-trim#readme",
       "repository": {
@@ -87,12 +87,12 @@
       },
       "versions": [
         {
-          "version": "0.2.3",
-          "publishTimestamp": 1794660578,
+          "version": "0.2.4",
+          "publishTimestamp": 1794661401,
           "source": {
             "type": "git",
             "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
-            "commit": "64ee5acfced68f611483fec8fc8944cbb53a2a22",
+            "commit": "ec49e78675e59e9886090472c213ad0086051e97",
             "path": "packages/plugin-trim"
           },
           "engines": {
@@ -111,7 +111,7 @@
         "en": "Turn a business goal into a validated workflow blueprint with steps, capabilities, minimum plugin set, permissions, failure policy, acceptance, and rollback.",
         "zh": "把业务目标翻译成可校验的工作流蓝图，包含步骤、能力、最小插件集、权限、失败策略、验收与回滚。"
       },
-      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/64ee5acfced68f611483fec8fc8944cbb53a2a22/packages/plugin-recipe/icon.png",
+      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/ec49e78675e59e9886090472c213ad0086051e97/packages/plugin-recipe/icon.png",
       "author": "Starlit-Sky-code",
       "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
       "repository": {
@@ -136,12 +136,12 @@
       },
       "versions": [
         {
-          "version": "0.2.3",
-          "publishTimestamp": 1794660578,
+          "version": "0.2.4",
+          "publishTimestamp": 1794661401,
           "source": {
             "type": "git",
             "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
-            "commit": "64ee5acfced68f611483fec8fc8944cbb53a2a22",
+            "commit": "ec49e78675e59e9886090472c213ad0086051e97",
             "path": "packages/plugin-recipe"
           },
           "engines": {
