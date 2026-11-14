@@ -1153,7 +1153,18 @@ function registerRecipeApi(ctx, config) {
 	});
 }
 async function handle(req, res, ctx, config) {
-	const rejection = ctx.get("connection")?.requestRejection?.({ headers: req.headers });
+	const connection = ctx.get("connection");
+	if (connection === void 0 || typeof connection.requestRejection !== "function") {
+		sendError(res, 401, "authentication unavailable");
+		return;
+	}
+	let rejection;
+	try {
+		rejection = connection.requestRejection({ headers: req.headers });
+	} catch {
+		sendError(res, 401, "authentication failed");
+		return;
+	}
 	if (rejection !== void 0) {
 		sendError(res, rejection, "authentication required");
 		return;

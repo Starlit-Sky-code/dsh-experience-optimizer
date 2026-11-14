@@ -25,8 +25,8 @@ DSH 插件生态的**减负**、**兼容性体检**与**工作流翻译**套件�
 ### 从 GitHub Release 安装（当前推荐，无需 npm）
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.3/dsh-plugin-trim-0.2.3.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.3/dsh-plugin-recipe-0.2.3.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.4/dsh-plugin-trim-0.2.4.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.4/dsh-plugin-recipe-0.2.4.tgz"
 ```
 
 ### 从 GitHub 源码安装（开发版，跟随 main）

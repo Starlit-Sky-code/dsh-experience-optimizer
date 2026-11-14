@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-trim",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "DSH plugin ecosystem diet and compatibility analyzer",
   "type": "module",
   "main": "dist/index.js",

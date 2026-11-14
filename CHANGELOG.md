@@ -3,6 +3,15 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.4] - 2026-11-14
+
+### Security
+
+- Web console APIs now **fail closed**: if the DSH Connection service is missing,
+  lacks `requestRejection`, or throws, the request is rejected with 401. They no
+  longer fall back to Origin/Host/loopback checks alone. This matches the
+  dshopen.org security review rules for `webServer` routes.
+
 ## [0.2.3] - 2026-11-14
 
 ### Added

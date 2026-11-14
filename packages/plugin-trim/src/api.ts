@@ -66,7 +66,17 @@ async function handle(
   const connection = ctx.get('connection') as
     | { requestRejection?: (request: { headers: typeof req.headers }) => 401 | 403 | undefined }
     | undefined
-  const rejection = connection?.requestRejection?.({ headers: req.headers })
+  if (connection === undefined || typeof connection.requestRejection !== 'function') {
+    sendError(res, 401, 'authentication unavailable')
+    return
+  }
+  let rejection: 401 | 403 | undefined
+  try {
+    rejection = connection.requestRejection({ headers: req.headers })
+  } catch {
+    sendError(res, 401, 'authentication failed')
+    return
+  }
   if (rejection !== undefined) {
     sendError(res, rejection, 'authentication required')
     return
