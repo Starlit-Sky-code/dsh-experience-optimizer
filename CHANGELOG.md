@@ -3,6 +3,15 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.3] - 2026-11-14
+
+### Added
+
+- A top-level **体验优化** settings section directly below **Agent presets**, with a
+  clear sliders icon. Users can open the console without going through
+  Built-in plugins → tabs.
+- The existing Built-in plugins tab remains available.
+
 ## [0.2.2] - 2026-11-08
 
 ### Changed

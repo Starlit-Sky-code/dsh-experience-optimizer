@@ -1475,6 +1475,29 @@ window.__ModuleLoader__.load({
       )
     }
 
+    function ExperienceOptimizerIcon({ size = 16, active = false }) {
+      return h(
+        'svg',
+        {
+          width: size,
+          height: size,
+          viewBox: '0 0 16 16',
+          fill: 'none',
+          stroke: 'currentColor',
+          strokeWidth: active ? 1.6 : 1.4,
+          strokeLinecap: 'round',
+          strokeLinejoin: 'round',
+          'aria-hidden': 'true',
+        },
+        h('path', { d: 'M2.8 4h10.4' }),
+        h('circle', { cx: 6, cy: 4, r: 1.45 }),
+        h('path', { d: 'M2.8 8h10.4' }),
+        h('circle', { cx: 10.2, cy: 8, r: 1.45 }),
+        h('path', { d: 'M2.8 12h10.4' }),
+        h('circle', { cx: 7.2, cy: 12, r: 1.45 }),
+      )
+    }
+
     function apply(ctx) {
       injectCss()
       ctx.slots.inject('settings.plugins.tab', () =>
@@ -1486,6 +1509,26 @@ window.__ModuleLoader__.load({
             label: () => '体验优化',
           },
           ExperiencePanel,
+        ),
+      )
+      ctx.slots.inject('settings.section', () =>
+        ctx.slots.register(
+          {
+            name: 'settings.section',
+            id: 'experience-optimizer',
+            order: 25,
+            label: () => '体验优化',
+          },
+          ExperiencePanel,
+        ),
+      )
+      ctx.slots.inject('settings.section.icon', () =>
+        ctx.slots.register(
+          {
+            name: 'settings.section.icon',
+            id: 'experience-optimizer',
+          },
+          ExperienceOptimizerIcon,
         ),
       )
     }

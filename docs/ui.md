@@ -8,11 +8,15 @@
 
 ## 打开
 
-安装 `dsh-plugin-trim` 与 `dsh-plugin-recipe` 后，打开：
+安装 `dsh-plugin-trim` 与 `dsh-plugin-recipe` 后，有两个入口：
 
 ```text
-设置 → 插件 → 体验优化
+设置 → 体验优化          # 左侧导航，Agent 预设下方，滑杆图标（order 25）
+设置 → 插件 → 体验优化   # 内置插件页签
 ```
+
+左侧入口由 `settings.section` + `settings.section.icon` 注册：
+section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ## 页面
 

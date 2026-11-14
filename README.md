@@ -25,8 +25,8 @@ DSH 插件生态的**减负**、**兼容性体检**与**工作流翻译**套件�
 ### 从 GitHub Release 安装（当前推荐，无需 npm）
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.2/dsh-plugin-trim-0.2.2.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.2/dsh-plugin-recipe-0.2.2.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.3/dsh-plugin-trim-0.2.3.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.3/dsh-plugin-recipe-0.2.3.tgz"
 ```
 
 ### 从 GitHub 源码安装（开发版，跟随 main）
@@ -52,7 +52,7 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
 
 ## Web 控制台
 
-安装后在 **设置 → 插件 → 体验优化** 打开。控制台包含两个页签：
+安装后可从两个入口打开：**设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。控制台包含两个页签：
 
 - **减负与兼容**：上下文成本总览、兼容性矩阵、按任务生成精简方案、勾选低风险项后显式应用、一键回滚。
 - **工作流配方**：业务目标与范围/频率/来源/交付/验收表单，生成可校验的工作流蓝图，并可导出 Markdown + JSON 运行手册。
