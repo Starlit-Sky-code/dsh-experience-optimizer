@@ -1,6 +1,6 @@
 # DSH 插件市场分布审计
 
-更新时间：2026-11-20
+更新时间：2026-11-20（npm 发布后复核）
 
 ## 结论
 
@@ -10,9 +10,9 @@ npm 已发布 `0.2.4`，并经注册表和临时 DSH profile 双重验证：
 - `dsh-plugin-recipe@0.2.4`
 
 现在可安装渠道有四个：npm、GitHub Release tarball、固定 Git 源、本仓库自定义索引。
-`dshbase.com` 已出现两个插件页，但页面安装命令仍错误地指向仓库根目录；
-`dsh.so` 仍只有 ecosystem 条目；`dsh-plugin.org` 仍在等待扫描；
-`dshopen.org` 与 awesome-dsh-plugin 仍在审核/CI。
+`dshopen.org` 已上线两个插件页；`dshbase.com` 也已出现两个页面，但安装命令仍错误地
+指向仓库根目录；`awesome-dsh-plugin` 已合并两个条目；`dsh.so` 仍只有 ecosystem 条目；
+`dsh-plugin.org` 仍在等待扫描。
 
 ## 矩阵
 
@@ -24,8 +24,8 @@ npm 已发布 `0.2.4`，并经注册表和临时 DSH profile 双重验证：
 | dshbase.com | **页面已上线，安装命令待修** | <https://dshbase.com/plugins/dsh-plugin-trim/> · <https://dshbase.com/plugins/dsh-plugin-recipe/> | 页面仍显示 `github:Starlit-Sky-code/dsh-experience-optimizer` | 根包无 `dsh.bundle`，已提交修正评论 [#332](https://github.com/ylwl1997/dshbase/issues/332)；应改为 npm 包名或子目录 |
 | dsh.so | **ecosystem 条目已上线；插件级待索引** | <https://www.dsh.so/artifact/dsh-experience-optimizer/> | 页面命令指向根仓库，不挂载插件 | 等 dsh.so 抓取 npm 包；npm 包详情页当前仍 404 |
 | dsh-plugin.org | **已接受，等待扫描** | [issue #677](https://github.com/dshplugin/dsh-plugin-hub/issues/677)（CLOSED） | 站点会展示 npm / 源码安装 | 站点页面仍 404；已评论 npm 已发布 |
-| dshopen.org | **已提交，待审核** | [#495](https://github.com/polang233/dsh-plugin-index/issues/495)（trim）、[#496](https://github.com/polang233/dsh-plugin-index/issues/496)（recipe） | npm 已发布，审核通过后可直接用 npm | 已评论 npm 版本 |
-| awesome-dsh-plugin | **PR 已开，CI 进行中** | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) | 合并后由 `data/plugins/` 生成列表；条目含 tarball | 等待 CI 与维护者 review |
+| dshopen.org | **已上线** | <https://dshopen.org/zh/plugins/dsh-plugin-trim/> · <https://dshopen.org/zh/plugins/dsh-plugin-recipe/>；[#495](https://github.com/polang233/dsh-plugin-index/issues/495) / [#496](https://github.com/polang233/dsh-plugin-index/issues/496) 已关闭并收录 | `dsh plugin --profile web add dsh-plugin-trim@0.2.4` | 页面显示 0.2.4；维护者建议后续为写操作接入可信宿主审批 |
+| awesome-dsh-plugin | **已合并** | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) MERGED；`data/plugins/` 已含两条 | 列表/商店读取 `data/plugins`；条目含 tarball 与 icon | README 生成器尚未显示两条，站点可能稍后重建 |
 | DSH 官方 Discover / 内置 Plugin Hub | **npm 条件已满足；待市场扫描** | npm 包已公开 | `dsh plugin add dsh-plugin-trim@0.2.4` | dsh-plugin.org 扫描后进入 Hub |
 
 ## 验证证据
@@ -55,8 +55,9 @@ npm CLI 发布输出：
 1. **dshbase 页面安装命令**：等待维护者修正为 npm 包名或 `packages/...` 子目录。
 2. **dsh.so 插件级索引**：等待下一轮 npm/GitHub 扫描；当前只有 ecosystem 条目。
 3. **dsh-plugin.org 扫描**：等待定时任务；页面仍 404。
-4. **dshopen.org / awesome**：等待审核/CI。
-5. **安全**：发布所用 token 已明文出现在对话中，应立即在 npm 设置中 revoke；
+4. **awesome README 生成**：数据文件已合并，README 生成器尚未显示；等待站点重建。
+5. **dshopen 后续建议**：为 `trim_apply_profile` / `trim_rollback_profile` 接入可信宿主审批。
+6. **安全**：发布所用 token 已明文出现在对话中，应立即在 npm 设置中 revoke；
    后续自动发布请配置新的 `NPM_TOKEN` secret 或 trusted publishing。
 
 ## 相关文档

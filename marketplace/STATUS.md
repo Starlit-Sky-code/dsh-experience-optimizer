@@ -46,9 +46,13 @@ pnpm market:check
 ## 其他市场
 
 - 完整审计：[`DISTRIBUTION.md`](DISTRIBUTION.md)
-- dshopen.org：已提交 [#495](https://github.com/polang233/dsh-plugin-index/issues/495)（trim）与 [#496](https://github.com/polang233/dsh-plugin-index/issues/496)（recipe），待审核。
-- dshbase.com：已提交 [#332](https://github.com/ylwl1997/dshbase/issues/332)，待审核。
-- awesome-dsh-plugin：已开 [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)，CI 进行中。
+- **dshopen.org：已上线**
+  - <https://dshopen.org/zh/plugins/dsh-plugin-trim/>
+  - <https://dshopen.org/zh/plugins/dsh-plugin-recipe/>
+- **dshbase.com：页面已上线，安装命令待修**
+  - <https://dshbase.com/plugins/dsh-plugin-trim/>
+  - <https://dshbase.com/plugins/dsh-plugin-recipe/>
+- **awesome-dsh-plugin：已合并** [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)
 
 ## npm
 
