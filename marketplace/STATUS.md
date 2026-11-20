@@ -13,7 +13,7 @@
   - `dsh-plugin-recipe-0.2.5.tgz`
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（没有 `NPM_TOKEN` 时跳过 npm 发布，仅创建 GitHub release；自动上传 release tarball）
-- 安装验证：在临时 headless profile 中执行 `dsh plugin add <release tarball>` 与 `dsh plugin add <pinned git spec>` 均成功，`--dump-config` 出现 `dsh-plugin-trim` row
+- 安装验证：`npm view` 返回 0.2.5；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.2.5` / `dsh-plugin-recipe@0.2.5` 成功，`--dump-config` 出现两个 bundle row
 
 ## 自定义 DSH 插件市场索引
 

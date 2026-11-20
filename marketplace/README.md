@@ -66,8 +66,8 @@ pnpm market:index
 发布后，dsh-plugin.org / dsh.so 可以直接用 npm 包名收录，用户也可以：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim
-dsh plugin --profile web add dsh-plugin-recipe
+dsh plugin --profile web add dsh-plugin-trim@0.2.5
+dsh plugin --profile web add dsh-plugin-recipe@0.2.5
 ```
 
 ## 5. GitHub Release tarball

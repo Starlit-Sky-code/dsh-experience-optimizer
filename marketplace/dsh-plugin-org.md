@@ -31,8 +31,8 @@ DSH Experience Optimizer — 插件减负、兼容性体检与工作流蓝图
 **安装命令**
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.5/dsh-plugin-trim-0.2.5.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.5/dsh-plugin-recipe-0.2.5.tgz"
+dsh plugin --profile web add dsh-plugin-trim@0.2.5
+dsh plugin --profile web add dsh-plugin-recipe@0.2.5
 ```
 
 **长描述**
