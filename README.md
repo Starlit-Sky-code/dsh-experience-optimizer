@@ -4,6 +4,8 @@
 
 [![CI](https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![npm dsh-plugin-trim](https://img.shields.io/npm/v/dsh-plugin-trim?label=dsh-plugin-trim)](https://www.npmjs.com/package/dsh-plugin-trim)
+[![npm dsh-plugin-recipe](https://img.shields.io/npm/v/dsh-plugin-recipe?label=dsh-plugin-recipe)](https://www.npmjs.com/package/dsh-plugin-recipe)
 
 > **少一点插件负担，多一点兼容确定性。**
 >
