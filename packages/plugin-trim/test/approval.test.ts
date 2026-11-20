@@ -1,11 +1,20 @@
 import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Context } from '@deepseek-ai/cordis'
 import type { SlimProfile } from 'dsh-shared-meta'
 import { apply } from '../src/index.ts'
 import { saveDraft } from '../src/store.ts'
+
+const { applyMock } = vi.hoisted(() => ({ applyMock: vi.fn() }))
+vi.mock('../src/apply.ts', () => ({
+  ApplyRefusedError: class extends Error {},
+  applySlimProfile: applyMock,
+}))
+vi.mock('../src/compat/analyze.ts', () => ({
+  analyzeCompatibility: vi.fn(async () => ({ findings: [] })),
+}))
 
 const cleanups: Array<() => Promise<void>> = []
 const originalHome = process.env.DSH_HOME
@@ -110,6 +119,29 @@ describe('host approval', () => {
     expect(String(requests[0]?.reason)).toContain('slim-approval')
     expect(String(requests[0]?.reason)).toContain('bundle:heavy')
     expect(String(requests[0]?.reason)).toContain('Snapshot id:')
+  })
+
+  it('applies only after allowed-once and reuses the approved snapshot token', async () => {
+    await home()
+    applyMock.mockResolvedValueOnce({ profileId: 'slim-approval', token: 'snap', items: [] })
+    const requests: Array<Record<string, unknown>> = []
+    const { ctx, tools } = context({
+      async request(request: Record<string, unknown>) {
+        requests.push(request)
+        return 'allowed-once'
+      },
+    })
+    apply(ctx, { approvalMode: 'always', approvalThreshold: 5 })
+    const result = await tools.get('trim_apply_profile')!.execute(
+      { profileId: 'slim-approval', confirm: true },
+      exec,
+    )
+    expect(String(result)).toContain('allowed-once')
+    expect(requests).toHaveLength(1)
+    expect(applyMock).toHaveBeenCalledTimes(1)
+    const options = applyMock.mock.calls[0]?.[1] as Record<string, unknown>
+    expect(options.snapshotToken).toBeTruthy()
+    expect(options.items).toEqual(['bundle:heavy'])
   })
 
   it('requires approval for rollback even without a draft', async () => {
