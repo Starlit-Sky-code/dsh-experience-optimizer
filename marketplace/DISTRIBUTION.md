@@ -57,8 +57,8 @@ npm CLI 发布输出：
 3. **dsh-plugin.org 扫描**：等待定时任务；页面仍 404。
 4. **awesome README 生成**：数据文件已合并，README 生成器尚未显示；等待站点重建。
 5. **dshopen 后续建议**：为 `trim_apply_profile` / `trim_rollback_profile` 接入可信宿主审批。
-6. **安全**：发布所用 token 已明文出现在对话中，应立即在 npm 设置中 revoke；
-   后续自动发布请配置新的 `NPM_TOKEN` secret 或 trusted publishing。
+6. **自动发布**：`NPM_TOKEN` 已配置为 GitHub Actions secret；后续 tag 会自动发布 npm。
+   token 已在对话中出现过，建议在合适时机轮换成新 token 并更新 secret。
 
 ## 相关文档
 

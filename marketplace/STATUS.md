@@ -12,7 +12,7 @@
   - `dsh-plugin-trim-0.2.5.tgz`
   - `dsh-plugin-recipe-0.2.5.tgz`
 - CI：`.github/workflows/ci.yml`
-- Release 工作流：`.github/workflows/release.yml`（没有 `NPM_TOKEN` 时跳过 npm 发布，仅创建 GitHub release；自动上传 release tarball）
+- Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
 - 安装验证：`npm view` 返回 0.2.5；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.2.5` / `dsh-plugin-recipe@0.2.5` 成功，`--dump-config` 出现两个 bundle row
 
 ## 自定义 DSH 插件市场索引
@@ -62,7 +62,7 @@ pnpm market:check
 - 安装：`dsh plugin --profile web add dsh-plugin-trim@0.2.5` / `dsh-plugin-recipe@0.2.5`
 - 注册表已验证：`npm view` 返回 0.2.5；临时 profile 安装成功。
 - 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.2.5`，不影响安装。
-- GitHub Release 工作流仍没有 `NPM_TOKEN` secret；后续 tag 自动发布前需要配置新的 token。
+- GitHub Release 工作流已配置 `NPM_TOKEN` secret；后续 tag 会自动 npm 发布。
 
 ## Web 控制台
 

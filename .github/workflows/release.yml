@@ -44,8 +44,8 @@ jobs:
             echo "NPM_TOKEN is not configured; skipping npm publish."
             exit 0
           fi
-          pnpm --filter dsh-plugin-trim publish --access public --no-git-checks
-          pnpm --filter dsh-plugin-recipe publish --access public --no-git-checks
+          (cd packages/plugin-trim && npm publish --access public)
+          (cd packages/plugin-recipe && npm publish --access public)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
