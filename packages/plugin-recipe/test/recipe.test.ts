@@ -67,6 +67,8 @@ describe('translation', () => {
     expect(bp.template).toBe('weekly-report')
     expect(bp.steps.map((step) => step.id)).toEqual(['s1', 's2', 's3', 's4', 's5'])
     expect(bp.steps.find((step) => step.id === 's4')?.needsConfirm).toBe(true)
+    expect(bp.steps.find((step) => step.id === 's4')?.approvalLevel).toBe('required')
+    expect(bp.steps.find((step) => step.id === 's1')?.approvalLevel).toBe('suggested')
     expect(bp.minPluginSet).toContain('@deepseek-ai/dsh-tool-bash')
     expect(bp.minPluginSet).toContain('@deepseek-ai/dsh-tool-fs')
     expect(bp.minPluginSet).toContain('@deepseek-ai/dsh-tool-schedule')
@@ -158,6 +160,7 @@ describe('export', () => {
     const text = renderBlueprintMarkdown(blueprint())
     expect(text).toContain('## 6. 运行手册')
     expect(text).toContain('## 8. 回滚')
+    expect(text).toContain('审批级别')
   })
 })
 

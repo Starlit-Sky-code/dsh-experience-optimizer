@@ -24,6 +24,8 @@ export class ApplyRefusedError extends Error {
 export interface ApplyOptions {
   confirm: boolean
   items?: string[]
+  /** Pre-generated snapshot token, so an approval reason and the written snapshot share one id. */
+  snapshotToken?: string
   manager: PluginManagerLike
   maxDrafts: number
   findings?: readonly CompatFinding[]
@@ -79,7 +81,7 @@ export async function applySlimProfile(
     (item) => !(item.kind === 'entry' && item.bundleName !== undefined && disabledBundles.has(item.bundleName)),
   )
 
-  const token = randomToken()
+  const token = options.snapshotToken ?? randomToken()
   const snapshot: ApplySnapshot = {
     schemaVersion: 1,
     token,

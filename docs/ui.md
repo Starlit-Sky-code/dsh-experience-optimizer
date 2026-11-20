@@ -72,6 +72,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 ## 安全
 
+- Web UI 的应用/回滚按钮本身是用户点击，因此 UI API 不再重复弹宿主审批；Agent 工具路径默认先调用 `ctx.approval.request()`，只有 `allowed-once` 才执行。
 - 路由注册在 `/api` 下，但使用 Connection 的 `requestRejection()` 校验 DSH
   浏览器会话；未登录返回 401。
 - 额外校验 `Origin` / `Sec-Fetch-Site`，拒绝跨站浏览器请求。

@@ -52,8 +52,8 @@ export function renderBlueprintMarkdown(blueprint: WorkflowBlueprint): string {
   lines.push('')
   lines.push('## 2. 步骤')
   lines.push('')
-  lines.push('| # | 意图 | 类型 | 能力 | 工具/插件 | 依赖 | 人工确认 | 失败处理 |')
-  lines.push('|---|---|---|---|---|---|---|---|')
+  lines.push('| # | 意图 | 类型 | 能力 | 工具/插件 | 依赖 | 人工确认 | 审批级别 | 失败处理 |')
+  lines.push('|---|---|---|---|---|---|---|---|---|')
   for (const step of blueprint.steps) {
     lines.push(stepRow(step))
   }
@@ -110,5 +110,5 @@ export function renderBlueprintMarkdown(blueprint: WorkflowBlueprint): string {
 function stepRow(step: WorkflowStep): string {
   const tools = step.toolNames.length > 0 ? step.toolNames.join(', ') : '（模型步骤）'
   const plugins = step.pluginIds.length > 0 ? ` / ${step.pluginIds.join(', ')}` : ''
-  return `| ${step.id} | ${escapeMarkdownCell(step.intent)} | ${step.kind} | ${step.capabilityId ?? '—'} | ${escapeMarkdownCell(tools + plugins)} | ${step.dependsOn.join(', ') || '—'} | ${step.needsConfirm ? 'yes' : 'no'} | ${escapeMarkdownCell(step.onFailure)} |`
+  return `| ${step.id} | ${escapeMarkdownCell(step.intent)} | ${step.kind} | ${step.capabilityId ?? '—'} | ${escapeMarkdownCell(tools + plugins)} | ${step.dependsOn.join(', ') || '—'} | ${step.needsConfirm ? 'yes' : 'no'} | ${step.approvalLevel ?? (step.needsConfirm ? 'required' : 'none')} | ${escapeMarkdownCell(step.onFailure)} |`
 }

@@ -10,6 +10,8 @@ import type { Config } from '../src/config.ts'
 
 const config: Config = {
   mode: 'advise',
+  approvalMode: 'always',
+  approvalThreshold: 5,
   protect: [],
   pinned: [],
   trackUsage: true,

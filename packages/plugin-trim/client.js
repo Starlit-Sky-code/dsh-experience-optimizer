@@ -1276,7 +1276,7 @@ window.__ModuleLoader__.load({
               { className: 'eo-summary' },
               h(Badge, { tone: 'info' }, 'template: ' + blueprint.template),
               h(Badge, { tone: 'neutral' }, 'permissions: ' + blueprint.permissions.length),
-              h(Badge, { tone: 'neutral' }, 'confirm: ' + blueprint.steps.filter((step) => step.needsConfirm).length),
+              h(Badge, { tone: 'warn' }, 'approval required: ' + blueprint.steps.filter((step) => step.approvalLevel === 'required' || step.needsConfirm).length),
               h(Badge, { tone: 'neutral' }, 'min plugins: ' + blueprint.minPluginSet.length),
             ),
             h(
@@ -1293,7 +1293,7 @@ window.__ModuleLoader__.load({
                   h('th', null, '类型'),
                   h('th', null, '能力'),
                   h('th', null, '工具'),
-                  h('th', null, '确认'),
+                  h('th', null, '审批'),
                 ),
               ),
               h(
@@ -1313,8 +1313,15 @@ window.__ModuleLoader__.load({
                       null,
                       h(
                         Badge,
-                        { tone: step.needsConfirm ? 'warn' : 'neutral' },
-                        step.needsConfirm ? 'yes' : 'no',
+                        {
+                          tone:
+                            (step.approvalLevel ?? (step.needsConfirm ? 'required' : 'none')) === 'required'
+                              ? 'danger'
+                              : (step.approvalLevel ?? 'none') === 'suggested'
+                                ? 'warn'
+                                : 'neutral',
+                        },
+                        step.approvalLevel ?? (step.needsConfirm ? 'required' : 'none'),
                       ),
                     ),
                   ),

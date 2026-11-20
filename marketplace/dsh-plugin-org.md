@@ -31,8 +31,8 @@ DSH Experience Optimizer — 插件减负、兼容性体检与工作流蓝图
 **安装命令**
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.2.5
-dsh plugin --profile web add dsh-plugin-recipe@0.2.5
+dsh plugin --profile web add dsh-plugin-trim@0.2.7
+dsh plugin --profile web add dsh-plugin-recipe@0.2.7
 ```
 
 **长描述**

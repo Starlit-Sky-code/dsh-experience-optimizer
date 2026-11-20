@@ -13,6 +13,8 @@ import { scopeOf } from "@deepseek-ai/dsh-scope";
 /** Defaults used when the loader starts the plugin without an explicit config. */
 const DEFAULT_CONFIG = {
 	mode: "advise",
+	approvalMode: "always",
+	approvalThreshold: 5,
 	protect: [],
 	pinned: [],
 	trackUsage: true,
@@ -42,6 +44,8 @@ function normalizeConfig(config) {
 /** Schemastery configuration for the trim plugin. */
 const Config = z.object({
 	mode: z.union(["advise", "auto-safe"]).default("advise"),
+	approvalMode: z.union(["always", "risk-based"]).default("always"),
+	approvalThreshold: z.natural().min(1).max(100).default(5),
 	protect: z.array(z.string()).default([]),
 	pinned: z.array(z.string()).default([]),
 	trackUsage: z.boolean().default(true),
@@ -3639,7 +3643,7 @@ async function applySlimProfile(profileId, options) {
 	const freshFindings = findingsBySubject(options.findings ?? []);
 	const disabledBundles = new Set(candidates.filter((item) => item.kind === "bundle" && item.action === "suggest-disable").map((item) => item.bundleName).filter((name) => name !== void 0));
 	candidates = candidates.filter((item) => !(item.kind === "entry" && item.bundleName !== void 0 && disabledBundles.has(item.bundleName)));
-	const token = randomToken();
+	const token = options.snapshotToken ?? randomToken();
 	const snapshot = {
 		schemaVersion: 1,
 		token,
@@ -4081,7 +4085,7 @@ function registerSuggestTool(ctx, deps) {
 function registerApplyTool(ctx, deps) {
 	ctx.tools.register(defineTool({
 		name: "trim_apply_profile",
-		description: "Apply low-risk keep/enable/disable items from a saved slim-profile draft. Requires confirm: true and must be called only after the user explicitly approved the exact profileId and items in this conversation. Protected/core/preset items are never changed. Returns a rollback token. Only low-risk disables/enables are applied; compatibility errors can block an item.",
+		description: "Apply low-risk keep/enable/disable items from a saved slim-profile draft. Requires confirm: true, and by default the host approval service must return allowed-once before anything changes. Protected/core/preset items are never changed. Returns a rollback token. Only low-risk disables/enables are applied; compatibility errors can block an item.",
 		parameters: {
 			profileId: {
 				type: "string",
@@ -4091,7 +4095,7 @@ function registerApplyTool(ctx, deps) {
 			confirm: {
 				type: "boolean",
 				required: true,
-				description: "Must be true only after explicit user approval of the exact draft."
+				description: "A proposal marker: true means the model has prepared this exact draft and is requesting host approval. The host approval result, not this boolean, is the authorization gate."
 			},
 			items: {
 				type: "array",
@@ -4110,6 +4114,41 @@ function registerApplyTool(ctx, deps) {
 			if (args.confirm !== true) return "❌ 应用精简方案需要用户明确确认：请先让用户批准具体的 profileId 与 items，再调用 `trim_apply_profile({ profileId, confirm: true })`。";
 			const manager = getPluginManager(ctx);
 			if (manager === void 0) return "❌ 当前 profile 没有可用的 pluginManager，无法应用精简方案。请改用 `trim_scan_plugins` 只读查看。";
+			const draft = await loadDraft(args.profileId);
+			if (draft === void 0) return `❌ 未找到精简草稿：${args.profileId}。请先调用 \`trim_suggest_profile\`。`;
+			const wanted = args.items === void 0 ? void 0 : new Set(args.items);
+			const candidates = applicableItems(draft).filter((item) => wanted === void 0 || wanted.has(item.id));
+			const profileName = resolveProfileFacts(ctx, exec.agent).name;
+			const needsApproval = candidates.length > 0 && (deps.config.approvalMode === "always" || candidates.length > deps.config.approvalThreshold);
+			const snapshotToken = needsApproval ? randomToken() : void 0;
+			let approvalNote = "";
+			if (needsApproval) {
+				if (exec.agent === void 0) return "❌ 本次变更需要宿主审批，但当前调用没有 agent，无法发起审批；未应用任何变更。";
+				const approval = ctx.get("approval");
+				if (approval === void 0 || typeof approval.request !== "function") return "❌ 本次变更需要宿主审批，但当前会话没有 approval 服务；未应用任何变更。";
+				let outcome;
+				try {
+					outcome = await approval.request({
+						agent: exec.agent,
+						toolName: "trim_apply_profile",
+						callId: exec.callId,
+						signal: exec.signal,
+						reason: buildApprovalReason(draft, profileName, candidates, snapshotToken ?? "—"),
+						displayReason: {
+							en: `Apply ${candidates.length} low-risk plugin change${candidates.length === 1 ? "" : "s"} to profile "${profileName}"?`,
+							zh: `是否对 profile「${profileName}」应用 ${candidates.length} 项低风险插件变更？`
+						}
+					});
+				} catch (error) {
+					return `❌ 宿主审批调用失败（fail-closed）：${error instanceof Error ? error.message : String(error)}；未应用任何变更。`;
+				}
+				if (outcome !== "allowed-once") {
+					await audit("apply_profile", "skipped", `approval ${outcome}; draft ${draft.id} kept`);
+					return `❌ 宿主审批未通过（${outcome}）；未应用任何变更。草稿 \`${draft.id}\` 仍保留，可稍后重新发起。`;
+				}
+				approvalNote = "✅ 宿主审批已通过（allowed-once）。\n\n";
+				await audit("apply_profile", "ok", `approval allowed-once for ${candidates.length} items`);
+			}
 			const compat = await analyzeCompatibility(ctx, deps.config, {
 				scope: "current",
 				includeInfo: true,
@@ -4120,15 +4159,16 @@ function registerApplyTool(ctx, deps) {
 			});
 			try {
 				const result = await applySlimProfile(args.profileId, {
-					confirm: args.confirm,
-					items: args.items,
+					confirm: true,
+					items: needsApproval ? candidates.map((item) => item.id) : args.items,
+					snapshotToken,
 					manager,
 					maxDrafts: deps.config.maxDrafts,
 					findings: compat.findings,
-					profileName: resolveProfileFacts(ctx, exec.agent).name
+					profileName
 				});
 				await audit("apply_profile", "ok", `applied ${result.items.length} items`);
-				return renderApply(result);
+				return approvalNote + renderApply(result);
 			} catch (error) {
 				if (error instanceof ApplyRefusedError) return `❌ ${error.message}`;
 				return `❌ 应用失败：${error instanceof Error ? error.message : String(error)}`;
@@ -4144,7 +4184,7 @@ function registerApplyTool(ctx, deps) {
 function registerRollbackTool(ctx, deps) {
 	ctx.tools.register(defineTool({
 		name: "trim_rollback_profile",
-		description: "Restore plugin enablement from a previous trim apply snapshot. Omit token to use the latest snapshot. Skips items already restored or changed outside trim. Returns per-item results.",
+		description: "Restore plugin enablement from a previous trim apply snapshot. Requires host approval (allowed-once). Omit token to use the latest snapshot. Skips items already restored or changed outside trim. Returns per-item results.",
 		parameters: { token: {
 			type: "string",
 			description: "Rollback token returned by trim_apply_profile. Omit for the latest snapshot."
@@ -4156,18 +4196,46 @@ function registerRollbackTool(ctx, deps) {
 				text: value
 			}]
 		},
-		async execute(args) {
+		async execute(args, exec) {
 			const manager = getPluginManager(ctx);
 			if (manager === void 0) return "❌ 当前 profile 没有可用的 pluginManager，无法回滚。";
+			if (exec.agent === void 0) return "❌ 回滚会修改插件状态，需要宿主审批；当前调用没有 agent，未执行。";
+			const approval = ctx.get("approval");
+			if (approval === void 0 || typeof approval.request !== "function") return "❌ 回滚会修改插件状态，需要宿主审批；当前会话没有 approval 服务，未执行。";
+			const profileName = resolveProfileFacts(ctx, exec.agent).name;
+			let outcome;
+			try {
+				outcome = await approval.request({
+					agent: exec.agent,
+					toolName: "trim_rollback_profile",
+					callId: exec.callId,
+					signal: exec.signal,
+					reason: [
+						`Restore plugin enablement on profile "${profileName}".`,
+						args.token === void 0 ? "Snapshot: latest available rollback snapshot." : `Snapshot: ${args.token}`,
+						"This changes plugin state; the rollback itself is not automatically reversible."
+					].join("\n"),
+					displayReason: {
+						en: `Restore the plugin state on profile "${profileName}" from ${args.token === void 0 ? "the latest trim snapshot" : "trim snapshot " + args.token}?`,
+						zh: `是否从${args.token === void 0 ? "最近的 trim 快照" : ` trim 快照 ${args.token}`}恢复 profile「${profileName}」的插件状态？`
+					}
+				});
+			} catch (error) {
+				return `❌ 宿主审批调用失败（fail-closed）：${error instanceof Error ? error.message : String(error)}；未回滚。`;
+			}
+			if (outcome !== "allowed-once") {
+				await audit("rollback_profile", "skipped", `approval ${outcome}`);
+				return `❌ 宿主审批未通过（${outcome}）；未回滚任何变更。`;
+			}
 			try {
 				const result = await rollbackSlimProfile({
 					token: args.token,
 					manager,
 					maxDrafts: deps.config.maxDrafts,
-					profileName: resolveProfileFacts(ctx).name
+					profileName
 				});
 				await audit("rollback_profile", "ok", `restored ${result.items.filter((item) => item.status === "restored").length} items`);
-				return renderRollback(result);
+				return "✅ 宿主审批已通过（allowed-once）。\n\n" + renderRollback(result);
 			} catch (error) {
 				return `❌ 回滚失败：${error instanceof Error ? error.message : String(error)}`;
 			}
@@ -4178,6 +4246,17 @@ function registerRollbackTool(ctx, deps) {
 			kind: "other"
 		})
 	}));
+}
+function buildApprovalReason(draft, profileName, candidates, snapshotToken) {
+	const lines = [
+		`Apply slim profile ${draft.id} (task=${draft.task.tag}) to profile "${profileName}".`,
+		`Snapshot id: ${snapshotToken}`,
+		`Items (${candidates.length}):`,
+		...candidates.slice(0, 20).map((item) => `- ${item.id} [${item.action}] ${item.name} risk=${item.risk}: ${item.reason}`)
+	];
+	if (candidates.length > 20) lines.push(`- … ${candidates.length - 20} more`);
+	lines.push("Only low-risk, non-protected items are eligible; a rollback snapshot is written before any change.");
+	return lines.join("\n");
 }
 async function inventoryOf$1(ctx) {
 	const adapter = getInventory(ctx);
@@ -4327,7 +4406,7 @@ function renderSuggest(profile, scan, saved = true) {
 	lines.push("");
 	lines.push(`profileId: \`${profile.id}\``);
 	lines.push("");
-	lines.push("> 未修改任何插件状态。仅在用户明确同意上述 profileId 与具体 items 后，才调用 `trim_apply_profile({ profileId, confirm: true })`。");
+	lines.push("> 未修改任何插件状态。应用前需要用户确认具体 profileId 与 items，并由宿主审批服务返回 `allowed-once`；`confirm: true` 只是提案标记。");
 	lines.push("");
 	lines.push(jsonBlock({
 		profileId: profile.id,

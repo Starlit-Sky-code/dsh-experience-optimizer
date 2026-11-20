@@ -559,6 +559,7 @@ function weeklyReportSteps(answers, capabilities, options) {
 		pluginIds: [],
 		dependsOn: steps.map((step) => step.id),
 		needsConfirm: false,
+		approvalLevel: "none",
 		inputs: ["commit 列表", "diff 统计"],
 		outputs: ["周报正文草稿"],
 		onFailure: "保留上下文，提示用户补充数据"
@@ -588,6 +589,7 @@ function genericSteps(answers, capabilities, options) {
 			pluginIds: [],
 			dependsOn: lastIds(steps),
 			needsConfirm: false,
+			approvalLevel: "none",
 			inputs: ["上一步输出"],
 			outputs: ["汇总文本"],
 			onFailure: "保留中间结果并提示用户"
@@ -600,6 +602,8 @@ function genericSteps(answers, capabilities, options) {
 	return steps;
 }
 function toolStep(id, intent, capability, dependsOn, needsConfirm, inputs, outputs) {
+	const requiresConfirm = needsConfirm || capability.needsConfirm;
+	const approvalLevel = requiresConfirm ? "required" : capability.permissions.some((permission) => ["external-send", "shell"].includes(permission)) ? "suggested" : "none";
 	return {
 		id,
 		intent,
@@ -608,7 +612,8 @@ function toolStep(id, intent, capability, dependsOn, needsConfirm, inputs, outpu
 		toolNames: [...capability.tools],
 		pluginIds: [...capability.pluginIds],
 		dependsOn: [...dependsOn],
-		needsConfirm: needsConfirm || capability.needsConfirm,
+		needsConfirm: requiresConfirm,
+		approvalLevel,
 		inputs,
 		outputs,
 		onFailure: capability.trigger === "schedule" ? "停用本次运行并通知用户" : "保留草稿；采集步骤最多重试一次"
@@ -803,8 +808,8 @@ function renderBlueprintMarkdown(blueprint) {
 	lines.push("");
 	lines.push("## 2. 步骤");
 	lines.push("");
-	lines.push("| # | 意图 | 类型 | 能力 | 工具/插件 | 依赖 | 人工确认 | 失败处理 |");
-	lines.push("|---|---|---|---|---|---|---|---|");
+	lines.push("| # | 意图 | 类型 | 能力 | 工具/插件 | 依赖 | 人工确认 | 审批级别 | 失败处理 |");
+	lines.push("|---|---|---|---|---|---|---|---|---|");
 	for (const step of blueprint.steps) lines.push(stepRow(step));
 	lines.push("");
 	lines.push("## 3. 数据流");
@@ -854,7 +859,7 @@ function renderBlueprintMarkdown(blueprint) {
 function stepRow(step) {
 	const tools = step.toolNames.length > 0 ? step.toolNames.join(", ") : "（模型步骤）";
 	const plugins = step.pluginIds.length > 0 ? ` / ${step.pluginIds.join(", ")}` : "";
-	return `| ${step.id} | ${escapeMarkdownCell(step.intent)} | ${step.kind} | ${step.capabilityId ?? "—"} | ${escapeMarkdownCell(tools + plugins)} | ${step.dependsOn.join(", ") || "—"} | ${step.needsConfirm ? "yes" : "no"} | ${escapeMarkdownCell(step.onFailure)} |`;
+	return `| ${step.id} | ${escapeMarkdownCell(step.intent)} | ${step.kind} | ${step.capabilityId ?? "—"} | ${escapeMarkdownCell(tools + plugins)} | ${step.dependsOn.join(", ") || "—"} | ${step.needsConfirm ? "yes" : "no"} | ${step.approvalLevel ?? (step.needsConfirm ? "required" : "none")} | ${escapeMarkdownCell(step.onFailure)} |`;
 }
 // src/tools.ts
 /** Register the recipe model-facing tools. */

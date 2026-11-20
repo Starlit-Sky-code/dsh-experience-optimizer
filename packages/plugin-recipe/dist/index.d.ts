@@ -28,6 +28,8 @@ interface CapabilitySeam {
   /** True for a reasoning-only step that needs no tool. */
   modelOnly?: boolean;
 }
+/** Human-in-the-loop level a step asks the downstream executor to honor. */
+type ApprovalLevel = 'none' | 'suggested' | 'required';
 /** One workflow step in a plan produced by the recipe layer. */
 interface WorkflowStep {
   id: string;
@@ -38,6 +40,8 @@ interface WorkflowStep {
   pluginIds: string[];
   dependsOn: string[];
   needsConfirm: boolean;
+  /** `required` means the step must have a host/user approval before execution. */
+  approvalLevel: ApprovalLevel;
   inputs: string[];
   outputs: string[];
   onFailure: string;

@@ -27,15 +27,15 @@ DSH 插件生态的**减负**、**兼容性体检**与**工作流翻译**套件�
 ### 从 npm 安装（推荐）
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.2.5
-dsh plugin --profile web add dsh-plugin-recipe@0.2.5
+dsh plugin --profile web add dsh-plugin-trim@0.2.7
+dsh plugin --profile web add dsh-plugin-recipe@0.2.7
 ```
 
 ### 从 GitHub Release 安装（备用，无需 npm）
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.5/dsh-plugin-trim-0.2.5.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.5/dsh-plugin-recipe-0.2.5.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.7/dsh-plugin-trim-0.2.7.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.7/dsh-plugin-recipe-0.2.7.tgz"
 ```
 
 ### 从 GitHub 源码安装（开发版，跟随 main）
@@ -102,8 +102,8 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
 | `trim_scan_plugins` | 只读扫描插件、上下文成本、兼容性摘要 |
 | `trim_analyze_compatibility` | 只读兼容性矩阵：插件↔插件、插件↔DSH、Profile/工作区 |
 | `trim_suggest_profile` | 按任务生成精简方案草稿，不修改插件 |
-| `trim_apply_profile` | 用户显式确认后应用低风险项，返回回滚 token |
-| `trim_rollback_profile` | 恢复上一次精简方案 |
+| `trim_apply_profile` | 生成提案并经宿主审批 `allowed-once` 后应用低风险项，返回回滚 token |
+| `trim_rollback_profile` | 经宿主审批后恢复上一次精简方案 |
 | `recipe_plan_workflow` | 对话式向导，输出工作流蓝图 |
 | `recipe_validate_workflow` | 校验依赖、权限、循环、兼容性 |
 | `recipe_export_workflow` | 导出 Markdown/JSON 蓝图到 DSH 数据目录 |
@@ -111,7 +111,9 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
 ## 安全边界
 
 - 默认只建议，不自动禁用。
-- `trim_apply_profile` 必须显式 `confirm: true`，只应用低风险项；受保护插件永不改。
+- `trim_apply_profile` 必须显式 `confirm: true`，默认还要宿主审批返回 `allowed-once` 才写入；`confirm` 是提案标记，不是授权本身。
+- `trim_rollback_profile` 始终需要宿主审批。
+- 只应用低风险、非受保护项；受保护插件永不改。
 - 兼容性分析只读本地元数据，不执行 `!!js`、不 import 未加载插件、不联网。
 - 版本豁免与插件升级只报告，不自动执行。
 - 数据写入 `$DSH_HOME/experience-optimizer/`，目录 `0700`、文件 `0600`。

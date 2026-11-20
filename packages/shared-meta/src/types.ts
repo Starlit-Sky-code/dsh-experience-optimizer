@@ -231,6 +231,9 @@ export interface RollbackResult {
   items: RollbackItemResult[]
 }
 
+/** Human-in-the-loop level a step asks the downstream executor to honor. */
+export type ApprovalLevel = 'none' | 'suggested' | 'required'
+
 /** One workflow step in a plan produced by the recipe layer. */
 export interface WorkflowStep {
   id: string
@@ -241,6 +244,8 @@ export interface WorkflowStep {
   pluginIds: string[]
   dependsOn: string[]
   needsConfirm: boolean
+  /** `required` means the step must have a host/user approval before execution. */
+  approvalLevel: ApprovalLevel
   inputs: string[]
   outputs: string[]
   onFailure: string

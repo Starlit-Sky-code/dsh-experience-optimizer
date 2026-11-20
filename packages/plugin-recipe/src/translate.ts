@@ -82,6 +82,7 @@ function weeklyReportSteps(
       pluginIds: [],
       dependsOn: steps.map((step) => step.id),
       needsConfirm: false,
+      approvalLevel: 'none',
       inputs: ['commit 列表', 'diff 统计'],
       outputs: ['周报正文草稿'],
       onFailure: '保留上下文，提示用户补充数据',
@@ -148,6 +149,7 @@ function genericSteps(
         pluginIds: [],
         dependsOn: lastIds(steps),
         needsConfirm: false,
+        approvalLevel: 'none',
         inputs: ['上一步输出'],
         outputs: ['汇总文本'],
         onFailure: '保留中间结果并提示用户',
@@ -182,6 +184,14 @@ function toolStep(
   inputs: string[],
   outputs: string[],
 ): WorkflowStep {
+  const requiresConfirm = needsConfirm || capability.needsConfirm
+  const approvalLevel = requiresConfirm
+    ? 'required'
+    : capability.permissions.some((permission) =>
+        ['external-send', 'shell'].includes(permission),
+      )
+      ? 'suggested'
+      : 'none'
   return {
     id,
     intent,
@@ -190,7 +200,8 @@ function toolStep(
     toolNames: [...capability.tools],
     pluginIds: [...capability.pluginIds],
     dependsOn: [...dependsOn],
-    needsConfirm: needsConfirm || capability.needsConfirm,
+    needsConfirm: requiresConfirm,
+    approvalLevel,
     inputs,
     outputs,
     onFailure:

@@ -4,6 +4,10 @@ import z from '@deepseek-ai/schemastery'
 export interface Config {
   /** `advise` keeps every suggestion advisory; `auto-safe` only narrows the suggestion set. */
   mode: 'advise' | 'auto-safe'
+  /** `always` asks the host approval service before every tool apply; `risk-based` auto-applies small low-risk drafts. */
+  approvalMode: 'always' | 'risk-based'
+  /** In `risk-based` mode, drafts larger than this many items require host approval. */
+  approvalThreshold: number
   /** Extra package names or entry ids that must never be suggested for disable. */
   protect: string[]
   /** Packages the user explicitly pinned; never suggested for disable. */
@@ -45,6 +49,8 @@ export interface Config {
 /** Defaults used when the loader starts the plugin without an explicit config. */
 export const DEFAULT_CONFIG: Config = {
   mode: 'advise',
+  approvalMode: 'always',
+  approvalThreshold: 5,
   protect: [],
   pinned: [],
   trackUsage: true,
@@ -73,6 +79,8 @@ export function normalizeConfig(config?: Partial<Config> | undefined): Config {
 /** Schemastery configuration for the trim plugin. */
 export const Config: z<Config> = z.object({
   mode: z.union(['advise', 'auto-safe']).default('advise'),
+  approvalMode: z.union(['always', 'risk-based']).default('always'),
+  approvalThreshold: z.natural().min(1).max(100).default(5),
   protect: z.array(z.string()).default([]),
   pinned: z.array(z.string()).default([]),
   trackUsage: z.boolean().default(true),

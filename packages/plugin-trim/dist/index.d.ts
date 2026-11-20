@@ -4,6 +4,10 @@ import { Context } from "@deepseek-ai/cordis";
 export interface Config {
   /** `advise` keeps every suggestion advisory; `auto-safe` only narrows the suggestion set. */
   mode: 'advise' | 'auto-safe';
+  /** `always` asks the host approval service before every tool apply; `risk-based` auto-applies small low-risk drafts. */
+  approvalMode: 'always' | 'risk-based';
+  /** In `risk-based` mode, drafts larger than this many items require host approval. */
+  approvalThreshold: number;
   /** Extra package names or entry ids that must never be suggested for disable. */
   protect: string[];
   /** Packages the user explicitly pinned; never suggested for disable. */
@@ -601,6 +605,8 @@ export declare function buildSlimProfile(scan: ScanResult, task: TaskProfile, co
 interface ApplyOptions {
   confirm: boolean;
   items?: string[];
+  /** Pre-generated snapshot token, so an approval reason and the written snapshot share one id. */
+  snapshotToken?: string;
   manager: PluginManagerLike;
   maxDrafts: number;
   findings?: readonly CompatFinding[];

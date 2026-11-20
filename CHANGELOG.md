@@ -3,6 +3,38 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.7] - 2026-11-20
+
+### Fixed
+
+- Republished 0.2.6 as 0.2.7 because the npm registry served a persistent
+  `404` for the `dsh-plugin-trim-0.2.6.tgz` tarball while its metadata and
+  `latest` tag were already visible. 0.2.7 uses a fresh tarball path.
+- No runtime code changes.
+
+## [0.2.6] - 2026-11-20
+
+### Added
+
+- Host approval gate for model-facing writes:
+  - `trim_apply_profile` requests `ctx.approval.request()` by default and only writes on
+    `allowed-once`; `confirm: true` is now a proposal marker, not authorization.
+  - `trim_rollback_profile` always requires host approval.
+  - Fail closed when the approval service is missing/throwing or the outcome is
+    `rejected` / `cancelled` / `unavailable`; the draft is kept.
+  - The approval reason includes the profile, draft id, snapshot id, and exact items;
+    the pre-generated snapshot token is the one actually written.
+  - `approvalMode: always | risk-based` and `approvalThreshold` config (default
+    `always`, 5) allow explicit low-risk automation only when opted in.
+- Recipe blueprints now carry a per-step `approvalLevel` (`none` / `suggested` /
+  `required`), rendered in Markdown/JSON and the Web console.
+
+### Changed
+
+- Default behavior: model tool applies now require host approval even for one
+  low-risk item. The Web console remains user-click-driven and does not double-prompt.
+- 68 tests (approval fail-closed coverage and approval-level assertions).
+
 ## [0.2.5] - 2026-11-20
 
 ### Changed

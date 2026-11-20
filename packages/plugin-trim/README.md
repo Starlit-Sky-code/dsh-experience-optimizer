@@ -7,13 +7,13 @@ DSH 插件生态的**减负**与**兼容性体检**插件。
 从 npm 安装（推荐）：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.2.5
+dsh plugin --profile web add dsh-plugin-trim@0.2.7
 ```
 
 从 GitHub Release 安装（备用，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.5/dsh-plugin-trim-0.2.5.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.7/dsh-plugin-trim-0.2.7.tgz"
 ```
 
 本地开发：
@@ -40,13 +40,15 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 | `trim_scan_plugins` | 只读 | 插件清单、真实 prompt 上下文成本、使用统计、去重组、兼容性摘要 |
 | `trim_analyze_compatibility` | 只读 | 兼容性矩阵：插件↔插件、插件↔DSH/Node/平台、Profile/工作区漂移 |
 | `trim_suggest_profile` | 只写本地草稿 | 按当前任务生成 keep/enable/disable/review 建议与证据 |
-| `trim_apply_profile` | 修改 profile | 用户显式确认后应用低风险项，返回回滚 token |
-| `trim_rollback_profile` | 修改 profile | 恢复上一次应用 |
+| `trim_apply_profile` | 修改 profile | 提案 + 宿主审批 `allowed-once` 后应用低风险项 |
+| `trim_rollback_profile` | 修改 profile | 宿主审批后恢复上一次应用 |
 
 ## 安全边界
 
 - 默认只建议，不自动禁用。
-- `trim_apply_profile` 必须 `confirm: true`，只应用 `risk: low` 的 disable/enable 项。
+- `trim_apply_profile` 必须 `confirm: true`，但默认还要宿主审批返回 `allowed-once` 才真正写入；`confirm` 只是提案标记。
+- `trim_rollback_profile` 始终需要宿主审批。
+- 只应用 `risk: low`、非受保护的 disable/enable 项。
 - 受保护项永不改：核心、管理、agent preset、当前 profile 依赖、用户 `protect`/`pinned`、套件自身。
 - 版本豁免、插件升级、patch 编辑只报告，不自动执行。
 - 兼容性扫描不执行 `!!js`、不 import 未加载插件、不联网。
@@ -60,6 +62,8 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 - id: dsh-plugin-trim
   config:
     mode: advise
+    approvalMode: always
+    approvalThreshold: 5
     protect:
       - my-important-plugin
     pinned:
@@ -70,7 +74,9 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 
 | key | 默认 | 说明 |
 |---|---|---|
-| `mode` | `advise` | `auto-safe` 只收窄建议范围，不绕过 confirm |
+| `mode` | `advise` | `auto-safe` 只收窄建议范围 |
+| `approvalMode` | `always` | `always`：每次工具应用都请求宿主审批；`risk-based`：仅超过阈值时审批 |
+| `approvalThreshold` | `5` | `risk-based` 模式下，超过该数量的草稿需要宿主审批 |
 | `protect` | `[]` | 额外保护包名/entry id |
 | `pinned` | `[]` | 永不建议禁用 |
 | `trackUsage` | `true` | 记录工具名/成败/时间，不记录参数 |
