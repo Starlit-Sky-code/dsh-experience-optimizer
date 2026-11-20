@@ -61,7 +61,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 |---|---|---|
 | `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
-| `POST` | `/api/dsh-experience-optimizer/apply` | 需要 `confirm: true`，应用低风险项 |
+| `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |
 | `POST` | `/api/dsh-experience-optimizer/rollback` | 恢复最近快照 |
 | `POST` | `/api/dsh-experience-optimizer/recipe/plan` | 生成并校验蓝图 |
 | `POST` | `/api/dsh-experience-optimizer/recipe/export` | 导出运行手册 |
@@ -77,7 +77,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
   浏览器会话；未登录返回 401。
 - 额外校验 `Origin` / `Sec-Fetch-Site`，拒绝跨站浏览器请求。
 - 请求体限制 64 KiB；响应 `cache-control: no-store`。
-- 只读接口不修改插件；`apply` 必须 `confirm: true`，只接受低风险、非受保护项。
+- 只读接口不修改插件；UI 的 `apply` 由用户点击触发，只接受低风险、非受保护项；Agent 工具路径还需 `ctx.approval.request()` 返回 `allowed-once`。
 - 受保护项包括核心 bundle、管理插件、agent preset、当前 profile 依赖、
   用户 `protect`/`pinned` 和本套件自身。
 - 所有变更写入快照并返回回滚 token；失败自动回滚。

@@ -25,7 +25,7 @@ npm 已发布 `0.2.7`，并经注册表和临时 DSH profile 双重验证：
 | dsh.so | **ecosystem 条目已上线；插件级待索引** | <https://www.dsh.so/artifact/dsh-experience-optimizer/> | 页面命令指向根仓库，不挂载插件 | 等 dsh.so 抓取 npm 包；npm 包详情页当前仍 404 |
 | dsh-plugin.org | **已接受，等待扫描** | [issue #677](https://github.com/dshplugin/dsh-plugin-hub/issues/677)（CLOSED） | 站点会展示 npm / 源码安装 | 站点页面仍 404；已评论 npm 已发布 |
 | dshopen.org | **已上线** | <https://dshopen.org/zh/plugins/dsh-plugin-trim/> · <https://dshopen.org/zh/plugins/dsh-plugin-recipe/>；[#495](https://github.com/polang233/dsh-plugin-index/issues/495) / [#496](https://github.com/polang233/dsh-plugin-index/issues/496) 已关闭并收录 | `dsh plugin --profile web add dsh-plugin-trim@0.2.7` | 页面当前显示 0.2.4，等待更新到 npm 0.2.7；维护者建议后续为写操作接入可信宿主审批 |
-| awesome-dsh-plugin | **已合并，0.2.5/0.2.6 更新待合并** | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) MERGED；[PR #17071](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17071) 更新 tarball 到 0.2.5 | 列表/商店读取 `data/plugins`；条目含 tarball 与 icon | 等待 #17071 合并；README 生成器尚未显示两条 |
+| awesome-dsh-plugin | **已合并，0.2.7 更新待合并** | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) MERGED；[PR #17071](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17071) 更新 tarball 到 0.2.7 | 列表/商店读取 `data/plugins`；条目含 tarball 与 icon | 等待 #17071 合并；README 生成器尚未显示两条 |
 | DSH 官方 Discover / 内置 Plugin Hub | **npm 条件已满足；待市场扫描** | npm 包已公开 | `dsh plugin add dsh-plugin-trim@0.2.7` | dsh-plugin.org 扫描后进入 Hub |
 
 ## 验证证据

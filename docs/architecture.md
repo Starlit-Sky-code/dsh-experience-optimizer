@@ -36,7 +36,7 @@ tool call
 apply：
 
 ```text
-trim_apply_profile({ profileId, confirm: true })
+trim_apply_profile({ profileId, confirm: true })  // 提案 → ctx.approval.request → allowed-once → apply
   → 读取草稿，过滤 low-risk disable/enable
   → 重新读取当前 enabled 状态，跳过 stale
   → 写 snapshot（pending）

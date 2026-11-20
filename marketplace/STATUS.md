@@ -52,7 +52,7 @@ pnpm market:check
 - **dshbase.com：页面已上线，安装命令待修**
   - <https://dshbase.com/plugins/dsh-plugin-trim/>
   - <https://dshbase.com/plugins/dsh-plugin-recipe/>
-- **awesome-dsh-plugin：已合并** [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)；0.2.5/0.2.6 tarball 更新 [PR #17071](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17071) 待合并
+- **awesome-dsh-plugin：已合并** [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)；0.2.7 tarball 更新 [PR #17071](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17071) 待合并
 
 ## npm
 
