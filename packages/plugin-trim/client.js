@@ -39,12 +39,13 @@ window.__ModuleLoader__.load({
 .eo-tab-active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1.5px;background:var(--eo-primary);border-radius:1px}
 .eo-stack{display:flex;flex-direction:column;gap:14px}
 .eo-stack>.eo-metrics{order:0}
-.eo-stack>[data-section="draft"]{order:1}
-.eo-stack>[data-section="compat"]{order:2}
-.eo-stack>[data-section="context"]{order:3}
-.eo-stack>[data-section="result"]{order:4}
-.eo-stack>[data-section="dedupe"]{order:5}
-.eo-stack>[data-section="diagnostics"]{order:6}
+.eo-stack>[data-section="inventory"]{order:1}
+.eo-stack>[data-section="draft"]{order:2}
+.eo-stack>[data-section="compat"]{order:3}
+.eo-stack>[data-section="context"]{order:4}
+.eo-stack>[data-section="result"]{order:5}
+.eo-stack>[data-section="dedupe"]{order:6}
+.eo-stack>[data-section="diagnostics"]{order:7}
 .eo-grid{display:grid;gap:10px}
 .eo-metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:.5px solid var(--eo-card-stroke);border-radius:var(--eo-radius);background:var(--eo-card-bg);overflow:hidden}
 .eo-metric{padding:12px 14px;border-right:.5px solid var(--eo-border);min-width:0}
