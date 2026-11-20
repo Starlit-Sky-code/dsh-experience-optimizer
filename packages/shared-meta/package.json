@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Shared types, local storage, audit, and text helpers for dsh-experience-optimizer",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -14,7 +14,9 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsdown",
     "typecheck": "tsc --noEmit"

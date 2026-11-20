@@ -41,14 +41,14 @@ plugins and now face context cost, plugin conflicts, and workflow setup friction
   human confirmation, rollback, and compatibility findings.
 
 The analysis is local and read-only: no network requests, no `!!js` execution, no
-third-party source edits, and no automatic version exemptions or upgrades. License: MIT.
+third-party source edits, and no automatic version exemptions or upgrades. License: AGPL-3.0.
 DSH: `>=0.2.2-rc.1 <0.3.0`; Node: `>=20`.
 
 **安装命令**
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.2.7
-dsh plugin --profile web add dsh-plugin-recipe@0.2.7
+dsh plugin --profile web add dsh-plugin-trim@0.3.1
+dsh plugin --profile web add dsh-plugin-recipe@0.3.1
 ```
 
 **Topics**

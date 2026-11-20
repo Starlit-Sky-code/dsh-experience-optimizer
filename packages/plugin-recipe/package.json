@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-recipe",
-  "version": "0.2.7",
+  "version": "0.3.1",
   "description": "DSH workflow recipe planner: translate business goals into validated workflow blueprints",
   "type": "module",
   "main": "dist/index.js",
@@ -27,7 +27,7 @@
     "planning",
     "automation"
   ],
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "icon": "./icon.png",
   "engines": {
     "node": ">=20",

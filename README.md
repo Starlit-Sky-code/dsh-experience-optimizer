@@ -1,82 +1,139 @@
-# dsh-experience-optimizer
+# DSH Experience Optimizer
 
-![dsh-experience-optimizer banner](assets/banner.png)
+![DSH Experience Optimizer — 少一点插件负担，多一点兼容确定性](assets/readme/hero.svg)
 
-[![CI](https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![npm dsh-plugin-trim](https://img.shields.io/npm/v/dsh-plugin-trim?label=dsh-plugin-trim)](https://www.npmjs.com/package/dsh-plugin-trim)
-[![npm dsh-plugin-recipe](https://img.shields.io/npm/v/dsh-plugin-recipe?label=dsh-plugin-recipe)](https://www.npmjs.com/package/dsh-plugin-recipe)
+<p align="center">
+  <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://www.npmjs.com/package/dsh-plugin-trim"><img alt="npm dsh-plugin-trim" src="https://img.shields.io/npm/v/dsh-plugin-trim?label=dsh-plugin-trim"></a>
+  <a href="https://www.npmjs.com/package/dsh-plugin-recipe"><img alt="npm dsh-plugin-recipe" src="https://img.shields.io/npm/v/dsh-plugin-recipe?label=dsh-plugin-recipe"></a>
+  <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg"></a>
+</p>
 
-> **少一点插件负担，多一点兼容确定性。**
->
-> 插件减负 × 兼容性体检 × 工作流蓝图。
-
-DSH 插件生态的**减负**、**兼容性体检**与**工作流翻译**套件。
-
-- `dsh-plugin-trim`：扫描插件、上下文成本与兼容性冲突，按任务生成可解释的精简启用方案；显式确认后才应用，可回滚。
-- `dsh-plugin-recipe`：把业务目标翻译成可校验、可导出的工作流蓝图。
-- `dsh-shared-meta`：私有共享包，构建时内联进两个插件，不增加运行时安装负担。
-
-> 已提供可安装的 **DSH Web 控制台**：设置 → 插件 → 体验优化。
-> 详细设计见 [`docs/architecture.md`](docs/architecture.md)，兼容性规则见
-> [`docs/compatibility.md`](docs/compatibility.md)，界面说明见 [`docs/ui.md`](docs/ui.md)，
-> 宣传素材与市场文案见 [`docs/marketing.md`](docs/marketing.md)。
+<p align="center"><strong>插件减负 × 兼容性体检 × 工作流蓝图</strong><br>
+两个插件可独立安装，也可同时使用；共用同一个 Web 控制台与审批边界。</p>
 
 ## 安装
 
-### 从 npm 安装（推荐）
-
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.2.7
-dsh plugin --profile web add dsh-plugin-recipe@0.2.7
+dsh plugin --profile web add dsh-plugin-trim@0.3.1
+dsh plugin --profile web add dsh-plugin-recipe@0.3.1
 ```
 
-### 从 GitHub Release 安装（备用，无需 npm）
+安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
+
+<details>
+<summary>GitHub Release / 源码安装（备用）</summary>
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.7/dsh-plugin-trim-0.2.7.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.7/dsh-plugin-recipe-0.2.7.tgz"
-```
+# Release tarball
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.1/dsh-plugin-trim-0.3.1.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.1/dsh-plugin-recipe-0.3.1.tgz"
 
-### 从 GitHub 源码安装（开发版，跟随 main）
-
-```bash
+# 开发版（跟随 main）
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-recipe"
 ```
 
-### 本地开发
+</details>
 
-```bash
-dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
-dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
+## 一眼看懂
+
+![体验优化 Web 控制台](assets/ui-preview.png)
+
+<p align="center"><sub>设置 → 体验优化：上下文、兼容性、精简方案与工作流配方在同一个原生设置页里。</sub></p>
+
+![两条路径，一个授权边界](assets/readme/flow.svg)
+
+## 它解决什么
+
+DSH 插件装得越多，越容易出现三类问题：
+
+- **上下文变贵**：插件 prompt、工具描述和重复段落持续占用 token。
+- **兼容性变脆**：插件↔插件、插件↔DSH 运行时、Profile/工作区之间互相冲突。
+- **工作流难落地**：知道“想自动化什么”，但不知道需要哪些工具、权限和人工确认点。
+
+`dsh-experience-optimizer` 把这三件事放进一个套件：
+
+| 插件 | 职责 |
+|---|---|
+| [`dsh-plugin-trim`](packages/plugin-trim) | 只读扫描上下文成本与兼容性，生成可解释的保留/启用/禁用建议；低风险项经用户确认与宿主审批后应用，支持快照回滚 |
+| [`dsh-plugin-recipe`](packages/plugin-recipe) | 把业务目标翻译成可校验、可导出的工作流蓝图，标注每步审批级别 |
+
+`dsh-shared-meta` 是私有共享包，构建时内联，不增加运行时安装负担。
+
+## 核心机制
+
+### 先建议，后授权
+
+`trim_apply_profile` 的 `confirm: true` 只是**提案标记**。默认流程是：
+
+```text
+draft → confirm: true → ctx.approval.request() → allowed-once → snapshot → apply
 ```
+
+- approval 缺失、抛错、`rejected`、`cancelled`、`unavailable` 一律 fail-closed
+- 审批 reason 带 profile、草稿 id、快照 id 和具体 items
+- 只应用低风险、非受保护项；受保护/核心/preset/pinned 永不改
+- 失败自动回滚；回滚工具同样需要宿主审批
+
+### 兼容性矩阵
+
+覆盖四个域：
+
+| 域 | 例子 |
+|---|---|
+| 插件 ↔ 插件 | peer 缺失、重复 prompt、互斥能力 |
+| 插件 ↔ DSH | DSH 版本、Node/平台、官方 row 覆盖 |
+| Profile | 多个 profile 的启用差异、锁文件漂移 |
+| 工作区 | `AGENTS.md`/`CLAUDE.md` 与插件规则重叠 |
+
+### 工作流蓝图
+
+`dsh-plugin-recipe` 生成步骤、能力、最小插件集、权限、失败策略、验收和回滚；每个步骤带：
+
+```text
+approvalLevel: none | suggested | required
+```
+
+Markdown/JSON 运行手册与 Web 控制台都会展示，供下游执行者继续遵守 HITL 边界。
 
 ## Web 控制台
 
-安装后可从两个入口打开：**设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。控制台包含两个页签：
+- **减负与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
+- **工作流配方**：目标表单、蓝图步骤、审批级别、校验问题、Markdown/JSON 导出
+- 同源 JSON API 校验 DSH 浏览器会话与 `Origin`；未登录返回 401
+- UI 的应用/回滚按钮本身就是用户操作，因此不重复弹宿主审批；Agent 工具路径默认走审批
 
-- **减负与兼容**：上下文成本总览、兼容性矩阵、按任务生成精简方案、勾选低风险项后显式应用、一键回滚。
-- **工作流配方**：业务目标与范围/频率/来源/交付/验收表单，生成可校验的工作流蓝图，并可导出 Markdown + JSON 运行手册。
+详见 [docs/ui.md](docs/ui.md)。
 
-![体验优化控制台](assets/ui-preview.png)
+## 工具
 
-控制台是 `dsh-plugin-trim` 的 Web 客户端半身；Host 端通过同源 JSON API 提供数据。
-API 同时校验 DSH 浏览器会话与 `Origin`，未登录请求返回 401；只读分析与草稿生成不会修改插件，
-应用操作必须经过确认弹窗并写入回滚快照。界面状态、API 路由和维护方式见 [`docs/ui.md`](docs/ui.md)。
+| 工具 | 作用 |
+|---|---|
+| `trim_scan_plugins` | 只读扫描插件、上下文成本、兼容性摘要 |
+| `trim_analyze_compatibility` | 只读兼容性矩阵：插件↔插件、插件↔DSH、Profile/工作区 |
+| `trim_suggest_profile` | 按任务生成精简方案草稿，不修改插件 |
+| `trim_apply_profile` | 提案 + 宿主审批 `allowed-once` 后应用低风险项 |
+| `trim_rollback_profile` | 宿主审批后恢复上一次精简方案 |
+| `recipe_plan_workflow` | 对话式向导，输出工作流蓝图 |
+| `recipe_validate_workflow` | 校验依赖、权限、循环、兼容性 |
+| `recipe_export_workflow` | 导出 Markdown/JSON 蓝图到 DSH 数据目录 |
 
-## DSH 自定义插件市场索引
+## 市场与发布
 
-套件提供格式 1 市场索引：
+- npm：<https://www.npmjs.com/package/dsh-plugin-trim> · <https://www.npmjs.com/package/dsh-plugin-recipe>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases>
+- dshopen.org：<https://dshopen.org/zh/plugins/dsh-plugin-trim/> · <https://dshopen.org/zh/plugins/dsh-plugin-recipe/>
+- dshbase.com：<https://dshbase.com/plugins/dsh-plugin-trim/> · <https://dshbase.com/plugins/dsh-plugin-recipe/>
+- dsh.so：<https://www.dsh.so/artifact/dsh-experience-optimizer/>
+- DSH 自定义索引：
+  ```text
+  https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/marketplace/index.json
+  ```
 
-```text
-https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/marketplace/index.json
-```
+市场收录状态见 [marketplace/DISTRIBUTION.md](marketplace/DISTRIBUTION.md)。
 
-在 DSH「设置 → 插件市场」中加入该地址即可。索引生成与社区市场提交说明见
-[`marketplace/README.md`](marketplace/README.md)。
-
-## 快速开始
+## 开发
 
 ```bash
 pnpm install
@@ -86,44 +143,19 @@ pnpm build
 pnpm verify
 ```
 
-## 安装到 DSH profile
+- 设计：[docs/architecture.md](docs/architecture.md)
+- 兼容性规则：[docs/compatibility.md](docs/compatibility.md)
+- 界面与 API：[docs/ui.md](docs/ui.md)
+- 市场文案：[docs/marketing.md](docs/marketing.md)
+- 发布状态：[marketplace/STATUS.md](marketplace/STATUS.md)
 
-```bash
-dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
-dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
-```
-
-本地开发时也可以使用 `scripts/smoke-profile.mjs` 在临时 profile 中验证 bundle 能被正确插入。
-
-## 工具
-
-| 工具 | 作用 |
-|---|---|
-| `trim_scan_plugins` | 只读扫描插件、上下文成本、兼容性摘要 |
-| `trim_analyze_compatibility` | 只读兼容性矩阵：插件↔插件、插件↔DSH、Profile/工作区 |
-| `trim_suggest_profile` | 按任务生成精简方案草稿，不修改插件 |
-| `trim_apply_profile` | 生成提案并经宿主审批 `allowed-once` 后应用低风险项，返回回滚 token |
-| `trim_rollback_profile` | 经宿主审批后恢复上一次精简方案 |
-| `recipe_plan_workflow` | 对话式向导，输出工作流蓝图 |
-| `recipe_validate_workflow` | 校验依赖、权限、循环、兼容性 |
-| `recipe_export_workflow` | 导出 Markdown/JSON 蓝图到 DSH 数据目录 |
-
-## 安全边界
+## 安全
 
 - 默认只建议，不自动禁用。
-- `trim_apply_profile` 必须显式 `confirm: true`，默认还要宿主审批返回 `allowed-once` 才写入；`confirm` 是提案标记，不是授权本身。
-- `trim_rollback_profile` 始终需要宿主审批。
-- 只应用低风险、非受保护项；受保护插件永不改。
 - 兼容性分析只读本地元数据，不执行 `!!js`、不 import 未加载插件、不联网。
-- 版本豁免与插件升级只报告，不自动执行。
 - 数据写入 `$DSH_HOME/experience-optimizer/`，目录 `0700`、文件 `0600`。
+- 版本豁免、插件升级、patch 编辑只报告，不自动执行。
 
-## 开发
+## License
 
-```bash
-pnpm install
-pnpm build        # 构建 shared-meta，再构建两个插件
-pnpm test         # vitest
-pnpm typecheck    # 每个包 tsc --noEmit
-pnpm verify       # 构建 + 打包契约检查 + 测试
-```
+[AGPL-3.0-only](LICENSE)。修改后通过网络向用户提供服务时，需要按 AGPL 提供对应源代码。

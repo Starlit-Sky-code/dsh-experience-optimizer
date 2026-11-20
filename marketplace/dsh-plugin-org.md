@@ -31,8 +31,8 @@ DSH Experience Optimizer — 插件减负、兼容性体检与工作流蓝图
 **安装命令**
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.2.7
-dsh plugin --profile web add dsh-plugin-recipe@0.2.7
+dsh plugin --profile web add dsh-plugin-trim@0.3.1
+dsh plugin --profile web add dsh-plugin-recipe@0.3.1
 ```
 
 **长描述**
@@ -47,11 +47,11 @@ dsh plugin --profile web add dsh-plugin-recipe@0.2.7
   权限、失败策略、验收清单和回滚说明，并校验依赖、循环、人工确认和兼容性冲突。
 
 分析只读、不联网、不执行 `!!js`、不修改第三方插件源码；版本豁免和插件升级只报告，
-不自动执行。许可证 MIT。
+不自动执行。许可证 AGPL-3.0。
 
 **许可证**
 
-MIT
+AGPL-3.0
 
 **兼容性**
 

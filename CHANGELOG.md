@@ -3,6 +3,29 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] - 2026-11-20
+
+### Fixed
+
+- Republished 0.3.0 as 0.3.1 because the npm registry served a persistent
+  `404` for the `dsh-plugin-trim-0.3.0.tgz` tarball while metadata and `latest`
+  were already visible. 0.3.1 uses a fresh tarball path.
+- No runtime code changes.
+
+## [0.3.0] - 2026-11-20
+
+### Changed
+
+- License changed from MIT to **AGPL-3.0-only** across the repository, both packages,
+  npm metadata, market copy, and promo assets.
+- Web console substantial UI update:
+  - compatibility findings now have full-text search and severity filtering;
+  - new read-only plugin inventory with name/description search, enabled/disabled
+    and protected filters, and token/usage/name sorting;
+  - inventory expands from 12 to 200 rows on demand.
+- README redesigned around a project-native SVG hero and a two-path authorization
+  flow diagram.
+
 ## [0.2.7] - 2026-11-20
 
 ### Fixed

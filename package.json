@@ -1,10 +1,10 @@
 {
   "name": "dsh-experience-optimizer",
-  "version": "0.2.7",
+  "version": "0.3.1",
   "private": true,
   "type": "module",
   "description": "DSH plugin ecosystem diet, compatibility analysis, and workflow planning suite",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "packageManager": "pnpm@12.8.1",
   "engines": {
     "node": ">=20"

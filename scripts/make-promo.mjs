@@ -96,7 +96,7 @@ const promo = `<?xml version="1.0" encoding="UTF-8"?>
   <rect x="450" y="470" width="600" height="1" fill="url(#rule)"/>
   <text x="450" y="512" font-family="${mono}" font-size="20" fill="#cfd9ea">dsh-plugin-trim  ·  dsh-plugin-recipe</text>
   <text x="450" y="548" font-family="${mono}" font-size="17" fill="#7f92aa">github.com/${repo}</text>
-  <text x="450" y="582" font-family="${mono}" font-size="15" fill="#5f728a">v${pkg.version}  ·  MIT  ·  DSH 0.2.2-rc.1</text>
+  <text x="450" y="582" font-family="${mono}" font-size="15" fill="#5f728a">v${pkg.version}  ·  AGPL-3.0  ·  DSH 0.2.2-rc.1</text>
 </svg>`
 
 const banner = `<?xml version="1.0" encoding="UTF-8"?>

@@ -326,6 +326,12 @@ window.__ModuleLoader__.load({
       const [showInfo, setShowInfo] = useState(false)
       const [showAllFindings, setShowAllFindings] = useState(false)
       const [showContext, setShowContext] = useState(false)
+      const [findingQuery, setFindingQuery] = useState('')
+      const [findingSeverity, setFindingSeverity] = useState('all')
+      const [bundleQuery, setBundleQuery] = useState('')
+      const [bundleFilter, setBundleFilter] = useState('all')
+      const [bundleSort, setBundleSort] = useState('tokens')
+      const [showAllBundles, setShowAllBundles] = useState(false)
       const [taskTag, setTaskTag] = useState('unknown')
       const [goal, setGoal] = useState('')
       const [draft, setDraft] = useState(null)
@@ -376,8 +382,42 @@ window.__ModuleLoader__.load({
 
       const findings = useMemo(() => {
         if (!overview) return []
-        return overview.findings.filter((finding) => showInfo || finding.severity !== 'info')
-      }, [overview, showInfo])
+        const query = findingQuery.trim().toLowerCase()
+        return overview.findings.filter((finding) => {
+          if (!showInfo && finding.severity === 'info') return false
+          if (findingSeverity !== 'all' && finding.severity !== findingSeverity) return false
+          if (query.length === 0) return true
+          return [finding.code, finding.title, finding.domain, ...finding.subjects]
+            .join(' ')
+            .toLowerCase()
+            .includes(query)
+        })
+      }, [overview, showInfo, findingSeverity, findingQuery])
+
+      const filteredBundles = useMemo(() => {
+        if (!overview) return []
+        const query = bundleQuery.trim().toLowerCase()
+        const rows = overview.bundles.filter((bundle) => {
+          if (
+            bundleFilter === 'enabled' && !bundle.enabled ||
+            bundleFilter === 'disabled' && bundle.enabled ||
+            bundleFilter === 'protected' && !bundle.protected
+          ) {
+            return false
+          }
+          if (query.length === 0) return true
+          return (bundle.name + ' ' + (bundle.description ?? '')).toLowerCase().includes(query)
+        })
+        return rows.sort((left, right) => {
+          if (bundleSort === 'name') return left.name.localeCompare(right.name)
+          if (bundleSort === 'usage') {
+            const a = (left.usage?.calls ?? 0) + (left.usage?.sessionCalls ?? 0)
+            const b = (right.usage?.calls ?? 0) + (right.usage?.sessionCalls ?? 0)
+            return b - a
+          }
+          return (right.contextTokens ?? 0) - (left.contextTokens ?? 0)
+        })
+      }, [overview, bundleQuery, bundleFilter, bundleSort])
 
       const enabledBundles = overview
         ? overview.bundles.filter((bundle) => bundle.enabled).length
@@ -702,8 +742,38 @@ window.__ModuleLoader__.load({
                 h(Badge, { tone: compat.error ? 'danger' : 'ok' }, compat.error ? '需要处理' : '无阻断'),
               ),
             },
+            h(
+              'div',
+              { className: 'eo-toolbar', style: { marginBottom: '10px' } },
+              h(
+                Field,
+                { label: '搜索兼容性' },
+                h('input', {
+                  className: 'eo-input',
+                  placeholder: 'code / title / subject',
+                  value: findingQuery,
+                  onChange: (event) => setFindingQuery(event.target.value),
+                }),
+              ),
+              h(
+                Field,
+                { label: '级别' },
+                h(
+                  'select',
+                  {
+                    className: 'eo-select',
+                    value: findingSeverity,
+                    onChange: (event) => setFindingSeverity(event.target.value),
+                  },
+                  h('option', { value: 'all' }, '全部'),
+                  h('option', { value: 'error' }, 'error'),
+                  h('option', { value: 'warn' }, 'warn'),
+                  h('option', { value: 'info' }, 'info'),
+                ),
+              ),
+            ),
             findings.length === 0
-              ? h('div', { className: 'eo-empty' }, '未发现需要处理的兼容性问题。')
+              ? h('div', { className: 'eo-empty' }, '没有匹配的兼容性问题。')
               : h(
                   'div',
                   { className: 'eo-findings' },
@@ -831,6 +901,125 @@ window.__ModuleLoader__.load({
               ),
             )
               : null,
+          ),
+          h(
+            Card,
+            {
+              title: '插件清单',
+              subtitle: `${filteredBundles.length} / ${totalBundles} 个匹配 · 只读`,
+              section: 'inventory',
+              extra: h(
+                Button,
+                { variant: 'ghost', onClick: () => setShowAllBundles((value) => !value) },
+                showAllBundles ? '收起' : '查看全部',
+              ),
+            },
+            h(
+              'div',
+              { className: 'eo-toolbar', style: { marginBottom: '10px' } },
+              h(
+                Field,
+                { label: '搜索插件' },
+                h('input', {
+                  className: 'eo-input',
+                  placeholder: 'name / description',
+                  value: bundleQuery,
+                  onChange: (event) => setBundleQuery(event.target.value),
+                }),
+              ),
+              h(
+                Field,
+                { label: '状态' },
+                h(
+                  'select',
+                  {
+                    className: 'eo-select',
+                    value: bundleFilter,
+                    onChange: (event) => setBundleFilter(event.target.value),
+                  },
+                  h('option', { value: 'all' }, '全部'),
+                  h('option', { value: 'enabled' }, '启用'),
+                  h('option', { value: 'disabled' }, '禁用'),
+                  h('option', { value: 'protected' }, '受保护'),
+                ),
+              ),
+              h(
+                Field,
+                { label: '排序' },
+                h(
+                  'select',
+                  {
+                    className: 'eo-select',
+                    value: bundleSort,
+                    onChange: (event) => setBundleSort(event.target.value),
+                  },
+                  h('option', { value: 'tokens' }, '上下文 tokens'),
+                  h('option', { value: 'usage' }, '调用次数'),
+                  h('option', { value: 'name' }, '名称'),
+                ),
+              ),
+            ),
+            filteredBundles.length === 0
+              ? h('div', { className: 'eo-empty' }, '没有匹配的插件。')
+              : h(
+                  'table',
+                  { className: 'eo-table' },
+                  h(
+                    'thead',
+                    null,
+                    h(
+                      'tr',
+                      null,
+                      h('th', null, '插件'),
+                      h('th', null, '状态'),
+                      h('th', null, '保护'),
+                      h('th', null, 'Guard'),
+                      h('th', null, 'Tokens'),
+                      h('th', null, 'Calls'),
+                    ),
+                  ),
+                  h(
+                    'tbody',
+                    null,
+                    filteredBundles.slice(0, showAllBundles ? 200 : 12).map((bundle) =>
+                      h(
+                        'tr',
+                        { key: bundle.name },
+                        h(
+                          'td',
+                          null,
+                          h('code', null, bundle.name),
+                          bundle.description
+                            ? h('div', { className: 'eo-muted' }, bundle.description)
+                            : null,
+                        ),
+                        h(
+                          'td',
+                          null,
+                          h(
+                            Badge,
+                            { tone: bundle.enabled ? 'ok' : 'neutral' },
+                            bundle.enabled ? 'enabled' : 'disabled',
+                          ),
+                        ),
+                        h(
+                          'td',
+                          null,
+                          bundle.protected ? h(Badge, { tone: 'warn' }, 'protected') : '—',
+                        ),
+                        h('td', { className: 'eo-muted' }, bundle.guardStatus || '—'),
+                        h('td', null, formatNumber(bundle.contextTokens)),
+                        h(
+                          'td',
+                          null,
+                          formatNumber(
+                            (bundle.usage?.calls ?? 0) + (bundle.usage?.sessionCalls ?? 0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
           ),
           h(
             Card,
