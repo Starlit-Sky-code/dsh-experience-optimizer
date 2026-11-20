@@ -2,9 +2,9 @@
 /**
  * Build a format-1 DSH plugin market index for this repository's two bundles.
  *
- * The index pins the current Git commit, so it must be generated after the
- * commit that contains the plugin sources. It is intended to be served from
- * raw.githubusercontent.com or GitHub Pages.
+ * Versions install from npm. The index still points at GitHub for icons and
+ * repository display, and is intended to be served from raw.githubusercontent.com
+ * or GitHub Pages.
  */
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -16,9 +16,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const repo = resolveRepo()
 const commit = git(['rev-parse', 'HEAD']).trim()
 if (!/^[0-9a-f]{40}$/.test(commit)) throw new Error(`invalid git commit: ${commit}`)
-const publishTimestamp = Number(git(['log', '-1', '--format=%ct']).trim()) || Math.floor(Date.now() / 1000)
+const fallbackTimestamp = Number(git(['log', '-1', '--format=%ct']).trim()) || Math.floor(Date.now() / 1000)
 const repoUrl = `https://github.com/${repo}`
-const rawBase = `https://raw.githubusercontent.com/${repo}/${commit}`
+const rawBase = `https://raw.githubusercontent.com/${repo}/main`
 const indexUrl = `https://raw.githubusercontent.com/${repo}/main/marketplace/index.json`
 
 const trim = readPackage('packages/plugin-trim')
@@ -97,12 +97,16 @@ if (process.argv.includes('--check')) {
       console.error(`marketplace/index.json has stale version for ${expected.name}`)
       process.exit(1)
     }
+    if (actual.versions[0]?.source.type !== 'npm') {
+      console.error(`marketplace/index.json still uses a non-npm source for ${expected.name}`)
+      process.exit(1)
+    }
   }
   console.log('marketplace/index.json is valid for the current package versions')
 } else {
   mkdirSync(join(root, 'marketplace'), { recursive: true })
   writeFileSync(target, output)
-  console.log(`wrote marketplace/index.json (${commit})`)
+  console.log(`wrote marketplace/index.json (npm sources; repo ${commit.slice(0, 7)})`)
   console.log(`index URL: ${indexUrl}`)
   for (const plugin of index.plugins) {
     const version = plugin.versions[0]
@@ -122,6 +126,24 @@ function resolveRepo() {
     // Fall through to the configured default.
   }
   return 'Starlit-Sky-code/dsh-experience-optimizer'
+}
+
+
+function npmPublishTimestamp(pkg, fallback) {
+  try {
+    const raw = execFileSync(
+      'npm',
+      ['view', `${pkg.name}@${pkg.version}`, 'time', '--json'],
+      { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+    ).trim()
+    const parsed = JSON.parse(raw)
+    const value = parsed?.[pkg.version]
+    const seconds = Date.parse(value) / 1000
+    if (Number.isFinite(seconds)) return Math.floor(seconds)
+  } catch {
+    // Offline or not published yet: use the commit time as a harmless fallback.
+  }
+  return fallback
 }
 
 function git(args) {
@@ -150,12 +172,9 @@ function pluginEntry({ pkg, directory, title, description, keywords, labels }) {
     versions: [
       {
         version: pkg.version,
-        publishTimestamp,
+        publishTimestamp: npmPublishTimestamp(pkg, fallbackTimestamp),
         source: {
-          type: 'git',
-          url: repoUrl,
-          commit,
-          path: directory,
+          type: 'npm',
         },
         engines: { dsh: pkg.engines?.dsh ?? '>=0.2.2-rc.1 <0.3.0' },
       },

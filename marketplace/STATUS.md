@@ -7,10 +7,10 @@
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`、`workflow`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.2.4>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.2.5>
 - Release assets：
-  - `dsh-plugin-trim-0.2.4.tgz`
-  - `dsh-plugin-recipe-0.2.4.tgz`
+  - `dsh-plugin-trim-0.2.5.tgz`
+  - `dsh-plugin-recipe-0.2.5.tgz`
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（没有 `NPM_TOKEN` 时跳过 npm 发布，仅创建 GitHub release；自动上传 release tarball）
 - 安装验证：在临时 headless profile 中执行 `dsh plugin add <release tarball>` 与 `dsh plugin add <pinned git spec>` 均成功，`--dump-config` 出现 `dsh-plugin-trim` row
@@ -32,7 +32,7 @@ pnpm market:check
 ## DSH Plugin Hub（dsh-plugin.org）
 
 - 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/677>（已关闭，等待定时扫描）
-- npm 已发布 0.2.4，内置 Plugin Hub 的条件已满足；站点页面仍为 404，等待扫描。
+- npm 已发布 0.2.5，内置 Plugin Hub 的条件已满足；站点页面仍为 404，等待扫描。
 - 已在 issue 评论中补充 npm 包链接与安装命令。
 
 ## dsh.so
@@ -56,12 +56,12 @@ pnpm market:check
 
 ## npm
 
-- **已发布 0.2.4**：
+- **已发布 0.2.5**：
   - <https://www.npmjs.com/package/dsh-plugin-trim>
   - <https://www.npmjs.com/package/dsh-plugin-recipe>
-- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.2.4` / `dsh-plugin-recipe@0.2.4`
-- 注册表已验证：`npm view` 返回 0.2.4；临时 profile 安装成功。
-- 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.2.4`，不影响安装。
+- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.2.5` / `dsh-plugin-recipe@0.2.5`
+- 注册表已验证：`npm view` 返回 0.2.5；临时 profile 安装成功。
+- 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.2.5`，不影响安装。
 - GitHub Release 工作流仍没有 `NPM_TOKEN` secret；后续 tag 自动发布前需要配置新的 token。
 
 ## Web 控制台

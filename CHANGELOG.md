@@ -3,6 +3,16 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.5] - 2026-11-20
+
+### Changed
+
+- npm is now the primary install source everywhere: README, package READMEs,
+  market copy, and the format-1 DSH market index.
+- The market index now uses `source.type: "npm"` for both plugins; install targets
+  are `dsh-plugin-trim@0.2.5` and `dsh-plugin-recipe@0.2.5`.
+- No runtime code changes.
+
 ## [0.2.4] - 2026-11-14
 
 ### Security
