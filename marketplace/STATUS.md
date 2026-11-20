@@ -32,8 +32,8 @@ pnpm market:check
 ## DSH Plugin Hub（dsh-plugin.org）
 
 - 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/677>（已关闭，等待定时扫描）
-- 维护者回复：仓库会被自动索引；没有 npm 的仓库只出现在网站，不进入 DSH 内置 Plugin Hub。
-- 当前站点页面仍为 404；npm 是应用内一键安装的门槛。
+- npm 已发布 0.2.4，内置 Plugin Hub 的条件已满足；站点页面仍为 404，等待扫描。
+- 已在 issue 评论中补充 npm 包链接与安装命令。
 
 ## dsh.so
 
@@ -52,12 +52,13 @@ pnpm market:check
 
 ## npm
 
-- 未发布（用户选择暂缓）；`npm view dsh-plugin-trim` 返回 404。
-- 发布前需要在 GitHub 仓库配置 `NPM_TOKEN` secret，然后推送 `v0.2.4` tag 或手动执行：
-  ```bash
-  pnpm --filter dsh-plugin-trim publish --access public --no-git-checks
-  pnpm --filter dsh-plugin-recipe publish --access public --no-git-checks
-  ```
+- **已发布 0.2.4**：
+  - <https://www.npmjs.com/package/dsh-plugin-trim>
+  - <https://www.npmjs.com/package/dsh-plugin-recipe>
+- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.2.4` / `dsh-plugin-recipe@0.2.4`
+- 注册表已验证：`npm view` 返回 0.2.4；临时 profile 安装成功。
+- 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.2.4`，不影响安装。
+- GitHub Release 工作流仍没有 `NPM_TOKEN` secret；后续 tag 自动发布前需要配置新的 token。
 
 ## Web 控制台
 

@@ -1,92 +1,63 @@
 # DSH 插件市场分布审计
 
-更新时间：2026-11-14
+更新时间：2026-11-20
 
 ## 结论
 
-当前真正**可安装**的公开渠道只有两个：
+npm 已发布 `0.2.4`，并经注册表和临时 DSH profile 双重验证：
 
-1. GitHub Release tarball / 固定 Git 源；
-2. 本仓库的 DSH format-1 自定义索引。
+- `dsh-plugin-trim@0.2.4`
+- `dsh-plugin-recipe@0.2.4`
 
-`dsh.so` 已自动收录仓库，但它是 **ecosystem-plugin**（根目录没有 `dsh.bundle`），
-安装命令不会挂载任何插件；`dsh-plugin.org` 已接受提交、等待定时扫描；
-`dshopen.org`、`dshbase.com` 尚未收录；npm 仍未发布，这是进入各市场
-「一键安装」和 DSH 内置 Plugin Hub 的主要门槛。
+现在可安装渠道有四个：npm、GitHub Release tarball、固定 Git 源、本仓库自定义索引。
+`dshbase.com` 已出现两个插件页，但页面安装命令仍错误地指向仓库根目录；
+`dsh.so` 仍只有 ecosystem 条目；`dsh-plugin.org` 仍在等待扫描；
+`dshopen.org` 与 awesome-dsh-plugin 仍在审核/CI。
 
 ## 矩阵
 
-| 渠道 | 类型 | 当前状态 | 证据 | 安装路径 | 缺口 / 动作 |
-|---|---|---|---|---|---|
-| GitHub 仓库 + `dsh-plugin` topic | 源码 / 发现 | **已上线** | <https://github.com/Starlit-Sky-code/dsh-experience-optimizer> | Release tarball 或 `git+...#commit&path:/packages/...` | 无 |
-| 本仓库自定义 DSH 索引 | format-1 索引 | **已上线** | <https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/marketplace/index.json> | 在 DSH Discover 添加上面的索引地址；源固定到 Git commit | 无；需 npm 才能进入内置 Plugin Hub |
-| dsh.so | 社区市场 | **已收录，但为 ecosystem 条目** | <https://www.dsh.so/artifact/dsh-experience-optimizer/> | 页面命令：`dsh plugin --profile web add github:Starlit-Sky-code/dsh-experience-optimizer#v0.2.2` | 根目录没有 `dsh.bundle`，页面明确提示“installing it adds no plugin functionality”；不是可用的插件条目 |
-| dsh-plugin.org | 社区市场 | **提交已关闭 / 等待扫描** | [issue #677](https://github.com/dshplugin/dsh-plugin-hub/issues/677)（CLOSED；维护者回复会自动扫描） | 站点会展示源码安装命令；DSH 内置 Plugin Hub 需要 npm | 站点页面暂为 404；内置 Hub 需要 npm 包 |
-| dshopen.org（开放插件市场） | 社区市场 + 索引 | **已提交，待审核** | [#495](https://github.com/polang233/dsh-plugin-index/issues/495)（trim）、[#496](https://github.com/polang233/dsh-plugin-index/issues/496)（recipe） | 固定提交 `f7f9038…` + 子目录；审核通过后由索引提供 | 审核中；暂无 npm |
-| dshbase.com | 社区目录 | **已提交，待审核** | [#332](https://github.com/ylwl1997/dshbase/issues/332) | 审核通过后进入 dshbase 目录；安装命令用 Release tarball / 固定提交 | 审核中；目录以 dsh.so feed + issue 提交为主 |
-| awesome-dsh-plugin | 社区精选列表 | **PR 已开，CI 进行中** | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) | 合并后由 `data/plugins/` 自动生成 README；提供 tarball 字段 | 等待 CI 与维护者 review |
-| npm | 包注册表 | **未发布** | `npm view dsh-plugin-trim` → 404 | `dsh plugin add dsh-plugin-trim` | 需要 npm 登录并发布两个包 |
-| DSH 官方 Discover / 内置 Plugin Hub | 官方入口 | **未收录** | 内置 Hub 只展示 npm 可安装包 | 自定义索引可替代 | npm 是硬门槛 |
+| 渠道 | 状态 | 证据 | 安装路径 | 缺口 / 动作 |
+|---|---|---|---|---|
+| npm | **已上线** | <https://www.npmjs.com/package/dsh-plugin-trim> · <https://www.npmjs.com/package/dsh-plugin-recipe> | `dsh plugin --profile web add dsh-plugin-trim@0.2.4`（recipe 同理） | 首发产生 `0.0.0-stage` 占位版本；`latest` 已指向 `0.2.4`，不影响安装 |
+| GitHub 仓库 + `dsh-plugin` topic | **已上线** | <https://github.com/Starlit-Sky-code/dsh-experience-optimizer> | Release tarball / 固定 Git 源 | 无 |
+| 本仓库自定义 DSH 索引 | **已上线** | <https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/marketplace/index.json> | 在 DSH Discover 添加索引地址 | 可改用 npm 源 |
+| dshbase.com | **页面已上线，安装命令待修** | <https://dshbase.com/plugins/dsh-plugin-trim/> · <https://dshbase.com/plugins/dsh-plugin-recipe/> | 页面仍显示 `github:Starlit-Sky-code/dsh-experience-optimizer` | 根包无 `dsh.bundle`，已提交修正评论 [#332](https://github.com/ylwl1997/dshbase/issues/332)；应改为 npm 包名或子目录 |
+| dsh.so | **ecosystem 条目已上线；插件级待索引** | <https://www.dsh.so/artifact/dsh-experience-optimizer/> | 页面命令指向根仓库，不挂载插件 | 等 dsh.so 抓取 npm 包；npm 包详情页当前仍 404 |
+| dsh-plugin.org | **已接受，等待扫描** | [issue #677](https://github.com/dshplugin/dsh-plugin-hub/issues/677)（CLOSED） | 站点会展示 npm / 源码安装 | 站点页面仍 404；已评论 npm 已发布 |
+| dshopen.org | **已提交，待审核** | [#495](https://github.com/polang233/dsh-plugin-index/issues/495)（trim）、[#496](https://github.com/polang233/dsh-plugin-index/issues/496)（recipe） | npm 已发布，审核通过后可直接用 npm | 已评论 npm 版本 |
+| awesome-dsh-plugin | **PR 已开，CI 进行中** | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) | 合并后由 `data/plugins/` 生成列表；条目含 tarball | 等待 CI 与维护者 review |
+| DSH 官方 Discover / 内置 Plugin Hub | **npm 条件已满足；待市场扫描** | npm 包已公开 | `dsh plugin add dsh-plugin-trim@0.2.4` | dsh-plugin.org 扫描后进入 Hub |
 
-## 关键证据
-
-### dsh.so
-
-索引记录：
-
-```json
-{
-  "id": "dsh-experience-optimizer",
-  "kind": "ecosystem-plugin",
-  "install": "dsh plugin --profile web add github:Starlit-Sky-code/dsh-experience-optimizer#v0.2.2",
-  "verification": { "level": 5, "label": "L5 · Ecosystem plugin" },
-  "security": { "status": "audited", "riskLevel": "low" }
-}
-```
-
-页面明确说明：根包声明没有 `dsh.bundle`、不挂载插件能力，安装它不会增加插件功能。
-它被当作“生态仓库”而不是插件。**不要把这个命令当作套件安装命令使用**；
-请用 Release tarball 或自定义索引。
-
-### dsh-plugin.org
-
-提交 issue 已由维护者关闭，回复说明：
-
-- 收录是全自动的，由定时仓库扫描完成；
-- 下一轮扫描会出现在网站上；
-- DSH 内置 Plugin Hub 只列 npm 一键安装包；
-- 没有 npm 的仓库仍会出现在网站，用户可从 README 复制源码安装命令。
-
-### npm
+## 验证证据
 
 ```text
-npm view dsh-plugin-trim → 404
-npm view dsh-plugin-recipe → 404
+npm view dsh-plugin-trim@0.2.4  → 0.2.4
+npm view dsh-plugin-recipe@0.2.4 → 0.2.4
+
+临时 DSH headless profile：
++ dsh-plugin-trim 0.2.4
++ dsh-plugin-recipe 0.2.4
+--dump-config 出现两个 bundle row
 ```
 
-## 建议优先级
+npm CLI 发布输出：
 
-1. **发布 npm 包**：`dsh-plugin-trim@0.2.3`、`dsh-plugin-recipe@0.2.3`。
-   这是 dsh-plugin.org 内置 Hub、dsh.so 插件级条目、dshopen.org 收录的共同前提。
-2. **修正 dsh.so 的套件条目**：发布 npm 后让 dsh.so 分别索引两个包；或增加一个
-   根级 meta-bundle，让 `github:...#tag` 真正挂载两个插件。
-3. **dsh-plugin.org**：等待扫描；无需重复提交。
-4. **dshopen.org**：npm 发布后用仓库子目录路径提交两个包；若暂不发 npm，
-   只能走固定 Git 提交，需维护者确认。
-5. **dshbase.com / awesome 列表**：非核心渠道，npm 发布后再补。
+```text
++ dsh-plugin-trim@0.2.4
++ dsh-plugin-recipe@0.2.4
+```
 
-## 本次提交记录（2026-11-14）
+首发时 npm 创建了 `0.0.0-stage` 占位版本并短暂显示“processing”；几分钟后 `0.2.4`
+成为 `latest`。这属于 npm staged-publishing 的首发包处理，不是失败。
 
-| 市场 | 提交 | 状态 |
-|---|---|---|
-| dshopen.org | [#495 dsh-plugin-trim](https://github.com/polang233/dsh-plugin-index/issues/495) | OPEN，待审核 |
-| dshopen.org | [#496 dsh-plugin-recipe](https://github.com/polang233/dsh-plugin-index/issues/496) | OPEN，待审核 |
-| dshbase.com | [#332 套件收录](https://github.com/ylwl1997/dshbase/issues/332) | OPEN，待审核 |
-| awesome-dsh-plugin | [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271) | OPEN，CI 进行中 |
-| dsh-plugin.org | [issue #677](https://github.com/dshplugin/dsh-plugin-hub/issues/677) | CLOSED，等待定时扫描；站点仍 404 |
-| dsh.so | 自动收录 | 已上线，但为 ecosystem 条目（不可安装） |
+## 待处理
 
-所有提交都指向固定提交 `f7f903821862b437ceb5b2def2ffecd9b869d322`（v0.2.4）或 v0.2.4 Release tarball。
+1. **dshbase 页面安装命令**：等待维护者修正为 npm 包名或 `packages/...` 子目录。
+2. **dsh.so 插件级索引**：等待下一轮 npm/GitHub 扫描；当前只有 ecosystem 条目。
+3. **dsh-plugin.org 扫描**：等待定时任务；页面仍 404。
+4. **dshopen.org / awesome**：等待审核/CI。
+5. **安全**：发布所用 token 已明文出现在对话中，应立即在 npm 设置中 revoke；
+   后续自动发布请配置新的 `NPM_TOKEN` secret 或 trusted publishing。
 
 ## 相关文档
 

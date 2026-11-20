@@ -4,16 +4,16 @@
 
 ## 安装
 
-从 GitHub Release 安装（当前推荐，无需 npm）：
+从 npm 安装（推荐）：
+
+```bash
+dsh plugin --profile web add dsh-plugin-recipe@0.2.4
+```
+
+从 GitHub Release 安装（备用，无需 npm）：
 
 ```bash
 dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.2.4/dsh-plugin-recipe-0.2.4.tgz"
-```
-
-发布到 npm 后：
-
-```bash
-dsh plugin --profile web add dsh-plugin-recipe
 ```
 
 本地开发：
