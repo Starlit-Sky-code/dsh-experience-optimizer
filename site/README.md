@@ -1,4 +1,4 @@
-# Promo site
+# Promo site — Context Observatory
 
 Static, dependency-free promotional page for DSH Experience Optimizer.
 
@@ -9,10 +9,27 @@ python3 -m http.server 4173 -d site
 # open http://127.0.0.1:4173/
 ```
 
-## Notes
+Motion-off / reduced-motion test:
 
-- This directory lives on the `promo-site` branch and is not merged to `main`.
-- Assets are local copies; no external fonts or CDNs.
-- The banner is `assets/banner.svg` with a PNG fallback.
-- QQ group and donation links are intentionally marked “待补充” until real values are provided.
-- Language toggle: `中文 / EN`; preference is stored in localStorage.
+```text
+http://127.0.0.1:4173/?motion=off
+```
+
+## Structure
+
+- `index.html` — hero instrument, poster, evidence gates, product, safety, install, FAQ, about
+- `styles.css` — dark observatory + paper editorial sections, responsive layout
+- `main.js` — canvas constellation, scan, counters, sticky gates, terminal typing, copy
+- `i18n.js` — Chinese/English copy
+- `MOTION_SPEC.md` — concept, beats, tokens, fallback, acceptance
+- `assets/` — cover, mobile cover, UI screenshot, banner, icon, flow
+
+## Assets
+
+- Cover: `assets/cover.jpg` from `dsh-promo/publish/cover.jpg` (updated, no stale version number)
+- Mobile cover: `assets/cover-3x4.jpg`
+- No autoplay video or audio.
+- QQ group: **1134419871**; donation method is intentionally marked to-be-added.
+- AGPL-3.0-only · Copyright © 2026 Starlit Sky.
+
+This directory lives on the `promo-site` branch and is not merged to `main`.

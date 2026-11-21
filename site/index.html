@@ -3,20 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="DSH 体验优化器：插件减负、兼容性体检与工作流蓝图。">
-  <meta name="theme-color" content="#0a1220">
-  <meta property="og:title" content="DSH 体验优化器">
-  <meta property="og:description" content="少一点插件负担，多一点兼容确定性。">
-  <meta property="og:image" content="./assets/banner.png">
-  <title>DSH 体验优化器 · 插件减负与兼容性体检</title>
+  <meta name="description" content="DSH 体验优化器：让插件常驻上下文可见，让减负按证据发生。">
+  <meta name="theme-color" content="#07101d">
+  <meta property="og:title" content="DSH 体验优化器 · Context Observatory">
+  <meta property="og:description" content="插件在偷偷吃上下文。现在，把它拖到光下。">
+  <meta property="og:image" content="./assets/cover.jpg">
+  <meta property="og:type" content="website">
+  <title>DSH 体验优化器 · Context Observatory</title>
   <link rel="icon" href="./assets/icon.png">
+  <link rel="preload" as="image" href="./assets/cover.jpg">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">跳到主要内容</a>
-  <header class="site-header">
+
+  <header class="site-header" id="site-header">
     <a class="brand" href="#top" aria-label="DSH Experience Optimizer">
-      <img src="./assets/icon.png" alt="" width="32" height="32">
+      <img src="./assets/icon.png" alt="" width="34" height="34">
       <span>DSH <b>Experience Optimizer</b></span>
     </a>
     <nav class="nav" aria-label="主导航">
@@ -30,222 +33,249 @@
     <div class="header-actions">
       <button id="lang" class="ghost" type="button" aria-label="Switch language">EN</button>
       <a class="ghost" href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub ↗</a>
+      <a class="header-cta" href="#install" data-i18n="navCta">安装</a>
     </div>
   </header>
 
   <main id="main">
     <section class="hero" id="top">
-      <div class="hero-copy">
-        <p class="eyebrow" data-i18n="eyebrow">DSH 插件套件 · AGPL-3.0</p>
-        <h1 data-i18n="h1">让插件成本可见，<br>让减负可控。</h1>
-        <p class="lede" data-i18n="lede">插件减负 × 兼容性体检 × 工作流蓝图。看清常驻上下文，再用证据决定关掉什么。</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#install" data-i18n="ctaInstall">开始安装</a>
-          <a class="button" href="#how" data-i18n="ctaHow">看它怎么判断</a>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">DSH · CONTEXT OBSERVATORY</p>
+          <h1 class="display">
+            <span class="line" data-i18n="heroLine1">插件在偷偷</span>
+            <span class="line" data-i18n="heroLine2">吃上下文。</span>
+            <span class="line line-accent" data-i18n="heroLine3">现在，把它拖到光下。</span>
+          </h1>
+          <p class="lede" data-i18n="heroLede">DSH 体验优化器把插件常驻成本、兼容性检查和减负方案放进一个可观察的界面。少一点插件负担，多一点兼容确定性。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#install" data-i18n="ctaInstall">安装最新版</a>
+            <a class="button" href="#how" data-i18n="ctaHow">看判断依据</a>
+          </div>
+          <div class="install-inline">
+            <code id="hero-command">dsh plugin --profile web add dsh-plugin-trim</code>
+            <button class="copy" type="button" data-copy-el="hero-command" data-i18n="copy" aria-label="复制安装命令">复制</button>
+          </div>
+          <p class="micro" data-i18n="heroMicro">省略版本号即最新版 · 两个插件可独立或同时使用</p>
         </div>
-        <div class="install-inline">
-          <code>dsh plugin --profile web add dsh-plugin-trim</code>
-          <button class="copy" type="button" data-copy="dsh plugin --profile web add dsh-plugin-trim" aria-label="复制安装命令" data-i18n="copy">复制</button>
+
+        <div class="instrument" id="instrument">
+          <canvas id="constellation" aria-hidden="true"></canvas>
+          <div class="instrument-top">
+            <span class="mono" data-i18n="instrumentTop">TOPOLOGY / 14 NODES</span>
+            <span class="live"><i></i><span data-i18n="instrumentLive">LIVE</span></span>
+          </div>
+          <div class="instrument-hud">
+            <div class="hud-row">
+              <span class="hud-label" data-i18n="hudLabel">示例 profile · 常驻上下文</span>
+              <span class="hud-value"><span id="cost-value">2,417</span><small>tokens</small></span>
+            </div>
+            <div class="hud-track" aria-hidden="true"><i id="cost-bar"></i></div>
+            <div class="hud-meta"><span data-i18n="hudBefore">应用前 2,417</span><span data-i18n="hudAfter">应用后 1,105 · −54%</span></div>
+          </div>
+          <div class="instrument-scan" aria-hidden="true"></div>
+          <div class="node-tip" id="node-tip" hidden></div>
+          <div class="instrument-foot">
+            <span data-i18n="instrumentFootLeft">未归属 1,312 tokens</span>
+            <span data-i18n="instrumentFootRight">示例数据</span>
+          </div>
         </div>
-        <p class="micro" data-i18n="micro">省略版本号即取 latest · 两个插件可独立或同时使用</p>
       </div>
-      <div class="hero-visual">
-        <img src="./assets/banner.svg" alt="DSH 体验优化器" width="1600" height="500">
+      <div class="hero-foot">
+        <p data-i18n="heroFoot">不是工具白名单，是插件常驻上下文。</p>
+        <a class="scroll-cue" href="#why"><span data-i18n="scroll">向下看</span><i></i></a>
       </div>
+    </section>
+
+    <section class="poster" aria-labelledby="poster-title">
+      <div class="poster-meta">
+        <p class="kicker" data-i18n="posterKicker">INTERLUDE 01 / POSTER</p>
+        <h2 id="poster-title" data-i18n="posterTitle">先看一张海报。</h2>
+        <p data-i18n="posterBody">这是宣传片封面，也是一张真实产品界面的缩影：轻一点，走得更远。</p>
+      </div>
+      <figure class="poster-frame">
+        <picture>
+          <source media="(max-width: 700px)" srcset="./assets/cover-3x4.jpg">
+          <img src="./assets/cover.jpg" alt="DSH 体验优化器宣传海报：轻一点，走得更远" width="1920" height="1080">
+        </picture>
+        <figcaption data-i18n="posterCaption">宣传片封面 · 示例 profile · AGPL-3.0</figcaption>
+      </figure>
     </section>
 
     <section class="section problem" id="why">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="whyEyebrow">问题</p>
-        <h2 data-i18n="whyTitle">你砍的是工具白名单，<br>没量的是插件常驻上下文。</h2>
-        <p data-i18n="whyLede">插件不像工具调用那样显眼。它们持续占用 prompt、工具描述和重复段落，直到某一天你发现上下文里有一大块“看不见的成本”。</p>
-      </div>
-      <div class="cards three">
-        <article class="card">
-          <span class="num">01</span>
-          <h3 data-i18n="p1Title">常驻成本不可见</h3>
-          <p data-i18n="p1Body">每个 bundle 的 prompt 和工具描述都在持续消耗 token，但平时看不到占比。</p>
-        </article>
-        <article class="card">
-          <span class="num">02</span>
-          <h3 data-i18n="p2Title">兼容性变脆</h3>
-          <p data-i18n="p2Body">插件↔插件、插件↔DSH、配置集/工作区之间的冲突，往往在出问题后才被发现。</p>
-        </article>
-        <article class="card">
-          <span class="num">03</span>
-          <h3 data-i18n="p3Title">工作流难落地</h3>
-          <p data-i18n="p3Body">知道要自动化什么，却不知道需要哪些工具、权限和人工确认点。</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section how" id="how">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="howEyebrow">怎么工作</p>
-        <h2 data-i18n="howTitle">先看依据，再动插件。</h2>
-        <p data-i18n="howLede">默认保守：描述匹配不单独构成“建议关闭”。定时/触发、已有调用、无账本、低置信度，都会进入人工复核。</p>
-      </div>
-      <div class="steps">
-        <article class="step">
-          <div class="step-icon">◎</div>
-          <p class="step-kicker">01 / <span data-i18n="step1Kicker">测量</span></p>
-          <h3 data-i18n="step1Title">扫描常驻成本</h3>
-          <p data-i18n="step1Body">插件清单显示每个 bundle 的上下文占比；未归属部分单独标出，不硬摊给某个插件。</p>
-        </article>
-        <article class="step">
-          <div class="step-icon">⌁</div>
-          <p class="step-kicker">02 / <span data-i18n="step2Kicker">解释</span></p>
-          <h3 data-i18n="step2Title">生成可解释方案</h3>
-          <p data-i18n="step2Body">任务相关性、使用账本、周期语义和上下文成本共同决定保留、启用、复核或建议关闭。</p>
-        </article>
-        <article class="step">
-          <div class="step-icon">◇</div>
-          <p class="step-kicker">03 / <span data-i18n="step3Kicker">确认</span></p>
-          <h3 data-i18n="step3Title">安全确认后应用</h3>
-          <p data-i18n="step3Body">confirm 只是提案标记；宿主审批返回 allowed-once 才写入。每次应用前先写还原点。</p>
-        </article>
-        <article class="step">
-          <div class="step-icon">↺</div>
-          <p class="step-kicker">04 / <span data-i18n="step4Kicker">恢复</span></p>
-          <h3 data-i18n="step4Title">随时恢复</h3>
-          <p data-i18n="step4Body">回滚同样需要安全确认。先小步验证，再扩大范围。</p>
-        </article>
-      </div>
-      <div class="evidence">
-        <p class="evidence-title" data-i18n="evidenceTitle">“建议关闭”的硬条件</p>
-        <div class="evidence-grid">
-          <span data-i18n="e1">窗口内 0 调用</span>
-          <span data-i18n="e2">有可归属上下文成本</span>
-          <span data-i18n="e3">非定时/触发插件</span>
-          <span data-i18n="e4">当前任务高置信</span>
-          <span data-i18n="e5">描述低相关</span>
-          <span class="and" data-i18n="eAnd">以上同时成立，仍只是建议</span>
+      <div class="section-label"><span>01</span><span data-i18n="problemKicker">看不见的成本</span></div>
+      <div class="problem-grid">
+        <div class="problem-copy">
+          <h2 class="display-2" data-i18n="problemTitle">你砍掉了工具白名单，<br>却没量过插件的常驻上下文。</h2>
+          <p data-i18n="problemBody">工具调用看得见，插件的提示词和工具描述却一直在后台占位。先量出来，再决定关掉什么。</p>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number"><span data-count-to="54">54</span><small>%</small></div>
+          <p data-i18n="statLabel">示例 profile 的常驻上下文降幅</p>
+          <div class="stat-track"><i data-bar-to="46"></i></div>
+          <p class="stat-note" data-i18n="statNote">示例数据，不是你的 profile。</p>
         </div>
       </div>
+      <div class="cost-compare" aria-label="上下文成本示例">
+        <div class="cost-row"><span data-i18n="costBefore">应用前</span><strong>2,417</strong><div class="cost-line"><i style="width:100%"></i></div></div>
+        <div class="cost-row"><span data-i18n="costAfter">应用后</span><strong>1,105</strong><div class="cost-line"><i data-bar-to="46"></i></div></div>
+        <p class="cost-delta" data-i18n="costDelta">−1,312 tokens · 少 54%</p>
+      </div>
     </section>
 
-    <section class="section features" id="features">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="featuresEyebrow">功能</p>
-        <h2 data-i18n="featuresTitle">一个套件，两条路径。</h2>
+    <section class="evidence" id="how">
+      <div class="evidence-sticky">
+        <p class="kicker" data-i18n="evidenceKicker">02 / EVIDENCE CHAIN</p>
+        <h2 class="display-2" data-i18n="evidenceTitle">先过闸门，<br>再谈建议关闭。</h2>
+        <p data-i18n="evidenceBody">描述匹配只说明“可能相关”。强证据要同时穿过任务、账本、周期和成本四道门。</p>
+        <div class="evidence-legend">
+          <span><i class="dot dot-warn"></i><span data-i18n="legendReview">进入人工复核</span></span>
+          <span><i class="dot dot-ok"></i><span data-i18n="legendClose">才可能成为候选</span></span>
+        </div>
       </div>
-      <div class="cards two">
-        <article class="feature-card">
+      <div class="gate-stack">
+        <article class="gate" data-gate>
+          <span class="gate-index">01</span>
+          <div><p class="gate-kicker" data-i18n="gate1Kicker">任务相关</p><h3 data-i18n="gate1Title">描述匹配，只算相关</h3><p data-i18n="gate1Body">关键词命中不单独构成“用不上”。</p></div>
+          <span class="gate-state" data-i18n="gateWeak">弱证据</span>
+        </article>
+        <article class="gate" data-gate>
+          <span class="gate-index">02</span>
+          <div><p class="gate-kicker" data-i18n="gate2Kicker">使用账本</p><h3 data-i18n="gate2Title">有调用记录，直接复核</h3><p data-i18n="gate2Body">历史或本会话调用过，就不自动建议关闭。</p></div>
+          <span class="gate-state" data-i18n="gateGuard">保护</span>
+        </article>
+        <article class="gate" data-gate>
+          <span class="gate-index">03</span>
+          <div><p class="gate-kicker" data-i18n="gate3Kicker">定时 / 触发</p><h3 data-i18n="gate3Title">每月才用一次，也不能误伤</h3><p data-i18n="gate3Body">schedule、cron、提醒、dream 等语义硬保护。</p></div>
+          <span class="gate-state" data-i18n="gateGuard">保护</span>
+        </article>
+        <article class="gate" data-gate>
+          <span class="gate-index">04</span>
+          <div><p class="gate-kicker" data-i18n="gate4Kicker">上下文成本</p><h3 data-i18n="gate4Title">成本 > 0，才值得优化</h3><p data-i18n="gate4Body">没有可归属成本的插件，进入复核而不是候选。</p></div>
+          <span class="gate-state" data-i18n="gateWeak">弱证据</span>
+        </article>
+        <article class="gate gate-result" data-gate>
+          <p class="gate-kicker" data-i18n="gateResultKicker">RESULT</p>
+          <h3 data-i18n="gateResultTitle">强证据 → 候选；其余 → 复核</h3>
+          <p data-i18n="gateResultBody">即使成为候选，也仍然需要确认与 host 审批 allowed-once。</p>
+          <span class="seal-inline">ALLOWED · ONCE</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section product" id="features">
+      <div class="section-label"><span>03</span><span data-i18n="productKicker">一个套件，两条路径</span></div>
+      <div class="product-grid">
+        <article class="product-card">
           <p class="tag">dsh-plugin-trim</p>
-          <h3 data-i18n="trimTitle">插件减负</h3>
-          <p data-i18n="trimBody">上下文占比、兼容性检查、可解释的精简方案、安全确认、还原点与恢复。</p>
+          <h2 data-i18n="trimTitle">插件减负</h2>
+          <p data-i18n="trimBody">扫描上下文占比与兼容性，生成可解释的保留/启用/关闭方案；低风险项经确认与安全审批后应用。</p>
           <ul>
             <li data-i18n="trim1">插件清单搜索 / 筛选 / 排序</li>
             <li data-i18n="trim2">定时/触发与已用插件保护</li>
-            <li data-i18n="trim3">Agent 工具路径与网页界面共用审批边界</li>
+            <li data-i18n="trim3">还原点、恢复与逐项解释</li>
           </ul>
+          <a class="text-link" href="https://www.npmjs.com/package/dsh-plugin-trim" target="_blank" rel="noreferrer" data-i18n="trimLink">查看 npm 包 ↗</a>
         </article>
-        <article class="feature-card">
+        <article class="product-card">
           <p class="tag">dsh-plugin-recipe</p>
-          <h3 data-i18n="recipeTitle">工作流配方</h3>
+          <h2 data-i18n="recipeTitle">工作流配方</h2>
           <p data-i18n="recipeBody">把业务目标翻译成可校验、可导出的工作流蓝图，每一步都标注审批级别。</p>
           <ul>
             <li data-i18n="recipe1">步骤 / 能力 / 最小插件集</li>
             <li data-i18n="recipe2">依赖与兼容性校验</li>
             <li data-i18n="recipe3">Markdown / JSON 运行手册</li>
           </ul>
+          <a class="text-link" href="https://www.npmjs.com/package/dsh-plugin-recipe" target="_blank" rel="noreferrer" data-i18n="recipeLink">查看 npm 包 ↗</a>
         </article>
       </div>
-    </section>
-
-    <section class="section showcase">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="showEyebrow">界面</p>
-        <h2 data-i18n="showTitle">在一个原生设置页里看清成本。</h2>
-      </div>
-      <figure class="shot">
-        <img src="./assets/ui-preview.png" alt="体验优化控制台" loading="lazy">
-        <figcaption data-i18n="shotCaption">设置 → 体验优化：插件清单、判断依据、安全确认与恢复。</figcaption>
+      <figure class="console">
+        <div class="console-bar"><i></i><i></i><i></i><span data-i18n="consoleLabel">设置 → 体验优化</span></div>
+        <img src="./assets/ui-preview.png" alt="DSH 体验优化器控制台：插件清单、精简方案与兼容性检查" loading="lazy">
       </figure>
     </section>
 
     <section class="safety" id="safety">
-      <div>
-        <p class="eyebrow" data-i18n="safetyEyebrow">边界</p>
-        <h2 data-i18n="safetyTitle">默认不自动改任何东西。</h2>
+      <div class="safety-copy">
+        <p class="kicker" data-i18n="safetyKicker">04 / SAFETY IS A VERB</p>
+        <h2 class="display-2" data-i18n="safetyTitle">安全不是弹窗，<br>是每一步都能回头。</h2>
+        <p data-i18n="safetyBody">只读分析、低风险、安全确认、还原点。没有任何一步靠“相信模型”。</p>
       </div>
-      <div class="safety-points">
-        <p data-i18n="s1">只读分析，不执行 !!js、不联网。</p>
-        <p data-i18n="s2">受保护 / 核心 / 预设 / 固定项永不改动。</p>
-        <p data-i18n="s3">confirm 不是授权；安全确认才是。</p>
-        <p data-i18n="s4">定时/触发、已有调用、无账本只进入复核。</p>
-      </div>
+      <div class="seal" aria-hidden="true"><span>ALLOWED</span><span>ONCE</span><small data-i18n="sealNote">host approval</small></div>
+      <ul class="safety-list">
+        <li><b data-i18n="safety1Title">只读扫描</b><span data-i18n="safety1Body">不执行 !!js、不联网分析。</span></li>
+        <li><b data-i18n="safety2Title">受保护项不动</b><span data-i18n="safety2Body">核心 / 预设 / 固定项永不改动。</span></li>
+        <li><b data-i18n="safety3Title">写入前有还原点</b><span data-i18n="safety3Body">恢复同样需要安全确认。</span></li>
+        <li><b data-i18n="safety4Title">宿主批准才写入</b><span data-i18n="safety4Body">confirm 只是提案，allowed-once 才是授权。</span></li>
+      </ul>
     </section>
 
     <section class="section install" id="install">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="installEyebrow">安装</p>
-        <h2 data-i18n="installTitle">最短路径，装最新版。</h2>
-        <p data-i18n="installLede">省略版本号即取 latest。npm i 是 npm install 的官方别名。</p>
+      <div class="section-label"><span>05</span><span data-i18n="installKicker">安装</span></div>
+      <div class="install-head">
+        <h2 class="display-2" data-i18n="installTitle">最短路径，装最新版。</h2>
+        <p data-i18n="installBody">省略版本号即 latest。npm i 是 npm install 的官方别名。</p>
       </div>
-      <div class="terminal">
-        <div class="terminal-bar"><span></span><span></span><span></span><b>shell</b></div>
-        <pre><code id="install-command">dsh plugin --profile web add dsh-plugin-trim
-dsh plugin --profile web add dsh-plugin-recipe</code></pre>
-        <button class="copy" type="button" data-copy-el="install-command" data-i18n="copyAll">复制全部</button>
+      <div class="terminal" id="terminal">
+        <div class="terminal-bar"><i></i><i></i><i></i><span>SHELL</span></div>
+        <pre><code id="terminal-text"></code></pre>
+        <button class="copy terminal-copy" type="button" data-copy="dsh plugin --profile web add dsh-plugin-trim&#10;dsh plugin --profile web add dsh-plugin-recipe" data-copy-el="terminal-text" data-i18n="copyAll">复制全部</button>
       </div>
       <p class="micro" data-i18n="installNote">普通 npm 安装：npm i dsh-plugin-trim dsh-plugin-recipe</p>
+      <div class="install-footer">
+        <a class="button primary" href="https://www.npmjs.com/package/dsh-plugin-trim" target="_blank" rel="noreferrer" data-i18n="npmCta">打开 npm</a>
+        <a class="text-link" href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases" target="_blank" rel="noreferrer" data-i18n="releaseCta">GitHub Release ↗</a>
+      </div>
     </section>
 
     <section class="section faq" id="faq">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="faqEyebrow">问答</p>
-        <h2 data-i18n="faqTitle">你可能正想问。</h2>
+      <div class="section-label"><span>06</span><span data-i18n="faqKicker">问答</span></div>
+      <h2 class="display-2" data-i18n="faqTitle">你可能正想问。</h2>
+      <div class="faq-list">
+        <details><summary data-i18n="q1">为什么我几乎没有“建议关闭”？</summary><p data-i18n="a1">默认保守：没有使用账本、任务置信度不够、带定时/触发语义，或已有调用记录时，只进入复核。</p></details>
+        <details><summary data-i18n="q2">每月才用一次的插件会被误伤吗？</summary><p data-i18n="a2">带“每月/每周/定时/提醒/日程/dream”等语义的插件会被硬保护；也可以加入 protect 列表。</p></details>
+        <details><summary data-i18n="q3">应用后出问题怎么办？</summary><p data-i18n="a3">每次应用前写入还原点。在界面点击“恢复最近”，或调用 trim_rollback_profile；恢复同样需要安全确认。</p></details>
+        <details><summary data-i18n="q4">为什么还需要宿主审批？</summary><p data-i18n="a4">confirm: true 只是提案标记。宿主审批返回 allowed-once 才是授权；拒绝、取消或审批不可用时一律不写入。</p></details>
       </div>
-      <details>
-        <summary data-i18n="q1">为什么我几乎没有“建议关闭”？</summary>
-        <p data-i18n="a1">默认保守：没有使用账本、任务置信度不够、带定时/触发语义，或已有调用记录时，只进入复核。</p>
-      </details>
-      <details>
-        <summary data-i18n="q2">每月才用一次的插件会被误伤吗？</summary>
-        <p data-i18n="a2">带“每月/每周/定时/提醒/日程/dream”等语义的插件会被硬保护；也可以加入 protect 列表。</p>
-      </details>
-      <details>
-        <summary data-i18n="q3">应用后出问题怎么办？</summary>
-        <p data-i18n="a3">每次应用前写入还原点。在界面点击“恢复最近”，或调用 trim_rollback_profile；恢复同样需要安全确认。</p>
-      </details>
-      <details>
-        <summary data-i18n="q4">为什么还需要宿主审批？</summary>
-        <p data-i18n="a4">confirm: true 只是提案标记。宿主审批返回 allowed-once 才是授权；拒绝、取消或审批不可用时一律不写入。</p>
-      </details>
     </section>
 
     <section class="section about" id="about">
-      <div class="section-head">
-        <p class="eyebrow" data-i18n="aboutEyebrow">关于 / 支持</p>
-        <h2 data-i18n="aboutTitle">一个本地优先的 DSH 插件套件。</h2>
-        <p data-i18n="aboutLede">AGPL-3.0 · 作者 Starlit Sky · 欢迎反馈与试用。</p>
-      </div>
-      <div class="cards two">
-        <article class="card">
-          <h3 data-i18n="linksTitle">项目链接</h3>
-          <ul class="links">
-            <li><a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub ↗</a></li>
-            <li><a href="https://www.npmjs.com/package/dsh-plugin-trim" target="_blank" rel="noreferrer">npm · dsh-plugin-trim ↗</a></li>
-            <li><a href="https://www.npmjs.com/package/dsh-plugin-recipe" target="_blank" rel="noreferrer">npm · dsh-plugin-recipe ↗</a></li>
-            <li><a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues" target="_blank" rel="noreferrer">Issues ↗</a></li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3 data-i18n="supportTitle">交流与支持</h3>
-          <p><span data-i18n="qqLabel">QQ 群：</span><span>1134419871</span></p>
-          <p><span data-i18n="donateLabel">捐赠方式：</span><span class="pending" data-i18n="pending">待补充</span></p>
-          <p class="micro" data-i18n="supportNote">当前也可以通过反馈、文档和插件试用来支持项目。</p>
-        </article>
+      <div class="section-label"><span>07</span><span data-i18n="aboutKicker">关于 / 支持</span></div>
+      <div class="about-grid">
+        <div>
+          <h2 class="display-2" data-i18n="aboutTitle">一个本地优先的<br>DSH 插件套件。</h2>
+          <p class="about-lede" data-i18n="aboutBody">AGPL-3.0 · 作者 Starlit Sky · 欢迎反馈、试用和一起把插件生态做轻。</p>
+          <div class="about-links">
+            <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub ↗</a>
+            <a href="https://www.npmjs.com/package/dsh-plugin-trim" target="_blank" rel="noreferrer">npm · trim ↗</a>
+            <a href="https://www.npmjs.com/package/dsh-plugin-recipe" target="_blank" rel="noreferrer">npm · recipe ↗</a>
+            <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues" target="_blank" rel="noreferrer">Issues ↗</a>
+          </div>
+        </div>
+        <div class="about-side">
+          <div class="about-block">
+            <h3 data-i18n="qqTitle">交流群</h3>
+            <p><span data-i18n="qqLabel">QQ 群：</span><strong>1134419871</strong></p>
+          </div>
+          <div class="about-block">
+            <h3 data-i18n="donateTitle">支持项目</h3>
+            <p data-i18n="donateBody">捐赠方式：待补充。当前也可以通过反馈、文档和插件试用来支持。</p>
+          </div>
+          <div class="about-block">
+            <h3 data-i18n="licenseTitle">许可证</h3>
+            <p>AGPL-3.0-only · Copyright © 2026 Starlit Sky</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <img src="./assets/icon.png" alt="DSH 体验优化器图标" width="56" height="56">
     <p class="copyright">Copyright © 2026 Starlit Sky · AGPL-3.0-only</p>
     <p><a href="./README.md" data-i18n="siteReadme">站点说明</a> · <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub</a></p>
   </footer>
+
   <script src="./i18n.js"></script>
   <script src="./main.js"></script>
 </body>
