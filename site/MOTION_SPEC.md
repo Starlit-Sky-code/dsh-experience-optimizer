@@ -10,9 +10,9 @@
 
 ## 2. Choreography
 
-- **Opening beat**: hero title mask-in, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
-- **Scroll rhythm**: poster interlude → paper problem statement → dark evidence gates → paper product → dark safety → paper install/FAQ → dark about.
-- **Interaction rhythm**: language toggle, copy command, node tooltips, FAQ details, terminal typing.
+- **Opening beat**: four-line hero mask-in with a drawn amber underline, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
+- **Scroll rhythm**: ticker strip → poster interlude → paper problem statement → dark evidence gates → paper product → dark safety → paper install/FAQ → dark about.
+- **Interaction rhythm**: language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, FAQ details, terminal typing.
 - **Transition rhythm**: reveal only at section entry; no scroll-jacking.
 - **Closing beat**: quiet safety seal and install terminal; page ends on project links, QQ, copyright.
 
@@ -20,11 +20,12 @@
 
 - Fast interaction: 160ms
 - Standard transition: 280ms
-- Slow reveal: 550–700ms
+- Slow reveal: 600–900ms
+- Hero line stagger: 80ms
 - Hero scan: 1700ms
 - Cost count-up: 1500ms
-- Primary easing: `cubic-bezier(.2,.7,.2,1)`
-- Stagger: 60ms
+- Ticker loop: 34s
+- Primary easing: `cubic-bezier(.16,1,.3,1)` / soft `cubic-bezier(.22,.61,.36,1)`
 - No spring library; CSS transitions + rAF.
 
 ## 4. Interaction Map
@@ -32,21 +33,23 @@
 - **Hover/focus**: buttons lift 1px, border turns teal; node tooltip on canvas.
 - **Click/tap**: copy command; language toggle; FAQ opens natively.
 - **Keyboard**: skip link, visible focus ring, native details/links.
-- **Pointer**: canvas parallax capped at 16px / 12px; poster parallax capped at ±22px.
-- **Touch**: pointer parallax disabled; content and terminal remain.
+- **Pointer**: canvas parallax capped at 16px / 12px; poster parallax capped at ±22px; hero spotlight follows the cursor; instrument tilts at most 2.4°.
+- **Scroll**: top progress hairline, ticker marquee, staggered card/gate entry.
+- **Touch**: pointer parallax, spotlight, and tilt disabled; content and terminal remain.
 - **Mobile**: no hover dependency; canvas static-ish, fewer moving parts.
 
 ## 5. Scroll Timeline
 
 | Section | Trigger | Animation | Failure mode |
 |---|---|---|---|
-| Hero | load + canvas visible | line masks, scan, HUD count | static final if reduced motion |
+| Hero | load + canvas visible | four-line masks, underline draw, scan, HUD count | static final if reduced motion |
+| Ticker | load | 34s marquee; pause on hover | static strip |
 | Poster | scroll | image parallax ±22px | no transform if reduced/mobile |
 | Problem | 35% visible | 54% count-up, 46% bar | final values immediately |
 | Evidence | gate 20% visible | gate opacity/translate, sticky text | all gates visible |
 | Product | section entry | card/console reveal | visible |
 | Safety | section entry | seal stamp once, quiet | static |
-| Install | terminal 35% visible | command typed once | full command immediately |
+| Install | terminal 35% visible | `npm i` commands typed once, blinking cursor | full command immediately |
 | FAQ/About | entry | subtle reveal | visible |
 
 ## 6. Canvas / Media
@@ -59,9 +62,10 @@
 
 ## 7. Baseline UI
 
-- Display: system Noto Sans SC / Source Han Sans SC, 800 weight, large CJK display.
-- Body: 15–16px, 1.7 line-height.
-- Code/data: JetBrains Maple Mono fallback.
+- Display: system Noto Sans SC / Source Han Sans SC, 700 weight, 52–104px, four deliberate lines, `-0.04em` tracking, amber underline on the last line.
+- Section display: 650 weight, 34–68px, `-0.035em`, balanced wrapping.
+- Body: 16px, 1.75 line-height, 34em measure.
+- Code/data: JetBrains Maple Mono fallback; tabular numbers for scores.
 - Palette: ink #07101d, teal #5eead4, amber #fbbf24, paper #f2f4f7.
 - 8px spacing rhythm, 18px cards, max width 1280.
 
@@ -85,7 +89,8 @@
 ## 10. Acceptance
 
 - [x] Hero has a distinct mechanic, not a stock hero.
-- [x] Five motion beats: scan, count-up, gates, seal, terminal.
+- [x] Seven motion beats: four-line title, underlined accent, scan, count-up, gates, seal, terminal.
+- [x] Ticker, scroll progress, spotlight, and instrument tilt add a second motion layer.
 - [x] One quiet section: safety.
 - [x] Reduced-motion fallback covers all content.
 - [x] 1440 / 768 / 390 no horizontal overflow.

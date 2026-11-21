@@ -2,6 +2,7 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
     new URLSearchParams(location.search).get('motion') === 'off'
   document.documentElement.classList.add('js')
+  if (reduce) document.documentElement.classList.add('motion-off')
 
   const lang = document.getElementById('lang')
   if (lang) lang.addEventListener('click', () => window.siteLocale?.toggle())
@@ -10,6 +11,19 @@
   const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 24)
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
+
+  const progressBar = document.getElementById('progress')
+  let progressRaf = 0
+  const updateProgress = () => {
+    progressRaf = 0
+    if (!progressBar) return
+    const max = document.documentElement.scrollHeight - window.innerHeight
+    progressBar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`
+  }
+  const requestProgress = () => { if (!progressRaf) progressRaf = requestAnimationFrame(updateProgress) }
+  updateProgress()
+  window.addEventListener('scroll', requestProgress, { passive: true })
+  window.addEventListener('resize', requestProgress)
 
   // Copy controls
   document.querySelectorAll('.copy').forEach((button) => {
@@ -31,6 +45,28 @@
   // Hero entrance
   const hero = document.querySelector('.hero')
   requestAnimationFrame(() => hero?.classList.add('is-ready'))
+
+  if (hero && !reduce && window.matchMedia('(pointer: fine)').matches) {
+    let glowRaf = 0
+    let glowX = 72
+    let glowY = 28
+    const paintGlow = () => {
+      glowRaf = 0
+      hero.style.setProperty('--mx', glowX + '%')
+      hero.style.setProperty('--my', glowY + '%')
+    }
+    hero.addEventListener('pointermove', (event) => {
+      const rect = hero.getBoundingClientRect()
+      glowX = ((event.clientX - rect.left) / rect.width) * 100
+      glowY = ((event.clientY - rect.top) / rect.height) * 100
+      if (!glowRaf) glowRaf = requestAnimationFrame(paintGlow)
+    }, { passive: true })
+    hero.addEventListener('pointerleave', () => {
+      glowX = 72
+      glowY = 28
+      if (!glowRaf) glowRaf = requestAnimationFrame(paintGlow)
+    })
+  }
 
   // Counters and bars
   const animateCounter = (element, target, duration = 900) => {
@@ -105,10 +141,36 @@
     if (reduce) runHud()
   }
 
+  if (instrument && !reduce && window.matchMedia('(pointer: fine)').matches) {
+    let tiltRaf = 0
+    let tiltX = 0
+    let tiltY = 0
+    const applyTilt = () => {
+      tiltRaf = 0
+      instrument.style.transform = tiltX || tiltY
+        ? `perspective(1100px) rotateX(${tiltY}deg) rotateY(${tiltX}deg)`
+        : ''
+    }
+    instrument.addEventListener('pointermove', (event) => {
+      const rect = instrument.getBoundingClientRect()
+      tiltX = ((event.clientX - rect.left) / rect.width - .5) * 2.4
+      tiltY = ((event.clientY - rect.top) / rect.height - .5) * -2.4
+      if (!tiltRaf) tiltRaf = requestAnimationFrame(applyTilt)
+    }, { passive: true })
+    instrument.addEventListener('pointerleave', () => {
+      tiltX = 0
+      tiltY = 0
+      if (!tiltRaf) tiltRaf = requestAnimationFrame(applyTilt)
+    })
+  }
+
   // Generic reveal
   const revealTargets = document.querySelectorAll(
-    '.section-label, .problem-copy, .stat-block, .cost-compare, .product-card, .console, .safety-copy, .seal, .safety-list, .install-head, .terminal, .install-footer, .faq .display-2, .faq-list, .about-grid'
+    '.section-label, .problem-copy, .stat-block, .cost-compare, .product-card, .console, .safety-copy, .seal, .safety-list li, .install-head, .terminal, .install-footer, .faq .display-2, .faq-list, .about-grid'
   )
+  document.querySelectorAll('.safety-list li').forEach((element, index) => {
+    element.style.setProperty('--reveal-delay', `${index * .06}s`)
+  })
   if (reduce) {
     revealTargets.forEach((element) => element.classList.add('is-visible'))
   } else {
@@ -125,6 +187,7 @@
 
   // Evidence gates
   const gates = document.querySelectorAll('.gate')
+  gates.forEach((gate, index) => gate.style.setProperty('--reveal-delay', `${index * .06}s`))
   if (!reduce && 'IntersectionObserver' in window) {
     const gateObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -156,7 +219,7 @@
   // Terminal typing
   const terminal = document.getElementById('terminal')
   const terminalText = document.getElementById('terminal-text')
-  const command = 'dsh plugin --profile web add dsh-plugin-trim\ndsh plugin --profile web add dsh-plugin-recipe'
+  const command = 'npm i dsh-plugin-trim\nnpm i dsh-plugin-recipe'
   if (terminal && terminalText) {
     const runTerminal = () => {
       if (terminal.dataset.done === '1') return

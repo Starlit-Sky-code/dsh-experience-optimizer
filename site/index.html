@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <div class="progress" id="progress" aria-hidden="true"></div>
   <a class="skip" href="#main" data-i18n="skip">跳到主要内容</a>
 
   <header class="site-header" id="site-header">
@@ -39,13 +40,15 @@
 
   <main id="main">
     <section class="hero" id="top">
+      <div class="hero-glow" aria-hidden="true"></div>
       <div class="hero-grid">
         <div class="hero-copy">
           <p class="eyebrow" data-i18n="heroEyebrow">DSH · CONTEXT OBSERVATORY</p>
           <h1 class="display">
             <span class="line" data-i18n="heroLine1">插件在偷偷</span>
             <span class="line" data-i18n="heroLine2">吃上下文。</span>
-            <span class="line line-accent" data-i18n="heroLine3">现在，把它拖到光下。</span>
+            <span class="line line-accent" data-i18n="heroLine3">现在，</span>
+            <span class="line line-accent" data-i18n="heroLine4">把它拖到光下。</span>
           </h1>
           <p class="lede" data-i18n="heroLede">DSH 体验优化器把插件常驻成本、兼容性检查和减负方案放进一个可观察的界面。少一点插件负担，多一点兼容确定性。</p>
           <div class="hero-actions">
@@ -53,7 +56,7 @@
             <a class="button" href="#how" data-i18n="ctaHow">看判断依据</a>
           </div>
           <div class="install-inline">
-            <code id="hero-command">dsh plugin --profile web add dsh-plugin-trim</code>
+            <code id="hero-command">npm i dsh-plugin-trim</code>
             <button class="copy" type="button" data-copy-el="hero-command" data-i18n="copy" aria-label="复制安装命令">复制</button>
           </div>
           <p class="micro" data-i18n="heroMicro">省略版本号即最新版 · 两个插件可独立或同时使用</p>
@@ -87,6 +90,17 @@
       </div>
     </section>
 
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <div class="ticker-group">
+          <span>CONTEXT COST</span><i></i><span>PLUGIN DIET</span><i></i><span>COMPATIBILITY</span><i></i><span>HOST APPROVAL</span><i></i><span>ALLOWED · ONCE</span><i></i><span>2,417 → 1,105 TOKENS</span><i></i><span>READ-ONLY SCAN</span><i></i><span>RESTORE POINT</span><i></i>
+        </div>
+        <div class="ticker-group">
+          <span>CONTEXT COST</span><i></i><span>PLUGIN DIET</span><i></i><span>COMPATIBILITY</span><i></i><span>HOST APPROVAL</span><i></i><span>ALLOWED · ONCE</span><i></i><span>2,417 → 1,105 TOKENS</span><i></i><span>READ-ONLY SCAN</span><i></i><span>RESTORE POINT</span><i></i>
+        </div>
+      </div>
+    </div>
+
     <section class="poster" aria-labelledby="poster-title">
       <div class="poster-meta">
         <p class="kicker" data-i18n="posterKicker">INTERLUDE 01 / POSTER</p>
@@ -106,7 +120,7 @@
       <div class="section-label"><span>01</span><span data-i18n="problemKicker">看不见的成本</span></div>
       <div class="problem-grid">
         <div class="problem-copy">
-          <h2 class="display-2" data-i18n="problemTitle">你砍掉了工具白名单，<br>却没量过插件的常驻上下文。</h2>
+          <h2 class="display-2"><span data-i18n="problemTitle1">你砍掉了工具白名单，</span><br><span data-i18n="problemTitle2">却没量过插件的常驻上下文。</span></h2>
           <p data-i18n="problemBody">工具调用看得见，插件的提示词和工具描述却一直在后台占位。先量出来，再决定关掉什么。</p>
         </div>
         <div class="stat-block">
@@ -126,7 +140,7 @@
     <section class="evidence" id="how">
       <div class="evidence-sticky">
         <p class="kicker" data-i18n="evidenceKicker">02 / EVIDENCE CHAIN</p>
-        <h2 class="display-2" data-i18n="evidenceTitle">先过闸门，<br>再谈建议关闭。</h2>
+        <h2 class="display-2"><span data-i18n="evidenceTitle1">先过闸门，</span><br><span data-i18n="evidenceTitle2">再谈建议关闭。</span></h2>
         <p data-i18n="evidenceBody">描述匹配只说明“可能相关”。强证据要同时穿过任务、账本、周期和成本四道门。</p>
         <div class="evidence-legend">
           <span><i class="dot dot-warn"></i><span data-i18n="legendReview">进入人工复核</span></span>
@@ -198,7 +212,7 @@
     <section class="safety" id="safety">
       <div class="safety-copy">
         <p class="kicker" data-i18n="safetyKicker">04 / SAFETY IS A VERB</p>
-        <h2 class="display-2" data-i18n="safetyTitle">安全不是弹窗，<br>是每一步都能回头。</h2>
+        <h2 class="display-2"><span data-i18n="safetyTitle1">安全不是弹窗，</span><br><span data-i18n="safetyTitle2">是每一步都能回头。</span></h2>
         <p data-i18n="safetyBody">只读分析、低风险、安全确认、还原点。没有任何一步靠“相信模型”。</p>
       </div>
       <div class="seal" aria-hidden="true"><span>ALLOWED</span><span>ONCE</span><small data-i18n="sealNote">host approval</small></div>
@@ -214,14 +228,14 @@
       <div class="section-label"><span>05</span><span data-i18n="installKicker">安装</span></div>
       <div class="install-head">
         <h2 class="display-2" data-i18n="installTitle">最短路径，装最新版。</h2>
-        <p data-i18n="installBody">省略版本号即 latest。npm i 是 npm install 的官方别名。</p>
+        <p data-i18n="installBody">省略版本号即 latest。两个包都可以单独安装。</p>
       </div>
       <div class="terminal" id="terminal">
         <div class="terminal-bar"><i></i><i></i><i></i><span>SHELL</span></div>
         <pre><code id="terminal-text"></code></pre>
-        <button class="copy terminal-copy" type="button" data-copy="dsh plugin --profile web add dsh-plugin-trim&#10;dsh plugin --profile web add dsh-plugin-recipe" data-copy-el="terminal-text" data-i18n="copyAll">复制全部</button>
+        <button class="copy terminal-copy" type="button" data-copy="npm i dsh-plugin-trim&#10;npm i dsh-plugin-recipe" data-copy-el="terminal-text" data-i18n="copyAll">复制全部</button>
       </div>
-      <p class="micro" data-i18n="installNote">普通 npm 安装：npm i dsh-plugin-trim dsh-plugin-recipe</p>
+      <p class="micro" data-i18n="installNote">可选工作流配方：npm i dsh-plugin-recipe</p>
       <div class="install-footer">
         <a class="button primary" href="https://www.npmjs.com/package/dsh-plugin-trim" target="_blank" rel="noreferrer" data-i18n="npmCta">打开 npm</a>
         <a class="text-link" href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases" target="_blank" rel="noreferrer" data-i18n="releaseCta">GitHub Release ↗</a>
@@ -243,7 +257,7 @@
       <div class="section-label"><span>07</span><span data-i18n="aboutKicker">关于 / 支持</span></div>
       <div class="about-grid">
         <div>
-          <h2 class="display-2" data-i18n="aboutTitle">一个本地优先的<br>DSH 插件套件。</h2>
+          <h2 class="display-2"><span data-i18n="aboutTitle1">一个本地优先的</span><br><span data-i18n="aboutTitle2">DSH 插件套件。</span></h2>
           <p class="about-lede" data-i18n="aboutBody">AGPL-3.0 · 作者 Starlit Sky · 欢迎反馈、试用和一起把插件生态做轻。</p>
           <div class="about-links">
             <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub ↗</a>
