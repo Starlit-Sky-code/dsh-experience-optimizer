@@ -20,8 +20,9 @@ All notable changes to this repository are documented here. Versions follow
   scale, balanced section headings, a live ticker, pointer spotlight, instrument
   tilt, scroll progress, staggered reveals, and a blinking terminal cursor.
   Metadata sizes were raised from the previous 8–10px floor.
-- Promo page now opens with a short, skippable 1.5s observatory boot sequence
-  (radar, node/token counters, wordmark, upward wipe).
+- Promo page now opens with a 12s, five-scene observatory sequence: the existing
+  boot radar, resident-cost bars, evidence gates, workflow recipe, and a ready
+  lockup. It is skippable at any time; reduced-motion and `?intro=off` skip it.
 - Scroll guidance is now explicit: a centered mouse-track cue on desktop and a
   fixed bottom pill on tablet/mobile that hides after scrolling.
 
