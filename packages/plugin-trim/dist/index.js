@@ -4609,11 +4609,11 @@ function registerTrimApi(ctx, config, ledger) {
 		webCtx.effect(() => server.register({
 			kind: "prefix",
 			path: API_PREFIX,
-			handler: (req, res) => handle(req, res, ctx, config, ledger)
+			handler: (req, res) => handleTrimRequest(req, res, ctx, config, ledger)
 		}), "trim.webApi");
 	});
 }
-async function handle(req, res, ctx, config, ledger) {
+async function handleTrimRequest(req, res, ctx, config, ledger) {
 	const connection = ctx.get("connection");
 	if (connection === void 0 || typeof connection.requestRejection !== "function") {
 		sendError(res, 401, "authentication unavailable");
@@ -4654,6 +4654,13 @@ async function handle(req, res, ctx, config, ledger) {
 			sendJson(res, 200, {
 				ok: true,
 				data: await checkForUpdate()
+			});
+			return;
+		}
+		if (req.method === "POST" && path === "/config") {
+			sendJson(res, 200, {
+				ok: true,
+				data: publicConfig(ctx, normalizeConfig(await updateTrimConfig(ctx, sanitizeConfigPatch(await readJsonBody(req)))))
 			});
 			return;
 		}
@@ -4729,6 +4736,68 @@ async function checkForUpdate() {
 			checkedAt: (/* @__PURE__ */ new Date()).toISOString()
 		};
 	}
+}
+/** Validate the mutable config fields accepted from the authenticated Web UI. */
+function sanitizeConfigPatch(input) {
+	if (!input || typeof input !== "object" || Array.isArray(input)) throw new Error("config patch must be an object");
+	const raw = input;
+	const patch = {};
+	if ("mode" in raw) {
+		if (raw.mode !== "advise" && raw.mode !== "auto-safe") throw new Error("invalid mode");
+		patch.mode = raw.mode;
+	}
+	if ("approvalMode" in raw) {
+		if (raw.approvalMode !== "always" && raw.approvalMode !== "risk-based") throw new Error("invalid approvalMode");
+		patch.approvalMode = raw.approvalMode;
+	}
+	if ("suggestionPolicy" in raw) {
+		if (raw.suggestionPolicy !== "conservative" && raw.suggestionPolicy !== "balanced") throw new Error("invalid suggestionPolicy");
+		patch.suggestionPolicy = raw.suggestionPolicy;
+	}
+	if ("approvalThreshold" in raw) {
+		const value = Number(raw.approvalThreshold);
+		if (!Number.isInteger(value) || value < 1 || value > 100) throw new Error("invalid approvalThreshold");
+		patch.approvalThreshold = value;
+	}
+	if ("trackUsage" in raw) {
+		if (typeof raw.trackUsage !== "boolean") throw new Error("invalid trackUsage");
+		patch.trackUsage = raw.trackUsage;
+	}
+	if ("usageRetentionDays" in raw) {
+		const value = Number(raw.usageRetentionDays);
+		if (!Number.isInteger(value) || value < 1 || value > 365) throw new Error("invalid usageRetentionDays");
+		patch.usageRetentionDays = value;
+	}
+	if ("maxDrafts" in raw) {
+		const value = Number(raw.maxDrafts);
+		if (!Number.isInteger(value) || value < 1 || value > 200) throw new Error("invalid maxDrafts");
+		patch.maxDrafts = value;
+	}
+	if ("protect" in raw) patch.protect = stringList(raw.protect, "protect");
+	if ("pinned" in raw) patch.pinned = stringList(raw.pinned, "pinned");
+	if (Object.keys(patch).length === 0) throw new Error("config patch is empty");
+	return patch;
+}
+function stringList(value, field) {
+	if (!Array.isArray(value)) throw new Error(`invalid ${field}`);
+	return value.map((item) => typeof item === "string" ? item.trim() : "").filter(Boolean).slice(0, 200);
+}
+/** Write the validated patch through the DSH loader so the profile patch remains authoritative. */
+async function updateTrimConfig(ctx, patch) {
+	const loader = ctx.get("loader");
+	if (!loader || typeof loader.entries !== "function" || typeof loader.update !== "function") throw new Error("loader unavailable; config was not written");
+	let entry;
+	for (const candidate of loader.entries()) if (candidate.options?.id === "dsh-plugin-trim" || candidate.options?.name === "dsh-plugin-trim") {
+		entry = candidate;
+		break;
+	}
+	if (!entry?.options?.id) throw new Error("plugin entry not found; config was not written");
+	const next = {
+		...entry.options.config && typeof entry.options.config === "object" ? entry.options.config : {},
+		...patch
+	};
+	await loader.update(entry.options.id, { config: next });
+	return normalizeConfig(next);
 }
 function publicConfig(ctx, config) {
 	const profile = resolveProfileFacts(ctx);

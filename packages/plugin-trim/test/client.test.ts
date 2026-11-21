@@ -110,7 +110,7 @@ describe('client onboarding and pages', () => {
     const skip = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '跳过')
     expect(skip).toBeDefined()
     await act(async () => { skip?.click(); await sleep(30) })
-    expect(window.localStorage.getItem('dsh-experience-optimizer.onboarding.v1')).toBe('1')
+    expect(window.localStorage.getItem('dsh-experience-optimizer.onboarding.v2')).toBe('1')
 
     const planToggle = [...container.querySelectorAll('.eo-card-toggle')].find((button) => button.textContent?.includes('插件体检方案'))
     expect(planToggle).toBeDefined()
@@ -151,10 +151,18 @@ describe('client onboarding and pages', () => {
     const settings = tabs.find((button) => button.textContent?.trim() === '设置')
     await act(async () => { settings?.click(); await sleep(80) })
     const settingsText = container.textContent || ''
-    expect(settingsText).toContain('设置页不会直接改配置')
+    expect(settingsText).toContain('修改后点击应用')
     expect(settingsText).toContain('审批与保护逻辑不会因为改设置而跳过')
-    expect(settingsText.indexOf('设置页不会直接改配置')).toBeLessThan(settingsText.indexOf('当前生效设置'))
+    expect(settingsText.indexOf('修改后点击应用')).toBeLessThan(settingsText.indexOf('插件设置'))
     expect(settingsText).not.toContain('守卫')
+    const mode = container.querySelector('select') as HTMLSelectElement
+    expect(mode).not.toBeNull()
+    await act(async () => {
+      mode.value = 'auto-safe'
+      mode.dispatchEvent(new Event('change', { bubbles: true }))
+      await sleep(40)
+    })
+    expect(container.textContent).toContain('应用修改')
 
     const language = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'EN')
     expect(language).toBeDefined()
@@ -191,5 +199,18 @@ describe('client onboarding and pages', () => {
     await act(async () => { await sleep(80) })
     expect(container.textContent).toContain('1,000 tokens')
     expect(container.querySelector('.mock-reasoning')).not.toBeNull()
+
+    await act(async () => { root.unmount() })
+    const Activation = slotComponents['plugins.bundle.activation']
+    expect(Activation).toBeDefined()
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(Activation as React.ComponentType, {
+        onDismiss: () => undefined,
+        onOpenDetails: () => undefined,
+      }))
+    })
+    expect(container.textContent).toContain('Plugin checkup is enabled')
+    expect(container.textContent).toContain('Five steps')
   })
 })

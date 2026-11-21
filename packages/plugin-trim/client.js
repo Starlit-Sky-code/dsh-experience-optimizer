@@ -24,8 +24,8 @@ window.__ModuleLoader__.load({
     ]
 
     const LOCALE_KEY = 'dsh-experience-optimizer.locale'
-    const ONBOARDING_KEY = 'dsh-experience-optimizer.onboarding.v1'
-    const MAIN_GUIDE_KEY = 'dsh-experience-optimizer.main-guide.v1'
+    const ONBOARDING_KEY = 'dsh-experience-optimizer.onboarding.v2'
+    const MAIN_GUIDE_KEY = 'dsh-experience-optimizer.main-guide.v2'
     const ABOUT_LINKS = {
       repo: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
       npmTrim: 'https://www.npmjs.com/package/dsh-plugin-trim',
@@ -425,6 +425,12 @@ window.__ModuleLoader__.load({
         .eo-settings-row:last-child{border-bottom:0}
         .eo-settings-row span:first-child{color:var(--eo-secondary);flex:0 0 auto}
         .eo-settings-row code{font:400 11px/16px var(--eo-code);color:var(--eo-primary);text-align:right;word-break:break-all}
+        .eo-settings-control{width:190px;flex:0 1 190px;height:30px;font-size:12px;line-height:18px}
+        .eo-settings-row-wide{flex-wrap:wrap}
+        .eo-settings-row-wide .eo-settings-control{width:100%;flex:1 1 240px}
+        .eo-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--eo-primary);cursor:pointer;min-height:30px}
+        .eo-check input{width:14px;height:14px;accent-color:var(--eo-primary);cursor:pointer}
+        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}}
         .eo-codeblock{margin:0;padding:12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05));font:400 11px/18px var(--eo-code);color:var(--eo-secondary);white-space:pre-wrap;word-break:break-word}
         .eo-faq{border-bottom:.5px solid var(--eo-border);padding:8px 0}
         .eo-faq:last-child{border-bottom:0}
@@ -477,11 +483,29 @@ window.__ModuleLoader__.load({
 @keyframes eo-modal-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes eo-thought-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 @keyframes eo-bubble-in{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
+.eo-activation{max-width:760px;padding:16px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.2));border-radius:12px;background:var(--dsw-alias-bg-layer-1,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);box-shadow:0 10px 30px rgba(0,0,0,.08);animation:eo-activation-in .4s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-activation-head{display:flex;align-items:flex-start;gap:10px}
+.eo-activation-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;background:color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 10%,transparent);color:var(--dsw-alias-state-success-primary,#1a7f37)}
+.eo-activation h3{margin:0;color:var(--dsw-alias-label-primary,#1a1a1a);font-size:14px;line-height:21px;font-weight:600}
+.eo-activation p{margin:3px 0 0;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:12px;line-height:18px}
+.eo-activation-steps{list-style:none;margin:13px 0 0;padding:0;display:grid;gap:7px}
+.eo-activation-steps li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;align-items:start}
+.eo-activation-steps b{color:var(--dsw-alias-label-tertiary,#8b96a5);font:10px/18px var(--ds-font-family-code,ui-monospace,monospace)}
+.eo-activation-steps strong{display:block;color:var(--dsw-alias-label-primary,#1a1a1a);font-size:12px;line-height:18px;font-weight:500}
+.eo-activation-steps small{display:block;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:11px;line-height:17px}
+.eo-activation-actions{display:flex;gap:7px;margin-top:14px}
+.eo-activation-btn{appearance:none;height:28px;padding:0 10px;border:.5px solid var(--dsw-alias-border-l3,rgba(127,127,127,.28));border-radius:6px;background:transparent;color:var(--dsw-alias-label-secondary,#5f6b7a);font:inherit;font-size:11px;cursor:pointer;transition:background .18s ease,color .18s ease,transform .14s ease}
+.eo-activation-btn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.08));color:var(--dsw-alias-label-primary,#1a1a1a)}
+.eo-activation-btn:active{transform:translateY(1px)}
+.eo-activation-primary{border-color:var(--dsw-alias-button-primary-fill,#1a1a1a);background:var(--dsw-alias-button-primary-fill,#1a1a1a);color:var(--dsw-alias-label-primary-inverted,#fff)}
+.eo-activation-primary:hover{background:var(--dsw-alias-button-primary-hover,#333);color:var(--dsw-alias-label-primary-inverted,#fff)}
+@keyframes eo-activation-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
 @keyframes eo-spin{to{transform:rotate(360deg)}}
 @keyframes eo-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media(max-width:820px){.eo-layout-two .eo-findings,.eo-layout-two .eo-list,.eo-layout-two .eo-owner-list,.eo-inventory-grid{grid-template-columns:1fr}.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
 @media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-metric{border-right:0;border-bottom:.5px solid var(--eo-border)}.eo-metric:last-child{border-bottom:0}}
-@media(prefers-reduced-motion:reduce){.eo-bubble-toast,.eo-bubble-pulse,.eo-thought-pulse,.eo-tab-active:after,.eo-tab-panel,.eo-modal-backdrop,.eo-modal,.eo-toast{animation:none}.eo-collapse,.eo-btn,.eo-bubble-close,.eo-tab{transition:none}.eo-btn:active:not(:disabled),.eo-bubble-close:active{transform:none}}
+@media(prefers-reduced-motion:reduce){.eo-bubble-toast,.eo-bubble-pulse,.eo-thought-pulse,.eo-tab-active:after,.eo-tab-panel,.eo-modal-backdrop,.eo-modal,.eo-toast,.eo-activation{animation:none}.eo-collapse,.eo-btn,.eo-bubble-close,.eo-tab{transition:none}.eo-btn:active:not(:disabled),.eo-bubble-close:active{transform:none}}
 `
 
 
@@ -1065,7 +1089,7 @@ window.__ModuleLoader__.load({
         const storage = browserStorage()
         try { return storage ? storage.getItem(MAIN_GUIDE_KEY) !== '1' : true } catch { return true }
       })
-      const [stepsOpen, setStepsOpen] = useState(false)
+      const [stepsOpen, setStepsOpen] = useState(true)
       const dismiss = () => {
         const storage = browserStorage()
         try { if (storage) storage.setItem(MAIN_GUIDE_KEY, '1') } catch { /* ignore */ }
@@ -1103,7 +1127,7 @@ window.__ModuleLoader__.load({
           h('i', null, '→'),
           h('span', null, tr('插件体检', 'Plugin checkup')),
         ),
-        h('p', { className: 'eo-guide-note' }, tr('打开后会自动出现 5 步教程；也可以先看这里的路径。', 'A five-step guide opens there; you can follow this path first.')),
+        h('p', { className: 'eo-guide-note' }, tr('打开后会先出现新手引导；「教程」页有完整 5 步。', 'First-run onboarding opens there; the Guide tab has the full five steps.')),
         stepsOpen
           ? h('ol', { className: 'eo-guide-steps' }, steps.map(([title, body], index) =>
               h('li', { key: title }, h('b', null, String(index + 1).padStart(2, '0')), h('span', null, title), h('small', null, body)),
@@ -1115,6 +1139,45 @@ window.__ModuleLoader__.load({
           h(Button, { variant: 'ghost', onClick: () => setStepsOpen((value) => !value) }, stepsOpen ? tr('收起步骤', 'Hide steps') : tr('查看 5 步教程', 'Show 5 steps')),
           h(Button, { variant: 'accent', onClick: dismiss }, tr('知道了', 'Got it')),
         ),
+        ),
+      )
+    }
+
+    function ActivationGuide({ onDismiss, onOpenDetails }) {
+      const steps = [
+        [tr('打开插件体检', 'Open Plugin checkup'), tr('设置 → 插件体检，或在插件页签里找到它。', 'Settings → Plugin checkup, or find it in the Plugins tab.')],
+        [tr('先扫描', 'Scan first'), tr('看可归属上下文、兼容性和插件清单，不急着关任何东西。', 'Review attributable context, compatibility, and inventory before closing anything.')],
+        [tr('生成体检方案', 'Build a checkup plan'), tr('选任务或写目标；默认只生成草稿。', 'Pick a task or write a goal; the default is a draft only.')],
+        [tr('看依据再决定', 'Read the evidence'), tr('周期、已有调用、无账本都会先保护或复核。', 'Schedules, prior calls, or no ledger go to protection or review first.')],
+        [tr('需要时看完整教程', 'Open the full guide'), tr('「教程」页有 5 分钟上手和常见问题。', 'The Guide tab has the five-minute walkthrough and FAQ.')],
+      ]
+      return h(
+        'section',
+        { className: 'eo-activation', role: 'dialog', 'aria-label': tr('插件体检初次使用', 'Plugin checkup first run') },
+        h(
+          'div',
+          { className: 'eo-activation-head' },
+          h('div', { className: 'eo-activation-icon' }, h(Icon, { name: 'gauge', size: 20 })),
+          h('div', null,
+            h('h3', null, tr('插件体检已启用', 'Plugin checkup is enabled')),
+            h('p', null, tr('先量成本，再决定关什么。5 步上手：', 'Measure first, then decide what to close. Five steps:')),
+          ),
+        ),
+        h(
+          'ol',
+          { className: 'eo-activation-steps' },
+          steps.map(([title, body], index) =>
+            h('li', { key: title },
+              h('b', null, String(index + 1).padStart(2, '0')),
+              h('span', null, h('strong', null, title), h('small', null, body)),
+            ),
+          ),
+        ),
+        h(
+          'div',
+          { className: 'eo-activation-actions' },
+          h('button', { type: 'button', className: 'eo-activation-btn', onClick: onDismiss }, tr('开始使用', 'Start using it')),
+          h('button', { type: 'button', className: 'eo-activation-btn eo-activation-primary', onClick: onOpenDetails }, tr('查看插件详情', 'Open plugin details')),
         ),
       )
     }
@@ -1162,7 +1225,9 @@ window.__ModuleLoader__.load({
       const [recipeResult, setRecipeResult] = useState(null)
       const [recipeBusy, setRecipeBusy] = useState(false)
       const [settings, setSettings] = useState(null)
+      const [settingsDraft, setSettingsDraft] = useState(null)
       const [settingsBusy, setSettingsBusy] = useState(false)
+      const [settingsApplying, setSettingsApplying] = useState(false)
       const [settingsError, setSettingsError] = useState('')
       const [updateInfo, setUpdateInfo] = useState(null)
       const [updateBusy, setUpdateBusy] = useState(false)
@@ -1242,7 +1307,9 @@ window.__ModuleLoader__.load({
         setSettingsBusy(true)
         setSettingsError('')
         try {
-          setSettings(await fetchJson(API + '/config'))
+          const data = await fetchJson(API + '/config')
+          setSettings(data)
+          setSettingsDraft(data)
         } catch (err) {
           setSettingsError(err instanceof Error ? err.message : String(err))
         } finally {
@@ -1250,16 +1317,65 @@ window.__ModuleLoader__.load({
         }
       }, [])
 
+      const settingsChanged = useMemo(() => {
+        if (!settings || !settingsDraft) return false
+        const fields = ['mode', 'approvalMode', 'suggestionPolicy', 'approvalThreshold', 'trackUsage', 'usageRetentionDays', 'maxDrafts', 'protect', 'pinned']
+        return JSON.stringify(fields.map((field) => settingsDraft[field])) !==
+          JSON.stringify(fields.map((field) => settings[field]))
+      }, [settings, settingsDraft])
+
+      const updateSettingsField = useCallback((field, value) => {
+        setSettingsDraft((current) => current ? { ...current, [field]: value } : current)
+      }, [])
+
+      const discardSettings = useCallback(() => {
+        setSettingsDraft(settings ? { ...settings } : null)
+        setSettingsError('')
+      }, [settings])
+
+      const applySettings = useCallback(async () => {
+        if (!settingsDraft) return
+        setSettingsApplying(true)
+        setSettingsError('')
+        try {
+          const payload = {
+            mode: settingsDraft.mode,
+            approvalMode: settingsDraft.approvalMode,
+            suggestionPolicy: settingsDraft.suggestionPolicy,
+            approvalThreshold: settingsDraft.approvalThreshold,
+            trackUsage: settingsDraft.trackUsage,
+            usageRetentionDays: settingsDraft.usageRetentionDays,
+            maxDrafts: settingsDraft.maxDrafts,
+            protect: settingsDraft.protect,
+            pinned: settingsDraft.pinned,
+          }
+          const data = await fetchJson(API + '/config', {
+            method: 'POST',
+            body: JSON.stringify(payload),
+          })
+          setSettings(data)
+          setSettingsDraft(data)
+          notify(tr('设置已应用，插件会重新加载', 'Settings applied; the plugin will reload'))
+        } catch (err) {
+          setSettingsError(err instanceof Error ? err.message : String(err))
+        } finally {
+          setSettingsApplying(false)
+        }
+      }, [settingsDraft, notify])
+
       const checkUpdate = useCallback(async () => {
         setUpdateBusy(true)
         try {
           setUpdateInfo(await fetchJson(API + '/update'))
         } catch (err) {
+          const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.3.6',
+            current: '0.3.7',
             latest: null,
             updateAvailable: false,
-            error: err instanceof Error ? err.message : String(err),
+            error: /unknown endpoint/i.test(message)
+              ? tr('当前安装版本不支持在线检查，请更新到最新版', 'This installed version does not support the online check; update to the latest version.')
+              : message,
           })
         } finally {
           setUpdateBusy(false)
@@ -1520,11 +1636,6 @@ window.__ModuleLoader__.load({
               },
               locale === 'zh' ? 'EN' : '中文',
             ),
-            h(
-              Button,
-              { onClick: refresh, disabled: loading, variant: 'ghost' },
-              loading ? tr('刷新中…', 'Refreshing…') : tr('刷新', 'Refresh'),
-            ),
           ),
         ),
         h(
@@ -1745,8 +1856,17 @@ window.__ModuleLoader__.load({
           return h('div', { className: 'eo-error' }, h('span', null, settingsError), h(Button, { variant: 'ghost', onClick: loadSettings }, tr('重试', 'Retry')))
         }
         if (!settings) return h('div', { className: 'eo-empty' }, tr('暂无设置数据。', 'No settings data.'))
-        const policyLabel = settings.suggestionPolicy === 'balanced' ? tr('旧评分（仍保护周期与已用插件）', 'Legacy score (still protects scheduled/used plugins)') : tr('证据优先（推荐）', 'Evidence-first (recommended)')
-        const approvalLabel = settings.approvalMode === 'risk-based' ? tr('仅超过阈值时审批', 'Approve only above threshold') : tr('每次工具写入都审批', 'Approve every tool write')
+        const form = settingsDraft || settings
+        const dirty = settingsChanged
+        const option = (labelZh, labelEn, value) => h('option', { key: value, value }, tr(labelZh, labelEn))
+        const inputNumber = (field, min, max) => h('input', {
+          className: 'eo-input eo-input-number',
+          type: 'number',
+          min,
+          max,
+          value: form[field],
+          onChange: (event) => updateSettingsField(field, Number(event.target.value)),
+        })
         return h(
           'div',
           { className: 'eo-stack' },
@@ -1754,46 +1874,31 @@ window.__ModuleLoader__.load({
             Card,
             {
               className: 'eo-settings-readonly',
-              title: tr('设置页不会直接改配置', 'This page does not edit config directly'),
-              subtitle: tr('只读视图；修改请写入配置补丁', 'Read-only; edit the profile patch to change'),
+              title: tr('修改后点击应用', 'Review changes, then apply'),
+              subtitle: tr('不会自动写入；应用会更新当前 profile', 'Nothing is written until you apply'),
             },
-            h('div', { className: 'eo-muted' }, tr('为避免 UI 绕过 DSH 的配置边界，这里只展示当前生效值与可复制片段。修改后请重新加载插件；审批与保护逻辑不会因为改设置而跳过。', 'To avoid bypassing DSH configuration boundaries, this page only shows effective values and a copyable snippet. Reload the plugin after editing; approval and protection are never skipped.')),
+            h('div', { className: 'eo-muted' }, tr('这里的修改先保存在页面草稿中，点击应用才会写入当前 profile 并重载插件。审批与保护逻辑不会因为改设置而跳过。', 'Changes stay as a page draft until you apply. Applying writes the current profile and reloads the plugin; approval and protection are never skipped.')),
           ),
           h(
             Card,
             {
               title: tr('界面偏好', 'Interface preferences'),
-              subtitle: tr('只作用于插件体检页；偏好保存在本浏览器', 'Applies to the Plugin checkup page; saved in this browser'),
+              subtitle: tr('即时生效；偏好保存在本浏览器', 'Applied immediately; saved in this browser'),
             },
-            h(
-              'div',
-              { className: 'eo-settings-row' },
-              h('span', null, tr('内容排列', 'Content layout')),
-              h(
-                'div',
-                { className: 'eo-inline' },
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('内容排列', 'Content layout')),
+              h('div', { className: 'eo-inline' },
                 h(Button, { variant: 'ghost', className: layout === 'standard' ? 'eo-btn-active' : '', onClick: () => changeLayout('standard') }, tr('标准', 'Standard')),
                 h(Button, { variant: 'ghost', className: layout === 'two' ? 'eo-btn-active' : '', onClick: () => changeLayout('two') }, tr('双列', 'Two-column')),
               ),
             ),
-            h(
-              'div',
-              { className: 'eo-settings-row' },
-              h('span', null, tr('密度', 'Density')),
-              h(
-                'div',
-                { className: 'eo-inline' },
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('密度', 'Density')),
+              h('div', { className: 'eo-inline' },
                 h(Button, { variant: 'ghost', className: density === 'comfortable' ? 'eo-btn-active' : '', onClick: () => changeDensity('comfortable') }, tr('舒适', 'Comfortable')),
                 h(Button, { variant: 'ghost', className: density === 'compact' ? 'eo-btn-active' : '', onClick: () => changeDensity('compact') }, tr('紧凑', 'Compact')),
               ),
             ),
-            h(
-              'div',
-              { className: 'eo-settings-row' },
-              h('span', null, tr('卡片', 'Cards')),
-              h(
-                'div',
-                { className: 'eo-inline' },
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('卡片', 'Cards')),
+              h('div', { className: 'eo-inline' },
                 h(Button, { variant: 'ghost', onClick: collapseAllCards }, tr('全部折叠', 'Collapse all')),
                 h(Button, { variant: 'ghost', onClick: expandAllCards }, tr('全部展开', 'Expand all')),
               ),
@@ -1802,21 +1907,64 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
-              title: tr('更新与反馈', 'Updates & feedback'),
-              subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues'),
+              title: tr('插件设置', 'Plugin settings'),
+              subtitle: tr('改动后才会出现应用按钮；应用会重载插件', 'The apply button appears after changes; applying reloads the plugin'),
             },
             h(
               'div',
-              { className: 'eo-settings-row' },
-              h('span', null, tr('当前版本', 'Current version')),
-              h('code', null, updateInfo?.current || '0.3.6'),
+              { className: 'eo-settings-grid' },
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前配置', 'Profile')), h('code', null, form.profile)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('运行模式', 'Mode')),
+                h('select', { className: 'eo-select eo-settings-control', value: form.mode, onChange: (event) => updateSettingsField('mode', event.target.value) },
+                  option('建议模式', 'Advice mode', 'advise'),
+                  option('自动安全（收窄建议）', 'Auto-safe (narrower)', 'auto-safe'),
+                ),
+              ),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批策略', 'Approval')),
+                h('select', { className: 'eo-select eo-settings-control', value: form.approvalMode, onChange: (event) => updateSettingsField('approvalMode', event.target.value) },
+                  option('每次工具写入都审批', 'Approve every tool write', 'always'),
+                  option('仅超过阈值时审批', 'Approve only above threshold', 'risk-based'),
+                ),
+              ),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), inputNumber('approvalThreshold', 1, 100)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('建议策略', 'Suggestion policy')),
+                h('select', { className: 'eo-select eo-settings-control', value: form.suggestionPolicy, onChange: (event) => updateSettingsField('suggestionPolicy', event.target.value) },
+                  option('证据优先（推荐）', 'Evidence-first (recommended)', 'conservative'),
+                  option('旧评分（仍保护周期与已用插件）', 'Legacy score', 'balanced'),
+                ),
+              ),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('使用账本', 'Usage ledger')),
+                h('label', { className: 'eo-check' },
+                  h('input', { type: 'checkbox', checked: form.trackUsage, onChange: (event) => updateSettingsField('trackUsage', event.target.checked) }),
+                  h('span', null, form.trackUsage ? tr('开启', 'On') : tr('关闭', 'Off')),
+                ),
+              ),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('账本保留', 'Ledger retention')), inputNumber('usageRetentionDays', 1, 365)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), inputNumber('maxDrafts', 1, 200)),
+              h('div', { className: 'eo-settings-row eo-settings-row-wide' }, h('span', null, tr('保护名单', 'Protect list')),
+                h('input', { className: 'eo-input eo-settings-control', value: form.protect.join(', '), placeholder: tr('包名，用逗号分隔', 'Package names, comma separated'), onChange: (event) => updateSettingsField('protect', splitList(event.target.value)) }),
+              ),
+              h('div', { className: 'eo-settings-row eo-settings-row-wide' }, h('span', null, tr('固定名单', 'Pinned list')),
+                h('input', { className: 'eo-input eo-settings-control', value: form.pinned.join(', '), placeholder: tr('包名，用逗号分隔', 'Package names, comma separated'), onChange: (event) => updateSettingsField('pinned', splitList(event.target.value)) }),
+              ),
             ),
-            h(
-              'div',
-              { className: 'eo-settings-row' },
-              h('span', null, tr('最新版本', 'Latest version')),
-              h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked')),
-            ),
+            h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('配置目录：', 'Config directory: ') + form.profileDir),
+            settingsError ? h('div', { className: 'eo-error', style: { marginTop: '10px' } }, h('span', null, settingsError)) : null,
+            dirty
+              ? h('div', { className: 'eo-applybar' },
+                  h('span', null, tr('有未应用的修改', 'Unapplied changes')),
+                  h('div', { className: 'eo-inline' },
+                    h(Button, { variant: 'ghost', onClick: discardSettings, disabled: settingsApplying }, tr('撤销', 'Discard')),
+                    h(Button, { variant: 'accent', onClick: () => void applySettings(), disabled: settingsApplying }, settingsApplying ? tr('应用中…', 'Applying…') : tr('应用修改', 'Apply changes')),
+                  ),
+                )
+              : h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('修改任意设置后，这里会出现「应用修改」。', 'The Apply button appears here after you change a setting.')),
+          ),
+          h(
+            Card,
+            { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.7')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
               : updateInfo && updateInfo.latest
@@ -1824,9 +1972,7 @@ window.__ModuleLoader__.load({
                 : updateInfo && updateInfo.error
                   ? h('div', { className: 'eo-issue eo-issue-warn' }, h('span', null, tr('检查失败：', 'Check failed: ') + updateInfo.error))
                   : null,
-            h(
-              'div',
-              { className: 'eo-inline', style: { marginTop: '10px' } },
+            h('div', { className: 'eo-inline', style: { marginTop: '10px' } },
               h(Button, { variant: 'accent', onClick: () => void checkUpdate(), disabled: updateBusy }, updateBusy ? tr('检查中…', 'Checking…') : tr('检查更新', 'Check for updates')),
               h('a', { className: 'eo-btn eo-btn-ghost', href: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues/new/choose', target: '_blank', rel: 'noreferrer' }, tr('新建 Issue', 'New issue')),
               h('a', { className: 'eo-btn eo-btn-ghost', href: ABOUT_LINKS.issues, target: '_blank', rel: 'noreferrer' }, tr('问题列表', 'Issues')),
@@ -1834,45 +1980,8 @@ window.__ModuleLoader__.load({
           ),
           h(
             Card,
-            {
-              title: tr('当前生效设置', 'Effective settings'),
-              subtitle: tr('只读视图；修改请写入配置补丁', 'Read-only; edit the profile patch to change'),
-              extra: h(Button, { variant: 'ghost', onClick: loadSettings, disabled: settingsBusy }, settingsBusy ? tr('读取中…', 'Loading…') : tr('刷新', 'Refresh')),
-            },
-            h(
-              'div',
-              { className: 'eo-settings-grid' },
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前配置', 'Profile')), h('code', null, settings.profile)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('运行模式', 'Mode')), h('code', null, settings.mode === 'auto-safe' ? tr('自动安全（收窄建议）', 'Auto-safe (narrower)') : tr('建议模式', 'Advice mode'))),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批策略', 'Approval')), h('code', null, approvalLabel)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), h('code', null, String(settings.approvalThreshold) + tr(' 项', ' items'))),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('建议策略', 'Suggestion policy')), h('code', null, policyLabel)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('使用账本', 'Usage ledger')), h('code', null, settings.trackUsage ? tr('开启', 'On') : tr('关闭', 'Off'))),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('账本保留', 'Ledger retention')), h('code', null, settings.usageRetentionDays + tr(' 天', ' days'))),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), h('code', null, String(settings.maxDrafts))),
-            ),
-            h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('配置目录：', 'Config directory: ') + settings.profileDir),
-          ),
-          h(
-            Card,
-            { title: tr('保护与固定', 'Protect & pin'), subtitle: tr('这些插件永远不会进入自动建议', 'These plugins never become automatic candidates') },
-            settings.protect.length === 0 && settings.pinned.length === 0
-              ? h('div', { className: 'eo-empty' }, tr('尚未配置保护 / 固定名单。可在配置补丁中添加需要保底的插件。', 'No protect/pinned entries. Add must-keep plugins to the profile patch.'))
-              : h(
-                  'div',
-                  { className: 'eo-inline' },
-                  settings.protect.map((name) => h(Badge, { key: 'protect-' + name, tone: 'warn' }, tr('保护 · ', 'Protect · ') + name)),
-                  settings.pinned.map((name) => h(Badge, { key: 'pinned-' + name, tone: 'neutral' }, tr('固定 · ', 'Pinned · ') + name)),
-                ),
-          ),
-          h(
-            Card,
-            {
-              title: tr('配置片段', 'Configuration snippet'),
-              subtitle: tr('复制到配置补丁；写入后由 DSH 重新加载', 'Copy into the profile patch; DSH reloads after writing'),
-              extra: h(Button, { variant: 'accent', onClick: () => void copyConfig(settings) }, tr('复制片段', 'Copy snippet')),
-            },
-            h('pre', { className: 'eo-codeblock' }, configPatch(settings)),
+            { title: tr('配置片段', 'Configuration snippet'), subtitle: tr('当前草稿的可复制片段', 'Copyable snippet for the current draft'), extra: h(Button, { variant: 'accent', onClick: () => void copyConfig(form) }, tr('复制片段', 'Copy snippet')) },
+            h('pre', { className: 'eo-codeblock' }, configPatch(form)),
           ),
         )
       }
@@ -3129,6 +3238,15 @@ window.__ModuleLoader__.load({
             priority: 90,
           },
           ReasoningCheckup,
+        ),
+      )
+      ctx.slots.inject('plugins.bundle.activation', () =>
+        ctx.slots.register(
+          {
+            name: 'plugins.bundle.activation',
+            key: 'dsh-plugin-trim',
+          },
+          ActivationGuide,
         ),
       )
       ctx.slots.inject('shell.overlay', () =>

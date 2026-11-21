@@ -44,7 +44,7 @@ For source development, see [Development](#development).
 - **`dsh-plugin-trim`** scans plugin context cost and compatibility, then builds an explainable keep/enable/disable plan. Low-risk items are applied only after explicit confirmation and host approval; a restore point is written first.
 - **`dsh-plugin-recipe`** turns a business goal into a validated, exportable workflow blueprint with per-step approval levels.
 - **Guide / About / Settings** tabs make the first run explicit instead of hiding safety rules in documentation; About includes an inline hero SVG, real links, copyright, QQ group `1134419871`, and clearly marked donation placeholders.
-- Settings includes layout/density/collapse preferences, an npm update check, and Issue shortcuts. A one-time main-screen guide points to More → Settings → Plugin checkup and expands the five-step tutorial.
+- Settings includes layout/density/collapse preferences, editable plugin policy fields with an Apply button that appears after changes, an npm update check, and Issue shortcuts. A first-run activation card shows the five-step tutorial after enabling; a one-time main-screen guide also points to More → Settings → Plugin checkup.
 - In conversation: a brief “Measure first, then decide what to close” reminder above the composer, and a token strip in expanded reasoning. Read-only, once per session, dismissible.
 - **English and Chinese UI** can be switched at runtime.
 

@@ -7,9 +7,15 @@ All notable changes to this repository are documented here. Versions follow
 
 ### Changed
 
-- Settings puts the read-only configuration boundary notice at the very top.
-  The UI never writes config; editing the profile patch still requires a plugin
-  reload, and approval/protection logic is never skipped.
+- Settings is now an editable draft instead of a read-only card with a Refresh
+  button. The Apply button appears only after a change; applying writes through
+  the DSH loader, reloads the plugin, and never skips approval/protection rules.
+- Added a first-run tutorial card on `plugins.bundle.activation`, shown after the
+  bundle is enabled. It lists the five checkup steps and links to the bundle
+  details. The shell guide and onboarding keys moved to v2 so existing installs
+  see the new walkthrough once.
+- The update check now explains an old install that lacks `/update` instead of
+  surfacing a raw `unknown endpoint` error.
 - User-facing naming now uses **插件体检 / Plugin checkup** instead of
   “插件减负 / Experience Optimizer” in the tab, hero, settings labels, guides,
   and package descriptions. The package and repository names are unchanged.
