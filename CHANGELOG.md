@@ -3,6 +3,27 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.2] - 2026-11-21
+
+### Changed
+
+- Disable suggestions are now **evidence-first by default** (`suggestionPolicy: conservative`):
+  - a description/keyword match alone never produces a disable suggestion;
+  - plugins with historical or session calls, periodic/trigger semantics, no usage ledger,
+    or low task confidence are routed to manual review;
+  - a disable candidate requires a real ledger with zero calls to that plugin, non-zero
+    attributable context cost, no periodic hint, high task confidence, and low task match.
+- `suggestionPolicy: balanced` preserves the older scoring for explicit opt-in, while
+  periodic and already-used plugins still cannot become automatic suggestions.
+- Draft rows now expose `periodic`, `usageState`, and `evidenceLevel`; the UI explains the
+  evidence and shows each plugin's share of attributable context.
+
+### Added
+
+- Plugin inventory **context share** column; stronger cadence/usage guardrails and tests
+  (73 total).
+- README section answering how “建议关闭” is decided, plus an icon credit footer.
+
 ## [0.3.1] - 2026-11-20
 
 ### Fixed

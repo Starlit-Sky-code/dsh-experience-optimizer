@@ -22,11 +22,11 @@ export function buildSlimProfile(
   const items: SlimItem[] = []
   for (const bundle of scan.bundles) {
     if (!bundle.enabled && bundle.availability === 'missing') continue
-    items.push(scoreBundle(scan, task, bundle, overlap))
+    items.push(scoreBundle(scan, task, bundle, overlap, config.suggestionPolicy))
   }
   for (const entry of scan.entries) {
     if (entry.bundleName === undefined || entry.patchId === undefined) continue
-    items.push(scoreEntry(scan, task, entry, overlap))
+    items.push(scoreEntry(scan, task, entry, overlap, config.suggestionPolicy))
   }
 
   const bundleDisables = new Set(

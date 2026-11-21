@@ -153,6 +153,12 @@ export interface SlimItem {
   evidence: Evidence[]
   observedEnabled: boolean
   protected: boolean
+  /** Cadence/trigger hint detected in the bundle metadata; such items are never auto-candidates. */
+  periodic?: boolean
+  /** What the local usage ledger can actually prove. */
+  usageState?: 'used' | 'unused' | 'unknown'
+  /** Strength of the evidence behind a disable suggestion. */
+  evidenceLevel?: 'strong' | 'weak' | 'insufficient'
   reason: string
   findings: CompatFinding[]
 }

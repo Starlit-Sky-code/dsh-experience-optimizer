@@ -145,6 +145,7 @@ window.__ModuleLoader__.load({
 .eo-spinner{width:13px;height:13px;border-radius:50%;border:2px solid var(--eo-border-strong);border-top-color:var(--eo-primary);animation:eo-spin .8s linear infinite}
 .eo-error{padding:10px 12px;border-radius:var(--dsw-radius-md,8px);background:color-mix(in srgb,var(--eo-error) 7%,transparent);border:.5px solid color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error);font-size:12px;line-height:18px;display:flex;gap:10px;align-items:center;justify-content:space-between}
 .eo-muted{color:var(--eo-tertiary);font-size:12px;line-height:18px}
+        .eo-note{padding:9px 12px;border:1px solid var(--dsw-alias-border-l3);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--eo-secondary);font-size:12px;line-height:19px}
 .eo-code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
 .eo-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .eo-spacer{height:0}
@@ -242,8 +243,8 @@ window.__ModuleLoader__.load({
         {
           keep: '保留',
           enable: '建议启用',
-          'suggest-disable': '建议禁用',
-          'disable-if-unused': '未用可禁用',
+          'suggest-disable': '建议关闭',
+          'disable-if-unused': '未用可关闭',
           review: '人工复核',
         }[action] || action
       )
@@ -286,6 +287,14 @@ window.__ModuleLoader__.load({
         item.risk === 'low' &&
         (item.action === 'suggest-disable' || item.action === 'enable')
       )
+    }
+
+    function usageLabel(state) {
+      return state === 'used' ? '有调用记录' : state === 'unused' ? '窗口内 0 调用' : '无使用账本'
+    }
+
+    function evidenceLabel(level) {
+      return level === 'strong' ? '证据强' : level === 'weak' ? '证据弱' : '证据不足'
     }
 
     function splitList(value) {
@@ -424,6 +433,7 @@ window.__ModuleLoader__.load({
         ? overview.bundles.filter((bundle) => bundle.enabled).length
         : 0
       const totalBundles = overview ? overview.bundles.length : 0
+      const totalContextTokens = overview ? overview.context.totalTokens : 0
       const compat = overview ? overview.compat : { error: 0, warn: 0, info: 0 }
       const byOwner = overview ? overview.context.byOwner : []
       const maxOwner = Math.max(1, ...byOwner.map((owner) => owner.tokens))
@@ -433,6 +443,8 @@ window.__ModuleLoader__.load({
       const actionableDraftItems = draftItems.filter(
         (item) => item.action !== 'keep' && item.protected !== true,
       )
+      const periodicDraftCount = draftItems.filter((item) => item.periodic === true).length
+      const strongDraftCount = draftItems.filter((item) => item.evidenceLevel === 'strong').length
 
       const generateDraft = useCallback(async () => {
         setDraftBusy(true)
@@ -976,6 +988,7 @@ window.__ModuleLoader__.load({
                       h('th', null, '保护'),
                       h('th', null, 'Guard'),
                       h('th', null, 'Tokens'),
+                      h('th', null, '占比'),
                       h('th', null, 'Calls'),
                     ),
                   ),
@@ -1010,6 +1023,13 @@ window.__ModuleLoader__.load({
                         ),
                         h('td', { className: 'eo-muted' }, bundle.guardStatus || '—'),
                         h('td', null, formatNumber(bundle.contextTokens)),
+                        h(
+                          'td',
+                          { className: 'eo-muted', title: '占可归属上下文的比例' },
+                          totalContextTokens > 0
+                            ? Math.round((bundle.contextTokens / totalContextTokens) * 100) + '%'
+                            : '—',
+                        ),
                         h(
                           'td',
                           null,
@@ -1072,19 +1092,26 @@ window.__ModuleLoader__.load({
                   null,
                   h(
                     'div',
-                    { className: 'eo-summary' },
+                    { className: 'eo-note' },
+                    '判断依据：描述匹配只说明“可能相关”；出现周期/触发器语义、已有调用记录、无使用账本或任务置信度不足时，只进入人工复核。只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭，且仍需确认与宿主审批。',
+                  ),
+                  h(
+                    'div',
+                    { className: 'eo-summary', style: { marginTop: '10px' } },
                     h(Badge, { tone: 'neutral' }, '保留 ' + draft.summary.keep),
                     h(Badge, { tone: 'ok' }, '启用 ' + draft.summary.enable),
-                    h(Badge, { tone: 'danger' }, '禁用 ' + draft.summary.disable),
+                    h(Badge, { tone: 'danger' }, '建议关闭 ' + draft.summary.disable),
                     h(Badge, { tone: 'info' }, '复核 ' + draft.summary.review),
                     h(Badge, { tone: 'neutral' }, '受保护 ' + draft.summary.protected),
+                    h(Badge, { tone: 'warn' }, '周期保护 ' + periodicDraftCount),
+                    h(Badge, { tone: 'ok' }, '证据强 ' + strongDraftCount),
                     h(Badge, { tone: 'warn' }, 'task: ' + draft.task.tag),
                   ),
                   actionableDraftItems.length === 0
                     ? h(
                         'div',
                         { className: 'eo-empty' },
-                        '当前没有可裁剪项：所有插件均受保护，或与当前任务匹配。',
+                        '本轮没有强证据候选：周期/触发器、已有调用记录、无使用账本或低置信项只进入人工复核。',
                       )
                     : h(
                     'div',
@@ -1121,6 +1148,26 @@ window.__ModuleLoader__.load({
                               ),
                               h(Badge, { tone: riskTone(item.risk) }, 'risk: ' + item.risk),
                               item.protected ? h(Badge, { tone: 'neutral' }, '受保护') : null,
+                              item.periodic ? h(Badge, { tone: 'warn' }, '周期/触发器') : null,
+                              item.usageState
+                                ? h(
+                                    Badge,
+                                    {
+                                      tone:
+                                        item.usageState === 'used'
+                                          ? 'ok'
+                                          : item.usageState === 'unused'
+                                            ? 'info'
+                                            : 'neutral',
+                                    },
+                                    usageLabel(item.usageState),
+                                  )
+                                : null,
+                              item.evidenceLevel === 'strong'
+                                ? h(Badge, { tone: 'ok' }, '证据强')
+                                : item.evidenceLevel === 'insufficient'
+                                  ? h(Badge, { tone: 'neutral' }, '证据不足')
+                                  : null,
                             ),
                             h('div', { className: 'eo-item-reason' }, item.reason),
                             h(

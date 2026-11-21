@@ -7,13 +7,13 @@ DSH 插件生态的**减负**与**兼容性体检**插件。
 从 npm 安装（推荐）：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.1
+dsh plugin --profile web add dsh-plugin-trim@0.3.2
 ```
 
 从 GitHub Release 安装（备用，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.1/dsh-plugin-trim-0.3.1.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.2/dsh-plugin-trim-0.3.2.tgz"
 ```
 
 本地开发：
@@ -63,6 +63,7 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
   config:
     mode: advise
     approvalMode: always
+    suggestionPolicy: conservative
     approvalThreshold: 5
     protect:
       - my-important-plugin
@@ -76,6 +77,7 @@ dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 |---|---|---|
 | `mode` | `advise` | `auto-safe` 只收窄建议范围 |
 | `approvalMode` | `always` | `always`：每次工具应用都请求宿主审批；`risk-based`：仅超过阈值时审批 |
+| `suggestionPolicy` | `conservative` | `conservative`：仅强证据才标“建议关闭”；`balanced`：保留旧评分，仍受周期/调用记录保护 |
 | `approvalThreshold` | `5` | `risk-based` 模式下，超过该数量的草稿需要宿主审批 |
 | `protect` | `[]` | 额外保护包名/entry id |
 | `pinned` | `[]` | 永不建议禁用 |

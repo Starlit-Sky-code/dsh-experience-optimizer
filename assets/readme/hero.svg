@@ -56,7 +56,7 @@
 
   <!-- copy -->
   <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Noto Sans CJK SC', sans-serif">
-    <text x="64" y="76" fill="#5eead4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" letter-spacing="3">DSH PLUGIN SUITE · v0.3.1</text>
+    <text x="64" y="76" fill="#5eead4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" letter-spacing="3">DSH PLUGIN SUITE · v0.3.2</text>
     <text x="62" y="158" fill="#f2f7ff" font-size="58" font-weight="750" letter-spacing="-1.8">Experience Optimizer</text>
     <text x="64" y="204" fill="#c3d3e8" font-size="25">少一点插件负担，多一点兼容确定性。</text>
     <text x="64" y="238" fill="#8ea3be" font-size="18">Trim the noise. Keep the power.</text>

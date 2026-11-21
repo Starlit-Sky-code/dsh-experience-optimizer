@@ -7,13 +7,13 @@
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`、`workflow`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.3.1>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.3.2>
 - Release assets：
-  - `dsh-plugin-trim-0.3.1.tgz`
-  - `dsh-plugin-recipe-0.3.1.tgz`
+  - `dsh-plugin-trim-0.3.2.tgz`
+  - `dsh-plugin-recipe-0.3.2.tgz`
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
-- 安装验证：`npm view` 返回 0.3.1；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.3.1` / `dsh-plugin-recipe@0.3.1` 成功，`--dump-config` 出现两个 bundle row
+- 安装验证：`npm view` 返回 0.3.2；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.3.2` / `dsh-plugin-recipe@0.3.2` 成功，`--dump-config` 出现两个 bundle row
 
 ## 自定义 DSH 插件市场索引
 
@@ -32,7 +32,7 @@ pnpm market:check
 ## DSH Plugin Hub（dsh-plugin.org）
 
 - 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/677>（已关闭，等待定时扫描）
-- npm 已发布 0.3.1，内置 Plugin Hub 的条件已满足；站点页面仍为 404，等待扫描。
+- npm 已发布 0.3.2，内置 Plugin Hub 的条件已满足；站点页面仍为 404，等待扫描。
 - 已在 issue 评论中补充 npm 包链接与安装命令。
 
 ## dsh.so
@@ -52,16 +52,16 @@ pnpm market:check
 - **dshbase.com：页面已上线，安装命令待修**
   - <https://dshbase.com/plugins/dsh-plugin-trim/>
   - <https://dshbase.com/plugins/dsh-plugin-recipe/>
-- **awesome-dsh-plugin：已合并** [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)；0.3.1 tarball 更新 [PR #17071](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17071) 待合并
+- **awesome-dsh-plugin：已合并** [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)；0.3.2 tarball 更新 [PR #17071](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17071) 待合并
 
 ## npm
 
-- **已发布 0.3.1**：
+- **已发布 0.3.2**：
   - <https://www.npmjs.com/package/dsh-plugin-trim>
   - <https://www.npmjs.com/package/dsh-plugin-recipe>
-- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.3.1` / `dsh-plugin-recipe@0.3.1`
-- 注册表已验证：`npm view` 返回 0.3.1；临时 profile 安装成功。
-- 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.3.1`，不影响安装。
+- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.3.2` / `dsh-plugin-recipe@0.3.2`
+- 注册表已验证：`npm view` 返回 0.3.2；临时 profile 安装成功。
+- 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.3.2`，不影响安装。
 - GitHub Release 工作流已配置 `NPM_TOKEN` secret；后续 tag 会自动 npm 发布。
 
 ## Web 控制台

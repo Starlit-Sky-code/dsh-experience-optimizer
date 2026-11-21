@@ -6,6 +6,7 @@ import type { Config } from '../src/config.ts'
 const config: Config = {
   mode: 'advise',
   approvalMode: 'always',
+  suggestionPolicy: 'balanced',
   approvalThreshold: 5,
   protect: [],
   pinned: [],

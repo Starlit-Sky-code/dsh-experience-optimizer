@@ -6,6 +6,8 @@ export interface Config {
   mode: 'advise' | 'auto-safe';
   /** `always` asks the host approval service before every tool apply; `risk-based` auto-applies small low-risk drafts. */
   approvalMode: 'always' | 'risk-based';
+  /** `conservative` only labels strong, non-periodic evidence as a disable candidate; `balanced` keeps the older scoring. */
+  suggestionPolicy: 'conservative' | 'balanced';
   /** In `risk-based` mode, drafts larger than this many items require host approval. */
   approvalThreshold: number;
   /** Extra package names or entry ids that must never be suggested for disable. */
@@ -136,6 +138,12 @@ interface SlimItem {
   evidence: Evidence[];
   observedEnabled: boolean;
   protected: boolean;
+  /** Cadence/trigger hint detected in the bundle metadata; such items are never auto-candidates. */
+  periodic?: boolean;
+  /** What the local usage ledger can actually prove. */
+  usageState?: 'used' | 'unused' | 'unknown';
+  /** Strength of the evidence behind a disable suggestion. */
+  evidenceLevel?: 'strong' | 'weak' | 'insufficient';
   reason: string;
   findings: CompatFinding[];
 }

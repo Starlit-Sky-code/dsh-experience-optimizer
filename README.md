@@ -15,8 +15,8 @@
 ## 安装
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.1
-dsh plugin --profile web add dsh-plugin-recipe@0.3.1
+dsh plugin --profile web add dsh-plugin-trim@0.3.2
+dsh plugin --profile web add dsh-plugin-recipe@0.3.2
 ```
 
 安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
@@ -26,8 +26,8 @@ dsh plugin --profile web add dsh-plugin-recipe@0.3.1
 
 ```bash
 # Release tarball
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.1/dsh-plugin-trim-0.3.1.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.1/dsh-plugin-recipe-0.3.1.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.2/dsh-plugin-trim-0.3.2.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.2/dsh-plugin-recipe-0.3.2.tgz"
 
 # 开发版（跟随 main）
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
@@ -60,6 +60,25 @@ DSH 插件装得越多，越容易出现三类问题：
 | [`dsh-plugin-recipe`](packages/plugin-recipe) | 把业务目标翻译成可校验、可导出的工作流蓝图，标注每步审批级别 |
 
 `dsh-shared-meta` 是私有共享包，构建时内联，不增加运行时安装负担。
+
+## “建议关闭”怎么判断？
+
+54% 这类数字之所以扎人，是因为它把插件**常驻上下文**变成了可见的占比；但你砍的是工具白名单，真正难量的是插件本身。`trim_scan_plugins` 会读取每个 bundle 的可归属上下文成本；Web 控制台的插件清单新增了 **Tokens / 占比** 两列，并单独标出 `unattributedTokens`，避免把“未归属”误算到某个插件头上。
+
+判断顺序不是“描述像不像当前任务”这么简单：
+
+| 信号 | 代码里怎么用 | 单独能建议关闭吗 |
+|---|---|---|
+| 描述 / 名称关键词 | 只计算任务相关性（`taskMatch`） | 不能，最多进入复核 |
+| 历史 / 本会话调用 | 有调用记录 → 直接阻止自动建议 | 不能，反而保护 |
+| 使用账本窗口内 0 调用 | 必要证据；账本为空时视为“未知” | 不能 |
+| 周期 / 触发器语义 | `schedule`、`cron`、`每月`、`周报`、`提醒`、`dream` 等 → 保护 | 不能 |
+| 可归属上下文成本 | 成本 > 0 才值得优化 | 不能 |
+| 任务置信度 | 低于阈值 → 只复核 | 不能 |
+
+默认 `suggestionPolicy: conservative`：只有**窗口内 0 调用 + 有上下文成本 + 非周期 + 当前任务高置信 + 描述低相关**同时成立，才会出现“建议关闭”。其余全部进入人工复核；应用仍需 `confirm: true` 与宿主审批 `allowed-once`。
+
+这也是为什么不会因为“上次没调用”就误伤每月一次的梦整理：周期/触发器语义是硬保护，历史有调用也会阻止自动建议。
 
 ## 核心机制
 
@@ -159,3 +178,5 @@ pnpm verify
 ## License
 
 [AGPL-3.0-only](LICENSE)。修改后通过网络向用户提供服务时，需要按 AGPL 提供对应源代码。
+
+<p align="center"><img src="icon.png" width="44" alt="Starlit Sky 插件图标"> <sub>built by Starlit Sky · AGPL-3.0</sub></p>

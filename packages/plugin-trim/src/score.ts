@@ -13,6 +13,7 @@ import type {
   TaskProfile,
 } from 'dsh-shared-meta'
 import type { ScanResult } from './scan.ts'
+import type { Config } from './config.ts'
 
 const WEIGHTS = {
   taskMatch: 0.35,
@@ -47,8 +48,9 @@ export function scoreBundle(
   task: TaskProfile,
   bundle: BundleProfile,
   overlap: Set<string>,
+  policy: Config['suggestionPolicy'] = 'conservative',
 ): SlimItem {
-  return scoreCommon({
+  return scoreCommon(policy, {
     scan,
     task,
     overlap,
@@ -73,9 +75,10 @@ export function scoreEntry(
   task: TaskProfile,
   entry: PluginProfile,
   overlap: Set<string>,
+  policy: Config['suggestionPolicy'] = 'conservative',
 ): SlimItem {
   const parent = scan.bundles.find((bundle) => bundle.name === entry.bundleName)
-  return scoreCommon({
+  return scoreCommon(policy, {
     scan,
     task,
     overlap,
@@ -118,7 +121,7 @@ interface ScoreInput {
   fiberPhase?: string | null
 }
 
-function scoreCommon(input: ScoreInput): SlimItem {
+function scoreCommon(policy: Config['suggestionPolicy'], input: ScoreInput): SlimItem {
   const evidence: Evidence[] = []
 
   if (input.protectedItem) {
@@ -173,14 +176,33 @@ function scoreCommon(input: ScoreInput): SlimItem {
   const historical = Math.min(1, input.usageCalls / 20) * successRate
   const session = Math.min(1, input.usageSessionCalls / 5) * 0.8
   const usage = Math.max(historical, session)
-  if (input.usageCalls > 0 || input.usageSessionCalls > 0) {
+  const anyUsage = Object.values(input.scan.usage.byTool).some(
+    (stats) => stats.calls + stats.sessionCalls > 0,
+  )
+  const usageState: 'used' | 'unused' | 'unknown' =
+    input.usageCalls + input.usageSessionCalls > 0
+      ? 'used'
+      : anyUsage
+        ? 'unused'
+        : 'unknown'
+  if (usageState === 'used') {
     evidence.push({
       kind: 'usage',
       summary: `历史调用 ${input.usageCalls}，会话内 ${input.usageSessionCalls}，成功率 ${round(successRate, 2)}`,
       weight: WEIGHTS.usage * usage,
     })
+  } else if (usageState === 'unused') {
+    evidence.push({
+      kind: 'usage',
+      summary: '使用账本有活动，但本插件在保留窗口内 0 次调用',
+      weight: 0,
+    })
   } else {
-    evidence.push({ kind: 'usage', summary: '没有可用使用记录', weight: 0 })
+    evidence.push({
+      kind: 'usage',
+      summary: '使用账本无记录（未开启 trackUsage 或尚未产生调用）',
+      weight: 0,
+    })
   }
 
   const overlap = input.overlap.has(input.name) || (input.bundleName !== undefined && input.overlap.has(input.bundleName))
@@ -197,6 +219,15 @@ function scoreCommon(input: ScoreInput): SlimItem {
     })
   } else {
     evidence.push({ kind: 'cost', summary: '没有可归属的 host 上下文成本', weight: 0 })
+  }
+
+  const periodic = detectPeriodic(input)
+  if (periodic) {
+    evidence.push({
+      kind: 'guard',
+      summary: '检测到周期/触发器语义；不自动建议关闭，只进入人工复核',
+      weight: 0.4,
+    })
   }
 
   for (const finding of input.findings.slice(0, 4)) {
@@ -237,8 +268,39 @@ function scoreCommon(input: ScoreInput): SlimItem {
   if (action === 'enable' && risk === 'high') action = 'review'
   if (action === 'enable' && hasError) action = 'review'
 
+  let guard = ''
+  if (action === 'suggest-disable') {
+    if (periodic) {
+      action = 'review'
+      guard = '疑似周期/触发器插件，已阻止自动建议关闭'
+    } else if (usageState === 'used') {
+      action = 'review'
+      guard = '已有使用记录，不自动建议关闭'
+    } else if (usageState === 'unknown' && policy === 'conservative') {
+      action = 'review'
+      guard = '使用账本无记录，证据不足'
+    } else if (
+      policy === 'conservative' &&
+      (input.contextTokens <= 0 || input.task.confidence < 0.75 || taskMatch > 0)
+    ) {
+      action = 'review'
+      guard = '证据不足：需要窗口内 0 调用、非周期、有上下文成本且任务高置信'
+    }
+  }
   if (input.task.tag === 'unknown' && action === 'suggest-disable') action = 'review'
   if (input.task.confidence < 0.6 && action === 'suggest-disable') action = 'review'
+
+  const strong =
+    usageState === 'unused' &&
+    !periodic &&
+    input.contextTokens > 0 &&
+    input.task.confidence >= 0.75 &&
+    taskMatch === 0
+  const evidenceLevel: 'strong' | 'weak' | 'insufficient' = strong
+    ? 'strong'
+    : periodic || usageState === 'unknown' || input.task.confidence < 0.6
+      ? 'insufficient'
+      : 'weak'
 
   return {
     id: input.id,
@@ -251,7 +313,10 @@ function scoreCommon(input: ScoreInput): SlimItem {
     evidence,
     observedEnabled: input.enabled,
     protected: false,
-    reason: reasonFor(action, input, taskMatch, usage, cost),
+    periodic,
+    usageState,
+    evidenceLevel,
+    reason: reasonFor(action, input, taskMatch, usage, cost, guard),
     findings: [],
   }
 }
@@ -265,6 +330,18 @@ function compatEvidence(findings: Array<{ code: string; title: string }>): Evide
 }
 
 function reasonFor(
+  action: SlimItem['action'],
+  input: ScoreInput,
+  taskMatch: number,
+  usage: number,
+  cost: number,
+  guard: string,
+): string {
+  if (guard.length > 0) return `${guard}；${reasonForBase(action, input, taskMatch, usage, cost)}`
+  return reasonForBase(action, input, taskMatch, usage, cost)
+}
+
+function reasonForBase(
   action: SlimItem['action'],
   input: ScoreInput,
   taskMatch: number,
@@ -286,4 +363,18 @@ function reasonFor(
         ? '任务识别置信度不足，只建议人工复核'
         : '证据不足或存在兼容性风险，建议人工复核'
   }
+}
+
+
+const PERIODIC_HINTS = [
+  'schedule', 'cron', 'timer', 'reminder', 'periodic', 'interval', 'recurring',
+  'daily', 'weekly', 'monthly', 'hourly', 'calendar', 'digest', 'webhook',
+  'trigger', 'subscription', 'watch', 'dream',
+  '定时', '周期', '每月', '每周', '每日', '每小时', '提醒', '日程', '日历',
+  '月报', '周报', '日报', '订阅', '触发器', '轮询', '梦整理', '梦境',
+]
+
+function detectPeriodic(input: ScoreInput): boolean {
+  const text = `${input.name} ${input.description ?? ''} ${input.moduleName ?? ''}`.toLowerCase()
+  return PERIODIC_HINTS.some((hint) => text.includes(hint))
 }

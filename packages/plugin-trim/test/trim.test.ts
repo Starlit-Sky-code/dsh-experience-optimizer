@@ -11,6 +11,7 @@ import type { Config } from '../src/config.ts'
 const config: Config = {
   mode: 'advise',
   approvalMode: 'always',
+  suggestionPolicy: 'balanced',
   approvalThreshold: 5,
   protect: [],
   pinned: [],
@@ -124,9 +125,82 @@ describe('bundle scoring', () => {
       task({ tag: 'bugfix', confidence: 0.9, keywords: ['修复'] }),
       bundle({ description: '演示文稿生成', contextTokens: 6000 }),
       new Set(),
+      'balanced',
     )
     expect(item.action).toBe('suggest-disable')
     expect(item.risk).toBe('low')
+  })
+
+  it('defaults to review when there is no usage ledger evidence', () => {
+    const item = scoreBundle(
+      scan(),
+      task({ tag: 'bugfix', confidence: 0.9, keywords: ['修复'] }),
+      bundle({ description: '演示文稿生成', contextTokens: 6000 }),
+      new Set(),
+      'conservative',
+    )
+    expect(item.action).toBe('review')
+    expect(item.usageState).toBe('unknown')
+    expect(item.evidenceLevel).toBe('insufficient')
+  })
+
+  it('suggests disabling only with a real ledger and strong non-periodic evidence', () => {
+    const item = scoreBundle(
+      scan({
+        usage: {
+          byTool: { other_tool: { calls: 3, successes: 3, sessionCalls: 0 } },
+          byOwner: {},
+        },
+      }),
+      task({ tag: 'bugfix', confidence: 0.9, keywords: ['修复'] }),
+      bundle({ description: '演示文稿生成', contextTokens: 6000 }),
+      new Set(),
+      'conservative',
+    )
+    expect(item.action).toBe('suggest-disable')
+    expect(item.usageState).toBe('unused')
+    expect(item.evidenceLevel).toBe('strong')
+    expect(item.periodic).toBe(false)
+  })
+
+  it('never suggests disabling a periodic plugin', () => {
+    const item = scoreBundle(
+      scan({
+        usage: {
+          byTool: { other_tool: { calls: 3, successes: 3, sessionCalls: 0 } },
+          byOwner: {},
+        },
+      }),
+      task({ tag: 'bugfix', confidence: 0.9, keywords: ['修复'] }),
+      bundle({ name: 'dsh-dream-journal', description: '每月整理一次梦境日记', contextTokens: 6000 }),
+      new Set(),
+      'conservative',
+    )
+    expect(item.action).toBe('review')
+    expect(item.periodic).toBe(true)
+    expect(item.reason).toContain('周期/触发器')
+  })
+
+  it('keeps plugins with observed usage out of automatic disable suggestions', () => {
+    const item = scoreBundle(
+      scan({
+        usage: {
+          byTool: { other_tool: { calls: 3, successes: 3, sessionCalls: 0 } },
+          byOwner: {},
+        },
+      }),
+      task({ tag: 'bugfix', confidence: 0.9, keywords: ['修复'] }),
+      bundle({
+        description: '演示文稿生成',
+        contextTokens: 6000,
+        usage: { calls: 2, successes: 2, sessionCalls: 0 },
+      }),
+      new Set(),
+      'conservative',
+    )
+    expect(item.action).toBe('review')
+    expect(item.usageState).toBe('used')
+    expect(item.reason).toContain('使用记录')
   })
 
   it('keeps protected items', () => {
@@ -176,7 +250,7 @@ describe('slim profile draft', () => {
     const profile = buildSlimProfile(
       scan({
         bundles: [
-          bundle({ name: 'heavy', enabled: true, contextTokens: 8000 }),
+          bundle({ name: 'heavy', description: '演示文稿生成', enabled: true, contextTokens: 8000 }),
           bundle({ name: 'core', enabled: true, protected: true }),
         ],
         entries: [protectedEntry],

@@ -6,6 +6,8 @@ export interface Config {
   mode: 'advise' | 'auto-safe'
   /** `always` asks the host approval service before every tool apply; `risk-based` auto-applies small low-risk drafts. */
   approvalMode: 'always' | 'risk-based'
+  /** `conservative` only labels strong, non-periodic evidence as a disable candidate; `balanced` keeps the older scoring. */
+  suggestionPolicy: 'conservative' | 'balanced'
   /** In `risk-based` mode, drafts larger than this many items require host approval. */
   approvalThreshold: number
   /** Extra package names or entry ids that must never be suggested for disable. */
@@ -50,6 +52,7 @@ export interface Config {
 export const DEFAULT_CONFIG: Config = {
   mode: 'advise',
   approvalMode: 'always',
+  suggestionPolicy: 'conservative',
   approvalThreshold: 5,
   protect: [],
   pinned: [],
@@ -80,6 +83,7 @@ export function normalizeConfig(config?: Partial<Config> | undefined): Config {
 export const Config: z<Config> = z.object({
   mode: z.union(['advise', 'auto-safe']).default('advise'),
   approvalMode: z.union(['always', 'risk-based']).default('always'),
+  suggestionPolicy: z.union(['conservative', 'balanced']).default('conservative'),
   approvalThreshold: z.natural().min(1).max(100).default(5),
   protect: z.array(z.string()).default([]),
   pinned: z.array(z.string()).default([]),

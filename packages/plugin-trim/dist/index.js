@@ -14,6 +14,7 @@ import { scopeOf } from "@deepseek-ai/dsh-scope";
 const DEFAULT_CONFIG = {
 	mode: "advise",
 	approvalMode: "always",
+	suggestionPolicy: "conservative",
 	approvalThreshold: 5,
 	protect: [],
 	pinned: [],
@@ -45,6 +46,7 @@ function normalizeConfig(config) {
 const Config = z.object({
 	mode: z.union(["advise", "auto-safe"]).default("advise"),
 	approvalMode: z.union(["always", "risk-based"]).default("always"),
+	suggestionPolicy: z.union(["conservative", "balanced"]).default("conservative"),
 	approvalThreshold: z.natural().min(1).max(100).default(5),
 	protect: z.array(z.string()).default([]),
 	pinned: z.array(z.string()).default([]),
@@ -2553,8 +2555,8 @@ function computeOverlapSet(scan) {
 	}
 	return overlap;
 }
-function scoreBundle(scan, task, bundle, overlap) {
-	return scoreCommon({
+function scoreBundle(scan, task, bundle, overlap, policy = "conservative") {
+	return scoreCommon(policy, {
 		scan,
 		task,
 		overlap,
@@ -2573,9 +2575,9 @@ function scoreBundle(scan, task, bundle, overlap) {
 		findings: bundle.findings
 	});
 }
-function scoreEntry(scan, task, entry, overlap) {
+function scoreEntry(scan, task, entry, overlap, policy = "conservative") {
 	const parent = scan.bundles.find((bundle) => bundle.name === entry.bundleName);
-	return scoreCommon({
+	return scoreCommon(policy, {
 		scan,
 		task,
 		overlap,
@@ -2596,7 +2598,7 @@ function scoreEntry(scan, task, entry, overlap) {
 		fiberPhase: entry.fiberPhase
 	});
 }
-function scoreCommon(input) {
+function scoreCommon(policy, input) {
 	const evidence = [];
 	if (input.protectedItem) return {
 		id: input.id,
@@ -2646,14 +2648,21 @@ function scoreCommon(input) {
 	const historical = Math.min(1, input.usageCalls / 20) * successRate;
 	const session = Math.min(1, input.usageSessionCalls / 5) * .8;
 	const usage = Math.max(historical, session);
-	if (input.usageCalls > 0 || input.usageSessionCalls > 0) evidence.push({
+	const anyUsage = Object.values(input.scan.usage.byTool).some((stats) => stats.calls + stats.sessionCalls > 0);
+	const usageState = input.usageCalls + input.usageSessionCalls > 0 ? "used" : anyUsage ? "unused" : "unknown";
+	if (usageState === "used") evidence.push({
 		kind: "usage",
 		summary: `历史调用 ${input.usageCalls}，会话内 ${input.usageSessionCalls}，成功率 ${round(successRate, 2)}`,
 		weight: WEIGHTS.usage * usage
 	});
+	else if (usageState === "unused") evidence.push({
+		kind: "usage",
+		summary: "使用账本有活动，但本插件在保留窗口内 0 次调用",
+		weight: 0
+	});
 	else evidence.push({
 		kind: "usage",
-		summary: "没有可用使用记录",
+		summary: "使用账本无记录（未开启 trackUsage 或尚未产生调用）",
 		weight: 0
 	});
 	const overlap = input.overlap.has(input.name) || input.bundleName !== void 0 && input.overlap.has(input.bundleName);
@@ -2672,6 +2681,12 @@ function scoreCommon(input) {
 		kind: "cost",
 		summary: "没有可归属的 host 上下文成本",
 		weight: 0
+	});
+	const periodic = detectPeriodic(input);
+	if (periodic) evidence.push({
+		kind: "guard",
+		summary: "检测到周期/触发器语义；不自动建议关闭，只进入人工复核",
+		weight: .4
 	});
 	for (const finding of input.findings.slice(0, 4)) evidence.push({
 		kind: "compat",
@@ -2700,8 +2715,25 @@ function scoreCommon(input) {
 	if (action === "suggest-disable" && risk !== "low") action = "review";
 	if (action === "enable" && risk === "high") action = "review";
 	if (action === "enable" && hasError) action = "review";
+	let guard = "";
+	if (action === "suggest-disable") {
+		if (periodic) {
+			action = "review";
+			guard = "疑似周期/触发器插件，已阻止自动建议关闭";
+		} else if (usageState === "used") {
+			action = "review";
+			guard = "已有使用记录，不自动建议关闭";
+		} else if (usageState === "unknown" && policy === "conservative") {
+			action = "review";
+			guard = "使用账本无记录，证据不足";
+		} else if (policy === "conservative" && (input.contextTokens <= 0 || input.task.confidence < .75 || taskMatch > 0)) {
+			action = "review";
+			guard = "证据不足：需要窗口内 0 调用、非周期、有上下文成本且任务高置信";
+		}
+	}
 	if (input.task.tag === "unknown" && action === "suggest-disable") action = "review";
 	if (input.task.confidence < .6 && action === "suggest-disable") action = "review";
+	const evidenceLevel = usageState === "unused" && !periodic && input.contextTokens > 0 && input.task.confidence >= .75 && taskMatch === 0 ? "strong" : periodic || usageState === "unknown" || input.task.confidence < .6 ? "insufficient" : "weak";
 	return {
 		id: input.id,
 		kind: input.kind,
@@ -2713,7 +2745,10 @@ function scoreCommon(input) {
 		evidence,
 		observedEnabled: input.enabled,
 		protected: false,
-		reason: reasonFor(action, input, taskMatch, usage, cost),
+		periodic,
+		usageState,
+		evidenceLevel,
+		reason: reasonFor(action, input, taskMatch, usage, cost, guard),
 		findings: []
 	};
 }
@@ -2724,7 +2759,11 @@ function compatEvidence(findings) {
 		weight: .5
 	}));
 }
-function reasonFor(action, input, taskMatch, usage, cost) {
+function reasonFor(action, input, taskMatch, usage, cost, guard) {
+	if (guard.length > 0) return `${guard}；${reasonForBase(action, input, taskMatch, usage, cost)}`;
+	return reasonForBase(action, input, taskMatch, usage, cost);
+}
+function reasonForBase(action, input, taskMatch, usage, cost) {
 	switch (action) {
 		case "keep": return `任务匹配 ${round(taskMatch, 2)}、使用 ${round(usage, 2)}、成本 ${round(cost, 2)}，收益可覆盖成本`;
 		case "enable": return "已禁用但与当前任务强相关；可在确认后启用";
@@ -2733,6 +2772,47 @@ function reasonFor(action, input, taskMatch, usage, cost) {
 		default: return input.task.confidence < .6 ? "任务识别置信度不足，只建议人工复核" : "证据不足或存在兼容性风险，建议人工复核";
 	}
 }
+const PERIODIC_HINTS = [
+	"schedule",
+	"cron",
+	"timer",
+	"reminder",
+	"periodic",
+	"interval",
+	"recurring",
+	"daily",
+	"weekly",
+	"monthly",
+	"hourly",
+	"calendar",
+	"digest",
+	"webhook",
+	"trigger",
+	"subscription",
+	"watch",
+	"dream",
+	"定时",
+	"周期",
+	"每月",
+	"每周",
+	"每日",
+	"每小时",
+	"提醒",
+	"日程",
+	"日历",
+	"月报",
+	"周报",
+	"日报",
+	"订阅",
+	"触发器",
+	"轮询",
+	"梦整理",
+	"梦境"
+];
+function detectPeriodic(input) {
+	const text = `${input.name} ${input.description ?? ""} ${input.moduleName ?? ""}`.toLowerCase();
+	return PERIODIC_HINTS.some((hint) => text.includes(hint));
+}
 // src/draft.ts
 /** Build a local, reversible slim-profile draft. Does not change plugin state. */
 function buildSlimProfile(scan, task, config, options = {}) {
@@ -2740,11 +2820,11 @@ function buildSlimProfile(scan, task, config, options = {}) {
 	const items = [];
 	for (const bundle of scan.bundles) {
 		if (!bundle.enabled && bundle.availability === "missing") continue;
-		items.push(scoreBundle(scan, task, bundle, overlap));
+		items.push(scoreBundle(scan, task, bundle, overlap, config.suggestionPolicy));
 	}
 	for (const entry of scan.entries) {
 		if (entry.bundleName === void 0 || entry.patchId === void 0) continue;
-		items.push(scoreEntry(scan, task, entry, overlap));
+		items.push(scoreEntry(scan, task, entry, overlap, config.suggestionPolicy));
 	}
 	const bundleDisables = new Set(items.filter((item) => item.kind === "bundle" && item.action === "suggest-disable").map((item) => item.bundleName).filter((name) => name !== void 0));
 	let filtered = items.filter((item) => !(item.kind === "entry" && item.bundleName !== void 0 && bundleDisables.has(item.bundleName)));
