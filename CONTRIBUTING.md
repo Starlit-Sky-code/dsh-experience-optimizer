@@ -37,6 +37,14 @@ assets/                 promotional images
 - Do not add a runtime dependency on `dsh-shared-meta`; it is inlined at build time.
 - Add tests for every new compatibility code or scoring rule.
 
+## 版本节奏
+
+- **每累计 3 个用户可见的大更改，才发布一次补丁版本（小版本）。**
+- 大更改包括：用户可见的行为/算法/API/UI、许可证、安装或兼容性变化。
+- 纯文档、测试、注释、依赖补丁和内部重构不单独计数，也不为单个小改动 bump 版本。
+- 同一批 3 个大更改共用一个版本号；紧急安全修复可以例外，但要在 CHANGELOG 说明。
+- 未凑满 3 个大更改时，改动进入 `CHANGELOG.md` 的 `Unreleased`，不发布 npm/Release。
+
 ## Release
 
 1. Update `CHANGELOG.md` and all package versions.

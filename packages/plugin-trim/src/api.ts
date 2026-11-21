@@ -92,6 +92,10 @@ async function handle(
       sendJson(res, 200, { ok: true, data: await overview(ctx, config, ledger) })
       return
     }
+    if (req.method === 'GET' && path === '/config') {
+      sendJson(res, 200, { ok: true, data: publicConfig(ctx, config) })
+      return
+    }
     if (req.method === 'POST' && path === '/suggest') {
       const body = await readJsonBody<Record<string, unknown>>(req)
       sendJson(res, 200, { ok: true, data: await suggest(ctx, config, ledger, body) })
@@ -110,6 +114,23 @@ async function handle(
     sendError(res, 404, `unknown endpoint ${path}`)
   } catch (error) {
     sendError(res, 500, error instanceof Error ? error.message : String(error))
+  }
+}
+
+export function publicConfig(ctx: Context, config: Config): unknown {
+  const profile = resolveProfileFacts(ctx)
+  return {
+    profile: profile.name,
+    profileDir: profile.dir,
+    mode: config.mode,
+    approvalMode: config.approvalMode,
+    suggestionPolicy: config.suggestionPolicy,
+    approvalThreshold: config.approvalThreshold,
+    protect: [...config.protect],
+    pinned: [...config.pinned],
+    trackUsage: config.trackUsage,
+    usageRetentionDays: config.usageRetentionDays,
+    maxDrafts: config.maxDrafts,
   }
 }
 

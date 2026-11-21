@@ -50,25 +50,25 @@
     <circle cx="954" cy="198" r="47" fill="#0c1728" stroke="#fbbf24" stroke-width="1.6"/>
     <path d="M954 166 L976 176 L976 198 C976 214 966 225 954 230 C942 225 932 214 932 198 L932 176 Z" fill="none" stroke="#fbbf24" stroke-width="2"/>
     <path d="M944 196 L951 203 L965 188" fill="none" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="954" y="255" fill="#ffd782" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" text-anchor="middle" letter-spacing="1">APPROVAL</text>
-    <text x="1128" y="86" text-anchor="end" fill="#7f93b0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" letter-spacing="1.4">CONTEXT / PLUGIN GRAPH</text>
+    <text x="954" y="255" fill="#ffd782" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" text-anchor="middle" letter-spacing="1">审批</text>
+    <text x="1128" y="86" text-anchor="end" fill="#7f93b0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" letter-spacing="1.4">上下文 / 插件关系</text>
   </g>
 
   <!-- copy -->
   <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Noto Sans CJK SC', sans-serif">
-    <text x="64" y="76" fill="#5eead4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" letter-spacing="3">DSH PLUGIN SUITE · v0.3.2</text>
-    <text x="62" y="158" fill="#f2f7ff" font-size="58" font-weight="750" letter-spacing="-1.8">Experience Optimizer</text>
+    <text x="64" y="76" fill="#5eead4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" letter-spacing="3">DSH 插件套件 · v0.3.4</text>
+    <text x="62" y="158" fill="#f2f7ff" font-size="58" font-weight="750" letter-spacing="-1.8">DSH 体验优化器</text>
     <text x="64" y="204" fill="#c3d3e8" font-size="25">少一点插件负担，多一点兼容确定性。</text>
-    <text x="64" y="238" fill="#8ea3be" font-size="18">Trim the noise. Keep the power.</text>
+    <text x="64" y="238" fill="#8ea3be" font-size="18">减负 · 兼容性体检 · 工作流配方</text>
 
     <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="1.2">
       <rect x="64" y="278" width="92" height="30" rx="15" fill="#0f2a2a" stroke="#2b6b64"/>
-      <text x="110" y="298" fill="#8ff0d8" text-anchor="middle">TRIM</text>
+      <text x="110" y="298" fill="#8ff0d8" text-anchor="middle">减负</text>
       <rect x="166" y="278" width="154" height="30" rx="15" fill="#102036" stroke="#2d4f7c"/>
-      <text x="243" y="298" fill="#a9cbff" text-anchor="middle">COMPATIBILITY</text>
+      <text x="243" y="298" fill="#a9cbff" text-anchor="middle">兼容性</text>
       <rect x="330" y="278" width="94" height="30" rx="15" fill="#2a2313" stroke="#6b5522"/>
-      <text x="377" y="298" fill="#ffd782" text-anchor="middle">RECIPE</text>
-      <text x="64" y="350" fill="#7186a3" font-size="11" letter-spacing="0.8">HOST APPROVAL · SNAPSHOT ROLLBACK · FORMAT-1 MARKET INDEX</text>
+      <text x="377" y="298" fill="#ffd782" text-anchor="middle">工作流配方</text>
+      <text x="64" y="350" fill="#7186a3" font-size="11" letter-spacing="0.8">宿主审批 · 快照回滚 · 格式 1 市场索引</text>
     </g>
   </g>
 

@@ -47,8 +47,8 @@ DSH: `>=0.2.2-rc.1 <0.3.0`; Node: `>=20`.
 **安装命令**
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.2
-dsh plugin --profile web add dsh-plugin-recipe@0.3.2
+dsh plugin --profile web add dsh-plugin-trim@0.3.4
+dsh plugin --profile web add dsh-plugin-recipe@0.3.4
 ```
 
 **Topics**

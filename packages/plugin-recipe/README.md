@@ -7,13 +7,13 @@
 从 npm 安装（推荐）：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-recipe@0.3.2
+dsh plugin --profile web add dsh-plugin-recipe@0.3.4
 ```
 
 从 GitHub Release 安装（备用，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.2/dsh-plugin-recipe-0.3.2.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.4/dsh-plugin-recipe-0.3.4.tgz"
 ```
 
 本地开发：

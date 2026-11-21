@@ -1,22 +1,22 @@
-# DSH Experience Optimizer
+# DSH 体验优化器
 
-![DSH Experience Optimizer — 少一点插件负担，多一点兼容确定性](assets/readme/hero.svg)
+![DSH 体验优化器 — 少一点插件负担，多一点兼容确定性](assets/readme/hero.svg)
 
 <p align="center">
-  <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="持续集成" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://www.npmjs.com/package/dsh-plugin-trim"><img alt="npm dsh-plugin-trim" src="https://img.shields.io/npm/v/dsh-plugin-trim?label=dsh-plugin-trim"></a>
   <a href="https://www.npmjs.com/package/dsh-plugin-recipe"><img alt="npm dsh-plugin-recipe" src="https://img.shields.io/npm/v/dsh-plugin-recipe?label=dsh-plugin-recipe"></a>
-  <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg"></a>
+  <a href="LICENSE"><img alt="许可证：AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg"></a>
 </p>
 
 <p align="center"><strong>插件减负 × 兼容性体检 × 工作流蓝图</strong><br>
-两个插件可独立安装，也可同时使用；共用同一个 Web 控制台与审批边界。</p>
+两个插件可独立安装，也可同时使用；共用同一个网页控制台与审批边界。</p>
 
 ## 安装
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.2
-dsh plugin --profile web add dsh-plugin-recipe@0.3.2
+dsh plugin --profile web add dsh-plugin-trim@0.3.4
+dsh plugin --profile web add dsh-plugin-recipe@0.3.4
 ```
 
 安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
@@ -26,8 +26,8 @@ dsh plugin --profile web add dsh-plugin-recipe@0.3.2
 
 ```bash
 # Release tarball
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.2/dsh-plugin-trim-0.3.2.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.2/dsh-plugin-recipe-0.3.2.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.4/dsh-plugin-trim-0.3.4.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.4/dsh-plugin-recipe-0.3.4.tgz"
 
 # 开发版（跟随 main）
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
@@ -38,7 +38,7 @@ dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experi
 
 ## 一眼看懂
 
-![体验优化 Web 控制台](assets/ui-preview.png)
+![体验优化网页控制台](assets/ui-preview.png)
 
 <p align="center"><sub>设置 → 体验优化：上下文、兼容性、精简方案与工作流配方在同一个原生设置页里。</sub></p>
 
@@ -48,8 +48,8 @@ dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experi
 
 DSH 插件装得越多，越容易出现三类问题：
 
-- **上下文变贵**：插件 prompt、工具描述和重复段落持续占用 token。
-- **兼容性变脆**：插件↔插件、插件↔DSH 运行时、Profile/工作区之间互相冲突。
+- **上下文变贵**：插件提示词、工具描述和重复段落持续占用 token。
+- **兼容性变脆**：插件↔插件、插件↔DSH 运行时、配置集/工作区之间互相冲突。
 - **工作流难落地**：知道“想自动化什么”，但不知道需要哪些工具、权限和人工确认点。
 
 `dsh-experience-optimizer` 把这三件事放进一个套件：
@@ -63,7 +63,7 @@ DSH 插件装得越多，越容易出现三类问题：
 
 ## “建议关闭”怎么判断？
 
-54% 这类数字之所以扎人，是因为它把插件**常驻上下文**变成了可见的占比；但你砍的是工具白名单，真正难量的是插件本身。`trim_scan_plugins` 会读取每个 bundle 的可归属上下文成本；Web 控制台的插件清单新增了 **Tokens / 占比** 两列，并单独标出 `unattributedTokens`，避免把“未归属”误算到某个插件头上。
+54% 这类数字之所以扎人，是因为它把插件**常驻上下文**变成了可见的占比；但你砍的是工具白名单，真正难量的是插件本身。`trim_scan_plugins` 会读取每个 bundle 的可归属上下文成本；网页控制台的插件清单新增了 **上下文 / 占比** 两列，并单独标出 `unattributedTokens`，避免把“未归属”误算到某个插件头上。
 
 判断顺序不是“描述像不像当前任务”这么简单：
 
@@ -87,12 +87,12 @@ DSH 插件装得越多，越容易出现三类问题：
 `trim_apply_profile` 的 `confirm: true` 只是**提案标记**。默认流程是：
 
 ```text
-draft → confirm: true → ctx.approval.request() → allowed-once → snapshot → apply
+草稿 → confirm: true → ctx.approval.request() → allowed-once → 快照 → 应用
 ```
 
-- approval 缺失、抛错、`rejected`、`cancelled`、`unavailable` 一律 fail-closed
-- 审批 reason 带 profile、草稿 id、快照 id 和具体 items
-- 只应用低风险、非受保护项；受保护/核心/preset/pinned 永不改
+- 审批缺失、抛错、`rejected`、`cancelled`、`unavailable` 一律失败即拒绝
+- 审批原因带配置集、草稿 id、快照 id 和具体条目
+- 只应用低风险、非受保护项；受保护/核心/预设/固定项永不改
 - 失败自动回滚；回滚工具同样需要宿主审批
 
 ### 兼容性矩阵
@@ -101,9 +101,9 @@ draft → confirm: true → ctx.approval.request() → allowed-once → snapshot
 
 | 域 | 例子 |
 |---|---|
-| 插件 ↔ 插件 | peer 缺失、重复 prompt、互斥能力 |
-| 插件 ↔ DSH | DSH 版本、Node/平台、官方 row 覆盖 |
-| Profile | 多个 profile 的启用差异、锁文件漂移 |
+| 插件 ↔ 插件 | peer 依赖缺失、提示词重复、互斥能力 |
+| 插件 ↔ DSH | DSH 版本、Node/平台、官方配置行覆盖 |
+| 配置集 | 多个配置集的启用差异、锁文件漂移 |
 | 工作区 | `AGENTS.md`/`CLAUDE.md` 与插件规则重叠 |
 
 ### 工作流蓝图
@@ -114,14 +114,16 @@ draft → confirm: true → ctx.approval.request() → allowed-once → snapshot
 approvalLevel: none | suggested | required
 ```
 
-Markdown/JSON 运行手册与 Web 控制台都会展示，供下游执行者继续遵守 HITL 边界。
+Markdown/JSON 运行手册与网页控制台都会展示，供下游执行者继续遵守人工确认（HITL）边界。
 
-## Web 控制台
+## 网页控制台
 
 - **减负与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
 - **工作流配方**：目标表单、蓝图步骤、审批级别、校验问题、Markdown/JSON 导出
+- **教程**：5 分钟上手、按任务快速开始、常见问题
+- **设置**：当前生效的审批/建议策略、保护名单、可复制的配置片段
 - 同源 JSON API 校验 DSH 浏览器会话与 `Origin`；未登录返回 401
-- UI 的应用/回滚按钮本身就是用户操作，因此不重复弹宿主审批；Agent 工具路径默认走审批
+- 网页界面的应用/回滚按钮本身就是用户操作，因此不重复弹宿主审批；Agent 工具路径默认走审批
 
 详见 [docs/ui.md](docs/ui.md)。
 
@@ -130,7 +132,7 @@ Markdown/JSON 运行手册与 Web 控制台都会展示，供下游执行者继�
 | 工具 | 作用 |
 |---|---|
 | `trim_scan_plugins` | 只读扫描插件、上下文成本、兼容性摘要 |
-| `trim_analyze_compatibility` | 只读兼容性矩阵：插件↔插件、插件↔DSH、Profile/工作区 |
+| `trim_analyze_compatibility` | 只读兼容性矩阵：插件↔插件、插件↔DSH、配置集/工作区 |
 | `trim_suggest_profile` | 按任务生成精简方案草稿，不修改插件 |
 | `trim_apply_profile` | 提案 + 宿主审批 `allowed-once` 后应用低风险项 |
 | `trim_rollback_profile` | 宿主审批后恢复上一次精简方案 |
@@ -175,7 +177,7 @@ pnpm verify
 - 数据写入 `$DSH_HOME/experience-optimizer/`，目录 `0700`、文件 `0600`。
 - 版本豁免、插件升级、patch 编辑只报告，不自动执行。
 
-## License
+## 许可证
 
 [AGPL-3.0-only](LICENSE)。修改后通过网络向用户提供服务时，需要按 AGPL 提供对应源代码。
 

@@ -4641,6 +4641,13 @@ async function handle(req, res, ctx, config, ledger) {
 			});
 			return;
 		}
+		if (req.method === "GET" && path === "/config") {
+			sendJson(res, 200, {
+				ok: true,
+				data: publicConfig(ctx, config)
+			});
+			return;
+		}
 		if (req.method === "POST" && path === "/suggest") {
 			sendJson(res, 200, {
 				ok: true,
@@ -4666,6 +4673,22 @@ async function handle(req, res, ctx, config, ledger) {
 	} catch (error) {
 		sendError(res, 500, error instanceof Error ? error.message : String(error));
 	}
+}
+function publicConfig(ctx, config) {
+	const profile = resolveProfileFacts(ctx);
+	return {
+		profile: profile.name,
+		profileDir: profile.dir,
+		mode: config.mode,
+		approvalMode: config.approvalMode,
+		suggestionPolicy: config.suggestionPolicy,
+		approvalThreshold: config.approvalThreshold,
+		protect: [...config.protect],
+		pinned: [...config.pinned],
+		trackUsage: config.trackUsage,
+		usageRetentionDays: config.usageRetentionDays,
+		maxDrafts: config.maxDrafts
+	};
 }
 async function overview(ctx, config, ledger) {
 	const compat = await analyzeCompatibility(ctx, config, {

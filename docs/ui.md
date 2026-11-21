@@ -20,6 +20,19 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ## 页面
 
+### 教程
+
+- 5 分钟上手：扫描 → 生成方案 → 看判断依据 → 确认应用 → 工作流配方；
+- 按任务快速开始：代码审查、修复问题、整理周报；
+- 常见问题：为什么没有建议关闭、周期插件保护、应用后回滚、确认与审批的区别。
+
+### 设置
+
+- 只读展示当前配置集、运行模式、审批策略、建议策略、使用账本和草稿上限；
+- 展示 `protect` / `pinned` 名单；
+- 生成可复制的 `dsh-plugin-trim` 配置补丁；
+- 不绕过 DSH 的 profile 配置边界，修改后需重新加载插件。
+
 ### 减负与兼容
 
 - 四张指标卡：可归属上下文、启用插件数、兼容性 error/warn、写操作可用性。
@@ -61,6 +74,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 |---|---|---|
 | `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
+| `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |
 | `POST` | `/api/dsh-experience-optimizer/rollback` | 恢复最近快照 |
 | `POST` | `/api/dsh-experience-optimizer/recipe/plan` | 生成并校验蓝图 |

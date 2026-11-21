@@ -3,6 +3,35 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.4] - 2026-11-21
+
+### Fixed
+
+- Registry hotfix: `dsh-plugin-recipe-0.3.3.tgz` was persistently served as
+  `404` by the npm CDN while its metadata was live. 0.3.4 republishes the same
+  tutorial/settings/localization release under fresh tarball paths.
+- No runtime changes. This is a release-infrastructure exception to the
+  three-large-changes cadence, documented here.
+
+## [0.3.3] - 2026-11-21
+
+### Added
+
+- New **教程** tab: 5-minute walkthrough, task quick-starts, and FAQ about safe
+  disable suggestions.
+- New **设置** tab: read-only effective approval/suggestion policy, protect/pinned
+  lists, data directory, and a copyable `dsh-plugin-trim` patch snippet. The new
+  authenticated `GET /api/dsh-experience-optimizer/config` endpoint backs it.
+- `AGENTS.md` and `CONTRIBUTING.md` now record the release cadence: publish one
+  patch version after three user-visible large changes, not for every small edit.
+
+### Changed
+
+- Chinese-first README/UI pass: tabs, metrics, inventory headers/statuses, risk
+  labels, draft badges, recipe summary, hero, and flow diagram now use Chinese
+  labels while retaining code identifiers and technical terms.
+- README adds the tutorial/settings entries and a localized UI screenshot.
+
 ## [0.3.2] - 2026-11-21
 
 ### Changed

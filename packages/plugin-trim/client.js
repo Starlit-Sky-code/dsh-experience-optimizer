@@ -14,7 +14,7 @@ window.__ModuleLoader__.load({
     const CSS_ID = 'dsh-experience-optimizer-ui'
     const TASK_TAGS = [
       ['unknown', '自动识别'],
-      ['bugfix', '修 Bug'],
+      ['bugfix', '修复问题'],
       ['feature', '新功能'],
       ['review', '代码审查'],
       ['docs', '文档'],
@@ -147,6 +147,20 @@ window.__ModuleLoader__.load({
 .eo-muted{color:var(--eo-tertiary);font-size:12px;line-height:18px}
         .eo-note{padding:9px 12px;border:1px solid var(--dsw-alias-border-l3);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--eo-secondary);font-size:12px;line-height:19px}
 .eo-code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
+        .eo-steps{margin:0;padding-left:20px;color:var(--eo-secondary);font-size:13px;line-height:22px}
+        .eo-steps li{margin:0 0 8px;padding-left:2px}
+        .eo-steps strong{color:var(--eo-primary);font-weight:500}
+        .eo-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+        .eo-settings-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:.5px solid var(--eo-border);font-size:13px;line-height:20px}
+        .eo-settings-row:last-child{border-bottom:0}
+        .eo-settings-row span:first-child{color:var(--eo-secondary);flex:0 0 auto}
+        .eo-settings-row code{font:400 11px/16px var(--eo-code);color:var(--eo-primary);text-align:right;word-break:break-all}
+        .eo-codeblock{margin:0;padding:12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05));font:400 11px/18px var(--eo-code);color:var(--eo-secondary);white-space:pre-wrap;word-break:break-word}
+        .eo-faq{border-bottom:.5px solid var(--eo-border);padding:8px 0}
+        .eo-faq:last-child{border-bottom:0}
+        .eo-faq summary{cursor:pointer;font-size:13px;line-height:20px;color:var(--eo-primary)}
+        .eo-faq p{margin:5px 0 0;color:var(--eo-tertiary);font-size:12px;line-height:19px}
+        @media(max-width:560px){.eo-settings-grid{grid-template-columns:1fr}}
 .eo-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .eo-spacer{height:0}
 @keyframes eo-spin{to{transform:rotate(360deg)}}
@@ -275,7 +289,7 @@ window.__ModuleLoader__.load({
         {
           'plugin-runtime': '插件 ↔ DSH',
           'plugin-plugin': '插件 ↔ 插件',
-          profile: 'Profile',
+          profile: '配置集',
           workspace: '工作区',
         }[domain] || domain
       )
@@ -286,6 +300,36 @@ window.__ModuleLoader__.load({
         item.protected !== true &&
         item.risk === 'low' &&
         (item.action === 'suggest-disable' || item.action === 'enable')
+      )
+    }
+
+    function taskLabel(tag) {
+      return (
+        {
+          bugfix: '修复',
+          feature: '新功能',
+          review: '审查',
+          docs: '文档',
+          release: '发布',
+          report: '报告',
+          research: '调研',
+          unknown: '未知',
+        }[tag] || tag
+      )
+    }
+
+    function riskLabel(risk) {
+      return { low: '低', medium: '中', high: '高' }[risk] || risk
+    }
+
+    function guardLabel(status) {
+      return (
+        {
+          ok: '正常',
+          protected: '受保护',
+          incompatible: '不兼容',
+          warn: '警告',
+        }[status] || status
       )
     }
 
@@ -362,6 +406,9 @@ window.__ModuleLoader__.load({
       })
       const [recipeResult, setRecipeResult] = useState(null)
       const [recipeBusy, setRecipeBusy] = useState(false)
+      const [settings, setSettings] = useState(null)
+      const [settingsBusy, setSettingsBusy] = useState(false)
+      const [settingsError, setSettingsError] = useState('')
 
       const notify = useCallback((message, kind) => {
         setToast({ message, kind: kind || 'ok', id: Date.now() })
@@ -389,6 +436,18 @@ window.__ModuleLoader__.load({
       useEffect(() => {
         void refresh()
       }, [refresh])
+
+      const loadSettings = useCallback(async () => {
+        setSettingsBusy(true)
+        setSettingsError('')
+        try {
+          setSettings(await fetchJson(API + '/config'))
+        } catch (err) {
+          setSettingsError(err instanceof Error ? err.message : String(err))
+        } finally {
+          setSettingsBusy(false)
+        }
+      }, [])
 
       const findings = useMemo(() => {
         if (!overview) return []
@@ -627,7 +686,7 @@ window.__ModuleLoader__.load({
             h(
               'span',
               { className: 'eo-status', title: overview ? overview.profile.dir : '' },
-              overview ? 'profile: ' + overview.profile.name : '读取中',
+              overview ? '配置集：' + overview.profile.name : '读取中',
             ),
             h(
               Button,
@@ -657,6 +716,27 @@ window.__ModuleLoader__.load({
             },
             '工作流配方',
           ),
+          h(
+            'button',
+            {
+              type: 'button',
+              className: 'eo-tab' + (tab === 'tutorial' ? ' eo-tab-active' : ''),
+              onClick: () => setTab('tutorial'),
+            },
+            '教程',
+          ),
+          h(
+            'button',
+            {
+              type: 'button',
+              className: 'eo-tab' + (tab === 'settings' ? ' eo-tab-active' : ''),
+              onClick: () => {
+                setTab('settings')
+                if (settings === null && !settingsBusy) void loadSettings()
+              },
+            },
+            '设置',
+          ),
         ),
         error
           ? h(
@@ -674,11 +754,15 @@ window.__ModuleLoader__.load({
               '正在读取插件画像与兼容性数据…',
             )
           : null,
-        overview
-          ? tab === 'trim'
-            ? renderTrim()
-            : renderRecipe()
-          : null,
+        tab === 'tutorial'
+          ? renderTutorial()
+          : tab === 'settings'
+            ? renderSettings()
+            : overview
+              ? tab === 'trim'
+                ? renderTrim()
+                : renderRecipe()
+              : null,
         confirmState
           ? h(ConfirmModal, {
               state: confirmState,
@@ -693,6 +777,188 @@ window.__ModuleLoader__.load({
           : null,
       )
 
+      function renderTutorial() {
+        const quickStarts = [
+          {
+            label: '代码审查',
+            desc: '先看兼容性，再生成审查任务的精简方案',
+            run: () => {
+              setTaskTag('review')
+              setGoal('审查当前改动，指出风险、回归点和需要补测的地方')
+              setTab('trim')
+              notify('已填入审查任务，点击“生成方案”继续')
+            },
+          },
+          {
+            label: '修复问题',
+            desc: '排除无关插件，保留调试与文件工具',
+            run: () => {
+              setTaskTag('bugfix')
+              setGoal('修复一个可复现的 bug，并验证没有回归')
+              setTab('trim')
+              notify('已填入修复任务，点击“生成方案”继续')
+            },
+          },
+          {
+            label: '整理周报',
+            desc: '进入工作流配方，生成可导出的周报蓝图',
+            run: () => {
+              setTab('recipe')
+              notify('已打开工作流配方，按表单确认范围与交付方式')
+            },
+          },
+        ]
+        return h(
+          'div',
+          { className: 'eo-stack' },
+          h(
+            Card,
+            { title: '5 分钟上手', subtitle: '从扫描到应用，每一步都可回滚' },
+            h(
+              'ol',
+              { className: 'eo-steps' },
+              h('li', null, h('strong', null, '先扫描。'), ' 打开「减负与兼容」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。'),
+              h('li', null, h('strong', null, '再生成方案。'), ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。'),
+              h('li', null, h('strong', null, '看判断依据。'), ' 只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭；其余进入人工复核。'),
+              h('li', null, h('strong', null, '确认后应用。'), ' 勾选低风险项，点击“应用选中”，核对弹窗后写入快照并应用；需要时可一键回滚。'),
+              h('li', null, h('strong', null, '需要工作流时。'), ' 打开「工作流配方」，生成带审批级别的蓝图，导出 Markdown/JSON 运行手册。'),
+            ),
+          ),
+          h(
+            Card,
+            { title: '按任务快速开始', subtitle: '只是填入表单，不会直接修改插件' },
+            h(
+              'div',
+              { className: 'eo-inline' },
+              quickStarts.map((item) =>
+                h(
+                  'div',
+                  { key: item.label, className: 'eo-issue', style: { flex: '1 1 180px', flexDirection: 'column', alignItems: 'flex-start' } },
+                  h('strong', null, item.label),
+                  h('span', { className: 'eo-muted' }, item.desc),
+                  h(Button, { variant: 'ghost', onClick: item.run }, '开始'),
+                ),
+              ),
+            ),
+          ),
+          h(
+            Card,
+            { title: '常见问题', subtitle: '先看证据，再做决定' },
+            h('details', { className: 'eo-faq' },
+              h('summary', null, '为什么我几乎没有“建议关闭”？'),
+              h('p', null, '这是默认的保守策略：没有使用账本、当前任务置信度不够、插件带周期/触发器语义，或已经有调用记录时，只会进入人工复核，不会给出建议关闭。'),
+            ),
+            h('details', { className: 'eo-faq' },
+              h('summary', null, '每月才用一次的插件会被误伤吗？'),
+              h('p', null, '带“每月/每周/定时/提醒/日程/dream”等语义的插件会被硬保护。仍不放心时，把它加入配置的 protect 列表。'),
+            ),
+            h('details', { className: 'eo-faq' },
+              h('summary', null, '应用后出问题怎么办？'),
+              h('p', null, '每次应用前都会写入快照；在精简方案底部点击“回滚最近”，或让 Agent 调用 trim_rollback_profile。回滚同样需要宿主审批。'),
+            ),
+            h('details', { className: 'eo-faq' },
+              h('summary', null, '为什么应用还需要确认和审批？'),
+              h('p', null, 'confirm: true 只是提案标记，真正授权来自宿主审批返回 allowed-once；被拒绝、取消或审批服务不可用时一律不写入。'),
+            ),
+          ),
+        )
+      }
+
+      function configPatch(data) {
+        const lines = [
+          '- id: dsh-plugin-trim',
+          '  config:',
+          '    mode: ' + data.mode,
+          '    approvalMode: ' + data.approvalMode,
+          '    suggestionPolicy: ' + data.suggestionPolicy,
+          '    approvalThreshold: ' + data.approvalThreshold,
+          '    trackUsage: ' + String(data.trackUsage),
+          '    usageRetentionDays: ' + data.usageRetentionDays,
+          '    maxDrafts: ' + data.maxDrafts,
+        ]
+        if (data.protect.length > 0) {
+          lines.push('    protect:')
+          for (const name of data.protect) lines.push('      - ' + name)
+        }
+        if (data.pinned.length > 0) {
+          lines.push('    pinned:')
+          for (const name of data.pinned) lines.push('      - ' + name)
+        }
+        return lines.join('\n')
+      }
+
+      async function copyConfig(data) {
+        try {
+          await navigator.clipboard.writeText(configPatch(data))
+          notify('配置片段已复制；写入配置补丁后生效')
+        } catch {
+          notify('无法访问剪贴板，请手动复制配置片段', 'warn')
+        }
+      }
+
+      function renderSettings() {
+        if (settingsBusy && settings === null) {
+          return h('div', { className: 'eo-loading' }, h('span', { className: 'eo-spinner' }), '正在读取当前生效设置…')
+        }
+        if (settingsError && settings === null) {
+          return h('div', { className: 'eo-error' }, h('span', null, settingsError), h(Button, { variant: 'ghost', onClick: loadSettings }, '重试'))
+        }
+        if (!settings) return h('div', { className: 'eo-empty' }, '暂无设置数据。')
+        const policyLabel = settings.suggestionPolicy === 'balanced' ? '旧评分（仍保护周期与已用插件）' : '证据优先（推荐）'
+        const approvalLabel = settings.approvalMode === 'risk-based' ? '仅超过阈值时审批' : '每次工具写入都审批'
+        return h(
+          'div',
+          { className: 'eo-stack' },
+          h(
+            Card,
+            {
+              title: '当前生效设置',
+              subtitle: '只读视图；修改请写入配置补丁',
+              extra: h(Button, { variant: 'ghost', onClick: loadSettings, disabled: settingsBusy }, settingsBusy ? '读取中…' : '刷新'),
+            },
+            h(
+              'div',
+              { className: 'eo-settings-grid' },
+              h('div', { className: 'eo-settings-row' }, h('span', null, '配置集'), h('code', null, settings.profile)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '运行模式'), h('code', null, settings.mode === 'auto-safe' ? '自动安全（收窄建议）' : '建议模式')),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '审批策略'), h('code', null, approvalLabel)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '审批阈值'), h('code', null, String(settings.approvalThreshold) + ' 项')),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '建议策略'), h('code', null, policyLabel)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '使用账本'), h('code', null, settings.trackUsage ? '开启' : '关闭')),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '账本保留'), h('code', null, settings.usageRetentionDays + ' 天')),
+              h('div', { className: 'eo-settings-row' }, h('span', null, '草稿/快照上限'), h('code', null, String(settings.maxDrafts))),
+            ),
+            h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, '配置目录：' + settings.profileDir),
+          ),
+          h(
+            Card,
+            { title: '保护与固定', subtitle: '这些插件永远不会进入自动建议' },
+            settings.protect.length === 0 && settings.pinned.length === 0
+              ? h('div', { className: 'eo-empty' }, '尚未配置保护 / 固定名单。可在配置补丁中添加需要保底的插件。')
+              : h(
+                  'div',
+                  { className: 'eo-inline' },
+                  settings.protect.map((name) => h(Badge, { key: 'protect-' + name, tone: 'warn' }, '保护 · ' + name)),
+                  settings.pinned.map((name) => h(Badge, { key: 'pinned-' + name, tone: 'neutral' }, '固定 · ' + name)),
+                ),
+          ),
+          h(
+            Card,
+            {
+              title: '配置片段',
+              subtitle: '复制到配置补丁；写入后由 DSH 重新加载',
+              extra: h(Button, { variant: 'accent', onClick: () => void copyConfig(settings) }, '复制片段'),
+            },
+            h('pre', { className: 'eo-codeblock' }, configPatch(settings)),
+          ),
+          h(
+            Card,
+            { title: '说明', subtitle: '设置页不会直接改配置' },
+            h('div', { className: 'eo-muted' }, '为避免 UI 绕过 DSH 的配置边界，这里只展示当前生效值与可复制片段。修改后请重新加载插件；审批与保护逻辑不会因为改设置而跳过。'),
+          ),
+        )
+      }
+
       function renderTrim() {
         return h(
           'div',
@@ -702,26 +968,26 @@ window.__ModuleLoader__.load({
               key: 'tokens',
               label: '可归属上下文',
               value: formatTokens(overview.context.totalTokens),
-              hint: 'tokens · 不含未归属部分',
+              hint: 'tokens · 不含未归属',
             }),
             h(Metric, {
               key: 'bundles',
               label: '启用插件',
               value: enabledBundles + ' / ' + totalBundles,
-              hint: 'enabled / total bundles',
+              hint: '已启用 / 全部插件',
             }),
             h(Metric, {
               key: 'compat',
               label: '兼容性',
-              value: compat.error + 'E · ' + compat.warn + 'W',
-              hint: 'error / warn · info ' + compat.info,
+              value: compat.error + ' 错 · ' + compat.warn + ' 警',
+              hint: '错误 / 警告 · 信息 ' + compat.info,
               tone: compat.error > 0 ? 'danger' : compat.warn > 0 ? 'warn' : 'ok',
             }),
             h(Metric, {
               key: 'manage',
               label: '写操作',
               value: overview.managementAvailable ? '可应用' : '只读',
-              hint: overview.managementAvailable ? 'pluginManager 可用' : '缺少 pluginManager',
+              hint: overview.managementAvailable ? '插件管理器可用' : '缺少插件管理器',
               tone: overview.managementAvailable ? 'ok' : 'danger',
             }),
           ]),
@@ -729,7 +995,7 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: '兼容性矩阵',
-              subtitle: '插件 ↔ 插件 · 插件 ↔ DSH · Profile / 工作区',
+              subtitle: '插件 ↔ 插件 · 插件 ↔ DSH · 配置集 / 工作区',
               section: 'compat',
               extra: h(
                 'div',
@@ -750,7 +1016,7 @@ window.__ModuleLoader__.load({
                     variant: 'ghost',
                     onClick: () => setShowInfo((value) => !value),
                   },
-                  showInfo ? '隐藏 info' : '显示 info',
+                  showInfo ? '隐藏信息' : '显示信息',
                 ),
                 h(Badge, { tone: compat.error ? 'danger' : 'ok' }, compat.error ? '需要处理' : '无阻断'),
               ),
@@ -763,7 +1029,7 @@ window.__ModuleLoader__.load({
                 { label: '搜索兼容性' },
                 h('input', {
                   className: 'eo-input',
-                  placeholder: 'code / title / subject',
+                  placeholder: '代码 / 标题 / 对象',
                   value: findingQuery,
                   onChange: (event) => setFindingQuery(event.target.value),
                 }),
@@ -779,9 +1045,9 @@ window.__ModuleLoader__.load({
                     onChange: (event) => setFindingSeverity(event.target.value),
                   },
                   h('option', { value: 'all' }, '全部'),
-                  h('option', { value: 'error' }, 'error'),
-                  h('option', { value: 'warn' }, 'warn'),
-                  h('option', { value: 'info' }, 'info'),
+                  h('option', { value: 'error' }, '错误'),
+                  h('option', { value: 'warn' }, '警告'),
+                  h('option', { value: 'info' }, '信息'),
                 ),
               ),
             ),
@@ -876,7 +1142,7 @@ window.__ModuleLoader__.load({
                   null,
                   h('th', null, 'Section / Tool'),
                   h('th', null, 'Owner'),
-                  h('th', null, 'Tokens'),
+                  h('th', null, '上下文'),
                 ),
               ),
               h(
@@ -935,7 +1201,7 @@ window.__ModuleLoader__.load({
                 { label: '搜索插件' },
                 h('input', {
                   className: 'eo-input',
-                  placeholder: 'name / description',
+                  placeholder: '名称 / 描述',
                   value: bundleQuery,
                   onChange: (event) => setBundleQuery(event.target.value),
                 }),
@@ -986,10 +1252,10 @@ window.__ModuleLoader__.load({
                       h('th', null, '插件'),
                       h('th', null, '状态'),
                       h('th', null, '保护'),
-                      h('th', null, 'Guard'),
-                      h('th', null, 'Tokens'),
+                      h('th', null, '守卫'),
+                      h('th', null, '上下文'),
                       h('th', null, '占比'),
-                      h('th', null, 'Calls'),
+                      h('th', null, '调用'),
                     ),
                   ),
                   h(
@@ -1013,15 +1279,15 @@ window.__ModuleLoader__.load({
                           h(
                             Badge,
                             { tone: bundle.enabled ? 'ok' : 'neutral' },
-                            bundle.enabled ? 'enabled' : 'disabled',
+                            bundle.enabled ? '已启用' : '已禁用',
                           ),
                         ),
                         h(
                           'td',
                           null,
-                          bundle.protected ? h(Badge, { tone: 'warn' }, 'protected') : '—',
+                          bundle.protected ? h(Badge, { tone: 'warn' }, '受保护') : '—',
                         ),
-                        h('td', { className: 'eo-muted' }, bundle.guardStatus || '—'),
+                        h('td', { className: 'eo-muted' }, bundle.guardStatus ? guardLabel(bundle.guardStatus) : '—'),
                         h('td', null, formatNumber(bundle.contextTokens)),
                         h(
                           'td',
@@ -1105,7 +1371,7 @@ window.__ModuleLoader__.load({
                     h(Badge, { tone: 'neutral' }, '受保护 ' + draft.summary.protected),
                     h(Badge, { tone: 'warn' }, '周期保护 ' + periodicDraftCount),
                     h(Badge, { tone: 'ok' }, '证据强 ' + strongDraftCount),
-                    h(Badge, { tone: 'warn' }, 'task: ' + draft.task.tag),
+                    h(Badge, { tone: 'warn' }, '任务：' + taskLabel(draft.task.tag)),
                   ),
                   actionableDraftItems.length === 0
                     ? h(
@@ -1146,7 +1412,7 @@ window.__ModuleLoader__.load({
                                 { tone: actionTone(item.action) },
                                 actionLabel(item.action),
                               ),
-                              h(Badge, { tone: riskTone(item.risk) }, 'risk: ' + item.risk),
+                              h(Badge, { tone: riskTone(item.risk) }, '风险：' + riskLabel(item.risk)),
                               item.protected ? h(Badge, { tone: 'neutral' }, '受保护') : null,
                               item.periodic ? h(Badge, { tone: 'warn' }, '周期/触发器') : null,
                               item.usageState
@@ -1186,7 +1452,7 @@ window.__ModuleLoader__.load({
                             'div',
                             { className: 'eo-item-side' },
                             h('span', null, Number(item.score).toFixed(2)),
-                            h('small', null, 'score'),
+                            h('small', null, '评分'),
                           ),
                         ),
                       ),
@@ -1232,7 +1498,7 @@ window.__ModuleLoader__.load({
                 Card,
                 {
                   title: '应用结果',
-                  subtitle: applyResult.rolledBack ? '中途失败，已自动回滚' : '变更已写入 profile',
+                  subtitle: applyResult.rolledBack ? '中途失败，已自动回滚' : '变更已写入配置集',
                   section: 'result',
                   extra: h(
                     Badge,
@@ -1511,10 +1777,10 @@ window.__ModuleLoader__.load({
             h(
               'div',
               { className: 'eo-summary' },
-              h(Badge, { tone: 'info' }, 'template: ' + blueprint.template),
-              h(Badge, { tone: 'neutral' }, 'permissions: ' + blueprint.permissions.length),
-              h(Badge, { tone: 'warn' }, 'approval required: ' + blueprint.steps.filter((step) => step.approvalLevel === 'required' || step.needsConfirm).length),
-              h(Badge, { tone: 'neutral' }, 'min plugins: ' + blueprint.minPluginSet.length),
+              h(Badge, { tone: 'info' }, '模板：' + blueprint.template),
+              h(Badge, { tone: 'neutral' }, '权限：' + blueprint.permissions.length),
+              h(Badge, { tone: 'warn' }, '需审批：' + blueprint.steps.filter((step) => step.approvalLevel === 'required' || step.needsConfirm).length),
+              h(Badge, { tone: 'neutral' }, '最小插件：' + blueprint.minPluginSet.length),
             ),
             h(
               'table',
@@ -1697,7 +1963,7 @@ window.__ModuleLoader__.load({
                         { className: 'eo-item-title' },
                         h('span', { className: 'eo-item-name' }, item.name),
                         h(Badge, { tone: actionTone(item.action) }, actionLabel(item.action)),
-                        h(Badge, { tone: riskTone(item.risk) }, 'risk: ' + item.risk),
+                        h(Badge, { tone: riskTone(item.risk) }, '风险：' + riskLabel(item.risk)),
                       ),
                       h('div', { className: 'eo-item-reason' }, item.reason),
                     ),
