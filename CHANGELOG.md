@@ -16,6 +16,11 @@ All notable changes to this repository are documented here. Versions follow
   <https://starlit-sky-code.github.io/dsh-experience-optimizer/> and deploys from
   the `promo-site` branch.
 
+### Fixed
+
+- The first-run guide now points at the bottom-left **更多** entry, matching the
+  actual navigation path.
+
 ## [0.3.7] - 2026-11-21
 
 ### Changed
