@@ -430,7 +430,28 @@ window.__ModuleLoader__.load({
         .eo-settings-row-wide .eo-settings-control{width:100%;flex:1 1 240px}
         .eo-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--eo-primary);cursor:pointer;min-height:30px}
         .eo-check input{width:14px;height:14px;accent-color:var(--eo-primary);cursor:pointer}
-        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}}
+        .eo-param{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:220px}
+        .eo-param-section{display:flex;flex-direction:column;gap:0;margin-top:14px;padding-top:12px;border-top:.5px solid var(--eo-border)}
+        .eo-param-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+        .eo-param-section-head strong{font-size:13px;line-height:20px;color:var(--eo-primary)}
+        .eo-param-section-head span{font-size:11px;line-height:17px;color:var(--eo-tertiary)}
+        .eo-param-row{display:flex;align-items:center;gap:14px;padding:8px 0;border-bottom:.5px solid var(--eo-border)}
+        .eo-param-row:last-child{border-bottom:0;padding-bottom:0}
+        .eo-param-row>span{flex:0 0 120px;color:var(--eo-secondary);font-size:12px;line-height:18px}
+        .eo-param-head{display:flex;align-items:center;gap:5px}
+        .eo-param-input{width:70px;height:30px;padding:0 7px;text-align:center;font:500 12px/18px var(--eo-code);appearance:textfield}
+        .eo-param-input::-webkit-inner-spin-button,.eo-param-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+        .eo-stepper{display:flex;flex-direction:column;gap:2px}
+        .eo-stepper-btn{width:22px;height:14px;display:grid;place-items:center;padding:0;border:.5px solid var(--eo-border-strong);border-radius:4px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05));color:var(--eo-secondary);cursor:pointer;transition:background .16s ease,color .16s ease,border-color .16s ease}
+        .eo-stepper-btn:hover{border-color:var(--eo-primary);color:var(--eo-primary);background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.1))}
+        .eo-stepper-btn:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--eo-primary));outline-offset:1px}
+        .eo-stepper-btn .eo-icon{display:block}
+        .eo-stepper-up .eo-icon{transform:rotate(180deg)}
+        .eo-param-track{position:relative;height:6px;border-radius:6px;background:var(--eo-border)}
+        .eo-param-track i{display:block;height:100%;min-width:3px;border-radius:6px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-success-primary,#1a7f37));transition:width .28s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
+        .eo-param-track b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:var(--dsw-alias-bg-layer-1,#fff);border:1.5px solid var(--eo-primary);transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+        .eo-param-scale{display:flex;justify-content:space-between;color:var(--eo-tertiary);font:10px/14px var(--eo-code);letter-spacing:.02em}
+        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}.eo-param-row{align-items:flex-start;flex-direction:column;gap:5px}.eo-param-row>span{flex:0 0 auto}.eo-param{width:100%;min-width:0}}
         .eo-codeblock{margin:0;padding:12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05));font:400 11px/18px var(--eo-code);color:var(--eo-secondary);white-space:pre-wrap;word-break:break-word}
         .eo-faq{border-bottom:.5px solid var(--eo-border);padding:8px 0}
         .eo-faq:last-child{border-bottom:0}
@@ -1859,14 +1880,37 @@ window.__ModuleLoader__.load({
         const form = settingsDraft || settings
         const dirty = settingsChanged
         const option = (labelZh, labelEn, value) => h('option', { key: value, value }, tr(labelZh, labelEn))
-        const inputNumber = (field, min, max) => h('input', {
-          className: 'eo-input eo-input-number',
-          type: 'number',
-          min,
-          max,
-          value: form[field],
-          onChange: (event) => updateSettingsField(field, Number(event.target.value)),
-        })
+        const inputNumber = (field, min, max, displayMax = max, step = 1) => {
+          const current = Math.min(max, Math.max(min, Number(form[field]) || min))
+          const visualMax = Math.min(max, Math.max(min + 1, displayMax))
+          const percent = Math.min(100, Math.max(0, ((current - min) / (visualMax - min)) * 100))
+          const setValue = (value) => updateSettingsField(field, Math.min(max, Math.max(min, Number(value) || min)))
+          return h(
+            'div',
+            { className: 'eo-param' },
+            h(
+              'div',
+              { className: 'eo-param-head' },
+              h('input', {
+                className: 'eo-input eo-param-input',
+                type: 'number',
+                min,
+                max,
+                step,
+                value: form[field],
+                onChange: (event) => setValue(event.target.value),
+              }),
+              h(
+                'div',
+                { className: 'eo-stepper' },
+                h('button', { type: 'button', className: 'eo-stepper-btn eo-stepper-up', onClick: () => setValue(current + step), 'aria-label': tr('增加', 'Increase') }, h(Icon, { name: 'chevron', size: 11 })),
+                h('button', { type: 'button', className: 'eo-stepper-btn', onClick: () => setValue(current - step), 'aria-label': tr('减少', 'Decrease') }, h(Icon, { name: 'chevron', size: 11 })),
+              ),
+            ),
+            h('div', { className: 'eo-param-track', 'aria-hidden': 'true' }, h('i', { style: { width: percent + '%' } }), h('b', { style: { left: percent + '%' } })),
+            h('div', { className: 'eo-param-scale' }, h('span', null, String(min)), h('span', null, String(visualMax) + (max > visualMax ? ' · ' + tr('上限 ', 'max ') + max : ''))),
+          )
+        }
         return h(
           'div',
           { className: 'eo-stack' },
@@ -1926,7 +1970,6 @@ window.__ModuleLoader__.load({
                   option('仅超过阈值时审批', 'Approve only above threshold', 'risk-based'),
                 ),
               ),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), inputNumber('approvalThreshold', 1, 100)),
               h('div', { className: 'eo-settings-row' }, h('span', null, tr('建议策略', 'Suggestion policy')),
                 h('select', { className: 'eo-select eo-settings-control', value: form.suggestionPolicy, onChange: (event) => updateSettingsField('suggestionPolicy', event.target.value) },
                   option('证据优先（推荐）', 'Evidence-first (recommended)', 'conservative'),
@@ -1939,14 +1982,25 @@ window.__ModuleLoader__.load({
                   h('span', null, form.trackUsage ? tr('开启', 'On') : tr('关闭', 'Off')),
                 ),
               ),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('账本保留', 'Ledger retention')), inputNumber('usageRetentionDays', 1, 365)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), inputNumber('maxDrafts', 1, 200)),
               h('div', { className: 'eo-settings-row eo-settings-row-wide' }, h('span', null, tr('保护名单', 'Protect list')),
                 h('input', { className: 'eo-input eo-settings-control', value: form.protect.join(', '), placeholder: tr('包名，用逗号分隔', 'Package names, comma separated'), onChange: (event) => updateSettingsField('protect', splitList(event.target.value)) }),
               ),
               h('div', { className: 'eo-settings-row eo-settings-row-wide' }, h('span', null, tr('固定名单', 'Pinned list')),
                 h('input', { className: 'eo-input eo-settings-control', value: form.pinned.join(', '), placeholder: tr('包名，用逗号分隔', 'Package names, comma separated'), onChange: (event) => updateSettingsField('pinned', splitList(event.target.value)) }),
               ),
+            ),
+            h(
+              'div',
+              { className: 'eo-param-section' },
+              h(
+                'div',
+                { className: 'eo-param-section-head' },
+                h('strong', null, tr('参数范围', 'Parameter ranges')),
+                h('span', null, tr('上下箭头微调；进度条按推荐范围显示，右侧标注配置上限', 'Use the arrows to tune; the bar shows the recommended range, with the config cap on the right')),
+              ),
+              h('div', { className: 'eo-param-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), inputNumber('approvalThreshold', 1, 100, 20)),
+              h('div', { className: 'eo-param-row' }, h('span', null, tr('账本保留', 'Ledger retention')), inputNumber('usageRetentionDays', 1, 365, 90)),
+              h('div', { className: 'eo-param-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), inputNumber('maxDrafts', 1, 200, 50)),
             ),
             h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('配置目录：', 'Config directory: ') + form.profileDir),
             settingsError ? h('div', { className: 'eo-error', style: { marginTop: '10px' } }, h('span', null, settingsError)) : null,

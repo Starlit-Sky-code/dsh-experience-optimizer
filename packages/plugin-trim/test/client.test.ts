@@ -163,6 +163,14 @@ describe('client onboarding and pages', () => {
       await sleep(40)
     })
     expect(container.textContent).toContain('应用修改')
+    const stepper = container.querySelector('.eo-stepper-up') as HTMLButtonElement
+    const numeric = container.querySelector('.eo-param-input') as HTMLInputElement
+    expect(stepper).not.toBeNull()
+    expect(numeric).not.toBeNull()
+    const previousValue = numeric.value
+    await act(async () => { stepper.click(); await sleep(40) })
+    expect(Number((container.querySelector('.eo-param-input') as HTMLInputElement).value)).toBe(Number(previousValue) + 1)
+    expect(container.querySelector('.eo-param-track i')).not.toBeNull()
 
     const language = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'EN')
     expect(language).toBeDefined()

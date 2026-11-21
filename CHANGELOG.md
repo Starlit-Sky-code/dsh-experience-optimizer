@@ -7,6 +7,10 @@ All notable changes to this repository are documented here. Versions follow
 
 ### Changed
 
+- Settings numeric parameters now show their position on a full-width range bar,
+  with custom up/down stepper buttons, recommended-range labels, and the config
+  cap. The three parameter rows moved out of the two-column grid so the bars and
+  arrows are legible.
 - The first-run main-screen guide is anchored above the **更多** entry with a
   larger 54px arrow that points at its label. Type sizes and the five-step list
   were raised for readability.
