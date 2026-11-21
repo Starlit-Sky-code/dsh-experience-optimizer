@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
     Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' })
 
     const React = require('react')
-    const { useState, useEffect, useCallback, useMemo, useRef } = React
+    const { useState, useEffect, useCallback, useMemo } = React
     const h = React.createElement
 
     const API = '/api/dsh-experience-optimizer'
@@ -435,38 +435,18 @@ window.__ModuleLoader__.load({
 .eo-spacer{height:0}
 
 /* Conversation checkup bubble */
-.eo-bubble{position:relative;display:inline-flex;align-items:center;font:inherit;color:var(--dsw-alias-label-secondary,#5f6b7a)}
-.eo-bubble-pill{appearance:none;height:26px;padding:0 9px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.2));border-radius:999px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.72));color:var(--dsw-alias-label-secondary,#5f6b7a);display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:11px;line-height:1;cursor:pointer;white-space:nowrap;transition:background .18s ease,border-color .18s ease,transform .12s ease}
-.eo-bubble-pill:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.09));border-color:var(--dsw-alias-border-l3,rgba(127,127,127,.32));color:var(--dsw-alias-label-primary,#1a1a1a)}
-.eo-bubble-pill:active{transform:translateY(1px) scale(.985)}
-.eo-bubble-pill:focus-visible{outline:2px solid var(--dsw-focus-ring-color,#1a5fb4);outline-offset:2px}
-.eo-bubble-pill.is-open{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.09));border-color:var(--dsw-alias-border-l3,rgba(127,127,127,.32))}
-.eo-bubble-pulse{width:6px;height:6px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#1a7f37);box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 16%,transparent);animation:eo-pulse 2.2s ease-in-out infinite}
-.eo-bubble-name{font-weight:500;color:var(--dsw-alias-label-primary,#1a1a1a)}
-.eo-bubble-metric{font:10.5px/1 var(--ds-font-family-code,ui-monospace,monospace);color:var(--dsw-alias-label-tertiary,#8b96a5)}
-.eo-bubble-alert{min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--dsw-alias-state-warning-primary,#9a6700);color:#fff;font:500 10px/16px var(--ds-font-family-code,ui-monospace,monospace);text-align:center}
-.eo-bubble-caret{font-size:10px;color:var(--dsw-alias-label-tertiary,#8b96a5);transition:transform .2s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
-.eo-bubble-pill.is-open .eo-bubble-caret{transform:rotate(180deg)}
-.eo-bubble-pop{position:fixed;z-index:70;max-height:min(70vh,480px);overflow:auto;padding:14px;border:.5px solid var(--dsw-alias-border-l3,rgba(127,127,127,.25));border-radius:12px;background:var(--dsw-alias-bg-layer-1,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);box-shadow:0 16px 44px rgba(0,0,0,.18);animation:eo-pop-in .2s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
-.eo-bubble-pop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
-.eo-bubble-pop-title{font-size:13px;line-height:20px;font-weight:600}
-.eo-bubble-pop-sub{margin-top:2px;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:11px;line-height:17px}
-.eo-bubble-close{appearance:none;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:17px;line-height:1;cursor:pointer;padding:0 2px;border-radius:4px}
+.eo-bubble-toast{display:inline-flex;align-items:center;gap:8px;max-width:min(360px,calc(100vw - 32px));padding:7px 8px 7px 10px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.2));border-radius:10px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.8));color:var(--dsw-alias-label-secondary,#5f6b7a);box-shadow:0 8px 24px rgba(0,0,0,.1);animation:eo-bubble-in .45s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-bubble-pulse{width:6px;height:6px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#1a7f37);box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 16%,transparent);flex:0 0 auto;animation:eo-pulse 2.4s ease-in-out infinite}
+.eo-bubble-copy{display:flex;flex-direction:column;min-width:0;gap:1px}
+.eo-bubble-copy b{color:var(--dsw-alias-label-primary,#1a1a1a);font-size:11px;line-height:15px;font-weight:500}
+.eo-bubble-copy span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:10.5px;line-height:15px}
+.eo-bubble-close{appearance:none;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:16px;line-height:1;cursor:pointer;padding:0 1px;border-radius:4px;flex:0 0 auto}
 .eo-bubble-close:hover{color:var(--dsw-alias-label-primary,#1a1a1a)}
-.eo-bubble-stats{display:flex;flex-direction:column;gap:5px;padding:8px 0 10px;border-top:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.15));border-bottom:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.15))}
-.eo-bubble-stats>div{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--dsw-alias-label-secondary,#5f6b7a);font-size:11px;line-height:16px}
-.eo-bubble-stats code{font:10.5px/16px var(--ds-font-family-code,ui-monospace,monospace);color:var(--dsw-alias-label-primary,#1a1a1a)}
-.eo-bubble-note{margin:9px 0 0;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:10.5px;line-height:16px}
-.eo-bubble-actions{display:flex;align-items:center;gap:7px;margin-top:11px}
-.eo-bubble-btn{appearance:none;height:27px;padding:0 9px;border:.5px solid var(--dsw-alias-border-l3,rgba(127,127,127,.28));border-radius:6px;background:transparent;color:var(--dsw-alias-label-secondary,#5f6b7a);font:inherit;font-size:11px;cursor:pointer;transition:background .16s ease,color .16s ease,transform .12s ease}
-.eo-bubble-btn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.08));color:var(--dsw-alias-label-primary,#1a1a1a)}
-.eo-bubble-btn:active{transform:translateY(1px)}
-.eo-bubble-btn-primary{border-color:var(--dsw-alias-button-primary-fill,#1a1a1a);background:var(--dsw-alias-button-primary-fill,#1a1a1a);color:var(--dsw-alias-label-primary-inverted,#fff)}
-.eo-bubble-btn-primary:hover{background:var(--dsw-alias-button-primary-hover,#333);color:var(--dsw-alias-label-primary-inverted,#fff)}
+.eo-bubble-close:focus-visible{outline:2px solid var(--dsw-focus-ring-color,#1a5fb4);outline-offset:2px}
 
 /* Thought-line checkup strip */
 .eo-thought{min-width:0}
-.eo-thought-note{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;padding:5px 8px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.16));border-radius:6px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.045));font-size:10.5px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8b96a5);animation:eo-thought-in .28s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-thought-note{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;padding:5px 8px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.16));border-radius:6px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.045));font-size:10.5px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8b96a5);animation:eo-thought-in .4s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
 .eo-thought-pulse{width:5px;height:5px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#1a7f37);box-shadow:0 0 0 2px color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 14%,transparent)}
 .eo-thought.is-running .eo-thought-pulse{animation:eo-pulse 1.4s ease-in-out infinite}
 .eo-thought-label{font-weight:500;color:var(--dsw-alias-label-secondary,#5f6b7a)}
@@ -477,17 +457,17 @@ window.__ModuleLoader__.load({
 /* Micro-interactions */
 .eo-tab{transition:color .18s ease,background .18s ease}
 .eo-tab-active:after{transform-origin:left;animation:eo-underline .22s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
-.eo-tab-panel{animation:eo-panel-in .28s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-tab-panel{animation:eo-panel-in .38s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
 .eo-btn{transition:background .14s ease,border-color .14s ease,color .14s ease,opacity .14s ease,transform .12s ease}
 .eo-btn:active:not(:disabled){transform:translateY(1px) scale(.985)}
 .eo-card{transition:border-color .2s ease,background .2s ease}
 .eo-item{transition:background .16s ease}
 .eo-item:hover{background:var(--eo-hover)}
-.eo-collapse{display:grid;grid-template-rows:1fr;opacity:1;transition:grid-template-rows .24s var(--eo-ease,cubic-bezier(.16,1,.3,1)),opacity .2s ease}
+.eo-collapse{display:grid;grid-template-rows:1fr;opacity:1;transition:grid-template-rows .32s var(--eo-ease,cubic-bezier(.16,1,.3,1)),opacity .24s ease}
 .eo-collapse.is-collapsed{grid-template-rows:0fr;opacity:0;pointer-events:none}
 .eo-collapse-inner{overflow:hidden;min-height:0}
 .eo-modal-backdrop{animation:eo-fade-in .18s ease both}
-.eo-modal{animation:eo-modal-in .24s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-modal{animation:eo-modal-in .32s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
 .eo-progress-track i,.eo-bar i{transition:width .4s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
 @keyframes eo-pulse{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1)}}
 @keyframes eo-pop-in{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
@@ -496,11 +476,12 @@ window.__ModuleLoader__.load({
 @keyframes eo-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes eo-modal-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes eo-thought-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+@keyframes eo-bubble-in{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes eo-spin{to{transform:rotate(360deg)}}
 @keyframes eo-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media(max-width:820px){.eo-layout-two .eo-findings,.eo-layout-two .eo-list,.eo-layout-two .eo-owner-list,.eo-inventory-grid{grid-template-columns:1fr}.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
 @media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-metric{border-right:0;border-bottom:.5px solid var(--eo-border)}.eo-metric:last-child{border-bottom:0}}
-@media(prefers-reduced-motion:reduce){.eo-bubble-pulse,.eo-thought-pulse,.eo-tab-active:after,.eo-tab-panel,.eo-modal-backdrop,.eo-modal,.eo-toast{animation:none}.eo-collapse,.eo-btn,.eo-bubble-pill,.eo-bubble-btn,.eo-tab{transition:none}.eo-btn:active:not(:disabled),.eo-bubble-pill:active,.eo-bubble-btn:active{transform:none}}
+@media(prefers-reduced-motion:reduce){.eo-bubble-toast,.eo-bubble-pulse,.eo-thought-pulse,.eo-tab-active:after,.eo-tab-panel,.eo-modal-backdrop,.eo-modal,.eo-toast{animation:none}.eo-collapse,.eo-btn,.eo-bubble-close,.eo-tab{transition:none}.eo-btn:active:not(:disabled),.eo-bubble-close:active{transform:none}}
 `
 
 
@@ -659,14 +640,8 @@ window.__ModuleLoader__.load({
     }
 
     function CheckupBubble({ sessionId }) {
-      const snapshot = useTrimOverview()
-      const data = snapshot.data
-      const [entered, setEntered] = useState(false)
-      const [open, setOpen] = useState(false)
-      const [anchor, setAnchor] = useState(null)
-      const [copied, setCopied] = useState(false)
-      const rootRef = useRef(null)
       const dismissKey = 'dsh-experience-optimizer.bubble.' + (sessionId || 'default')
+      const [visible, setVisible] = useState(false)
       const [dismissed, setDismissed] = useState(() => {
         try {
           return typeof sessionStorage !== 'undefined' && sessionStorage.getItem(dismissKey) === '1'
@@ -674,11 +649,6 @@ window.__ModuleLoader__.load({
           return false
         }
       })
-
-      useEffect(() => {
-        const timer = setTimeout(() => setEntered(true), 900)
-        return () => clearTimeout(timer)
-      }, [])
 
       useEffect(() => {
         try {
@@ -689,143 +659,42 @@ window.__ModuleLoader__.load({
       }, [dismissKey])
 
       useEffect(() => {
-        if (!open) return undefined
-        const close = () => {
-          setOpen(false)
-          setAnchor(null)
-        }
-        const onPointerDown = (event) => {
-          if (rootRef.current && !rootRef.current.contains(event.target)) close()
-        }
-        const onKeyDown = (event) => {
-          if (event.key === 'Escape') close()
-        }
-        document.addEventListener('pointerdown', onPointerDown)
-        document.addEventListener('keydown', onKeyDown)
-        window.addEventListener('resize', close)
-        window.addEventListener('scroll', close, true)
-        return () => {
-          document.removeEventListener('pointerdown', onPointerDown)
-          document.removeEventListener('keydown', onKeyDown)
-          window.removeEventListener('resize', close)
-          window.removeEventListener('scroll', close, true)
-        }
-      }, [open])
+        if (dismissed) return undefined
+        const timer = setTimeout(() => {
+          setVisible(true)
+          try {
+            if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(dismissKey, '1')
+          } catch {
+            // Ignore storage failures; the reminder still shows once for this mount.
+          }
+        }, 1400)
+        return () => clearTimeout(timer)
+      }, [dismissed, dismissKey])
 
       useEffect(() => {
-        if (!copied) return undefined
-        const timer = setTimeout(() => setCopied(false), 1400)
+        if (!visible) return undefined
+        const timer = setTimeout(() => setVisible(false), 7000)
         return () => clearTimeout(timer)
-      }, [copied])
+      }, [visible])
 
-      if (!data || dismissed || !entered) return null
+      if (!visible || dismissed) return null
 
-      const total = data.bundles.length
-      const enabled = data.bundles.filter((bundle) => bundle.enabled).length
-      const tokens = data.context.totalTokens
-      const attributed = Math.max(0, tokens - data.context.unattributedTokens)
-      const compatTotal = data.compat.error + data.compat.warn
-      const summary = [
-        tr('DSH 插件体检', 'DSH plugin checkup'),
-        tr('可归属上下文：', 'Attributable context: ') + formatNumber(attributed) + ' tokens',
-        tr('启用插件：', 'Enabled plugins: ') + enabled + ' / ' + total,
-        tr('兼容性：', 'Compatibility: ') + data.compat.error + ' error · ' + data.compat.warn + ' warn',
-        tr('54% 只是示例降幅，不是关闭目标。关错了比开着更贵。', '54% is a sample reduction, not a close target. A wrong close costs more than keeping it on.'),
-        tr('沉默插件默认保护：周期/触发、已有调用、无账本先进入复核。', 'Quiet plugins stay protected: schedules, prior calls, or no ledger go to review first.'),
-      ].join('\n')
-
-      const copySummary = async () => {
-        try {
-          await navigator.clipboard.writeText(summary)
-          setCopied(true)
-        } catch {
-          setCopied(false)
-        }
-      }
-
-      const dismiss = () => {
-        try {
-          if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(dismissKey, '1')
-        } catch {
-          // Ignore storage failures; the bubble still closes for this mount.
-        }
+      const close = () => {
+        setVisible(false)
         setDismissed(true)
-        setOpen(false)
-        setAnchor(null)
-      }
-
-      const toggle = () => {
-        if (open) {
-          setOpen(false)
-          setAnchor(null)
-          return
-        }
-        const rect = rootRef.current ? rootRef.current.getBoundingClientRect() : null
-        if (!rect) return
-        const width = Math.min(330, window.innerWidth - 36)
-        setAnchor({
-          left: Math.max(18, Math.min(rect.left, window.innerWidth - width - 18)),
-          bottom: window.innerHeight - rect.top + 8,
-          width,
-        })
-        setOpen(true)
       }
 
       return h(
-        'span',
-        { className: 'eo-bubble', ref: rootRef },
+        'div',
+        { className: 'eo-bubble-toast', role: 'status' },
+        h('span', { className: 'eo-bubble-pulse', 'aria-hidden': 'true' }),
         h(
-          'button',
-          {
-            type: 'button',
-            className: 'eo-bubble-pill' + (open ? ' is-open' : ''),
-            'aria-expanded': open,
-            'aria-haspopup': 'dialog',
-            onClick: toggle,
-          },
-          h('span', { className: 'eo-bubble-pulse', 'aria-hidden': 'true' }),
-          h('span', { className: 'eo-bubble-name' }, tr('插件体检', 'Plugin checkup')),
-          h('span', { className: 'eo-bubble-metric' }, formatTokens(tokens) + ' tokens'),
-          compatTotal ? h('span', { className: 'eo-bubble-alert' }, String(compatTotal)) : null,
-          h('span', { className: 'eo-bubble-caret', 'aria-hidden': 'true' }, '⌄'),
+          'div',
+          { className: 'eo-bubble-copy' },
+          h('b', null, tr('插件体检', 'Plugin checkup')),
+          h('span', null, tr('先量成本，再决定关什么。', 'Measure first, then decide what to close.')),
         ),
-        open && anchor
-          ? h(
-              'div',
-              {
-                className: 'eo-bubble-pop',
-                role: 'dialog',
-                'aria-label': tr('插件体检摘要', 'Plugin checkup summary'),
-                style: { left: anchor.left, bottom: anchor.bottom, width: anchor.width },
-              },
-              h(
-                'div',
-                { className: 'eo-bubble-pop-head' },
-                h(
-                  'div',
-                  null,
-                  h('div', { className: 'eo-bubble-pop-title' }, tr('插件体检', 'Plugin checkup')),
-                  h('div', { className: 'eo-bubble-pop-sub' }, tr('先量成本，再决定关什么。', 'Measure first. Then decide.')),
-                ),
-                h('button', { type: 'button', className: 'eo-bubble-close', onClick: () => { setOpen(false); setAnchor(null) }, 'aria-label': tr('关闭', 'Close') }, '×'),
-              ),
-              h(
-                'div',
-                { className: 'eo-bubble-stats' },
-                h('div', null, h('span', null, tr('可归属上下文', 'Attributable context')), h('code', null, formatNumber(attributed) + ' tokens')),
-                h('div', null, h('span', null, tr('启用插件', 'Enabled plugins')), h('code', null, enabled + ' / ' + total)),
-                h('div', null, h('span', null, tr('兼容性', 'Compatibility')), h('code', null, data.compat.error + ' error · ' + data.compat.warn + ' warn')),
-              ),
-              h('p', { className: 'eo-bubble-note' }, tr('54% 只是示例降幅，不是关闭目标。关错了比开着更贵。', '54% is a sample reduction, not a close target. A wrong close costs more than keeping it on.')),
-              h('p', { className: 'eo-bubble-note' }, tr('沉默插件默认保护：周期/触发、已有调用、无账本先进入复核。', 'Quiet plugins stay protected: schedules, prior calls, or no ledger go to review first.')),
-              h(
-                'div',
-                { className: 'eo-bubble-actions' },
-                h('button', { type: 'button', className: 'eo-bubble-btn eo-bubble-btn-primary', onClick: copySummary }, copied ? tr('已复制', 'Copied') : tr('复制摘要', 'Copy summary')),
-                h('button', { type: 'button', className: 'eo-bubble-btn', onClick: dismiss }, tr('本会话不再提醒', 'Hide for this session')),
-              ),
-            )
-          : null,
+        h('button', { type: 'button', className: 'eo-bubble-close', onClick: close, 'aria-label': tr('关闭提醒', 'Dismiss') }, '×'),
       )
     }
 
@@ -835,9 +704,7 @@ window.__ModuleLoader__.load({
       const content = typeof renderFactorySlot === 'function'
         ? renderFactorySlot('conversation.chat.reasoning.content', { text, running })
         : null
-      const enabled = data ? data.bundles.filter((bundle) => bundle.enabled).length : 0
-      const total = data ? data.bundles.length : 0
-      const compatTotal = data ? data.compat.error + data.compat.warn : 0
+      const tokens = data ? formatTokens(data.context.totalTokens) : ''
       return h(
         'div',
         { className: 'eo-thought' + (running ? ' is-running' : '') },
@@ -850,8 +717,7 @@ window.__ModuleLoader__.load({
               },
               h('span', { className: 'eo-thought-pulse', 'aria-hidden': 'true' }),
               h('span', { className: 'eo-thought-label' }, tr('插件体检', 'Plugin checkup')),
-              h('span', { className: 'eo-thought-meta' }, enabled + '/' + total + ' · ' + formatTokens(data.context.totalTokens) + ' tokens'),
-              compatTotal ? h('span', { className: 'eo-thought-warn' }, compatTotal + ' ' + tr('兼容', 'compat')) : null,
+              h('span', { className: 'eo-thought-meta' }, tokens + ' tokens'),
             )
           : null,
         h('div', { className: 'eo-thought-body' }, content),

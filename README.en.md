@@ -45,7 +45,7 @@ For source development, see [Development](#development).
 - **`dsh-plugin-recipe`** turns a business goal into a validated, exportable workflow blueprint with per-step approval levels.
 - **Guide / About / Settings** tabs make the first run explicit instead of hiding safety rules in documentation; About includes an inline hero SVG, real links, copyright, QQ group `1134419871`, and clearly marked donation placeholders.
 - Settings includes layout/density/collapse preferences, an npm update check, and Issue shortcuts. A one-time main-screen guide points to More → Settings → Plugin checkup and expands the five-step tutorial.
-- In conversation: a Plugin checkup bubble above the composer and a checkup strip in expanded reasoning. Read-only, copyable, and hideable for the session.
+- In conversation: a brief “Measure first, then decide what to close” reminder above the composer, and a token strip in expanded reasoning. Read-only, once per session, dismissible.
 - **English and Chinese UI** can be switched at runtime.
 
 ![Two paths, one authorization boundary](assets/readme/flow.svg)

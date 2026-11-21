@@ -172,13 +172,12 @@ describe('client onboarding and pages', () => {
     await act(async () => {
       root.render(React.createElement(Bubble as React.ComponentType, { sessionId: 'session-a' }))
     })
-    await act(async () => { await sleep(1000) })
-    expect(container.textContent).toContain('1,000 tokens')
-    const pill = container.querySelector('.eo-bubble-pill') as HTMLButtonElement
-    expect(pill).not.toBeNull()
-    await act(async () => { pill.click(); await sleep(40) })
-    expect(container.textContent).toContain('A wrong close costs more than keeping it on')
-    expect(container.textContent).toContain('Quiet plugins stay protected')
+    await act(async () => { await sleep(1500) })
+    expect(container.textContent).toContain('Measure first, then decide what to close.')
+    const dismiss = container.querySelector('.eo-bubble-close') as HTMLButtonElement
+    expect(dismiss).not.toBeNull()
+    await act(async () => { dismiss.click(); await sleep(40) })
+    expect(container.textContent).not.toContain('Measure first, then decide what to close.')
 
     await act(async () => { root.unmount() })
     root = createRoot(container)
@@ -190,7 +189,7 @@ describe('client onboarding and pages', () => {
       }))
     })
     await act(async () => { await sleep(80) })
-    expect(container.textContent).toContain('1/1 · 1,000 tokens')
+    expect(container.textContent).toContain('1,000 tokens')
     expect(container.querySelector('.mock-reasoning')).not.toBeNull()
   })
 })

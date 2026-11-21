@@ -13,12 +13,11 @@ All notable changes to this repository are documented here. Versions follow
 - User-facing naming now uses **插件体检 / Plugin checkup** instead of
   “插件减负 / Experience Optimizer” in the tab, hero, settings labels, guides,
   and package descriptions. The package and repository names are unchanged.
-- Added a conversation composer **checkup bubble**: it shows resident tokens,
-  enabled plugin count, compatibility warnings, the “54% is a sample reduction,
-  not a close target” caveat, and the quiet-plugin protection rule. It can be
-  hidden for the current session and copies a summary.
-- Added a compact **checkup strip inside the expanded thought line**, with the
-  current plugin count, resident tokens, and compatibility warnings.
+- Added a brief conversation **checkup reminder** above the composer:
+  “Measure first, then decide what to close.” It is read-only, appears once per
+  session, auto-hides, and can be dismissed. No stats or settings UI are shown.
+- Added a compact **checkup strip inside the expanded thought line**, showing
+  only the current resident token count.
 - Added micro-interactions across the panel: animated tab changes, collapsible
   card height/opacity transitions, button press feedback, modal entrance, and
   reduced-motion fallbacks.
