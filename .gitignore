@@ -14,3 +14,5 @@ coverage/
 # 本地宣传物料 / 工作树：不进仓库，也不进 npm 包
 promo/
 .agents/
+
+dsh-promo/
