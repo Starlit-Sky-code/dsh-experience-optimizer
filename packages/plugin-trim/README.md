@@ -13,7 +13,7 @@ npm i dsh-plugin-trim
 从 GitHub Release 安装（备用）：
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-trim-0.3.8.tgz"
 ```
 
 本地包：

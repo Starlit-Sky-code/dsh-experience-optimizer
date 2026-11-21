@@ -5,8 +5,11 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.3.8] - 2026-11-21
+
 ### Changed
 
+- Packages the checkup UI, first-run guide, and editable settings that were pending in Unreleased, so a normal install gets the current UI.
 - Settings is now an editable draft instead of a read-only card with a Refresh
   button. The Apply button appears only after a change; applying writes through
   the DSH loader, reloads the plugin, and never skips approval/protection rules.

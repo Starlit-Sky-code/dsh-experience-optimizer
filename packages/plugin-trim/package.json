@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-trim",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "DSH plugin checkup and compatibility analyzer",
   "type": "module",
   "main": "dist/index.js",

@@ -74,5 +74,5 @@ npm i dsh-plugin-recipe
 
 当前未发布 npm 时，推荐直接安装 release tarball：
 
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-trim-0.3.8.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-recipe-0.3.8.tgz"

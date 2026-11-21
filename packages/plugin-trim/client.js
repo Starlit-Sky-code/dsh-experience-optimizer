@@ -1370,7 +1370,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.3.7',
+            current: '0.3.8',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -1963,7 +1963,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.7')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.8')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2022,7 +2022,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.3.7 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.3.8 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(

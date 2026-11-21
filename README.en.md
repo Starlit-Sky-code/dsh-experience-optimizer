@@ -29,8 +29,8 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-trim-0.3.8.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-recipe-0.3.8.tgz"
 ```
 
 For source development, see [Development](#development).

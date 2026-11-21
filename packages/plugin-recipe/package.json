@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-recipe",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "DSH workflow recipe planner: translate business goals into validated workflow blueprints",
   "type": "module",
   "main": "dist/index.js",
