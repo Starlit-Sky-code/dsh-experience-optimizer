@@ -19,6 +19,11 @@ All notable changes to this repository are documented here. Versions follow
 - Promo typography and motion refined: a deliberate four-line hero, fluid display
   scale, balanced section headings, a live ticker, pointer spotlight, instrument
   tilt, scroll progress, staggered reveals, and a blinking terminal cursor.
+  Metadata sizes were raised from the previous 8–10px floor.
+- Promo page now opens with a short, skippable 1.5s observatory boot sequence
+  (radar, node/token counters, wordmark, upward wipe).
+- Scroll guidance is now explicit: a centered mouse-track cue on desktop and a
+  fixed bottom pill on tablet/mobile that hides after scrolling.
 
 ### Fixed
 
