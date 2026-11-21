@@ -115,11 +115,6 @@ describe('client onboarding and pages', () => {
     await act(async () => { (planToggle as HTMLButtonElement).click(); await sleep(30) })
     expect(container.textContent).toContain('任务类型')
 
-    const twoColumn = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '双列')
-    expect(twoColumn).toBeDefined()
-    await act(async () => { twoColumn?.click(); await sleep(30) })
-    expect(container.querySelector('.eo-layout-two')).not.toBeNull()
-
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')
     expect(tutorial).toBeDefined()

@@ -33,8 +33,8 @@ Open **Settings → Experience Optimizer** after installing.
 <summary>GitHub Release / source fallback</summary>
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-trim-0.3.6.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-recipe-0.3.6.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
 ```
 
 </details>
@@ -45,7 +45,8 @@ dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience
 
 - **`dsh-plugin-trim`** scans plugin context cost and compatibility, then builds an explainable keep/enable/disable plan. Low-risk items are applied only after explicit confirmation and host approval; a restore point is written first.
 - **`dsh-plugin-recipe`** turns a business goal into a validated, exportable workflow blueprint with per-step approval levels.
-- **Guide / About / Settings** tabs make the first run explicit instead of hiding safety rules in documentation; About includes real project links, copyright, and clearly marked community/donation placeholders.
+- **Guide / About / Settings** tabs make the first run explicit instead of hiding safety rules in documentation; About includes an inline hero SVG, real links, copyright, QQ group `1134419871`, and clearly marked donation placeholders.
+- Settings includes layout/density/collapse preferences, an npm update check, and Issue shortcuts. A one-time main-screen guide points to More → Settings → Experience Optimizer and expands the five-step tutorial.
 - **English and Chinese UI** can be switched at runtime.
 
 ![Two paths, one authorization boundary](assets/readme/flow.svg)

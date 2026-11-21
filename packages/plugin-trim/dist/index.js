@@ -4588,6 +4588,8 @@ function registerCompatTool(ctx, config) {
 }
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
+const CURRENT_VERSION = "0.3.7";
+let updateCache;
 const TASK_TAGS = [
 	"bugfix",
 	"feature",
@@ -4648,6 +4650,13 @@ async function handle(req, res, ctx, config, ledger) {
 			});
 			return;
 		}
+		if (req.method === "GET" && path === "/update") {
+			sendJson(res, 200, {
+				ok: true,
+				data: await checkForUpdate()
+			});
+			return;
+		}
 		if (req.method === "POST" && path === "/suggest") {
 			sendJson(res, 200, {
 				ok: true,
@@ -4672,6 +4681,53 @@ async function handle(req, res, ctx, config, ledger) {
 		sendError(res, 404, `unknown endpoint ${path}`);
 	} catch (error) {
 		sendError(res, 500, error instanceof Error ? error.message : String(error));
+	}
+}
+function compareVersions(left, right) {
+	const parse = (value) => value.replace(/^v/, "").split("-")[0].split(".").map((part) => Number.parseInt(part, 10) || 0);
+	const a = parse(left);
+	const b = parse(right);
+	for (let index = 0; index < Math.max(a.length, b.length); index++) {
+		const difference = (a[index] ?? 0) - (b[index] ?? 0);
+		if (difference !== 0) return difference > 0 ? 1 : -1;
+	}
+	return 0;
+}
+async function checkForUpdate() {
+	if (updateCache !== void 0 && Date.now() - updateCache.at < 6e4) return updateCache.value;
+	const base = {
+		current: CURRENT_VERSION,
+		package: "dsh-plugin-trim",
+		url: "https://www.npmjs.com/package/dsh-plugin-trim"
+	};
+	try {
+		const response = await fetch("https://registry.npmjs.org/dsh-plugin-trim/latest", {
+			headers: { accept: "application/json" },
+			signal: AbortSignal.timeout(4e3)
+		});
+		if (!response.ok) throw new Error(`registry HTTP ${response.status}`);
+		const metadata = await response.json();
+		const latest = typeof metadata.version === "string" ? metadata.version : void 0;
+		if (latest === void 0) throw new Error("registry response has no version");
+		const value = {
+			...base,
+			latest,
+			updateAvailable: compareVersions(latest, CURRENT_VERSION) > 0,
+			checkedAt: (/* @__PURE__ */ new Date()).toISOString()
+		};
+		updateCache = {
+			at: Date.now(),
+			value
+		};
+		return value;
+	} catch (error) {
+		return {
+			...base,
+			latest: null,
+			updateAvailable: false,
+			error: error instanceof Error ? error.message : String(error),
+			checkedAt: (/* @__PURE__ */ new Date()).toISOString()
+		};
 	}
 }
 function publicConfig(ctx, config) {

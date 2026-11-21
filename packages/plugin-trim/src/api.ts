@@ -19,6 +19,8 @@ import type { UsageLedger } from './usage.ts'
 import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
+const CURRENT_VERSION = '0.3.7'
+let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
   'feature',
@@ -96,6 +98,10 @@ async function handle(
       sendJson(res, 200, { ok: true, data: publicConfig(ctx, config) })
       return
     }
+    if (req.method === 'GET' && path === '/update') {
+      sendJson(res, 200, { ok: true, data: await checkForUpdate() })
+      return
+    }
     if (req.method === 'POST' && path === '/suggest') {
       const body = await readJsonBody<Record<string, unknown>>(req)
       sendJson(res, 200, { ok: true, data: await suggest(ctx, config, ledger, body) })
@@ -114,6 +120,53 @@ async function handle(
     sendError(res, 404, `unknown endpoint ${path}`)
   } catch (error) {
     sendError(res, 500, error instanceof Error ? error.message : String(error))
+  }
+}
+
+export function compareVersions(left: string, right: string): number {
+  const parse = (value: string): number[] =>
+    value.replace(/^v/, '').split('-')[0].split('.').map((part) => Number.parseInt(part, 10) || 0)
+  const a = parse(left)
+  const b = parse(right)
+  for (let index = 0; index < Math.max(a.length, b.length); index++) {
+    const difference = (a[index] ?? 0) - (b[index] ?? 0)
+    if (difference !== 0) return difference > 0 ? 1 : -1
+  }
+  return 0
+}
+
+async function checkForUpdate(): Promise<Record<string, unknown>> {
+  if (updateCache !== undefined && Date.now() - updateCache.at < 60_000) return updateCache.value
+  const base = {
+    current: CURRENT_VERSION,
+    package: 'dsh-plugin-trim',
+    url: 'https://www.npmjs.com/package/dsh-plugin-trim',
+  }
+  try {
+    const response = await fetch('https://registry.npmjs.org/dsh-plugin-trim/latest', {
+      headers: { accept: 'application/json' },
+      signal: AbortSignal.timeout(4000),
+    })
+    if (!response.ok) throw new Error(`registry HTTP ${response.status}`)
+    const metadata = (await response.json()) as { version?: unknown }
+    const latest = typeof metadata.version === 'string' ? metadata.version : undefined
+    if (latest === undefined) throw new Error('registry response has no version')
+    const value = {
+      ...base,
+      latest,
+      updateAvailable: compareVersions(latest, CURRENT_VERSION) > 0,
+      checkedAt: new Date().toISOString(),
+    }
+    updateCache = { at: Date.now(), value }
+    return value
+  } catch (error) {
+    return {
+      ...base,
+      latest: null,
+      updateAvailable: false,
+      error: error instanceof Error ? error.message : String(error),
+      checkedAt: new Date().toISOString(),
+    }
   }
 }
 

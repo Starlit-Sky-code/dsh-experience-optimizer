@@ -3,6 +3,26 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.7] - 2026-11-21
+
+### Changed
+
+- The previous “two cards side by side” layout was removed. **Two-column now applies
+  inside cards**: inventory becomes a two-column card grid, draft rows, findings, and
+  context owners use two columns; below 820px everything returns to one column.
+- Layout, density, and collapse controls moved from the main-page toolbar to
+  **Settings → 界面偏好**, reducing main-page clutter.
+- The tutorial page now uses a numbered visual timeline instead of a plain list.
+
+### Added
+
+- A one-time **main-screen guide** in `shell.overlay`: an arrow/panel explains
+  `更多 → 设置 → 体验优化` and can expand the five-step tutorial.
+- Settings now has **检查更新** backed by an authenticated npm-registry check
+  (`GET /api/dsh-experience-optimizer/update`), plus **新建 Issue** and
+  **问题列表** shortcuts.
+- About now includes an inline hero SVG and QQ group `1134419871`.
+
 ## [0.3.6] - 2026-11-21
 
 ### Added

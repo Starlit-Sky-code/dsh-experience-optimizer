@@ -25,6 +25,7 @@ window.__ModuleLoader__.load({
 
     const LOCALE_KEY = 'dsh-experience-optimizer.locale'
     const ONBOARDING_KEY = 'dsh-experience-optimizer.onboarding.v1'
+    const MAIN_GUIDE_KEY = 'dsh-experience-optimizer.main-guide.v1'
     const ABOUT_LINKS = {
       repo: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
       npmTrim: 'https://www.npmjs.com/package/dsh-plugin-trim',
@@ -283,9 +284,32 @@ window.__ModuleLoader__.load({
         .eo-density-compact .eo-stack,.eo-stack.eo-density-compact{gap:8px}
         .eo-density-compact .eo-item{padding:7px 0}
         .eo-density-compact .eo-metric{padding:9px 11px}
-        .eo-layout-two.eo-stack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-        .eo-layout-two>.eo-viewbar,.eo-layout-two>.eo-metrics,.eo-layout-two>[data-section="draft"],.eo-layout-two>[data-section="inventory"],.eo-layout-two>[data-section="result"],.eo-layout-two>[data-section="dedupe"],.eo-layout-two>[data-section="diagnostics"]{grid-column:1/-1}
-        .eo-layout-two>[data-section="compat"],.eo-layout-two>[data-section="context"]{grid-column:span 1}
+        .eo-layout-two .eo-findings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+        .eo-layout-two .eo-finding{padding:8px 0}
+        .eo-layout-two .eo-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+        .eo-layout-two .eo-item{padding:8px 0}
+        .eo-layout-two .eo-owner-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+        .eo-inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+        .eo-inventory-card{border:.5px solid var(--eo-border);border-radius:8px;padding:9px 10px;min-width:0}
+        .eo-inventory-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+        .eo-inventory-card code{font:400 11px/16px var(--eo-code);word-break:break-all;color:var(--eo-secondary)}
+        .eo-inventory-card-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;color:var(--eo-tertiary);font-size:11px}
+        .eo-main-guide{position:fixed;right:24px;left:auto;bottom:24px;z-index:30;width:min(340px,calc(100vw - 32px));padding:14px 16px;border:.5px solid var(--dsw-alias-border-l4,rgba(127,127,127,.25));border-radius:14px;background:var(--dsw-alias-bg-layer-1,#fff);box-shadow:0 14px 44px rgba(0,0,0,.2);color:var(--eo-primary);font-size:13px;line-height:20px}
+        .eo-guide-arrow{position:absolute;left:-16px;top:-20px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--dsw-alias-button-primary-fill,var(--eo-primary));color:var(--dsw-alias-label-primary-inverted,#fff);transform:rotate(-12deg);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+        .eo-guide-kicker{margin:0 0 3px;color:var(--eo-tertiary);font:500 10px/16px var(--eo-code);letter-spacing:.12em}
+        .eo-main-guide h3{margin:0 0 8px;font-size:16px;line-height:23px}
+        .eo-guide-path{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0 0 8px;font-size:12px;font-weight:500}
+        .eo-guide-path span{padding:2px 7px;border-radius:5px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.08))}
+        .eo-guide-path i{font-style:normal;color:var(--eo-tertiary)}
+        .eo-guide-note{margin:0;color:var(--eo-tertiary);font-size:11px;line-height:17px}
+        .eo-guide-steps{max-height:220px;overflow:auto;margin:10px 0 0;padding:0;list-style:none;border-top:.5px solid var(--eo-border)}
+        .eo-guide-steps li{display:flex;gap:7px;align-items:flex-start;padding:7px 0;border-bottom:.5px solid var(--eo-border)}
+        .eo-guide-steps b{font:500 10px/18px var(--eo-code);color:var(--eo-tertiary);flex:0 0 auto}
+        .eo-guide-steps span{flex:0 0 auto;font-weight:500;font-size:12px}
+        .eo-guide-steps small{color:var(--eo-tertiary);font-size:11px;line-height:17px}
+        .eo-guide-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+        .eo-main-guide .eo-btn{height:28px;font-size:11px;padding:0 9px}
+        @media(max-width:600px){.eo-main-guide{left:12px;right:12px;bottom:12px;width:auto}.eo-guide-arrow{display:none}}
         .eo-about-hero{display:block;width:100%;height:auto;border-radius:12px;background:#0b1422;margin:0 0 10px}
 .eo-card-title{margin:0;font-size:14px;line-height:22px;font-weight:500;letter-spacing:0}
 .eo-card-sub{margin:2px 0 0;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
@@ -377,6 +401,14 @@ window.__ModuleLoader__.load({
         .eo-note{padding:9px 12px;border:1px solid var(--dsw-alias-border-l3);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--eo-secondary);font-size:12px;line-height:19px}
 .eo-code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
         .eo-steps{margin:0;padding-left:20px;color:var(--eo-secondary);font-size:13px;line-height:22px}
+        .eo-tutorial-flow{position:relative;display:flex;flex-direction:column;gap:0}
+        .eo-tutorial-step{display:flex;gap:12px;position:relative;padding:0 0 14px}
+        .eo-tutorial-step:before{content:"";position:absolute;left:16px;top:34px;bottom:0;width:1px;background:var(--eo-border)}
+        .eo-tutorial-step:last-child:before{display:none}
+        .eo-tutorial-num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.08));border:1px solid var(--eo-border);color:var(--eo-secondary);font:500 10px/1 var(--eo-code)}
+        .eo-tutorial-copy{min-width:0;padding-top:1px}
+        .eo-tutorial-copy strong{display:block;font-size:13px;line-height:21px;color:var(--eo-primary)}
+        .eo-tutorial-copy p{margin:1px 0 0;color:var(--eo-tertiary);font-size:12px;line-height:19px}
         .eo-steps li{margin:0 0 8px;padding-left:2px}
         .eo-steps strong{color:var(--eo-primary);font-weight:500}
         .eo-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
@@ -394,14 +426,18 @@ window.__ModuleLoader__.load({
 .eo-spacer{height:0}
 @keyframes eo-spin{to{transform:rotate(360deg)}}
 @keyframes eo-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-@media(max-width:820px){.eo-layout-two.eo-stack{grid-template-columns:1fr}.eo-layout-two>*{grid-column:1/-1!important}.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
+@media(max-width:820px){.eo-layout-two .eo-findings,.eo-layout-two .eo-list,.eo-layout-two .eo-owner-list,.eo-inventory-grid{grid-template-columns:1fr}.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
 @media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-metric{border-right:0;border-bottom:.5px solid var(--eo-border)}.eo-metric:last-child{border-bottom:0}}
 `
 
 
     function injectCss() {
       if (typeof document === 'undefined') return
-      if (document.querySelector('style[data-plugin-css="' + CSS_ID + '"]')) return
+      const existing = document.querySelector('style[data-plugin-css="' + CSS_ID + '"]')
+      if (existing !== null) {
+        existing.textContent = CSS
+        return
+      }
       const tag = document.createElement('style')
       tag.dataset.pluginCss = CSS_ID
       tag.textContent = CSS
@@ -665,6 +701,7 @@ window.__ModuleLoader__.load({
         ['rect', { x: '14', y: '14', width: '6', height: '6', rx: '1' }],
       ],
       chevron: [['path', { d: 'M6 9l6 6 6-6' }]],
+      arrow: [['path', { d: 'M19 5L5 19M5 9v10h10' }]],
     }
 
     function Icon({ name, size = 16 }) {
@@ -831,6 +868,55 @@ window.__ModuleLoader__.load({
       )
     }
 
+    function MainGuide() {
+      const [visible, setVisible] = useState(() => {
+        const storage = browserStorage()
+        try { return storage ? storage.getItem(MAIN_GUIDE_KEY) !== '1' : true } catch { return true }
+      })
+      const [stepsOpen, setStepsOpen] = useState(false)
+      const dismiss = () => {
+        const storage = browserStorage()
+        try { if (storage) storage.setItem(MAIN_GUIDE_KEY, '1') } catch { /* ignore */ }
+        setVisible(false)
+      }
+      if (!visible) return null
+      const steps = [
+        [tr('点击「更多」', 'Open “More”'), tr('在 DSH 主界面打开更多菜单。', 'Open the More menu on the DSH main screen.')],
+        [tr('点击「设置」', 'Open “Settings”'), tr('进入设置页。', 'Open Settings.')],
+        [tr('点击「体验优化」', 'Open “Experience Optimizer”'), tr('在 Agent 预设下方或插件页签里找到体验优化。', 'Find it below Agent presets or in the plugins tab.')],
+        [tr('生成减负方案', 'Build a slim plan'), tr('选任务或写目标，先看依据，再决定是否应用。', 'Pick a task or goal, read the evidence, then decide.')],
+        [tr('需要时看教程', 'Open the guide'), tr('教程、常见问题和关于都在同一页。', 'Guide, FAQ, and About live in the same panel.')],
+      ]
+      return h(
+        'div',
+        { className: 'eo-main-guide', role: 'dialog', 'aria-label': tr('初次使用路径', 'First-run path') },
+        h('div', { className: 'eo-guide-arrow' }, h(Icon, { name: 'arrow', size: 22 })),
+        h('p', { className: 'eo-guide-kicker' }, tr('初次使用', 'FIRST RUN')),
+        h('h3', null, tr('从这里打开体验优化', 'Open Experience Optimizer here')),
+        h(
+          'div',
+          { className: 'eo-guide-path' },
+          h('span', null, tr('更多', 'More')),
+          h('i', null, '→'),
+          h('span', null, tr('设置', 'Settings')),
+          h('i', null, '→'),
+          h('span', null, tr('体验优化', 'Experience Optimizer')),
+        ),
+        h('p', { className: 'eo-guide-note' }, tr('打开后会自动出现 5 步教程；也可以先看这里的路径。', 'A five-step guide opens there; you can follow this path first.')),
+        stepsOpen
+          ? h('ol', { className: 'eo-guide-steps' }, steps.map(([title, body], index) =>
+              h('li', { key: title }, h('b', null, String(index + 1).padStart(2, '0')), h('span', null, title), h('small', null, body)),
+            ))
+          : null,
+        h(
+          'div',
+          { className: 'eo-guide-actions' },
+          h(Button, { variant: 'ghost', onClick: () => setStepsOpen((value) => !value) }, stepsOpen ? tr('收起步骤', 'Hide steps') : tr('查看 5 步教程', 'Show 5 steps')),
+          h(Button, { variant: 'accent', onClick: dismiss }, tr('知道了', 'Got it')),
+        ),
+      )
+    }
+
     function ExperiencePanel() {
 
       const [tab, setTab] = useState('trim')
@@ -876,6 +962,8 @@ window.__ModuleLoader__.load({
       const [settings, setSettings] = useState(null)
       const [settingsBusy, setSettingsBusy] = useState(false)
       const [settingsError, setSettingsError] = useState('')
+      const [updateInfo, setUpdateInfo] = useState(null)
+      const [updateBusy, setUpdateBusy] = useState(false)
       CURRENT_LOCALE = locale
 
       const notify = useCallback((message, kind) => {
@@ -957,6 +1045,22 @@ window.__ModuleLoader__.load({
           setSettingsError(err instanceof Error ? err.message : String(err))
         } finally {
           setSettingsBusy(false)
+        }
+      }, [])
+
+      const checkUpdate = useCallback(async () => {
+        setUpdateBusy(true)
+        try {
+          setUpdateInfo(await fetchJson(API + '/update'))
+        } catch (err) {
+          setUpdateInfo({
+            current: '0.3.6',
+            latest: null,
+            updateAvailable: false,
+            error: err instanceof Error ? err.message : String(err),
+          })
+        } finally {
+          setUpdateBusy(false)
         }
       }, [])
 
@@ -1342,12 +1446,26 @@ window.__ModuleLoader__.load({
           { className: 'eo-stack' },
           h(
             Card,
-            { title: tr('5 分钟上手', 'Five-minute guide'), subtitle: tr('从扫描到应用，每一步都可恢复', 'From scan to apply, every step is recoverable') },
+            {
+              title: tr('5 分钟上手', 'Five-minute guide'),
+              subtitle: tr('从扫描到应用，每一步都可恢复', 'From scan to apply, every step is recoverable'),
+              extra: h(Badge, { tone: 'info' }, tr('5 步', '5 steps')),
+            },
             h(
-              'ol',
-              { className: 'eo-steps' },
+              'div',
+              { className: 'eo-tutorial-flow' },
               steps.map(([zhTitle, enTitle, zhBody, enBody], index) =>
-                h('li', { key: enTitle }, h('strong', null, tr(zhTitle, enTitle)), tr(zhBody, enBody)),
+                h(
+                  'div',
+                  { className: 'eo-tutorial-step', key: enTitle },
+                  h('div', { className: 'eo-tutorial-num' }, String(index + 1).padStart(2, '0')),
+                  h(
+                    'div',
+                    { className: 'eo-tutorial-copy' },
+                    h('strong', null, tr(zhTitle, enTitle)),
+                    h('p', null, tr(zhBody, enBody)),
+                  ),
+                ),
               ),
             ),
           ),
@@ -1426,6 +1544,79 @@ window.__ModuleLoader__.load({
         return h(
           'div',
           { className: 'eo-stack' },
+          h(
+            Card,
+            {
+              title: tr('界面偏好', 'Interface preferences'),
+              subtitle: tr('只作用于插件减负页；偏好保存在本浏览器', 'Applies to the Plugin diet page; saved in this browser'),
+            },
+            h(
+              'div',
+              { className: 'eo-settings-row' },
+              h('span', null, tr('内容排列', 'Content layout')),
+              h(
+                'div',
+                { className: 'eo-inline' },
+                h(Button, { variant: 'ghost', className: layout === 'standard' ? 'eo-btn-active' : '', onClick: () => changeLayout('standard') }, tr('标准', 'Standard')),
+                h(Button, { variant: 'ghost', className: layout === 'two' ? 'eo-btn-active' : '', onClick: () => changeLayout('two') }, tr('双列', 'Two-column')),
+              ),
+            ),
+            h(
+              'div',
+              { className: 'eo-settings-row' },
+              h('span', null, tr('密度', 'Density')),
+              h(
+                'div',
+                { className: 'eo-inline' },
+                h(Button, { variant: 'ghost', className: density === 'comfortable' ? 'eo-btn-active' : '', onClick: () => changeDensity('comfortable') }, tr('舒适', 'Comfortable')),
+                h(Button, { variant: 'ghost', className: density === 'compact' ? 'eo-btn-active' : '', onClick: () => changeDensity('compact') }, tr('紧凑', 'Compact')),
+              ),
+            ),
+            h(
+              'div',
+              { className: 'eo-settings-row' },
+              h('span', null, tr('卡片', 'Cards')),
+              h(
+                'div',
+                { className: 'eo-inline' },
+                h(Button, { variant: 'ghost', onClick: collapseAllCards }, tr('全部折叠', 'Collapse all')),
+                h(Button, { variant: 'ghost', onClick: expandAllCards }, tr('全部展开', 'Expand all')),
+              ),
+            ),
+          ),
+          h(
+            Card,
+            {
+              title: tr('更新与反馈', 'Updates & feedback'),
+              subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues'),
+            },
+            h(
+              'div',
+              { className: 'eo-settings-row' },
+              h('span', null, tr('当前版本', 'Current version')),
+              h('code', null, updateInfo?.current || '0.3.6'),
+            ),
+            h(
+              'div',
+              { className: 'eo-settings-row' },
+              h('span', null, tr('最新版本', 'Latest version')),
+              h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked')),
+            ),
+            updateInfo && updateInfo.updateAvailable
+              ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
+              : updateInfo && updateInfo.latest
+                ? h('div', { className: 'eo-issue' }, h('span', null, tr('已是最新版本。', 'You are on the latest version.')))
+                : updateInfo && updateInfo.error
+                  ? h('div', { className: 'eo-issue eo-issue-warn' }, h('span', null, tr('检查失败：', 'Check failed: ') + updateInfo.error))
+                  : null,
+            h(
+              'div',
+              { className: 'eo-inline', style: { marginTop: '10px' } },
+              h(Button, { variant: 'accent', onClick: () => void checkUpdate(), disabled: updateBusy }, updateBusy ? tr('检查中…', 'Checking…') : tr('检查更新', 'Check for updates')),
+              h('a', { className: 'eo-btn eo-btn-ghost', href: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues/new/choose', target: '_blank', rel: 'noreferrer' }, tr('新建 Issue', 'New issue')),
+              h('a', { className: 'eo-btn eo-btn-ghost', href: ABOUT_LINKS.issues, target: '_blank', rel: 'noreferrer' }, tr('问题列表', 'Issues')),
+            ),
+          ),
           h(
             Card,
             {
@@ -1512,7 +1703,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Experience Optimizer')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.3.6 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.3.7 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -1588,6 +1779,51 @@ window.__ModuleLoader__.load({
       }
 
       function renderTrim() {
+        const renderInventoryCards = () =>
+          h(
+            'div',
+            { className: 'eo-inventory-grid' },
+            filteredBundles.slice(0, showAllBundles ? 200 : 12).map((bundle) =>
+              h(
+                'div',
+                { className: 'eo-inventory-card', key: bundle.name },
+                h(
+                  'div',
+                  { className: 'eo-inventory-card-head' },
+                  h('code', null, bundle.name),
+                  h(
+                    Badge,
+                    { tone: bundle.enabled ? 'ok' : 'neutral' },
+                    bundle.enabled ? tr('已启用', 'Enabled') : tr('已禁用', 'Disabled'),
+                  ),
+                ),
+                bundle.description ? h('div', { className: 'eo-muted' }, bundle.description) : null,
+                h(
+                  'div',
+                  { className: 'eo-inventory-card-meta' },
+                  h('span', null, tr('上下文', 'Context') + ' ' + formatNumber(bundle.contextTokens)),
+                  h(
+                    'span',
+                    null,
+                    tr('占比', 'Share') +
+                      ' ' +
+                      (totalContextTokens > 0
+                        ? Math.round((bundle.contextTokens / totalContextTokens) * 100) + '%'
+                        : '—'),
+                  ),
+                  h(
+                    'span',
+                    null,
+                    tr('调用', 'Calls') +
+                      ' ' +
+                      formatNumber((bundle.usage?.calls ?? 0) + (bundle.usage?.sessionCalls ?? 0)),
+                  ),
+                  bundle.protected ? h('span', null, tr('受保护', 'Protected')) : null,
+                  h('span', null, bundle.guardStatus ? guardLabel(bundle.guardStatus) : '—'),
+                ),
+              ),
+            ),
+          )
         return h(
           'div',
           {
@@ -1596,63 +1832,6 @@ window.__ModuleLoader__.load({
               (layout === 'two' ? ' eo-layout-two' : '') +
               (density === 'compact' ? ' eo-density-compact' : ''),
           },
-          h(
-            'div',
-            { className: 'eo-viewbar' },
-            h('span', { className: 'eo-viewbar-label' }, tr('视图', 'View')),
-            h(
-              'div',
-              { className: 'eo-inline' },
-              h(
-                Button,
-                {
-                  variant: 'ghost',
-                  className: layout === 'standard' ? 'eo-btn-active' : '',
-                  onClick: () => changeLayout('standard'),
-                },
-                tr('标准', 'Standard'),
-              ),
-              h(
-                Button,
-                {
-                  variant: 'ghost',
-                  className: layout === 'two' ? 'eo-btn-active' : '',
-                  onClick: () => changeLayout('two'),
-                },
-                tr('双列', 'Two-column'),
-              ),
-            ),
-            h('span', { className: 'eo-viewbar-label' }, tr('密度', 'Density')),
-            h(
-              'div',
-              { className: 'eo-inline' },
-              h(
-                Button,
-                {
-                  variant: 'ghost',
-                  className: density === 'comfortable' ? 'eo-btn-active' : '',
-                  onClick: () => changeDensity('comfortable'),
-                },
-                tr('舒适', 'Comfortable'),
-              ),
-              h(
-                Button,
-                {
-                  variant: 'ghost',
-                  className: density === 'compact' ? 'eo-btn-active' : '',
-                  onClick: () => changeDensity('compact'),
-                },
-                tr('紧凑', 'Compact'),
-              ),
-            ),
-            h('span', { className: 'eo-viewbar-label', style: { marginLeft: 'auto' } }, tr('折叠', 'Collapse')),
-            h(
-              'div',
-              { className: 'eo-inline' },
-              h(Button, { variant: 'ghost', onClick: collapseAllCards }, tr('全部折叠', 'Collapse all')),
-              h(Button, { variant: 'ghost', onClick: expandAllCards }, tr('全部展开', 'Expand all')),
-            ),
-          ),
           h('div', { className: 'eo-grid eo-metrics' }, [
             h(Metric, {
               key: 'tokens',
@@ -1946,7 +2125,9 @@ window.__ModuleLoader__.load({
             ),
             filteredBundles.length === 0
               ? h('div', { className: 'eo-empty' }, tr('没有匹配的插件。', 'No matching plugins.'))
-              : h(
+              : layout === 'two'
+                ? renderInventoryCards()
+                : h(
                   'div',
                   { className: 'eo-table-wrap' },
                   h(
@@ -2720,6 +2901,16 @@ window.__ModuleLoader__.load({
 
     function apply(ctx) {
       injectCss()
+      ctx.slots.inject('shell.overlay', () =>
+        ctx.slots.register(
+          {
+            name: 'shell.overlay',
+            id: 'experience-optimizer-guide',
+            order: 10,
+          },
+          MainGuide,
+        ),
+      )
       ctx.slots.inject('settings.plugins.tab', () =>
         ctx.slots.register(
           {

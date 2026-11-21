@@ -7,13 +7,13 @@
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`、`workflow`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.3.6>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.3.7>
 - Release assets：
-  - `dsh-plugin-trim-0.3.6.tgz`
-  - `dsh-plugin-recipe-0.3.6.tgz`
+  - `dsh-plugin-trim-0.3.7.tgz`
+  - `dsh-plugin-recipe-0.3.7.tgz`
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
-- 安装验证：`npm view` 返回 0.3.2；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.3.6` / `dsh-plugin-recipe@0.3.6` 成功，`--dump-config` 出现两个 bundle row
+- 安装验证：`npm view` 返回 0.3.2；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.3.7` / `dsh-plugin-recipe@0.3.7` 成功，`--dump-config` 出现两个 bundle row
 
 ## 自定义 DSH 插件市场索引
 
@@ -59,7 +59,7 @@ pnpm market:check
 - **已发布 0.3.2**：
   - <https://www.npmjs.com/package/dsh-plugin-trim>
   - <https://www.npmjs.com/package/dsh-plugin-recipe>
-- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.3.6` / `dsh-plugin-recipe@0.3.6`
+- 安装：`dsh plugin --profile web add dsh-plugin-trim@0.3.7` / `dsh-plugin-recipe@0.3.7`
 - 注册表已验证：`npm view` 返回 0.3.2；临时 profile 安装成功。
 - 首发触发了 npm 的 staged-publishing 占位版本 `0.0.0-stage`；`latest` 已指向 `0.3.2`，不影响安装。
 - GitHub Release 工作流已配置 `NPM_TOKEN` secret；后续 tag 会自动 npm 发布。

@@ -36,8 +36,8 @@ npm i dsh-plugin-trim dsh-plugin-recipe
 
 ```bash
 # Release tarball
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-trim-0.3.6.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-recipe-0.3.6.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
 
 # 开发版（跟随 main）
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
@@ -131,8 +131,9 @@ Markdown/JSON 运行手册与网页控制台都会展示，供下游执行者继
 - **减负与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
 - **工作流配方**：目标表单、蓝图步骤、审批级别、校验问题、Markdown/JSON 导出
 - **教程**：5 分钟上手、按任务快速开始、常见问题
-- **关于**：项目链接、版本、许可证、版权、QQ/捐赠占位
-- **设置**：当前生效的审批/建议策略、保护名单、可复制的配置片段
+- **关于**：Hero SVG、项目链接、版本、许可证、版权、QQ 群 `1134419871`、捐赠占位
+- **设置**：界面偏好（内容排列/密度/折叠）、检查更新、新建 Issue、当前策略、保护名单与配置片段
+- 首次安装后，主界面右下角会出现「更多 → 设置 → 体验优化」引导，并可展开 5 步教程
 - 同源 JSON API 校验 DSH 浏览器会话与 `Origin`；未登录返回 401
 - 网页界面的应用/回滚按钮本身就是用户操作，因此不重复弹宿主审批；Agent 工具路径默认走审批
 

@@ -66,13 +66,13 @@ pnpm market:index
 发布后，dsh-plugin.org / dsh.so 可以直接用 npm 包名收录，用户也可以：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.6
-dsh plugin --profile web add dsh-plugin-recipe@0.3.6
+dsh plugin --profile web add dsh-plugin-trim@0.3.7
+dsh plugin --profile web add dsh-plugin-recipe@0.3.7
 ```
 
 ## 5. GitHub Release tarball
 
 当前未发布 npm 时，推荐直接安装 release tarball：
 
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-trim-0.3.6.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-recipe-0.3.6.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
