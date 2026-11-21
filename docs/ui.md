@@ -1,18 +1,18 @@
 # Web 控制台
 
-「体验优化」是 `dsh-plugin-trim` 的浏览器半身，注册在 DSH 设置的
+「插件体检」是 `dsh-plugin-trim` 的浏览器半身，注册在 DSH 设置的
 `settings.plugins.tab` 槽位。它不替代任何工具，只是把同一套只读分析与本地草稿
 能力呈现为可视化面板。
 
-![体验优化控制台](../assets/ui-preview.png)
+![插件体检控制台](../assets/ui-preview.png)
 
 ## 打开
 
 安装 `dsh-plugin-trim` 与 `dsh-plugin-recipe` 后，有两个入口：
 
 ```text
-设置 → 体验优化          # 左侧导航，Agent 预设下方，滑杆图标（order 25）
-设置 → 插件 → 体验优化   # 内置插件页签
+设置 → 插件体检          # 左侧导航，Agent 预设下方，滑杆图标（order 25）
+设置 → 插件 → 插件体检   # 内置插件页签
 ```
 
 左侧入口由 `settings.section` + `settings.section.icon` 注册：
@@ -22,7 +22,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ### 视图与折叠
 
-- 插件清单、插件减负方案、兼容性、上下文等大卡片均可折叠；
+- 插件清单、插件体检方案、兼容性、上下文等大卡片均可折叠；
 - 顶部视图栏支持标准 / 双列、舒适 / 紧凑、全部折叠 / 全部展开；
 - 偏好在浏览器 localStorage 中保存；
 - 820px 以下自动单列。
@@ -53,11 +53,19 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 按任务快速开始：代码审查、修复问题、整理周报；
 - 常见问题：为什么没有建议关闭、周期插件保护、应用后回滚、确认与审批的区别。
 
+### 对话内体检
+
+- 输入框上方显示「插件体检」气泡：可归属上下文、启用插件数、兼容性 warning；
+- 展开后可看到“54% 只是示例降幅，不是关闭目标；关错了比开着更贵”；
+- 明确说明周期/触发、已有调用、无账本会先进入复核，沉默插件不会被自动建议关闭；
+- 可复制摘要，或在本会话内隐藏；数据只读，不修改任何插件；
+- 展开的 thought line 顶部显示同一份体检摘要，便于在推理过程中核对当前上下文成本。
+
 ### 检查更新与反馈
 
 - 设置页提供认证的 npm 最新版本检查，不会自动升级；
 - 提供新建 Issue / 问题列表快捷入口；
-- 主界面右下角一次性引导「更多 → 设置 → 体验优化」，可展开 5 步教程。
+- 主界面右下角一次性引导「更多 → 设置 → 插件体检」，可展开 5 步教程。
 
 ### 设置
 
@@ -67,7 +75,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 生成可复制的 `dsh-plugin-trim` 配置补丁；
 - 不绕过 DSH 的 profile 配置边界，修改后需重新加载插件。
 
-### 减负与兼容
+### 体检与兼容
 
 - 四张指标卡：可归属上下文、启用插件数、兼容性 error/warn、写操作可用性。
 - 兼容性矩阵：按 `plugin-plugin`、`plugin-runtime`、`profile`、`workspace`
@@ -146,7 +154,7 @@ dsh plugin --profile tmp-web add "$PWD/packages/plugin-recipe"
 dsh --profile tmp-web --port 3091 --no-open
 ```
 
-启动后访问打印的 token URL，进入 **设置 → 插件 → 体验优化**。
+启动后访问打印的 token URL，进入 **设置 → 插件 → 插件体检**。
 `client.js` 是 `__ModuleLoader__.load(...)` 包装的浏览器脚本，`package.json`
 里的 `dsh.client` 与 `exports["./client"]` 是它被组合进页面所需的声明。
 

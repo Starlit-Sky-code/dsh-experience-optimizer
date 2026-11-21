@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="500" viewBox="0 0 1600 500" role="img" aria-labelledby="title desc">
-  <title id="title">DSH 体验优化套件</title>
-  <desc id="desc">插件减负、兼容性体检与工作流蓝图。</desc>
+  <title id="title">DSH 插件体检套件</title>
+  <desc id="desc">插件体检、兼容性检查与工作流蓝图。</desc>
   
     <defs>
       <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -47,7 +47,7 @@
   
   <path transform="translate(1450 62) scale(1.3333333333333333)" d="M12 0l2.6 7.2L22 10l-7.2 2.6L12 20l-2.6-7.2L2 10l7.2-2.6z" fill="#f2a33a" opacity="0.9"/>
   <text x="390" y="158" font-family="JetBrains Maple Mono, monospace" font-size="18" letter-spacing="2.2" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
-  <text x="390" y="228" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="42" font-weight="700" fill="#f4f7ff">DSH 体验优化套件</text>
+  <text x="390" y="228" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="42" font-weight="700" fill="#f4f7ff">DSH 插件体检套件</text>
   <text x="390" y="282" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="24" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
   
     <g transform="translate(390 320)">
@@ -60,7 +60,7 @@
     <g transform="translate(550 320)">
       <rect width="118" height="44" rx="22" fill="#8fb7ff" fill-opacity="0.10" stroke="#8fb7ff" stroke-opacity="0.45"/>
       <circle cx="21" cy="22" r="4" fill="#8fb7ff"/>
-      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">插件减负</text>
+      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">插件体检</text>
     </g>
   
   

@@ -3,7 +3,7 @@
   "version": "0.3.7",
   "private": true,
   "type": "module",
-  "description": "DSH plugin ecosystem diet, compatibility analysis, and workflow planning suite",
+  "description": "DSH plugin checkup, compatibility analysis, and workflow planning suite",
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@12.8.1",
   "engines": {

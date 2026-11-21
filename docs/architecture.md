@@ -4,7 +4,7 @@
 
 ```text
 packages/shared-meta/   私有共享包：类型、原子存储、审计、文本估算
-packages/plugin-trim/   减负 + 兼容性体检（Host，工具面）
+packages/plugin-trim/   体检 + 兼容性检查（Host，工具面）
 packages/plugin-recipe/ 业务目标 → 工作流蓝图（Host，工具面）
 ```
 

@@ -11,7 +11,7 @@
   <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg"></a>
 </p>
 
-<p align="center"><strong>Plugin diet · compatibility checks · workflow recipes</strong><br>
+<p align="center"><strong>Plugin checkup · compatibility checks · workflow recipes</strong><br>
 Install either plugin independently, or use both in one native settings console.</p>
 
 ## Install
@@ -23,7 +23,7 @@ npm i dsh-plugin-trim
 > No `@version` means latest. The workflow recipe is optional: `npm i dsh-plugin-recipe`.
 > If the plugin does not appear in Settings, reload DSH and confirm the dependency is installed in the current workspace; use the Release tarball below if npm CDN returns 404.
 
-Open **Settings → Experience Optimizer** after installing.
+Open **Settings → Plugin checkup** after installing.
 
 <details>
 <summary>GitHub Release fallback</summary>
@@ -39,12 +39,13 @@ For source development, see [Development](#development).
 
 ## What it does
 
-![Experience Optimizer console](assets/ui-preview.png)
+![Plugin checkup console](assets/ui-preview.png)
 
 - **`dsh-plugin-trim`** scans plugin context cost and compatibility, then builds an explainable keep/enable/disable plan. Low-risk items are applied only after explicit confirmation and host approval; a restore point is written first.
 - **`dsh-plugin-recipe`** turns a business goal into a validated, exportable workflow blueprint with per-step approval levels.
 - **Guide / About / Settings** tabs make the first run explicit instead of hiding safety rules in documentation; About includes an inline hero SVG, real links, copyright, QQ group `1134419871`, and clearly marked donation placeholders.
-- Settings includes layout/density/collapse preferences, an npm update check, and Issue shortcuts. A one-time main-screen guide points to More → Settings → Experience Optimizer and expands the five-step tutorial.
+- Settings includes layout/density/collapse preferences, an npm update check, and Issue shortcuts. A one-time main-screen guide points to More → Settings → Plugin checkup and expands the five-step tutorial.
+- In conversation: a Plugin checkup bubble above the composer and a checkup strip in expanded reasoning. Read-only, copyable, and hideable for the session.
 - **English and Chinese UI** can be switched at runtime.
 
 ![Two paths, one authorization boundary](assets/readme/flow.svg)
@@ -95,5 +96,5 @@ pnpm verify
 
 [AGPL-3.0-only](LICENSE). If you modify and provide this software over a network, you must offer the corresponding source.
 
-<p align="center"><img src="icon.png" width="56" alt="DSH Experience Optimizer icon"></p>
+<p align="center"><img src="icon.png" width="56" alt="DSH Plugin Checkup icon"></p>
 <p align="center"><sub>Copyright © 2026 Starlit Sky · AGPL-3.0-only</sub></p>

@@ -5,10 +5,10 @@
   <rect x="1" y="1" width="1198" height="328" rx="23" fill="none" stroke="#25344d" stroke-width="1.5"/>
   <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Noto Sans CJK SC', sans-serif">
     <text x="48" y="52" fill="#e8f1ff" font-size="24" font-weight="700">两条路径，一个授权边界</text>
-    <text x="48" y="80" fill="#7f93b0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="1.4">减负 / 配方</text>
+    <text x="48" y="80" fill="#7f93b0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="1.4">体检 / 配方</text>
 
     <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
-      <text x="48" y="128" fill="#8ff0d8" font-size="13" letter-spacing="1.4">减负</text>
+      <text x="48" y="128" fill="#8ff0d8" font-size="13" letter-spacing="1.4">体检</text>
       <g fill="#0f1c2d" stroke="#2d4f7c">
         <rect x="48" y="146" width="132" height="56" rx="10"/>
         <rect x="204" y="146" width="132" height="56" rx="10"/>

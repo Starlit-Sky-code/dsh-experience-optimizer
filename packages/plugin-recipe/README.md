@@ -25,7 +25,7 @@ npm i /absolute/path/to/packages/plugin-recipe
 ## Web 控制台
 
 `dsh-plugin-trim` 的 Web 控制台包含「工作流配方」页签；本插件提供其 Host API，
-用于生成和导出蓝图。安装两个插件后即可在 **设置 → 插件 → 体验优化** 使用。
+用于生成和导出蓝图。安装两个插件后即可在 **设置 → 插件 → 插件体检** 使用。
 
 ## 工具
 

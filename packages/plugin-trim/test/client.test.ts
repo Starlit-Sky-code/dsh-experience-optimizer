@@ -60,11 +60,14 @@ async function waitFor(text: string): Promise<void> {
 describe('client onboarding and pages', () => {
   let container: HTMLDivElement
   let root: ReturnType<typeof createRoot>
+  let slotComponents: Record<string, React.ComponentType>
 
   beforeEach(async () => {
     document.body.innerHTML = '<div id="root"></div>'
     container = document.getElementById('root') as HTMLDivElement
+    slotComponents = {}
     window.localStorage.clear()
+    window.sessionStorage.clear()
     window.localStorage.setItem('dsh-experience-optimizer.locale', 'zh')
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
       ok: true,
@@ -77,6 +80,7 @@ describe('client onboarding and pages', () => {
       slots: {
         inject(_name: string, callback: () => void) { callback() },
         register(options: { name?: string }, C: React.ComponentType) {
+          if (options.name) slotComponents[options.name] = C
           if (options.name === 'settings.plugins.tab' || options.name === 'settings.section') component = C
           return () => undefined
         },
@@ -108,11 +112,18 @@ describe('client onboarding and pages', () => {
     await act(async () => { skip?.click(); await sleep(30) })
     expect(window.localStorage.getItem('dsh-experience-optimizer.onboarding.v1')).toBe('1')
 
-    const planToggle = [...container.querySelectorAll('.eo-card-toggle')].find((button) => button.textContent?.includes('插件减负方案'))
+    const planToggle = [...container.querySelectorAll('.eo-card-toggle')].find((button) => button.textContent?.includes('插件体检方案'))
     expect(planToggle).toBeDefined()
+    const planCard = planToggle?.closest('.eo-card')
+    const planBody = planCard?.querySelector('.eo-collapse')
     await act(async () => { (planToggle as HTMLButtonElement).click(); await sleep(30) })
-    expect(container.textContent).not.toContain('任务类型')
+    expect(planBody?.classList.contains('is-collapsed')).toBe(true)
+    expect(planBody?.getAttribute('aria-hidden')).toBe('true')
+    expect(planBody?.hasAttribute('inert')).toBe(true)
     await act(async () => { (planToggle as HTMLButtonElement).click(); await sleep(30) })
+    expect(planBody?.classList.contains('is-collapsed')).toBe(false)
+    expect(planBody?.getAttribute('aria-hidden')).toBeNull()
+    expect(planBody?.hasAttribute('inert')).toBe(false)
     expect(container.textContent).toContain('任务类型')
 
     const tabs = [...container.querySelectorAll('button')]
@@ -148,7 +159,38 @@ describe('client onboarding and pages', () => {
     const language = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'EN')
     expect(language).toBeDefined()
     await act(async () => { language?.click(); await sleep(40) })
-    expect(container.textContent).toContain('Plugin diet')
+    expect(container.textContent).toContain('Plugin checkup')
     expect(container.textContent).toContain('Guide')
+
+    await act(async () => { root.unmount() })
+    const Bubble = slotComponents['conversation.composer.dock']
+    const Reasoning = slotComponents['conversation.chat.reasoning.body']
+    expect(Bubble).toBeDefined()
+    expect(Reasoning).toBeDefined()
+
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(Bubble as React.ComponentType, { sessionId: 'session-a' }))
+    })
+    await act(async () => { await sleep(1000) })
+    expect(container.textContent).toContain('1,000 tokens')
+    const pill = container.querySelector('.eo-bubble-pill') as HTMLButtonElement
+    expect(pill).not.toBeNull()
+    await act(async () => { pill.click(); await sleep(40) })
+    expect(container.textContent).toContain('A wrong close costs more than keeping it on')
+    expect(container.textContent).toContain('Quiet plugins stay protected')
+
+    await act(async () => { root.unmount() })
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(Reasoning as React.ComponentType, {
+        text: 'thinking',
+        running: false,
+        renderFactorySlot: () => React.createElement('div', { className: 'mock-reasoning' }, 'reasoning-body'),
+      }))
+    })
+    await act(async () => { await sleep(80) })
+    expect(container.textContent).toContain('1/1 · 1,000 tokens')
+    expect(container.querySelector('.mock-reasoning')).not.toBeNull()
   })
 })

@@ -11,7 +11,7 @@
   <a href="LICENSE"><img alt="许可证：AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg"></a>
 </p>
 
-<p align="center"><strong>插件减负 × 兼容性体检 × 工作流蓝图</strong><br>
+<p align="center"><strong>插件体检 × 兼容性检查 × 工作流蓝图</strong><br>
 两个插件可独立安装，也可同时使用；共用同一个网页控制台与审批边界。</p>
 
 ## 安装
@@ -23,7 +23,7 @@ npm i dsh-plugin-trim
 > 省略版本号即取 latest。工作流配方是可选的：`npm i dsh-plugin-recipe`。
 > 安装后如果设置页没有出现，重新加载 DSH，并确认当前工作区已安装该依赖；npm CDN 返回 404 时请使用下方 Release tarball。
 
-安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
+安装后打开 **设置 → 插件体检**（Agent 预设下方），或 **设置 → 插件 → 插件体检**。
 
 <details>
 <summary>GitHub Release（备用）</summary>
@@ -40,9 +40,9 @@ npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/dow
 
 ## 一眼看懂
 
-![体验优化网页控制台](assets/ui-preview.png)
+![插件体检网页控制台](assets/ui-preview.png)
 
-<p align="center"><sub>设置 → 体验优化：上下文、兼容性、精简方案与工作流配方在同一个原生设置页里。</sub></p>
+<p align="center"><sub>设置 → 插件体检：上下文、兼容性、精简方案与工作流配方在同一个原生设置页里。</sub></p>
 
 ![两条路径，一个授权边界](assets/readme/flow.svg)
 
@@ -120,12 +120,13 @@ Markdown/JSON 运行手册与网页控制台都会展示，供下游执行者继
 
 ## 网页控制台
 
-- **减负与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
+- **体检与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
 - **工作流配方**：目标表单、蓝图步骤、审批级别、校验问题、Markdown/JSON 导出
 - **教程**：5 分钟上手、按任务快速开始、常见问题
 - **关于**：Hero SVG、项目链接、版本、许可证、版权、QQ 群 `1134419871`、捐赠占位
 - **设置**：界面偏好（内容排列/密度/折叠）、检查更新、新建 Issue、当前策略、保护名单与配置片段
-- 首次安装后，主界面右下角会出现「更多 → 设置 → 体验优化」引导，并可展开 5 步教程
+- **对话内**：输入框上方的插件体检气泡、展开 thought line 的体检摘要；只读、可复制、可本会话隐藏
+- 首次安装后，主界面右下角会出现「更多 → 设置 → 插件体检」引导，并可展开 5 步教程
 - 同源 JSON API 校验 DSH 浏览器会话与 `Origin`；未登录返回 401
 - 网页界面的应用/回滚按钮本身就是用户操作，因此不重复弹宿主审批；Agent 工具路径默认走审批
 
@@ -185,5 +186,5 @@ pnpm verify
 
 [AGPL-3.0-only](LICENSE)。修改后通过网络向用户提供服务时，需要按 AGPL 提供对应源代码。
 
-<p align="center"><img src="icon.png" width="56" alt="DSH 体验优化器图标"></p>
+<p align="center"><img src="icon.png" width="56" alt="DSH 插件体检图标"></p>
 <p align="center"><sub>Copyright © 2026 Starlit Sky · AGPL-3.0-only</sub></p>

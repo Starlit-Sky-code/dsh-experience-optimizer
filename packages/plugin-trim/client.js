@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
     Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' })
 
     const React = require('react')
-    const { useState, useEffect, useCallback, useMemo } = React
+    const { useState, useEffect, useCallback, useMemo, useRef } = React
     const h = React.createElement
 
     const API = '/api/dsh-experience-optimizer'
@@ -39,19 +39,19 @@ window.__ModuleLoader__.load({
     }
     const COPYRIGHT = 'Copyright © 2026 Starlit Sky · AGPL-3.0-only'
     const TABS = [
-      { id: 'trim', zh: '插件减负', en: 'Plugin diet', icon: 'gauge' },
+      { id: 'trim', zh: '插件体检', en: 'Plugin checkup', icon: 'gauge' },
       { id: 'recipe', zh: '工作流配方', en: 'Workflow recipe', icon: 'recipe' },
       { id: 'tutorial', zh: '教程', en: 'Guide', icon: 'book' },
       { id: 'about', zh: '关于', en: 'About', icon: 'info' },
       { id: 'settings', zh: '设置', en: 'Settings', icon: 'settings' },
     ]
     const EN_TEXT = {
-      '插件减负': 'Plugin diet',
+      '插件体检': 'Plugin checkup',
       '工作流配方': 'Workflow recipe',
       '教程': 'Guide',
       '关于': 'About',
       '设置': 'Settings',
-      '减负与兼容': 'Diet & compatibility',
+      '体检与兼容': 'Checkup & compatibility',
       '可归属上下文': 'Attributable context',
       '启用插件': 'Enabled plugins',
       '兼容性': 'Compatibility',
@@ -202,7 +202,7 @@ window.__ModuleLoader__.load({
     }
 
     const CSS = `
-.eo-root{--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
+.eo-root{--eo-ease:cubic-bezier(.16,1,.3,1);--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
 .eo-root *{box-sizing:border-box}
 .eo-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:0 0 2px}
 .eo-hero-copy{min-width:0}
@@ -433,10 +433,74 @@ window.__ModuleLoader__.load({
         @media(max-width:560px){.eo-settings-grid{grid-template-columns:1fr}}
 .eo-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .eo-spacer{height:0}
+
+/* Conversation checkup bubble */
+.eo-bubble{position:relative;display:inline-flex;align-items:center;font:inherit;color:var(--dsw-alias-label-secondary,#5f6b7a)}
+.eo-bubble-pill{appearance:none;height:26px;padding:0 9px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.2));border-radius:999px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.72));color:var(--dsw-alias-label-secondary,#5f6b7a);display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:11px;line-height:1;cursor:pointer;white-space:nowrap;transition:background .18s ease,border-color .18s ease,transform .12s ease}
+.eo-bubble-pill:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.09));border-color:var(--dsw-alias-border-l3,rgba(127,127,127,.32));color:var(--dsw-alias-label-primary,#1a1a1a)}
+.eo-bubble-pill:active{transform:translateY(1px) scale(.985)}
+.eo-bubble-pill:focus-visible{outline:2px solid var(--dsw-focus-ring-color,#1a5fb4);outline-offset:2px}
+.eo-bubble-pill.is-open{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.09));border-color:var(--dsw-alias-border-l3,rgba(127,127,127,.32))}
+.eo-bubble-pulse{width:6px;height:6px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#1a7f37);box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 16%,transparent);animation:eo-pulse 2.2s ease-in-out infinite}
+.eo-bubble-name{font-weight:500;color:var(--dsw-alias-label-primary,#1a1a1a)}
+.eo-bubble-metric{font:10.5px/1 var(--ds-font-family-code,ui-monospace,monospace);color:var(--dsw-alias-label-tertiary,#8b96a5)}
+.eo-bubble-alert{min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--dsw-alias-state-warning-primary,#9a6700);color:#fff;font:500 10px/16px var(--ds-font-family-code,ui-monospace,monospace);text-align:center}
+.eo-bubble-caret{font-size:10px;color:var(--dsw-alias-label-tertiary,#8b96a5);transition:transform .2s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
+.eo-bubble-pill.is-open .eo-bubble-caret{transform:rotate(180deg)}
+.eo-bubble-pop{position:fixed;z-index:70;max-height:min(70vh,480px);overflow:auto;padding:14px;border:.5px solid var(--dsw-alias-border-l3,rgba(127,127,127,.25));border-radius:12px;background:var(--dsw-alias-bg-layer-1,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);box-shadow:0 16px 44px rgba(0,0,0,.18);animation:eo-pop-in .2s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-bubble-pop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.eo-bubble-pop-title{font-size:13px;line-height:20px;font-weight:600}
+.eo-bubble-pop-sub{margin-top:2px;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:11px;line-height:17px}
+.eo-bubble-close{appearance:none;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:17px;line-height:1;cursor:pointer;padding:0 2px;border-radius:4px}
+.eo-bubble-close:hover{color:var(--dsw-alias-label-primary,#1a1a1a)}
+.eo-bubble-stats{display:flex;flex-direction:column;gap:5px;padding:8px 0 10px;border-top:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.15));border-bottom:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.15))}
+.eo-bubble-stats>div{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--dsw-alias-label-secondary,#5f6b7a);font-size:11px;line-height:16px}
+.eo-bubble-stats code{font:10.5px/16px var(--ds-font-family-code,ui-monospace,monospace);color:var(--dsw-alias-label-primary,#1a1a1a)}
+.eo-bubble-note{margin:9px 0 0;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:10.5px;line-height:16px}
+.eo-bubble-actions{display:flex;align-items:center;gap:7px;margin-top:11px}
+.eo-bubble-btn{appearance:none;height:27px;padding:0 9px;border:.5px solid var(--dsw-alias-border-l3,rgba(127,127,127,.28));border-radius:6px;background:transparent;color:var(--dsw-alias-label-secondary,#5f6b7a);font:inherit;font-size:11px;cursor:pointer;transition:background .16s ease,color .16s ease,transform .12s ease}
+.eo-bubble-btn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.08));color:var(--dsw-alias-label-primary,#1a1a1a)}
+.eo-bubble-btn:active{transform:translateY(1px)}
+.eo-bubble-btn-primary{border-color:var(--dsw-alias-button-primary-fill,#1a1a1a);background:var(--dsw-alias-button-primary-fill,#1a1a1a);color:var(--dsw-alias-label-primary-inverted,#fff)}
+.eo-bubble-btn-primary:hover{background:var(--dsw-alias-button-primary-hover,#333);color:var(--dsw-alias-label-primary-inverted,#fff)}
+
+/* Thought-line checkup strip */
+.eo-thought{min-width:0}
+.eo-thought-note{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;padding:5px 8px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.16));border-radius:6px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.045));font-size:10.5px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8b96a5);animation:eo-thought-in .28s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-thought-pulse{width:5px;height:5px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#1a7f37);box-shadow:0 0 0 2px color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 14%,transparent)}
+.eo-thought.is-running .eo-thought-pulse{animation:eo-pulse 1.4s ease-in-out infinite}
+.eo-thought-label{font-weight:500;color:var(--dsw-alias-label-secondary,#5f6b7a)}
+.eo-thought-meta{font:10px/16px var(--ds-font-family-code,ui-monospace,monospace);color:var(--dsw-alias-label-tertiary,#8b96a5)}
+.eo-thought-warn{padding:0 5px;border-radius:4px;background:color-mix(in srgb,var(--dsw-alias-state-warning-primary,#9a6700) 12%,transparent);color:var(--dsw-alias-state-warning-primary,#9a6700);font:10px/16px var(--ds-font-family-code,ui-monospace,monospace)}
+.eo-thought-body{min-width:0}
+
+/* Micro-interactions */
+.eo-tab{transition:color .18s ease,background .18s ease}
+.eo-tab-active:after{transform-origin:left;animation:eo-underline .22s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-tab-panel{animation:eo-panel-in .28s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-btn{transition:background .14s ease,border-color .14s ease,color .14s ease,opacity .14s ease,transform .12s ease}
+.eo-btn:active:not(:disabled){transform:translateY(1px) scale(.985)}
+.eo-card{transition:border-color .2s ease,background .2s ease}
+.eo-item{transition:background .16s ease}
+.eo-item:hover{background:var(--eo-hover)}
+.eo-collapse{display:grid;grid-template-rows:1fr;opacity:1;transition:grid-template-rows .24s var(--eo-ease,cubic-bezier(.16,1,.3,1)),opacity .2s ease}
+.eo-collapse.is-collapsed{grid-template-rows:0fr;opacity:0;pointer-events:none}
+.eo-collapse-inner{overflow:hidden;min-height:0}
+.eo-modal-backdrop{animation:eo-fade-in .18s ease both}
+.eo-modal{animation:eo-modal-in .24s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
+.eo-progress-track i,.eo-bar i{transition:width .4s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
+@keyframes eo-pulse{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1)}}
+@keyframes eo-pop-in{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes eo-panel-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes eo-underline{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes eo-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes eo-modal-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes eo-thought-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 @keyframes eo-spin{to{transform:rotate(360deg)}}
 @keyframes eo-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media(max-width:820px){.eo-layout-two .eo-findings,.eo-layout-two .eo-list,.eo-layout-two .eo-owner-list,.eo-inventory-grid{grid-template-columns:1fr}.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
 @media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-metric{border-right:0;border-bottom:.5px solid var(--eo-border)}.eo-metric:last-child{border-bottom:0}}
+@media(prefers-reduced-motion:reduce){.eo-bubble-pulse,.eo-thought-pulse,.eo-tab-active:after,.eo-tab-panel,.eo-modal-backdrop,.eo-modal,.eo-toast{animation:none}.eo-collapse,.eo-btn,.eo-bubble-pill,.eo-bubble-btn,.eo-tab{transition:none}.eo-btn:active:not(:disabled),.eo-bubble-pill:active,.eo-bubble-btn:active{transform:none}}
 `
 
 
@@ -512,9 +576,15 @@ window.__ModuleLoader__.load({
               extra || null,
             )
           : null,
-        collapsible && collapsed
-          ? null
-          : h('div', { className: 'eo-card-body' }, children),
+        h(
+          'div',
+          {
+            className: 'eo-collapse' + (collapsible && collapsed ? ' is-collapsed' : ''),
+            'aria-hidden': collapsible && collapsed ? 'true' : undefined,
+            inert: collapsible && collapsed ? '' : undefined,
+          },
+          h('div', { className: 'eo-collapse-inner' }, children),
+        ),
       )
     }
 
@@ -536,10 +606,256 @@ window.__ModuleLoader__.load({
       return new Intl.NumberFormat('zh-CN').format(Number(value) || 0)
     }
 
+    const trimOverviewStore = (() => {
+      let state = { status: 'idle', data: null, error: '' }
+      let promise = null
+      const listeners = new Set()
+      const emit = () => {
+        listeners.forEach((listener) => listener(state))
+      }
+      return {
+        get: () => state,
+        subscribe(listener) {
+          listeners.add(listener)
+          return () => listeners.delete(listener)
+        },
+        ensure() {
+          if (promise || state.status === 'ready') return
+          state = { status: 'loading', data: null, error: '' }
+          emit()
+          promise = fetchJson(API + '/overview')
+            .then((data) => {
+              state = { status: 'ready', data, error: '' }
+            })
+            .catch((err) => {
+              state = {
+                status: 'error',
+                data: null,
+                error: err instanceof Error ? err.message : String(err),
+              }
+            })
+            .finally(() => {
+              promise = null
+              emit()
+            })
+        },
+      }
+    })()
+
+    function useTrimOverview() {
+      const [snapshot, setSnapshot] = useState(trimOverviewStore.get())
+      useEffect(() => {
+        const unsubscribe = trimOverviewStore.subscribe(setSnapshot)
+        trimOverviewStore.ensure()
+        return unsubscribe
+      }, [])
+      return snapshot
+    }
+
     function formatTokens(value) {
       const n = Number(value) || 0
       if (n >= 10000) return (n / 1000).toFixed(1) + 'k'
       return formatNumber(n)
+    }
+
+    function CheckupBubble({ sessionId }) {
+      const snapshot = useTrimOverview()
+      const data = snapshot.data
+      const [entered, setEntered] = useState(false)
+      const [open, setOpen] = useState(false)
+      const [anchor, setAnchor] = useState(null)
+      const [copied, setCopied] = useState(false)
+      const rootRef = useRef(null)
+      const dismissKey = 'dsh-experience-optimizer.bubble.' + (sessionId || 'default')
+      const [dismissed, setDismissed] = useState(() => {
+        try {
+          return typeof sessionStorage !== 'undefined' && sessionStorage.getItem(dismissKey) === '1'
+        } catch {
+          return false
+        }
+      })
+
+      useEffect(() => {
+        const timer = setTimeout(() => setEntered(true), 900)
+        return () => clearTimeout(timer)
+      }, [])
+
+      useEffect(() => {
+        try {
+          setDismissed(typeof sessionStorage !== 'undefined' && sessionStorage.getItem(dismissKey) === '1')
+        } catch {
+          setDismissed(false)
+        }
+      }, [dismissKey])
+
+      useEffect(() => {
+        if (!open) return undefined
+        const close = () => {
+          setOpen(false)
+          setAnchor(null)
+        }
+        const onPointerDown = (event) => {
+          if (rootRef.current && !rootRef.current.contains(event.target)) close()
+        }
+        const onKeyDown = (event) => {
+          if (event.key === 'Escape') close()
+        }
+        document.addEventListener('pointerdown', onPointerDown)
+        document.addEventListener('keydown', onKeyDown)
+        window.addEventListener('resize', close)
+        window.addEventListener('scroll', close, true)
+        return () => {
+          document.removeEventListener('pointerdown', onPointerDown)
+          document.removeEventListener('keydown', onKeyDown)
+          window.removeEventListener('resize', close)
+          window.removeEventListener('scroll', close, true)
+        }
+      }, [open])
+
+      useEffect(() => {
+        if (!copied) return undefined
+        const timer = setTimeout(() => setCopied(false), 1400)
+        return () => clearTimeout(timer)
+      }, [copied])
+
+      if (!data || dismissed || !entered) return null
+
+      const total = data.bundles.length
+      const enabled = data.bundles.filter((bundle) => bundle.enabled).length
+      const tokens = data.context.totalTokens
+      const attributed = Math.max(0, tokens - data.context.unattributedTokens)
+      const compatTotal = data.compat.error + data.compat.warn
+      const summary = [
+        tr('DSH 插件体检', 'DSH plugin checkup'),
+        tr('可归属上下文：', 'Attributable context: ') + formatNumber(attributed) + ' tokens',
+        tr('启用插件：', 'Enabled plugins: ') + enabled + ' / ' + total,
+        tr('兼容性：', 'Compatibility: ') + data.compat.error + ' error · ' + data.compat.warn + ' warn',
+        tr('54% 只是示例降幅，不是关闭目标。关错了比开着更贵。', '54% is a sample reduction, not a close target. A wrong close costs more than keeping it on.'),
+        tr('沉默插件默认保护：周期/触发、已有调用、无账本先进入复核。', 'Quiet plugins stay protected: schedules, prior calls, or no ledger go to review first.'),
+      ].join('\n')
+
+      const copySummary = async () => {
+        try {
+          await navigator.clipboard.writeText(summary)
+          setCopied(true)
+        } catch {
+          setCopied(false)
+        }
+      }
+
+      const dismiss = () => {
+        try {
+          if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(dismissKey, '1')
+        } catch {
+          // Ignore storage failures; the bubble still closes for this mount.
+        }
+        setDismissed(true)
+        setOpen(false)
+        setAnchor(null)
+      }
+
+      const toggle = () => {
+        if (open) {
+          setOpen(false)
+          setAnchor(null)
+          return
+        }
+        const rect = rootRef.current ? rootRef.current.getBoundingClientRect() : null
+        if (!rect) return
+        const width = Math.min(330, window.innerWidth - 36)
+        setAnchor({
+          left: Math.max(18, Math.min(rect.left, window.innerWidth - width - 18)),
+          bottom: window.innerHeight - rect.top + 8,
+          width,
+        })
+        setOpen(true)
+      }
+
+      return h(
+        'span',
+        { className: 'eo-bubble', ref: rootRef },
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'eo-bubble-pill' + (open ? ' is-open' : ''),
+            'aria-expanded': open,
+            'aria-haspopup': 'dialog',
+            onClick: toggle,
+          },
+          h('span', { className: 'eo-bubble-pulse', 'aria-hidden': 'true' }),
+          h('span', { className: 'eo-bubble-name' }, tr('插件体检', 'Plugin checkup')),
+          h('span', { className: 'eo-bubble-metric' }, formatTokens(tokens) + ' tokens'),
+          compatTotal ? h('span', { className: 'eo-bubble-alert' }, String(compatTotal)) : null,
+          h('span', { className: 'eo-bubble-caret', 'aria-hidden': 'true' }, '⌄'),
+        ),
+        open && anchor
+          ? h(
+              'div',
+              {
+                className: 'eo-bubble-pop',
+                role: 'dialog',
+                'aria-label': tr('插件体检摘要', 'Plugin checkup summary'),
+                style: { left: anchor.left, bottom: anchor.bottom, width: anchor.width },
+              },
+              h(
+                'div',
+                { className: 'eo-bubble-pop-head' },
+                h(
+                  'div',
+                  null,
+                  h('div', { className: 'eo-bubble-pop-title' }, tr('插件体检', 'Plugin checkup')),
+                  h('div', { className: 'eo-bubble-pop-sub' }, tr('先量成本，再决定关什么。', 'Measure first. Then decide.')),
+                ),
+                h('button', { type: 'button', className: 'eo-bubble-close', onClick: () => { setOpen(false); setAnchor(null) }, 'aria-label': tr('关闭', 'Close') }, '×'),
+              ),
+              h(
+                'div',
+                { className: 'eo-bubble-stats' },
+                h('div', null, h('span', null, tr('可归属上下文', 'Attributable context')), h('code', null, formatNumber(attributed) + ' tokens')),
+                h('div', null, h('span', null, tr('启用插件', 'Enabled plugins')), h('code', null, enabled + ' / ' + total)),
+                h('div', null, h('span', null, tr('兼容性', 'Compatibility')), h('code', null, data.compat.error + ' error · ' + data.compat.warn + ' warn')),
+              ),
+              h('p', { className: 'eo-bubble-note' }, tr('54% 只是示例降幅，不是关闭目标。关错了比开着更贵。', '54% is a sample reduction, not a close target. A wrong close costs more than keeping it on.')),
+              h('p', { className: 'eo-bubble-note' }, tr('沉默插件默认保护：周期/触发、已有调用、无账本先进入复核。', 'Quiet plugins stay protected: schedules, prior calls, or no ledger go to review first.')),
+              h(
+                'div',
+                { className: 'eo-bubble-actions' },
+                h('button', { type: 'button', className: 'eo-bubble-btn eo-bubble-btn-primary', onClick: copySummary }, copied ? tr('已复制', 'Copied') : tr('复制摘要', 'Copy summary')),
+                h('button', { type: 'button', className: 'eo-bubble-btn', onClick: dismiss }, tr('本会话不再提醒', 'Hide for this session')),
+              ),
+            )
+          : null,
+      )
+    }
+
+    function ReasoningCheckup({ text, running, renderFactorySlot }) {
+      const snapshot = useTrimOverview()
+      const data = snapshot.data
+      const content = typeof renderFactorySlot === 'function'
+        ? renderFactorySlot('conversation.chat.reasoning.content', { text, running })
+        : null
+      const enabled = data ? data.bundles.filter((bundle) => bundle.enabled).length : 0
+      const total = data ? data.bundles.length : 0
+      const compatTotal = data ? data.compat.error + data.compat.warn : 0
+      return h(
+        'div',
+        { className: 'eo-thought' + (running ? ' is-running' : '') },
+        data
+          ? h(
+              'div',
+              {
+                className: 'eo-thought-note',
+                title: tr('体检数据来自当前 profile；54% 是示例降幅，不是关闭目标。', 'Checkup data comes from the current profile; 54% is a sample reduction, not a close target.'),
+              },
+              h('span', { className: 'eo-thought-pulse', 'aria-hidden': 'true' }),
+              h('span', { className: 'eo-thought-label' }, tr('插件体检', 'Plugin checkup')),
+              h('span', { className: 'eo-thought-meta' }, enabled + '/' + total + ' · ' + formatTokens(data.context.totalTokens) + ' tokens'),
+              compatTotal ? h('span', { className: 'eo-thought-warn' }, compatTotal + ' ' + tr('兼容', 'compat')) : null,
+            )
+          : null,
+        h('div', { className: 'eo-thought-body' }, content),
+      )
     }
 
     function actionLabel(action) {
@@ -843,7 +1159,7 @@ window.__ModuleLoader__.load({
           viewBox: '0 0 1200 300',
           className: 'eo-about-hero',
           role: 'img',
-          'aria-label': tr('DSH 体验优化器', 'DSH Experience Optimizer'),
+          'aria-label': tr('DSH 插件体检', 'DSH Plugin Checkup'),
         },
         h('defs', null,
           h('linearGradient', { id: 'eo-about-bg', x1: '0', y1: '0', x2: '1', y2: '1' },
@@ -863,10 +1179,10 @@ window.__ModuleLoader__.load({
         h('path', { d: 'M1010 127 L1028 136 L1028 154 C1028 168 1019 177 1010 181 C1001 177 992 168 992 154 L992 136 Z', fill: 'none', stroke: '#fbbf24', strokeWidth: 1.8 }),
         h('path', { d: 'M1002 151 L1008 157 L1019 144', fill: 'none', stroke: '#fbbf24', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }),
         h('text', { x: '64', y: '72', fill: '#5eead4', fontFamily: 'ui-monospace, monospace', fontSize: '13', letterSpacing: '2.4' }, 'DSH PLUGIN SUITE · AGPL-3.0'),
-        h('text', { x: '62', y: '142', fill: '#f2f7ff', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '44', fontWeight: '700' }, tr('DSH 体验优化器', 'DSH Experience Optimizer')),
+        h('text', { x: '62', y: '142', fill: '#f2f7ff', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '44', fontWeight: '700' }, tr('DSH 插件体检', 'DSH Plugin Checkup')),
         h('text', { x: '64', y: '184', fill: '#c3d3e8', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '20' }, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
         h('g', { transform: 'translate(64 220)' },
-          [tr('插件减负', 'Plugin diet'), tr('兼容性', 'Compatibility'), tr('工作流配方', 'Workflow recipe')].map((label, i) =>
+          [tr('插件体检', 'Plugin checkup'), tr('兼容性', 'Compatibility'), tr('工作流配方', 'Workflow recipe')].map((label, i) =>
             h('g', { key: label, transform: `translate(${i * 150} 0)` },
               h('rect', { width: '138', height: '30', rx: '15', fill: 'rgba(94,234,212,.08)', stroke: 'rgba(94,234,212,.35)' }),
               h('circle', { cx: '16', cy: '15', r: '3', fill: ['#5eead4','#60a5fa','#fbbf24'][i] }),
@@ -893,8 +1209,8 @@ window.__ModuleLoader__.load({
       const steps = [
         [tr('点击「更多」', 'Open “More”'), tr('在 DSH 主界面打开更多菜单。', 'Open the More menu on the DSH main screen.')],
         [tr('点击「设置」', 'Open “Settings”'), tr('进入设置页。', 'Open Settings.')],
-        [tr('点击「体验优化」', 'Open “Experience Optimizer”'), tr('在 Agent 预设下方或插件页签里找到体验优化。', 'Find it below Agent presets or in the plugins tab.')],
-        [tr('生成减负方案', 'Build a slim plan'), tr('选任务或写目标，先看依据，再决定是否应用。', 'Pick a task or goal, read the evidence, then decide.')],
+        [tr('点击「插件体检」', 'Open “Plugin checkup”'), tr('在 Agent 预设下方或插件页签里找到插件体检。', 'Find it below Agent presets or in the plugins tab.')],
+        [tr('生成体检方案', 'Build a checkup plan'), tr('选任务或写目标，先看依据，再决定是否应用。', 'Pick a task or goal, read the evidence, then decide.')],
         [tr('需要时看教程', 'Open the guide'), tr('教程、常见问题和关于都在同一页。', 'Guide, FAQ, and About live in the same panel.')],
       ]
       return h(
@@ -911,7 +1227,7 @@ window.__ModuleLoader__.load({
         { className: 'eo-main-guide', role: 'dialog', 'aria-label': tr('初次使用路径', 'First-run path') },
         h('div', { className: 'eo-guide-arrow' }, h(Icon, { name: 'arrow', size: 22 })),
         h('p', { className: 'eo-guide-kicker' }, tr('初次使用', 'FIRST RUN')),
-        h('h3', null, tr('从这里打开体验优化', 'Open Experience Optimizer here')),
+        h('h3', null, tr('从这里打开插件体检', 'Open Plugin checkup here')),
         h(
           'div',
           { className: 'eo-guide-path' },
@@ -919,7 +1235,7 @@ window.__ModuleLoader__.load({
           h('i', null, '→'),
           h('span', null, tr('设置', 'Settings')),
           h('i', null, '→'),
-          h('span', null, tr('体验优化', 'Experience Optimizer')),
+          h('span', null, tr('插件体检', 'Plugin checkup')),
         ),
         h('p', { className: 'eo-guide-note' }, tr('打开后会自动出现 5 步教程；也可以先看这里的路径。', 'A five-step guide opens there; you can follow this path first.')),
         stepsOpen
@@ -1318,8 +1634,8 @@ window.__ModuleLoader__.load({
           h(
             'div',
             { className: 'eo-hero-copy' },
-            h('h2', { className: 'eo-title' }, tr('体验优化', 'Experience Optimizer')),
-            h('p', { className: 'eo-sub' }, tr('插件减负、兼容性体检与工作流蓝图。', 'Plugin diet, compatibility checks, and workflow recipes.')),
+            h('h2', { className: 'eo-title' }, tr('插件体检', 'Plugin checkup')),
+            h('p', { className: 'eo-sub' }, tr('先量常驻成本，再判断该不该关；兼容性与工作流一起看。', 'Measure resident cost first, then decide what to close. Compatibility and workflows included.')),
           ),
           h(
             'div',
@@ -1383,17 +1699,21 @@ window.__ModuleLoader__.load({
               '正在读取插件画像与兼容性数据…',
             )
           : null,
-        tab === 'tutorial'
-          ? renderTutorial()
-          : tab === 'settings'
-            ? renderSettings()
-            : tab === 'about'
-              ? renderAbout()
-              : overview
-                ? tab === 'trim'
-                  ? renderTrim()
-                  : renderRecipe()
-                : null,
+        h(
+          'div',
+          { className: 'eo-tab-panel', key: tab },
+          tab === 'tutorial'
+            ? renderTutorial()
+            : tab === 'settings'
+              ? renderSettings()
+              : tab === 'about'
+                ? renderAbout()
+                : overview
+                  ? tab === 'trim'
+                    ? renderTrim()
+                    : renderRecipe()
+                  : null,
+        ),
         confirmState
           ? h(ConfirmModal, {
               state: confirmState,
@@ -1449,7 +1769,7 @@ window.__ModuleLoader__.load({
           },
         ]
         const steps = [
-          ['先扫描。', 'Scan first.', ' 打开「插件减负」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。', ' Open Plugin diet to see attributable context, compatibility, and inventory. The Share column makes resident cost visible.'],
+          ['先扫描。', 'Scan first.', ' 打开「插件体检」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。', ' Open Plugin checkup to see attributable context, compatibility, and inventory. The Share column makes resident cost visible.'],
           ['再生成方案。', 'Build a plan.', ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。', ' Pick a task or write a goal, then Build plan. It only creates a draft; no plugin is changed.'],
           ['看判断依据。', 'Read the evidence.', ' 只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭；其余进入人工复核。', ' Only zero calls in the window, attributable cost, no schedule/trigger hint, and high task confidence produce a close candidate. Everything else goes to review.'],
           ['确认后应用。', 'Confirm and apply.', ' 勾选低风险项，点击“应用选中”，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, apply, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
@@ -1577,7 +1897,7 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: tr('界面偏好', 'Interface preferences'),
-              subtitle: tr('只作用于插件减负页；偏好保存在本浏览器', 'Applies to the Plugin diet page; saved in this browser'),
+              subtitle: tr('只作用于插件体检页；偏好保存在本浏览器', 'Applies to the Plugin checkup page; saved in this browser'),
             },
             h(
               'div',
@@ -1703,7 +2023,7 @@ window.__ModuleLoader__.load({
       function renderAbout() {
         const links = [
           ['GitHub', ABOUT_LINKS.repo],
-          [tr('npm · 插件减负', 'npm · plugin diet'), ABOUT_LINKS.npmTrim],
+          [tr('npm · 插件体检', 'npm · plugin checkup'), ABOUT_LINKS.npmTrim],
           [tr('npm · 工作流配方', 'npm · workflow recipe'), ABOUT_LINKS.npmRecipe],
           [tr('发布记录', 'Releases'), ABOUT_LINKS.releases],
           [tr('问题反馈', 'Issues'), ABOUT_LINKS.issues],
@@ -1715,7 +2035,7 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: tr('关于项目', 'About the project'),
-              subtitle: tr('插件减负、兼容性检查与工作流蓝图', 'Plugin diet, compatibility checks, and workflow recipes'),
+              subtitle: tr('插件体检、兼容性检查与工作流蓝图', 'Plugin checkup, compatibility checks, and workflow recipes'),
               section: 'about',
             },
             h(AboutHero),
@@ -1725,7 +2045,7 @@ window.__ModuleLoader__.load({
               h(
                 'div',
                 { className: 'eo-about-card' },
-                h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Experience Optimizer')),
+                h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
                 h('p', null, tr('版本：', 'Version: ') + '0.3.7 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
@@ -2226,7 +2546,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
-              title: tr('插件减负方案', 'Slim plan'),
+              title: tr('插件体检方案', 'Checkup plan'),
               subtitle: tr('先建议，后确认；受保护项永不改动', 'Suggest first, confirm later; protected items never change'),
               section: 'draft', collapsible: true, collapsed: collapsedCards.draft === true, onToggle: () => toggleCard('draft'),
             },
@@ -2924,7 +3244,27 @@ window.__ModuleLoader__.load({
     }
 
     function apply(ctx) {
+      CURRENT_LOCALE = detectLocale()
       injectCss()
+      ctx.slots.inject('conversation.composer.dock', () =>
+        ctx.slots.register(
+          {
+            name: 'conversation.composer.dock',
+            id: 'experience-optimizer-checkup',
+            order: 20,
+          },
+          CheckupBubble,
+        ),
+      )
+      ctx.slots.inject('conversation.chat.reasoning.body', () =>
+        ctx.slots.register(
+          {
+            name: 'conversation.chat.reasoning.body',
+            priority: 90,
+          },
+          ReasoningCheckup,
+        ),
+      )
       ctx.slots.inject('shell.overlay', () =>
         ctx.slots.register(
           {
@@ -2941,7 +3281,7 @@ window.__ModuleLoader__.load({
             name: 'settings.plugins.tab',
             id: 'experience-optimizer',
             order: 40,
-            label: () => '体验优化',
+            label: () => '插件体检',
           },
           ExperiencePanel,
         ),
@@ -2952,7 +3292,7 @@ window.__ModuleLoader__.load({
             name: 'settings.section',
             id: 'experience-optimizer',
             order: 25,
-            label: () => '体验优化',
+            label: () => '插件体检',
           },
           ExperiencePanel,
         ),
