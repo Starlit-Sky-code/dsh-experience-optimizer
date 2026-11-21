@@ -5,6 +5,12 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+### Changed
+
+- The first-run main-screen guide is anchored above the **更多** entry with a
+  larger 54px arrow that points at its label. Type sizes and the five-step list
+  were raised for readability.
+
 ## [0.3.8] - 2026-11-21
 
 ### Changed
