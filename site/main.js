@@ -52,10 +52,28 @@
   const introSkip = document.getElementById('intro-skip')
   const introCount = document.getElementById('intro-count')
   const introToken = document.getElementById('intro-token')
+  const introCost = document.getElementById('intro-cost')
+  const introProgress = document.querySelector('.intro-progress i')
+  const introStepLabel = document.getElementById('intro-step-label')
+  const introScenes = [...document.querySelectorAll('.intro-scene')]
+  const introRail = [...document.querySelectorAll('.intro-rail [data-step]')]
   const introOff = !intro || reduce || new URLSearchParams(location.search).get('intro') === 'off'
   const pageRegions = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')]
+  const scenePlan = [
+    { key: 'boot', label: 'BOOT / 01', duration: 2400 },
+    { key: 'cost', label: 'COST / 02', duration: 2600 },
+    { key: 'evidence', label: 'EVIDENCE / 03', duration: 2700 },
+    { key: 'recipe', label: 'RECIPE / 04', duration: 2500 },
+    { key: 'close', label: 'READY / 05', duration: 1800 },
+  ]
+  const introTotal = scenePlan.reduce((sum, scene) => sum + scene.duration, 0)
   let heroStarted = false
   let introDone = false
+  let sceneIndex = -1
+  let sceneTimer = 0
+  let progressFrame = 0
+  let costFrame = 0
+  let introStartedAt = 0
 
   const setPageInert = (on) => {
     pageRegions.forEach((region) => {
@@ -72,11 +90,21 @@
     document.dispatchEvent(new CustomEvent('dsh:hero-start'))
   }
 
+  const cancelIntroFrames = () => {
+    window.clearTimeout(sceneTimer)
+    if (progressFrame) cancelAnimationFrame(progressFrame)
+    if (costFrame) cancelAnimationFrame(costFrame)
+    progressFrame = 0
+    costFrame = 0
+  }
+
   const finishIntro = (immediate = false) => {
     if (introDone) return
     introDone = true
+    cancelIntroFrames()
     document.body.classList.remove('intro-active')
     setPageInert(false)
+    if (introProgress) introProgress.style.width = '100%'
     if (!intro) { startHero(); return }
     if (immediate || reduce) {
       intro.style.display = 'none'
@@ -85,7 +113,61 @@
     }
     intro.classList.add('is-out')
     startHero()
-    window.setTimeout(() => { intro.style.display = 'none' }, 700)
+    window.setTimeout(() => { intro.style.display = 'none' }, 650)
+  }
+
+  const setScene = (index) => {
+    sceneIndex = index
+    introScenes.forEach((scene, i) => {
+      scene.classList.toggle('is-active', i === index)
+      scene.classList.toggle('is-past', i < index)
+    })
+    introRail.forEach((step, i) => step.classList.toggle('is-on', i === index))
+    if (introStepLabel) introStepLabel.textContent = scenePlan[index]?.label || ''
+    if (scenePlan[index]?.key === 'cost') animateCost()
+  }
+
+  const animateCost = () => {
+    if (!introCost) return
+    if (reduce) { introCost.textContent = '1,105'; return }
+    if (costFrame) cancelAnimationFrame(costFrame)
+    const start = performance.now()
+    const from = 2417
+    const to = 1105
+    const tick = (now) => {
+      if (introDone || sceneIndex !== 1) return
+      const progress = Math.min(1, (now - start) / 1700)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      introCost.textContent = Math.round(from + (to - from) * eased).toLocaleString('en-US')
+      if (progress < 1) costFrame = requestAnimationFrame(tick)
+    }
+    costFrame = requestAnimationFrame(tick)
+  }
+
+  const runScenes = (index) => {
+    if (introDone) return
+    if (index >= scenePlan.length) { finishIntro(false); return }
+    setScene(index)
+    sceneTimer = window.setTimeout(() => runScenes(index + 1), scenePlan[index].duration)
+  }
+
+  const tickProgress = (now) => {
+    if (introDone) return
+    const progress = Math.min(1, (now - introStartedAt) / introTotal)
+    if (introProgress) introProgress.style.width = (progress * 100) + '%'
+    if (progress < 1) progressFrame = requestAnimationFrame(tickProgress)
+  }
+
+  const animateBootCounts = () => {
+    const start = performance.now()
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / 950)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      if (introCount) introCount.textContent = String(Math.round(14 * eased)).padStart(2, '0')
+      if (introToken) introToken.textContent = Math.round(2417 * eased).toLocaleString('en-US')
+      if (progress < 1 && !introDone) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
   }
 
   if (introOff) {
@@ -93,26 +175,15 @@
   } else {
     document.body.classList.add('intro-active')
     setPageInert(true)
+    setScene(0)
     requestAnimationFrame(() => { if (!introDone) intro.classList.add('is-live') })
-    const countStart = performance.now()
-    const countTick = (now) => {
-      const progress = Math.min(1, (now - countStart) / 950)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      if (introCount) introCount.textContent = String(Math.round(14 * eased)).padStart(2, '0')
-      if (introToken) introToken.textContent = Math.round(2417 * eased).toLocaleString('en-US')
-      if (progress < 1 && !introDone) requestAnimationFrame(countTick)
-    }
-    requestAnimationFrame(countTick)
-    const introTimer = window.setTimeout(() => finishIntro(false), 1500)
-    introSkip?.addEventListener('click', () => {
-      window.clearTimeout(introTimer)
-      finishIntro(false)
-    })
+    introStartedAt = performance.now()
+    progressFrame = requestAnimationFrame(tickProgress)
+    animateBootCounts()
+    runScenes(0)
+    introSkip?.addEventListener('click', () => finishIntro(false))
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !introDone) {
-        window.clearTimeout(introTimer)
-        finishIntro(false)
-      }
+      if (event.key === 'Escape' && !introDone) finishIntro(false)
     })
   }
 

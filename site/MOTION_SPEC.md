@@ -10,7 +10,7 @@
 
 ## 2. Choreography
 
-- **Opening beat**: a short 1.5s boot overlay builds a radar/grid, counts 0→14 nodes and 0→2,417 tokens, reveals a two-line CONTEXT OBSERVATORY wordmark, then wipes upward.
+- **Opening beat**: a 12s five-scene sequence — boot radar → resident cost → evidence gates → workflow recipe → ready lockup — then wipes upward. It is skippable at any point.
 - **Hero beat**: four-line mask-in with a drawn amber underline, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
 - **Scroll rhythm**: ticker strip → poster interlude → paper problem statement → dark evidence gates → paper product → dark safety → paper install/FAQ → dark about.
 - **Interaction rhythm**: intro skip, language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, FAQ details, terminal typing.
@@ -22,7 +22,7 @@
 - Fast interaction: 160ms
 - Standard transition: 280ms
 - Slow reveal: 600–900ms
-- Intro: 1500ms; exit wipe: 680ms
+- Intro: 12s five-scene sequence; exit wipe: 600ms
 - Hero line stagger: 80ms
 - Hero scan: 1700ms
 - Cost count-up: 1500ms
@@ -45,7 +45,7 @@
 
 | Section | Trigger | Animation | Failure mode |
 |---|---|---|---|
-| Intro | load | grid, radar, node/token count, wordmark, upward wipe | skipped immediately |
+| Intro | load | five scenes: radar, cost bars, evidence gates, recipe graph, ready lockup; upward wipe | skipped immediately |
 | Hero | intro exit + canvas visible | four-line masks, underline draw, scan, HUD count | static final if reduced motion |
 | Ticker | load | 34s marquee; pause on hover | static strip |
 | Poster | scroll | image parallax ±22px | no transform if reduced/mobile |
@@ -93,9 +93,9 @@
 
 ## 10. Acceptance
 
-- [x] A short, skippable opening sequence establishes the observatory metaphor.
+- [x] A five-scene, skippable opening sequence establishes the observatory metaphor and shows cost, evidence, recipe, and approval.
 - [x] Hero has a distinct mechanic, not a stock hero.
-- [x] Seven motion beats: four-line title, underlined accent, scan, count-up, gates, seal, terminal.
+- [x] Five-scene intro plus seven hero/section motion beats.
 - [x] Ticker, scroll progress, spotlight, and instrument tilt add a second motion layer.
 - [x] Desktop and mobile both have a visible scroll cue.
 - [x] One quiet section: safety.

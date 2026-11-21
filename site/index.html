@@ -20,9 +20,9 @@
       <div class="intro-grid"></div>
       <div class="intro-hud intro-hud-tl">CONTEXT OBSERVATORY</div>
       <div class="intro-hud intro-hud-tr"><span id="intro-count">00</span> / 14 NODES</div>
-      <div class="intro-hud intro-hud-bl">BOOT SEQUENCE / 01</div>
+      <div class="intro-hud intro-hud-bl" id="intro-step-label">BOOT / 01</div>
       <div class="intro-hud intro-hud-br">LOCAL FIRST · HOST APPROVED</div>
-      <div class="intro-stage">
+      <div class="intro-scene intro-stage intro-scene-boot is-active" data-scene="boot">
         <div class="intro-radar">
           <span class="intro-ring intro-ring-1"></span>
           <span class="intro-ring intro-ring-2"></span>
@@ -47,6 +47,89 @@
           <div class="intro-title"><span>CONTEXT</span><span>OBSERVATORY</span></div>
           <p class="intro-status">SCANNING PLUGIN TOPOLOGY · <b id="intro-token">0</b> TOKENS</p>
         </div>
+      </div>
+
+      <div class="intro-scene intro-stage intro-scene-cost" data-scene="cost">
+        <div class="scene-copy">
+          <p class="scene-kicker">01 / RESIDENT CONTEXT</p>
+          <h2 class="scene-title">Measure first.<br><span>Then cut.</span></h2>
+          <p class="scene-body">Sample profile: 14 plugins, 2,417 resident tokens. Attribute the cost before disabling anything.</p>
+          <div class="scene-stat"><b id="intro-cost">2,417</b><small>tokens</small><em>→ 1,105</em></div>
+        </div>
+        <div class="cost-visual" aria-hidden="true">
+          <div class="cost-scan"></div>
+          <div class="cost-grid">
+            <span class="cost-bar" style="--h:64%;--i:0"></span>
+            <span class="cost-bar" style="--h:88%;--i:1"></span>
+            <span class="cost-bar" style="--h:52%;--i:2"></span>
+            <span class="cost-bar cost-cut" style="--h:94%;--i:3"></span>
+            <span class="cost-bar" style="--h:70%;--i:4"></span>
+            <span class="cost-bar cost-cut" style="--h:82%;--i:5"></span>
+            <span class="cost-bar" style="--h:46%;--i:6"></span>
+            <span class="cost-bar" style="--h:76%;--i:7"></span>
+            <span class="cost-bar cost-cut" style="--h:91%;--i:8"></span>
+            <span class="cost-bar" style="--h:58%;--i:9"></span>
+            <span class="cost-bar cost-cut" style="--h:86%;--i:10"></span>
+            <span class="cost-bar" style="--h:68%;--i:11"></span>
+            <span class="cost-bar cost-cut" style="--h:79%;--i:12"></span>
+            <span class="cost-bar cost-cut" style="--h:49%;--i:13"></span>
+          </div>
+          <div class="cost-axis"><span>2,417</span><span>1,105</span><strong>−54%</strong></div>
+        </div>
+      </div>
+
+      <div class="intro-scene intro-stage intro-scene-evidence" data-scene="evidence">
+        <div class="scene-copy">
+          <p class="scene-kicker">02 / EVIDENCE CHAIN</p>
+          <h2 class="scene-title">Four gates.<br><span>One answer.</span></h2>
+          <p class="scene-body">Task, ledger, schedule, cost. A keyword match is never enough.</p>
+          <div class="scene-seal">ALLOWED · ONCE</div>
+        </div>
+        <div class="gate-visual" aria-hidden="true">
+          <div class="gate-beam"></div>
+          <div class="intro-gate"><span>01</span><b>Task relevance</b><em>WEAK</em><strong>REVIEW</strong></div>
+          <div class="intro-gate"><span>02</span><b>Usage ledger</b><em>USED</em><strong>GUARD</strong></div>
+          <div class="intro-gate"><span>03</span><b>Schedule hint</b><em>CRON</em><strong>GUARD</strong></div>
+          <div class="intro-gate"><span>04</span><b>Context cost</b><em>&gt; 0</em><strong>REVIEW</strong></div>
+          <div class="gate-result">STRONG EVIDENCE → CANDIDATE</div>
+        </div>
+      </div>
+
+      <div class="intro-scene intro-stage intro-scene-recipe" data-scene="recipe">
+        <div class="scene-copy">
+          <p class="scene-kicker">03 / WORKFLOW RECIPE</p>
+          <h2 class="scene-title">Goal in.<br><span>Blueprint out.</span></h2>
+          <p class="scene-body">Steps, tools, approval levels, and rollback — exportable, not improvised.</p>
+          <div class="scene-tags"><span>PLAN</span><span>VALIDATE</span><span>EXPORT</span></div>
+        </div>
+        <div class="recipe-visual" aria-hidden="true">
+          <svg class="recipe-lines" viewBox="0 0 600 360">
+            <path class="recipe-line l1" d="M90 60 C 230 60, 250 180, 420 180" />
+            <path class="recipe-line l2" d="M90 180 C 230 180, 250 180, 420 180" />
+            <path class="recipe-line l3" d="M90 300 C 230 300, 250 180, 420 180" />
+          </svg>
+          <div class="recipe-node r1">GOAL</div>
+          <div class="recipe-node r2">TOOLS</div>
+          <div class="recipe-node r3">APPROVAL</div>
+          <div class="recipe-card"><span>BLUEPRINT.md</span><b>✓</b></div>
+        </div>
+      </div>
+
+      <div class="intro-scene intro-stage intro-scene-close" data-scene="close">
+        <div class="close-shell">
+          <p class="scene-kicker">04 / READY</p>
+          <div class="close-wordmark"><span>DSH</span><strong>EXPERIENCE<br>OPTIMIZER</strong></div>
+          <p class="close-tagline">Less context. More certainty.</p>
+          <div class="close-stats"><span>−54% context</span><span>2 plugins</span><span>1 approval boundary</span></div>
+        </div>
+      </div>
+
+      <div class="intro-rail" aria-hidden="true">
+        <span data-step="0" class="is-on">01 CONTEXT</span>
+        <span data-step="1">02 COST</span>
+        <span data-step="2">03 EVIDENCE</span>
+        <span data-step="3">04 RECIPE</span>
+        <span data-step="4">05 READY</span>
       </div>
       <div class="intro-progress"><i></i></div>
     </div>
