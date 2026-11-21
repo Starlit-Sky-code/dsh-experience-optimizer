@@ -295,6 +295,10 @@ window.__ModuleLoader__.load({
         .eo-inventory-card code{font:400 11px/16px var(--eo-code);word-break:break-all;color:var(--eo-secondary)}
         .eo-inventory-card-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;color:var(--eo-tertiary);font-size:11px}
         .eo-main-guide{position:fixed;right:24px;left:auto;bottom:24px;z-index:30;width:min(340px,calc(100vw - 32px));padding:14px 16px;border:.5px solid var(--dsw-alias-border-l4,rgba(127,127,127,.25));border-radius:14px;background:var(--dsw-alias-bg-layer-1,#fff);box-shadow:0 14px 44px rgba(0,0,0,.2);color:var(--eo-primary);font-size:13px;line-height:20px}
+        .eo-guide-beacon{position:fixed;left:18px;bottom:82px;z-index:31;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--eo-primary);pointer-events:none;font-size:10px;line-height:14px}
+        .eo-guide-beacon span{padding:1px 6px;border-radius:4px;background:var(--dsw-alias-bg-layer-1,#fff);border:.5px solid var(--eo-border-strong);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+        .eo-guide-beacon .eo-icon{color:var(--eo-primary);animation:eo-guide-bob 1.6s ease-in-out infinite}
+        @keyframes eo-guide-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
         .eo-guide-arrow{position:absolute;left:-16px;top:-20px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--dsw-alias-button-primary-fill,var(--eo-primary));color:var(--dsw-alias-label-primary-inverted,#fff);transform:rotate(-12deg);box-shadow:0 8px 20px rgba(0,0,0,.18)}
         .eo-guide-kicker{margin:0 0 3px;color:var(--eo-tertiary);font:500 10px/16px var(--eo-code);letter-spacing:.12em}
         .eo-main-guide h3{margin:0 0 8px;font-size:16px;line-height:23px}
@@ -309,7 +313,11 @@ window.__ModuleLoader__.load({
         .eo-guide-steps small{color:var(--eo-tertiary);font-size:11px;line-height:17px}
         .eo-guide-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
         .eo-main-guide .eo-btn{height:28px;font-size:11px;padding:0 9px}
-        @media(max-width:600px){.eo-main-guide{left:12px;right:12px;bottom:12px;width:auto}.eo-guide-arrow{display:none}}
+        @media(max-width:600px){.eo-main-guide{left:12px;right:12px;bottom:12px;width:auto}.eo-guide-beacon{position:fixed;left:18px;bottom:82px;z-index:31;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--eo-primary);pointer-events:none;font-size:10px;line-height:14px}
+        .eo-guide-beacon span{padding:1px 6px;border-radius:4px;background:var(--dsw-alias-bg-layer-1,#fff);border:.5px solid var(--eo-border-strong);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+        .eo-guide-beacon .eo-icon{color:var(--eo-primary);animation:eo-guide-bob 1.6s ease-in-out infinite}
+        @keyframes eo-guide-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+        .eo-guide-arrow{display:none}}
         .eo-about-hero{display:block;width:100%;height:auto;border-radius:12px;background:#0b1422;margin:0 0 10px}
 .eo-card-title{margin:0;font-size:14px;line-height:22px;font-weight:500;letter-spacing:0}
 .eo-card-sub{margin:2px 0 0;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
@@ -701,7 +709,8 @@ window.__ModuleLoader__.load({
         ['rect', { x: '14', y: '14', width: '6', height: '6', rx: '1' }],
       ],
       chevron: [['path', { d: 'M6 9l6 6 6-6' }]],
-      arrow: [['path', { d: 'M19 5L5 19M5 9v10h10' }]],
+      arrow: [['path', { d: 'M20 12H4M10 6l-6 6 6 6' }]],
+      arrowDown: [['path', { d: 'M12 4v16M6 14l6 6 6-6' }]],
     }
 
     function Icon({ name, size = 16 }) {
@@ -888,6 +897,15 @@ window.__ModuleLoader__.load({
         [tr('需要时看教程', 'Open the guide'), tr('教程、常见问题和关于都在同一页。', 'Guide, FAQ, and About live in the same panel.')],
       ]
       return h(
+        React.Fragment,
+        null,
+        h(
+          'div',
+          { className: 'eo-guide-beacon', 'aria-hidden': 'true' },
+          h('span', null, tr('更多', 'More')),
+          h(Icon, { name: 'arrowDown', size: 18 }),
+        ),
+        h(
         'div',
         { className: 'eo-main-guide', role: 'dialog', 'aria-label': tr('初次使用路径', 'First-run path') },
         h('div', { className: 'eo-guide-arrow' }, h(Icon, { name: 'arrow', size: 22 })),
@@ -913,6 +931,7 @@ window.__ModuleLoader__.load({
           { className: 'eo-guide-actions' },
           h(Button, { variant: 'ghost', onClick: () => setStepsOpen((value) => !value) }, stepsOpen ? tr('收起步骤', 'Hide steps') : tr('查看 5 步教程', 'Show 5 steps')),
           h(Button, { variant: 'accent', onClick: dismiss }, tr('知道了', 'Got it')),
+        ),
         ),
       )
     }
