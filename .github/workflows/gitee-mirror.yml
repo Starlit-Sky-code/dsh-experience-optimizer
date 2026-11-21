@@ -1,0 +1,44 @@
+name: Gitee mirror
+
+on:
+  push:
+    branches: [promo-site]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check Gitee credentials
+        id: creds
+        env:
+          OWNER: ${{ secrets.GITEE_OWNER }}
+          TOKEN: ${{ secrets.GITEE_TOKEN }}
+          REPO: ${{ vars.GITEE_REPO }}
+        run: |
+          if [ -n "$OWNER" ] && [ -n "$TOKEN" ] && [ -n "$REPO" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Gitee mirror skipped: set GITEE_OWNER and GITEE_TOKEN secrets, plus a GITEE_REPO repository variable."
+          fi
+
+      - name: Mirror promo-site
+        if: steps.creds.outputs.ready == 'true'
+        env:
+          OWNER: ${{ secrets.GITEE_OWNER }}
+          TOKEN: ${{ secrets.GITEE_TOKEN }}
+          REPO: ${{ vars.GITEE_REPO }}
+          BRANCH: ${{ vars.GITEE_BRANCH || 'master' }}
+        run: |
+          git remote add gitee "https://${OWNER}:${TOKEN}@gitee.com/${OWNER}/${REPO}.git"
+          git push --force gitee "HEAD:${BRANCH}"
