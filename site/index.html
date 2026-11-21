@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="DSH 体验优化器：让插件常驻上下文可见，让减负按证据发生。">
+  <meta name="description" content="DSH 插件体检：先量插件常驻上下文，再按证据决定关不关。">
   <meta name="theme-color" content="#07101d">
-  <meta property="og:title" content="DSH 体验优化器 · Context Observatory">
+  <meta property="og:title" content="DSH 插件体检 · Context Observatory">
   <meta property="og:description" content="插件在偷偷吃上下文。现在，把它拖到光下。">
   <meta property="og:image" content="./assets/cover.jpg">
   <meta property="og:type" content="website">
-  <title>DSH 体验优化器 · Context Observatory</title>
+  <title>DSH 插件体检 · Context Observatory</title>
   <link rel="icon" href="./assets/icon.png">
   <link rel="preload" as="image" href="./assets/cover.jpg">
   <link rel="stylesheet" href="./styles.css">
@@ -52,8 +52,8 @@
       <div class="intro-scene intro-stage intro-scene-cost" data-scene="cost">
         <div class="scene-copy">
           <p class="scene-kicker">01 / RESIDENT CONTEXT</p>
-          <h2 class="scene-title">Measure first.<br><span>Then cut.</span></h2>
-          <p class="scene-body">Sample profile: 14 plugins, 2,417 resident tokens. Attribute the cost before disabling anything.</p>
+          <h2 class="scene-title">Measure first.<br><span>Then decide.</span></h2>
+          <p class="scene-body">Sample profile: 14 plugins, 2,417 resident tokens. 54% is a sample, not a close target.</p>
           <div class="scene-stat"><b id="intro-cost">2,417</b><small>tokens</small><em>→ 1,105</em></div>
         </div>
         <div class="cost-visual" aria-hidden="true">
@@ -82,7 +82,7 @@
         <div class="scene-copy">
           <p class="scene-kicker">02 / EVIDENCE CHAIN</p>
           <h2 class="scene-title">Four gates.<br><span>One answer.</span></h2>
-          <p class="scene-body">Task, ledger, schedule, cost. A keyword match is never enough.</p>
+          <p class="scene-body">Task, ledger, schedule, cost. Quiet plugins are protected before any close.</p>
           <div class="scene-seal">ALLOWED · ONCE</div>
         </div>
         <div class="gate-visual" aria-hidden="true">
@@ -118,9 +118,9 @@
       <div class="intro-scene intro-stage intro-scene-close" data-scene="close">
         <div class="close-shell">
           <p class="scene-kicker">04 / READY</p>
-          <div class="close-wordmark"><span>DSH</span><strong>EXPERIENCE<br>OPTIMIZER</strong></div>
+          <div class="close-wordmark"><span>DSH</span><strong>PLUGIN<br>CHECKUP</strong></div>
           <p class="close-tagline">Less context. More certainty.</p>
-          <div class="close-stats"><span>−54% context</span><span>2 plugins</span><span>1 approval boundary</span></div>
+          <div class="close-stats"><span>sample −54% context</span><span>2 plugins</span><span>1 approval boundary</span></div>
         </div>
       </div>
 
@@ -141,9 +141,9 @@
   <a class="skip" href="#main" data-i18n="skip">跳到主要内容</a>
 
   <header class="site-header" id="site-header">
-    <a class="brand" href="#top" aria-label="DSH Experience Optimizer">
+    <a class="brand" href="#top" aria-label="DSH Plugin Checkup">
       <img src="./assets/icon.png" alt="" width="34" height="34">
-      <span>DSH <b>Experience Optimizer</b></span>
+      <span>DSH <b>Plugin Checkup</b></span>
     </a>
     <nav class="nav" aria-label="主导航">
       <a href="#why" data-i18n="navWhy">为什么</a>
@@ -165,14 +165,14 @@
       <div class="hero-glow" aria-hidden="true"></div>
       <div class="hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow" data-i18n="heroEyebrow">DSH · CONTEXT OBSERVATORY</p>
+          <p class="eyebrow" data-i18n="heroEyebrow">DSH · PLUGIN CHECKUP</p>
           <h1 class="display">
             <span class="line" data-i18n="heroLine1">插件在偷偷</span>
             <span class="line" data-i18n="heroLine2">吃上下文。</span>
             <span class="line line-accent" data-i18n="heroLine3">现在，</span>
             <span class="line line-accent" data-i18n="heroLine4">把它拖到光下。</span>
           </h1>
-          <p class="lede" data-i18n="heroLede">DSH 体验优化器把插件常驻成本、兼容性检查和减负方案放进一个可观察的界面。少一点插件负担，多一点兼容确定性。</p>
+          <p class="lede" data-i18n="heroLede">DSH 插件体检把插件常驻成本、兼容性检查和误关风险放进一次可解释的体检。少一点插件负担，多一点兼容确定性。</p>
           <div class="hero-actions">
             <a class="button primary" href="#install" data-i18n="ctaInstall">安装最新版</a>
             <a class="button" href="#how" data-i18n="ctaHow">看判断依据</a>
@@ -238,7 +238,7 @@
       <figure class="poster-frame">
         <picture>
           <source media="(max-width: 700px)" srcset="./assets/cover-3x4.jpg">
-          <img src="./assets/cover.jpg" alt="DSH 体验优化器宣传海报：轻一点，走得更远" width="1920" height="1080">
+          <img src="./assets/cover.jpg" alt="DSH 插件体检宣传海报：轻一点，走得更远" width="1920" height="1080">
         </picture>
         <figcaption data-i18n="posterCaption">宣传片封面 · 示例 profile · AGPL-3.0</figcaption>
       </figure>
@@ -253,23 +253,25 @@
         </div>
         <div class="stat-block">
           <div class="stat-number"><span data-count-to="54">54</span><small>%</small></div>
-          <p data-i18n="statLabel">示例 profile 的常驻上下文降幅</p>
+          <p data-i18n="statLabel">示例降幅，不是关闭目标</p>
           <div class="stat-track"><i data-bar-to="46"></i></div>
-          <p class="stat-note" data-i18n="statNote">示例数据，不是你的 profile。</p>
+          <p class="stat-note" data-i18n="statNote">54% 是示例数据，不是你的 profile；关错了比开着更贵。</p>
         </div>
       </div>
       <div class="cost-compare" aria-label="上下文成本示例">
         <div class="cost-row"><span data-i18n="costBefore">应用前</span><strong>2,417</strong><div class="cost-line"><i style="width:100%"></i></div></div>
         <div class="cost-row"><span data-i18n="costAfter">应用后</span><strong>1,105</strong><div class="cost-line"><i data-bar-to="46"></i></div></div>
-        <p class="cost-delta" data-i18n="costDelta">−1,312 tokens · 少 54%</p>
+        <p class="cost-delta" data-i18n="costDelta">−1,312 tokens · 示例降幅 54%</p>
       </div>
+      <p class="judge-note" data-i18n="judgeNote">判断不是只看词像不像：先看本任务/会话是否调用，再看账本、周期与成本；任一不确定只进入复核。</p>
+      <p class="quiet-note" data-i18n="quietNote">平时不吭声、关键时刻才出手的插件最容易被误关；周期/触发、已有调用、无账本都会先保护或复核。</p>
     </section>
 
     <section class="evidence" id="how">
       <div class="evidence-sticky">
         <p class="kicker" data-i18n="evidenceKicker">02 / EVIDENCE CHAIN</p>
         <h2 class="display-2"><span data-i18n="evidenceTitle1">先过闸门，</span><br><span data-i18n="evidenceTitle2">再谈建议关闭。</span></h2>
-        <p data-i18n="evidenceBody">描述匹配只说明“可能相关”。强证据要同时穿过任务、账本、周期和成本四道门。</p>
+        <p data-i18n="evidenceBody">先看本任务/会话有没有调用，再看账本、周期和成本。词像不像只是弱信号，不能单独判“用不上”。</p>
         <div class="evidence-legend">
           <span><i class="dot dot-warn"></i><span data-i18n="legendReview">进入人工复核</span></span>
           <span><i class="dot dot-ok"></i><span data-i18n="legendClose">才可能成为候选</span></span>
@@ -310,8 +312,8 @@
       <div class="product-grid">
         <article class="product-card">
           <p class="tag">dsh-plugin-trim</p>
-          <h2 data-i18n="trimTitle">插件减负</h2>
-          <p data-i18n="trimBody">扫描上下文占比与兼容性，生成可解释的保留/启用/关闭方案；低风险项经确认与安全审批后应用。</p>
+          <h2 data-i18n="trimTitle">插件体检</h2>
+          <p data-i18n="trimBody">先量上下文占比与兼容性，再给出可解释的保留/启用/关闭建议；低风险项经确认与安全审批后应用。</p>
           <ul>
             <li data-i18n="trim1">插件清单搜索 / 筛选 / 排序</li>
             <li data-i18n="trim2">定时/触发与已用插件保护</li>
@@ -332,8 +334,8 @@
         </article>
       </div>
       <figure class="console">
-        <div class="console-bar"><i></i><i></i><i></i><span data-i18n="consoleLabel">设置 → 体验优化</span></div>
-        <img src="./assets/ui-preview.png" alt="DSH 体验优化器控制台：插件清单、精简方案与兼容性检查" loading="lazy">
+        <div class="console-bar"><i></i><i></i><i></i><span data-i18n="consoleLabel">设置 → 插件体检</span></div>
+        <img src="./assets/ui-preview.png" alt="DSH 插件体检控制台：插件清单、体检方案与兼容性检查" loading="lazy">
       </figure>
     </section>
 
@@ -386,7 +388,7 @@
       <div class="about-grid">
         <div>
           <h2 class="display-2"><span data-i18n="aboutTitle1">一个本地优先的</span><br><span data-i18n="aboutTitle2">DSH 插件套件。</span></h2>
-          <p class="about-lede" data-i18n="aboutBody">AGPL-3.0 · 作者 Starlit Sky · 欢迎反馈、试用和一起把插件生态做轻。</p>
+          <p class="about-lede" data-i18n="aboutBody">AGPL-3.0 · 作者 Starlit Sky · 先体检，再决定关什么。</p>
           <div class="about-links">
             <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub ↗</a>
             <a href="https://www.npmjs.com/package/dsh-plugin-trim" target="_blank" rel="noreferrer">npm · trim ↗</a>
@@ -413,7 +415,7 @@
   </main>
 
   <footer class="site-footer">
-    <img src="./assets/icon.png" alt="DSH 体验优化器图标" width="56" height="56">
+    <img src="./assets/icon.png" alt="DSH 插件体检图标" width="56" height="56">
     <p class="copyright">Copyright © 2026 Starlit Sky · AGPL-3.0-only</p>
     <p><a href="./README.md" data-i18n="siteReadme">站点说明</a> · <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub</a></p>
   </footer>
