@@ -1,8 +1,8 @@
-# DSH Experience Optimizer
+# DSH Plugin Checkup
 
 <p align="center"><strong>English</strong> · <a href="README.md">简体中文</a> · <a href="https://starlit-sky-code.github.io/dsh-experience-optimizer/">Live site</a></p>
 
-![DSH Experience Optimizer](assets/banner.svg)
+![DSH Plugin Checkup](assets/banner.svg)
 
 <p align="center">
   <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>

@@ -16,13 +16,13 @@
 **标题**
 
 ```text
-DSH Experience Optimizer
+DSH Plugin Checkup
 ```
 
 **短描述**
 
 ```text
-Plugin diet, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.
+Plugin checkup, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.
 ```
 
 **长描述**

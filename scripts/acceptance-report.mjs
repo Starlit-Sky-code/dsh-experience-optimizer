@@ -9,7 +9,7 @@ const data = join(dshHome, 'experience-optimizer')
 const audit = await readJsonl(join(data, 'audit.jsonl'))
 const usage = await readJsonl(join(data, 'trim', 'usage.jsonl'))
 
-console.log('# DSH 体验优化验收报告')
+console.log('# DSH 插件体检验收报告')
 console.log('')
 console.log(`数据目录：${data}`)
 console.log(`审计记录：${audit.length}`)

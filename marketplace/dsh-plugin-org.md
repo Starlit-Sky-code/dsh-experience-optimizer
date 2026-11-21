@@ -19,7 +19,7 @@ workflow
 **标题**
 
 ```text
-DSH Experience Optimizer — 插件减负、兼容性体检与工作流蓝图
+DSH Plugin Checkup — 插件体检、兼容性检查与工作流蓝图
 ```
 
 **短描述**

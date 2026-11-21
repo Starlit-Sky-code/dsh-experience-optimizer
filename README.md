@@ -1,8 +1,8 @@
-# DSH 体验优化器
+# DSH 插件体检
 
 <p align="center"><a href="https://starlit-sky-code.github.io/dsh-experience-optimizer/">在线宣传页</a> · <a href="README.en.md">English</a> · <strong>简体中文</strong></p>
 
-![DSH 体验优化器](assets/banner.svg)
+![DSH 插件体检](assets/banner.svg)
 
 <p align="center">
   <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="持续集成" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>

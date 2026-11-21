@@ -66,7 +66,7 @@ pnpm market:check
 
 ## Web 控制台
 
-- 设置 → 插件 → 体验优化。
+- 设置 → 插件 → 插件体检。
 - 预览：[`assets/ui-preview.png`](../assets/ui-preview.png)
 - 文档：[`docs/ui.md`](../docs/ui.md)
 

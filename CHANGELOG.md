@@ -22,6 +22,11 @@ All notable changes to this repository are documented here. Versions follow
 - Added micro-interactions across the panel: animated tab changes, collapsible
   card height/opacity transitions, button press feedback, modal entrance, and
   reduced-motion fallbacks.
+- Promo page now leads with **插件体检 / Plugin checkup**, states that 54% is a
+  sample reduction and not a close target, and answers the “keyword match vs
+  task usage” question directly. Quiet plugins with schedules, prior calls, or
+  no ledger are described as protected or sent to review.
+- Replaced the stale UI preview with a render of the new checkup panel.
 - Public install surfaces now use `npm i <package>` everywhere: root READMEs,
   package READMEs, the Settings “copy install command” action, marketplace copy,
   and the promo page. The optional recipe is `npm i dsh-plugin-recipe`.

@@ -27,12 +27,12 @@ const recipe = readPackage('packages/plugin-recipe')
 const index = {
   format: 1,
   title: {
-    en: 'DSH Experience Optimizer',
-    zh: 'DSH 体验优化套件',
+    en: 'DSH Plugin Checkup',
+    zh: 'DSH 插件体检套件',
   },
   description: {
-    en: 'Plugin diet, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.',
-    zh: 'DSH 插件减负、兼容性体检与工作流蓝图套件。',
+    en: 'Plugin checkup, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.',
+    zh: 'DSH 插件体检、兼容性检查与工作流蓝图套件。',
   },
   metadata: {
     categories: {
@@ -42,7 +42,7 @@ const index = {
     },
     labels: {
       compatibility: { title: { en: 'Compatibility diagnostics', zh: '兼容性诊断' } },
-      diet: { title: { en: 'Context diet', zh: '上下文减负' } },
+      diet: { title: { en: 'Context checkup', zh: '上下文体检' } },
       workflow: { title: { en: 'Workflow planning', zh: '工作流规划' } },
     },
     sortKeys: {},
@@ -51,7 +51,7 @@ const index = {
     pluginEntry({
       pkg: trim,
       directory: 'packages/plugin-trim',
-      title: { en: 'DSH Plugin Trim', zh: 'DSH 插件减负与兼容性体检' },
+      title: { en: 'DSH Plugin Trim', zh: 'DSH 插件体检与兼容性检查' },
       description: {
         en: 'Scan plugin context cost, detect plugin/plugin, plugin/runtime, and profile/workspace conflicts, then apply low-risk reversible trimming only after confirmation.',
         zh: '扫描插件上下文成本，检测插件↔插件、插件↔DSH、Profile/工作区冲突；只在用户确认后应用低风险、可回滚的精简项。',
