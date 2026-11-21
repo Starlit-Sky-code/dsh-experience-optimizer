@@ -63,6 +63,8 @@ A plugin goes to review instead when it:
 
 A close candidate requires **zero calls in the usage window + non-zero attributable context cost + no schedule/trigger hint + high task confidence + low task match**. Even then, it is only a suggestion: confirmation and host approval are still required.
 
+**54% is sample data, not a close target. A wrong close costs more than keeping it on.** The decision is not a keyword match: task/session use, the ledger, schedule, and cost all matter; any uncertainty goes to review. Quiet plugins that only wake up at the right moment are the easiest to close by mistake, so schedules, prior calls, or no ledger keep them protected or in review.
+
 ## Safety
 
 - Read-only scanning; no `!!js`, no importing unloaded plugins, no network analysis.
