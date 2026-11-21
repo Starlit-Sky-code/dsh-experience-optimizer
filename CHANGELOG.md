@@ -3,6 +3,19 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Settings puts the read-only configuration boundary notice at the very top.
+  The UI never writes config; editing the profile patch still requires a plugin
+  reload, and approval/protection logic is never skipped.
+- README install now leads with `npm i dsh-plugin-trim`; the optional recipe and
+  profile-scoped install remain documented as fallbacks.
+- The promo page is live at
+  <https://starlit-sky-code.github.io/dsh-experience-optimizer/> and deploys from
+  the `promo-site` branch.
+
 ## [0.3.7] - 2026-11-21
 
 ### Changed

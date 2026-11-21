@@ -1,6 +1,6 @@
 # DSH 体验优化器
 
-<p align="center"><a href="README.en.md">English</a> · <strong>简体中文</strong></p>
+<p align="center"><a href="https://starlit-sky-code.github.io/dsh-experience-optimizer/">在线宣传页</a> · <a href="README.en.md">English</a> · <strong>简体中文</strong></p>
 
 ![DSH 体验优化器](assets/banner.svg)
 
@@ -17,17 +17,11 @@
 ## 安装
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim
-dsh plugin --profile web add dsh-plugin-recipe
+npm i dsh-plugin-trim
 ```
 
-> 安装命令省略版本号即取 latest。`npm i` 是 `npm install` 的官方别名；如果 npm CDN 暂时返回 404，请使用下方 Release tarball。
-
-如果只是安装 npm 包（作为依赖或在项目里使用）：
-
-```bash
-npm i dsh-plugin-trim dsh-plugin-recipe
-```
+> 省略版本号即取 latest。工作流配方是可选的：`npm i dsh-plugin-recipe`。
+> 如果插件没有出现在设置页，用 `dsh plugin --profile web add dsh-plugin-trim` 装进当前 profile；npm CDN 返回 404 时请使用下方 Release tarball。
 
 安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
 

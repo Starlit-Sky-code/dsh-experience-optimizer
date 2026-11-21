@@ -1,6 +1,6 @@
 # DSH Experience Optimizer
 
-<p align="center"><strong>English</strong> · <a href="README.md">简体中文</a></p>
+<p align="center"><strong>English</strong> · <a href="README.md">简体中文</a> · <a href="https://starlit-sky-code.github.io/dsh-experience-optimizer/">Live site</a></p>
 
 ![DSH Experience Optimizer](assets/banner.svg)
 
@@ -17,15 +17,11 @@ Install either plugin independently, or use both in one native settings console.
 ## Install
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim
-dsh plugin --profile web add dsh-plugin-recipe
+npm i dsh-plugin-trim
 ```
 
-No `@version` means latest. `npm i` is the official alias of `npm install`; for a normal package install:
-
-```bash
-npm i dsh-plugin-trim dsh-plugin-recipe
-```
+> No `@version` means latest. The workflow recipe is optional: `npm i dsh-plugin-recipe`.
+> If the plugin does not appear in Settings, install it into the current profile with `dsh plugin --profile web add dsh-plugin-trim`; use the Release tarball below if npm CDN returns 404.
 
 Open **Settings → Experience Optimizer** after installing.
 

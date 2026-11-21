@@ -129,8 +129,11 @@ describe('client onboarding and pages', () => {
 
     const settings = tabs.find((button) => button.textContent?.trim() === '设置')
     await act(async () => { settings?.click(); await sleep(80) })
-    expect(container.textContent).toContain('当前生效设置')
-    expect(container.textContent).not.toContain('守卫')
+    const settingsText = container.textContent || ''
+    expect(settingsText).toContain('设置页不会直接改配置')
+    expect(settingsText).toContain('审批与保护逻辑不会因为改设置而跳过')
+    expect(settingsText.indexOf('设置页不会直接改配置')).toBeLessThan(settingsText.indexOf('当前生效设置'))
+    expect(settingsText).not.toContain('守卫')
 
     const language = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'EN')
     expect(language).toBeDefined()

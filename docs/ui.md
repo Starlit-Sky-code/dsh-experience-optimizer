@@ -61,6 +61,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ### 设置
 
+- 顶部先说明设置页只读：UI 不写入配置，修改后需重新加载插件；
 - 只读展示当前配置集、运行模式、审批策略、建议策略、使用账本和草稿上限；
 - 展示 `protect` / `pinned` 名单；
 - 生成可复制的 `dsh-plugin-trim` 配置补丁；

@@ -420,6 +420,7 @@ window.__ModuleLoader__.load({
         .eo-steps li{margin:0 0 8px;padding-left:2px}
         .eo-steps strong{color:var(--eo-primary);font-weight:500}
         .eo-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+        .eo-settings-readonly{border-left:3px solid var(--eo-primary);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05))}
         .eo-settings-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:.5px solid var(--eo-border);font-size:13px;line-height:20px}
         .eo-settings-row:last-child{border-bottom:0}
         .eo-settings-row span:first-child{color:var(--eo-secondary);flex:0 0 auto}
@@ -1566,6 +1567,15 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
+              className: 'eo-settings-readonly',
+              title: tr('设置页不会直接改配置', 'This page does not edit config directly'),
+              subtitle: tr('只读视图；修改请写入配置补丁', 'Read-only; edit the profile patch to change'),
+            },
+            h('div', { className: 'eo-muted' }, tr('为避免 UI 绕过 DSH 的配置边界，这里只展示当前生效值与可复制片段。修改后请重新加载插件；审批与保护逻辑不会因为改设置而跳过。', 'To avoid bypassing DSH configuration boundaries, this page only shows effective values and a copyable snippet. Reload the plugin after editing; approval and protection are never skipped.')),
+          ),
+          h(
+            Card,
+            {
               title: tr('界面偏好', 'Interface preferences'),
               subtitle: tr('只作用于插件减负页；偏好保存在本浏览器', 'Applies to the Plugin diet page; saved in this browser'),
             },
@@ -1677,11 +1687,6 @@ window.__ModuleLoader__.load({
               extra: h(Button, { variant: 'accent', onClick: () => void copyConfig(settings) }, tr('复制片段', 'Copy snippet')),
             },
             h('pre', { className: 'eo-codeblock' }, configPatch(settings)),
-          ),
-          h(
-            Card,
-            { title: tr('说明', 'Notes'), subtitle: tr('设置页不会直接改配置', 'This page does not edit config directly') },
-            h('div', { className: 'eo-muted' }, tr('为避免 UI 绕过 DSH 的配置边界，这里只展示当前生效值与可复制片段。修改后请重新加载插件；审批与保护逻辑不会因为改设置而跳过。', 'To avoid bypassing DSH configuration boundaries, this page only shows effective values and a copyable snippet. Reload the plugin after editing; approval and protection are never skipped.')),
           ),
         )
       }
