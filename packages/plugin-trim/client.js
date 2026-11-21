@@ -23,6 +23,175 @@ window.__ModuleLoader__.load({
       ['research', '调研'],
     ]
 
+    const LOCALE_KEY = 'dsh-experience-optimizer.locale'
+    const ONBOARDING_KEY = 'dsh-experience-optimizer.onboarding.v1'
+    const ABOUT_LINKS = {
+      repo: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
+      npmTrim: 'https://www.npmjs.com/package/dsh-plugin-trim',
+      npmRecipe: 'https://www.npmjs.com/package/dsh-plugin-recipe',
+      releases: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases',
+      issues: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues',
+      homepage: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
+      qqGroup: '',
+      qqLink: '',
+      donate: [],
+    }
+    const COPYRIGHT = 'Copyright © 2026 Starlit Sky · AGPL-3.0-only'
+    const TABS = [
+      { id: 'trim', zh: '插件减负', en: 'Plugin diet', icon: 'gauge' },
+      { id: 'recipe', zh: '工作流配方', en: 'Workflow recipe', icon: 'recipe' },
+      { id: 'tutorial', zh: '教程', en: 'Guide', icon: 'book' },
+      { id: 'about', zh: '关于', en: 'About', icon: 'info' },
+      { id: 'settings', zh: '设置', en: 'Settings', icon: 'settings' },
+    ]
+    const EN_TEXT = {
+      '插件减负': 'Plugin diet',
+      '工作流配方': 'Workflow recipe',
+      '教程': 'Guide',
+      '关于': 'About',
+      '设置': 'Settings',
+      '减负与兼容': 'Diet & compatibility',
+      '可归属上下文': 'Attributable context',
+      '启用插件': 'Enabled plugins',
+      '兼容性': 'Compatibility',
+      '写操作': 'Write access',
+      '可应用': 'Ready',
+      '只读': 'Read-only',
+      '上下文成本': 'Context cost',
+      '插件清单': 'Plugin inventory',
+      '精简方案': 'Slim plan',
+      '兼容性检查': 'Compatibility check',
+      '搜索插件': 'Search plugins',
+      '搜索兼容性': 'Search findings',
+      '名称 / 描述': 'Name / description',
+      '代码 / 标题 / 对象': 'Code / title / subject',
+      '全部': 'All',
+      '启用': 'Enabled',
+      '禁用': 'Disabled',
+      '受保护': 'Protected',
+      '已启用': 'Enabled',
+      '已禁用': 'Disabled',
+      '正常': 'OK',
+      '不兼容': 'Incompatible',
+      '警告': 'Warning',
+      '插件': 'Plugin',
+      '状态': 'Status',
+      '保护': 'Protected',
+      '兼容状态': 'Compatibility',
+      '上下文': 'Context',
+      '占比': 'Share',
+      '调用': 'Calls',
+      '查看全部': 'Show all',
+      '收起': 'Collapse',
+      '刷新': 'Refresh',
+      '读取中…': 'Loading…',
+      '生成方案': 'Build plan',
+      '生成中…': 'Building…',
+      '任务类型': 'Task type',
+      '任务目标（可选）': 'Goal (optional)',
+      '自动识别': 'Auto-detect',
+      '保留': 'Keep',
+      '复核': 'Review',
+      '建议关闭': 'Close candidate',
+      '未用可关闭': 'Unused candidate',
+      '人工复核': 'Review',
+      '任务：': 'Task: ',
+      '风险：': 'Risk: ',
+      '评分': 'Score',
+      '周期/触发器': 'Scheduled / trigger',
+      '有调用记录': 'Used before',
+      '窗口内 0 调用': 'No calls in window',
+      '无使用账本': 'No usage ledger',
+      '证据强': 'Strong evidence',
+      '证据弱': 'Weak evidence',
+      '证据不足': 'Insufficient evidence',
+      '判断依据：描述匹配只说明“可能相关”；出现定时/触发语义、已有调用记录、无使用账本或任务置信度不足时，只进入人工复核。只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭，且仍需确认与安全确认。': 'Evidence rule: a description match only means “possibly relevant”. Scheduled/trigger plugins, plugins with calls, an empty usage ledger, or low task confidence go to review. A close candidate requires zero calls in the window, attributable context cost, no schedule/trigger hint, and high task confidence — and still needs confirmation and host approval.',
+      '全选低风险': 'Select low-risk',
+      '清空': 'Clear',
+      '应用选中': 'Apply selected',
+      '恢复最近': 'Restore latest',
+      '显示信息': 'Show info',
+      '隐藏信息': 'Hide info',
+      '需要处理': 'Needs attention',
+      '无阻断': 'No blockers',
+      '没有匹配的兼容性问题。': 'No matching compatibility findings.',
+      '没有匹配的插件。': 'No matching plugins.',
+      '当前配置': 'Current profile',
+      '兼容状态': 'Compatibility',
+      '运行模式': 'Mode',
+      '审批策略': 'Approval',
+      '审批阈值': 'Approval threshold',
+      '建议策略': 'Suggestion policy',
+      '使用账本': 'Usage ledger',
+      '账本保留': 'Ledger retention',
+      '草稿/还原点上限': 'Draft/snapshot limit',
+      '复制片段': 'Copy snippet',
+      '配置片段': 'Configuration snippet',
+      '说明': 'Notes',
+      '项目信息': 'Project',
+      '交流与支持': 'Community & support',
+      '项目链接': 'Links',
+      '版权': 'Copyright',
+      '新手引导': 'First-run guide',
+      '重新查看新手引导': 'Replay first-run guide',
+      '开始使用': 'Get started',
+      '查看完整教程': 'Open full guide',
+      '跳过': 'Skip',
+      '下一步': 'Next',
+      '上一步': 'Back',
+      '完成': 'Done',
+      '待补充': 'To be added',
+      '捐赠方式：待补充': 'Donation methods: to be added',
+      'QQ 群：待补充': 'QQ group: to be added',
+      '复制安装命令': 'Copy install command',
+      '打开完整教程': 'Open full guide',
+      '仅建议，先确认': 'Suggestion only — confirm first',
+      '先量成本': 'Measure first',
+      '再生成方案': 'Build a plan',
+      '最后安全确认': 'Confirm safely',
+    }
+    let CURRENT_LOCALE = 'zh'
+    function tr(zh, en) {
+      return CURRENT_LOCALE === 'zh' ? zh : (en === undefined ? (EN_TEXT[zh] === undefined ? zh : EN_TEXT[zh]) : en)
+    }
+    function browserStorage() {
+      try {
+        return typeof window !== 'undefined' && window.localStorage ? window.localStorage : undefined
+      } catch {
+        return undefined
+      }
+    }
+    function detectLocale() {
+      const storage = browserStorage()
+      try {
+        const saved = storage && storage.getItem(LOCALE_KEY)
+        if (saved === 'zh' || saved === 'en') return saved
+      } catch {
+        // localStorage may be unavailable
+      }
+      try {
+        return String(navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en'
+      } catch {
+        return 'zh'
+      }
+    }
+    function persistLocale(locale) {
+      const storage = browserStorage()
+      try { if (storage) storage.setItem(LOCALE_KEY, locale) } catch { /* ignore */ }
+    }
+    function readOnboarding() {
+      const storage = browserStorage()
+      try { return storage ? storage.getItem(ONBOARDING_KEY) === '1' : false } catch { return false }
+    }
+    function writeOnboarding() {
+      const storage = browserStorage()
+      try { if (storage) storage.setItem(ONBOARDING_KEY, '1') } catch { /* ignore */ }
+    }
+    function resetOnboarding() {
+      const storage = browserStorage()
+      try { if (storage) storage.removeItem(ONBOARDING_KEY) } catch { /* ignore */ }
+    }
+
     const CSS = `
 .eo-root{--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
 .eo-root *{box-sizing:border-box}
@@ -32,15 +201,49 @@ window.__ModuleLoader__.load({
 .eo-sub{margin:4px 0 0;color:var(--eo-tertiary);font-size:13px;line-height:20px}
 .eo-hero-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
 .eo-status{font:400 11px/1 var(--eo-code);color:var(--eo-tertiary);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.eo-tabs{display:flex;gap:18px;border-bottom:.5px solid var(--eo-border);margin:0}
-.eo-tab{appearance:none;border:0;background:transparent;color:var(--eo-tertiary);font:inherit;font-size:13px;line-height:20px;padding:7px 1px 9px;cursor:pointer;position:relative;border-radius:0}
+.eo-tabs{display:flex;gap:18px;border-bottom:.5px solid var(--eo-border);margin:0;overflow-x:auto;scrollbar-width:none}
+        .eo-tabs::-webkit-scrollbar{display:none}
+.eo-tab{appearance:none;border:0;background:transparent;color:var(--eo-tertiary);font:inherit;font-size:13px;line-height:20px;padding:7px 1px 9px;cursor:pointer;position:relative;border-radius:0;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+        .eo-icon{flex:0 0 auto}
+        .eo-progress-track{display:block;width:100%;min-width:40px;height:4px;border-radius:4px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));overflow:hidden;margin-top:5px}
+        .eo-progress-track i{display:block;height:100%;border-radius:4px;background:var(--eo-primary);opacity:.65;transition:width .2s ease;min-width:2px}
+        .eo-severity-bar{display:flex;gap:3px;height:5px;margin:0 0 10px}
+        .eo-severity-bar span{display:block;height:100%;border-radius:3px}
+        .eo-severity-error{background:var(--eo-error)}
+        .eo-severity-warn{background:var(--dsw-alias-state-warning-primary,#9a6700)}
+        .eo-severity-info{background:var(--dsw-alias-state-business-primary,#4a7fd6)}
+        .eo-severity-empty{background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.12));flex:1}
+        .eo-progress-ok i{background:var(--eo-success)}
+        .eo-progress-warn i{background:var(--dsw-alias-state-warning-primary,#9a6700)}
+        .eo-progress-danger i{background:var(--eo-error)}
+        .eo-progress-dots{display:flex;gap:6px;align-items:center;margin:12px 0 2px}
+        .eo-progress-dot{width:6px;height:6px;border-radius:50%;background:var(--eo-border-strong)}
+        .eo-progress-dot-active{width:18px;border-radius:4px;background:var(--eo-primary)}
+        .eo-onboarding{width:min(560px,100%)}
+        .eo-onboarding-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+        .eo-onboarding-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.08));color:var(--eo-primary);flex:0 0 auto}
+        .eo-onboarding-kicker{font:500 10px/16px var(--eo-code);letter-spacing:.12em;text-transform:uppercase;color:var(--eo-tertiary)}
+        .eo-onboarding h3{margin:2px 0 0;font-size:18px;line-height:26px}
+        .eo-about-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+        .eo-about-card{border:.5px solid var(--eo-border);border-radius:10px;padding:12px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.03))}
+        .eo-about-card h4{margin:0 0 6px;font-size:13px;line-height:20px;font-weight:500}
+        .eo-about-card p,.eo-about-card li{font-size:12px;line-height:19px;color:var(--eo-tertiary)}
+        .eo-link-list{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+        .eo-link-list a{color:var(--eo-primary);text-decoration:none;font-size:12px;line-height:19px;display:inline-flex;gap:6px;align-items:center;word-break:break-all}
+        .eo-link-list a:hover{text-decoration:underline}
+        .eo-about-icon{width:64px;height:64px;border-radius:18px;object-fit:cover;display:block;margin:0 auto}
+        .eo-copyright{text-align:center;color:var(--eo-tertiary);font-size:11px;line-height:17px;margin-top:8px}
+        .eo-install-command{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .eo-table-wrap{overflow-x:auto}
+        .eo-share-cell{min-width:64px}
+        @media(max-width:680px){.eo-col-secondary{display:none}.eo-about-grid{grid-template-columns:1fr}}
 .eo-tab:hover{color:var(--eo-primary)}
 .eo-tab-active{color:var(--eo-primary);font-weight:500}
 .eo-tab-active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1.5px;background:var(--eo-primary);border-radius:1px}
 .eo-stack{display:flex;flex-direction:column;gap:14px}
 .eo-stack>.eo-metrics{order:0}
-.eo-stack>[data-section="inventory"]{order:1}
-.eo-stack>[data-section="draft"]{order:2}
+.eo-stack>[data-section="draft"]{order:1}
+.eo-stack>[data-section="inventory"]{order:2}
 .eo-stack>[data-section="compat"]{order:3}
 .eo-stack>[data-section="context"]{order:4}
 .eo-stack>[data-section="result"]{order:5}
@@ -197,13 +400,14 @@ window.__ModuleLoader__.load({
       return h('span', { className: 'eo-badge eo-badge-' + tone }, children)
     }
 
-    function Metric({ label, value, hint, tone = 'neutral' }) {
+    function Metric({ label, value, hint, tone = 'neutral', progress, progressTone = 'neutral' }) {
       return h(
         'div',
         { className: 'eo-metric' },
         h('div', { className: 'eo-metric-label' }, label),
         h('div', { className: 'eo-metric-value', 'data-tone': tone }, value),
         hint ? h('div', { className: 'eo-metric-hint' }, hint) : null,
+        progress !== undefined ? h(Progress, { value: progress, tone: progressTone, label: label }) : null,
       )
     }
 
@@ -253,15 +457,15 @@ window.__ModuleLoader__.load({
     }
 
     function actionLabel(action) {
-      return (
-        {
-          keep: '保留',
-          enable: '建议启用',
-          'suggest-disable': '建议关闭',
-          'disable-if-unused': '未用可关闭',
-          review: '人工复核',
-        }[action] || action
-      )
+      const map = {
+        keep: ['保留', 'Keep'],
+        enable: ['建议启用', 'Enable candidate'],
+        'suggest-disable': ['建议关闭', 'Close candidate'],
+        'disable-if-unused': ['未用可关闭', 'Unused candidate'],
+        review: ['人工复核', 'Review'],
+      }
+      const pair = map[action]
+      return pair ? tr(pair[0], pair[1]) : action
     }
 
     function actionTone(action) {
@@ -289,7 +493,7 @@ window.__ModuleLoader__.load({
         {
           'plugin-runtime': '插件 ↔ DSH',
           'plugin-plugin': '插件 ↔ 插件',
-          profile: '配置集',
+          profile: tr('当前配置', 'Current profile'),
           workspace: '工作区',
         }[domain] || domain
       )
@@ -304,41 +508,49 @@ window.__ModuleLoader__.load({
     }
 
     function taskLabel(tag) {
-      return (
-        {
-          bugfix: '修复',
-          feature: '新功能',
-          review: '审查',
-          docs: '文档',
-          release: '发布',
-          report: '报告',
-          research: '调研',
-          unknown: '未知',
-        }[tag] || tag
-      )
+      const map = {
+        bugfix: ['修复', 'Bugfix'],
+        feature: ['新功能', 'Feature'],
+        review: ['审查', 'Review'],
+        docs: ['文档', 'Docs'],
+        release: ['发布', 'Release'],
+        report: ['报告', 'Report'],
+        research: ['调研', 'Research'],
+        unknown: ['未知', 'Unknown'],
+      }
+      const pair = map[tag]
+      return pair ? tr(pair[0], pair[1]) : tag
     }
 
     function riskLabel(risk) {
-      return { low: '低', medium: '中', high: '高' }[risk] || risk
+      const pair = { low: ['低', 'Low'], medium: ['中', 'Medium'], high: ['高', 'High'] }[risk]
+      return pair ? tr(pair[0], pair[1]) : risk
     }
 
     function guardLabel(status) {
-      return (
-        {
-          ok: '正常',
-          protected: '受保护',
-          incompatible: '不兼容',
-          warn: '警告',
-        }[status] || status
-      )
+      const pair = {
+        ok: ['正常', 'OK'],
+        protected: ['受保护', 'Protected'],
+        incompatible: ['不兼容', 'Incompatible'],
+        warn: ['警告', 'Warning'],
+      }[status]
+      return pair ? tr(pair[0], pair[1]) : status
     }
 
     function usageLabel(state) {
-      return state === 'used' ? '有调用记录' : state === 'unused' ? '窗口内 0 调用' : '无使用账本'
+      return state === 'used'
+        ? tr('有调用记录', 'Used before')
+        : state === 'unused'
+          ? tr('窗口内 0 调用', 'No calls in window')
+          : tr('无使用账本', 'No usage ledger')
     }
 
     function evidenceLabel(level) {
-      return level === 'strong' ? '证据强' : level === 'weak' ? '证据弱' : '证据不足'
+      return level === 'strong'
+        ? tr('证据强', 'Strong evidence')
+        : level === 'weak'
+          ? tr('证据弱', 'Weak evidence')
+          : tr('证据不足', 'Insufficient evidence')
     }
 
     function splitList(value) {
@@ -371,8 +583,176 @@ window.__ModuleLoader__.load({
       return body.data
     }
 
+    const ICON_PATHS = {
+      gauge: [
+        ['path', { d: 'M4 15a8 8 0 1 1 16 0' }],
+        ['path', { d: 'M12 15l4-5' }],
+        ['circle', { cx: '12', cy: '15', r: '1.4', fill: 'currentColor', stroke: 'none' }],
+      ],
+      recipe: [
+        ['path', { d: 'M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z' }],
+        ['path', { d: 'M8 8h7M8 12h7M8 16h4' }],
+      ],
+      book: [
+        ['path', { d: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22z' }],
+        ['path', { d: 'M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22z' }],
+      ],
+      info: [
+        ['circle', { cx: '12', cy: '12', r: '9' }],
+        ['path', { d: 'M12 11v6M12 7.5h.01' }],
+      ],
+      settings: [
+        ['circle', { cx: '12', cy: '12', r: '3' }],
+        ['path', { d: 'M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3v-4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.4 7 7.2 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V3h4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z' }],
+      ],
+      shield: [
+        ['path', { d: 'M12 3l7 3v5c0 4.5-3 7.7-7 10-4-2.3-7-5.5-7-10V6z' }],
+        ['path', { d: 'M9 12l2 2 4-5' }],
+      ],
+      restore: [
+        ['path', { d: 'M4 10a8 8 0 1 1 2 5.3' }],
+        ['path', { d: 'M4 4v6h6' }],
+      ],
+      context: [
+        ['path', { d: 'M12 3l9 5-9 5-9-5z' }],
+        ['path', { d: 'M3 12l9 5 9-5M3 16l9 5 9-5' }],
+      ],
+      plugin: [
+        ['rect', { x: '4', y: '4', width: '6', height: '6', rx: '1' }],
+        ['rect', { x: '14', y: '4', width: '6', height: '6', rx: '1' }],
+        ['rect', { x: '4', y: '14', width: '6', height: '6', rx: '1' }],
+        ['rect', { x: '14', y: '14', width: '6', height: '6', rx: '1' }],
+      ],
+    }
+
+    function Icon({ name, size = 16 }) {
+      const paths = ICON_PATHS[name] || ICON_PATHS.info
+      return h(
+        'svg',
+        {
+          width: size,
+          height: size,
+          viewBox: '0 0 24 24',
+          fill: 'none',
+          stroke: 'currentColor',
+          strokeWidth: 1.7,
+          strokeLinecap: 'round',
+          strokeLinejoin: 'round',
+          'aria-hidden': 'true',
+          focusable: 'false',
+          className: 'eo-icon',
+        },
+        paths.map(([tag, props], index) => h(tag, { key: index, ...props })),
+      )
+    }
+
+    function Progress({ value, tone = 'neutral', label }) {
+      const pct = Math.max(0, Math.min(100, Number(value) || 0))
+      return h(
+        'div',
+        {
+          className: 'eo-progress-track eo-progress-' + tone,
+          role: 'progressbar',
+          'aria-valuenow': Math.round(pct),
+          'aria-valuemin': 0,
+          'aria-valuemax': 100,
+          'aria-label': label,
+          title: label,
+        },
+        h('i', { style: { width: pct + '%' } }),
+      )
+    }
+
+    function OnboardingModal({ step, setStep, onFinish, onTutorial, onClose }) {
+      const steps = [
+        {
+          icon: 'gauge',
+          zh: '先量成本',
+          en: 'Measure first',
+          zhBody: '插件清单会显示每个插件占用的上下文比例；未归属部分单独标出。你砍掉的不只是工具白名单。',
+          enBody: 'The plugin inventory shows each plugin’s share of attributable context. Unattributed context is kept separate — the cost is not only the tool allowlist.',
+        },
+        {
+          icon: 'recipe',
+          zh: '再生成方案',
+          en: 'Build a plan',
+          zhBody: '选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。',
+          enBody: 'Pick a task or describe the goal, then build a plan. It is a draft by default and changes nothing.',
+        },
+        {
+          icon: 'shield',
+          zh: '最后安全确认',
+          en: 'Confirm safely',
+          zhBody: '只有依据充分才标建议关闭；定时/触发插件、有调用记录的插件只进入复核。应用前写入还原点，随时恢复。',
+          enBody: 'Only strong evidence becomes a close candidate. Scheduled/trigger plugins and plugins with calls go to review. A restore point is written before any change.',
+        },
+      ]
+      const current = steps[step] || steps[0]
+      useEffect(() => {
+        const onKey = (event) => { if (event.key === 'Escape') onClose() }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+      }, [onClose])
+      return h(
+        'div',
+        {
+          className: 'eo-modal-backdrop',
+          onClick: onClose,
+          role: 'presentation',
+        },
+        h(
+          'div',
+          {
+            className: 'eo-modal eo-onboarding',
+            role: 'dialog',
+            'aria-modal': 'true',
+            'aria-labelledby': 'eo-onboarding-title',
+            onClick: (event) => event.stopPropagation(),
+          },
+          h(
+            'div',
+            { className: 'eo-onboarding-head' },
+            h('span', { className: 'eo-onboarding-icon' }, h(Icon, { name: current.icon, size: 22 })),
+            h(
+              'div',
+              null,
+              h('div', { className: 'eo-onboarding-kicker' }, tr('新手引导', 'First-run guide')),
+              h('h3', { id: 'eo-onboarding-title' }, tr(current.zh, current.en)),
+            ),
+          ),
+          h('p', null, tr(current.zhBody, current.enBody)),
+          h(
+            'div',
+            { className: 'eo-progress-dots', 'aria-label': tr('新手引导进度', 'Guide progress') },
+            steps.map((item, index) =>
+              h('span', {
+                key: item.en,
+                className: index === step ? 'eo-progress-dot eo-progress-dot-active' : 'eo-progress-dot',
+              }),
+            ),
+          ),
+          h(
+            'div',
+            { className: 'eo-modal-actions' },
+            h(Button, { variant: 'ghost', onClick: onClose }, tr('跳过', 'Skip')),
+            step > 0
+              ? h(Button, { variant: 'ghost', onClick: () => setStep(step - 1) }, tr('上一步', 'Back'))
+              : null,
+            h(Button, { variant: 'ghost', onClick: onTutorial }, tr('查看完整教程', 'Open full guide')),
+            step < steps.length - 1
+              ? h(Button, { variant: 'accent', onClick: () => setStep(step + 1) }, tr('下一步', 'Next'))
+              : h(Button, { variant: 'accent', onClick: () => onFinish() }, tr('开始使用', 'Get started')),
+          ),
+        ),
+      )
+    }
+
     function ExperiencePanel() {
+
       const [tab, setTab] = useState('trim')
+      const [locale, setLocale] = useState(detectLocale)
+      const [showOnboarding, setShowOnboarding] = useState(false)
+      const [onboardingStep, setOnboardingStep] = useState(0)
       const [overview, setOverview] = useState(null)
       const [loading, setLoading] = useState(true)
       const [error, setError] = useState('')
@@ -409,6 +789,7 @@ window.__ModuleLoader__.load({
       const [settings, setSettings] = useState(null)
       const [settingsBusy, setSettingsBusy] = useState(false)
       const [settingsError, setSettingsError] = useState('')
+      CURRENT_LOCALE = locale
 
       const notify = useCallback((message, kind) => {
         setToast({ message, kind: kind || 'ok', id: Date.now() })
@@ -436,6 +817,33 @@ window.__ModuleLoader__.load({
       useEffect(() => {
         void refresh()
       }, [refresh])
+
+      useEffect(() => {
+        if (typeof document !== 'undefined') document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en'
+        persistLocale(locale)
+      }, [locale])
+
+      useEffect(() => {
+        if (!readOnboarding()) setShowOnboarding(true)
+      }, [])
+
+      const switchLocale = useCallback((next) => {
+        setLocale(next)
+        persistLocale(next)
+      }, [])
+
+      const finishOnboarding = useCallback((destination) => {
+        writeOnboarding()
+        setShowOnboarding(false)
+        setOnboardingStep(0)
+        if (destination === 'tutorial') setTab('tutorial')
+      }, [])
+
+      const replayOnboarding = useCallback(() => {
+        resetOnboarding()
+        setOnboardingStep(0)
+        setShowOnboarding(true)
+      }, [])
 
       const loadSettings = useCallback(async () => {
         setSettingsBusy(true)
@@ -493,7 +901,13 @@ window.__ModuleLoader__.load({
         : 0
       const totalBundles = overview ? overview.bundles.length : 0
       const totalContextTokens = overview ? overview.context.totalTokens : 0
+      const attributedContext = overview
+        ? Math.max(0, overview.context.totalTokens - overview.context.unattributedTokens)
+        : 0
+      const contextPct = totalContextTokens > 0 ? (attributedContext / totalContextTokens) * 100 : 0
+      const enabledPct = totalBundles > 0 ? (enabledBundles / totalBundles) * 100 : 0
       const compat = overview ? overview.compat : { error: 0, warn: 0, info: 0 }
+      const compatPct = compat.error > 0 ? 0 : compat.warn > 0 ? 50 : 100
       const byOwner = overview ? overview.context.byOwner : []
       const maxOwner = Math.max(1, ...byOwner.map((owner) => owner.tokens))
       const selectedIds = Object.keys(selected).filter((id) => selected[id])
@@ -574,7 +988,7 @@ window.__ModuleLoader__.load({
           if (result.token) setRollbackToken(result.token)
           notify(
             result.rolledBack
-              ? '应用未完成，已自动回滚'
+              ? '应用未完成，已自动恢复'
               : '已应用 ' +
                   result.items.filter((item) => item.status === 'applied').length +
                   ' 项',
@@ -604,7 +1018,7 @@ window.__ModuleLoader__.load({
           setApplyResult(null)
           setRollbackToken('')
           notify(
-            '已回滚 ' +
+            '已恢复 ' +
               result.items.filter((item) => item.status === 'restored').length +
               ' 项',
           )
@@ -677,8 +1091,8 @@ window.__ModuleLoader__.load({
           h(
             'div',
             { className: 'eo-hero-copy' },
-            h('h2', { className: 'eo-title' }, '体验优化'),
-            h('p', { className: 'eo-sub' }, '插件减负、兼容性体检与工作流蓝图。'),
+            h('h2', { className: 'eo-title' }, tr('体验优化', 'Experience Optimizer')),
+            h('p', { className: 'eo-sub' }, tr('插件减负、兼容性体检与工作流蓝图。', 'Plugin diet, compatibility checks, and workflow recipes.')),
           ),
           h(
             'div',
@@ -686,56 +1100,44 @@ window.__ModuleLoader__.load({
             h(
               'span',
               { className: 'eo-status', title: overview ? overview.profile.dir : '' },
-              overview ? '配置集：' + overview.profile.name : '读取中',
+              overview ? tr('当前配置：', 'Profile: ') + overview.profile.name : tr('读取中', 'Loading'),
+            ),
+            h(
+              Button,
+              {
+                variant: 'ghost',
+                onClick: () => switchLocale(locale === 'zh' ? 'en' : 'zh'),
+                title: tr('切换语言', 'Switch language'),
+              },
+              locale === 'zh' ? 'EN' : '中文',
             ),
             h(
               Button,
               { onClick: refresh, disabled: loading, variant: 'ghost' },
-              loading ? '刷新中…' : '刷新',
+              loading ? tr('刷新中…', 'Refreshing…') : tr('刷新', 'Refresh'),
             ),
           ),
         ),
         h(
           'div',
-          { className: 'eo-tabs' },
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'eo-tab' + (tab === 'trim' ? ' eo-tab-active' : ''),
-              onClick: () => setTab('trim'),
-            },
-            '减负与兼容',
-          ),
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'eo-tab' + (tab === 'recipe' ? ' eo-tab-active' : ''),
-              onClick: () => setTab('recipe'),
-            },
-            '工作流配方',
-          ),
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'eo-tab' + (tab === 'tutorial' ? ' eo-tab-active' : ''),
-              onClick: () => setTab('tutorial'),
-            },
-            '教程',
-          ),
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'eo-tab' + (tab === 'settings' ? ' eo-tab-active' : ''),
-              onClick: () => {
-                setTab('settings')
-                if (settings === null && !settingsBusy) void loadSettings()
+          { className: 'eo-tabs', role: 'tablist' },
+          TABS.map((item) =>
+            h(
+              'button',
+              {
+                key: item.id,
+                type: 'button',
+                role: 'tab',
+                'aria-selected': tab === item.id,
+                className: 'eo-tab' + (tab === item.id ? ' eo-tab-active' : ''),
+                onClick: () => {
+                  setTab(item.id)
+                  if (item.id === 'settings' && settings === null && !settingsBusy) void loadSettings()
+                },
               },
-            },
-            '设置',
+              h(Icon, { name: item.icon, size: 15 }),
+              tr(item.zh, item.en),
+            ),
           ),
         ),
         error
@@ -758,11 +1160,13 @@ window.__ModuleLoader__.load({
           ? renderTutorial()
           : tab === 'settings'
             ? renderSettings()
-            : overview
-              ? tab === 'trim'
-                ? renderTrim()
-                : renderRecipe()
-              : null,
+            : tab === 'about'
+              ? renderAbout()
+              : overview
+                ? tab === 'trim'
+                  ? renderTrim()
+                  : renderRecipe()
+                : null,
         confirmState
           ? h(ConfirmModal, {
               state: confirmState,
@@ -775,90 +1179,100 @@ window.__ModuleLoader__.load({
         toast
           ? h('div', { className: 'eo-toast eo-toast-' + toast.kind }, toast.message)
           : null,
+        showOnboarding
+          ? h(OnboardingModal, {
+              step: onboardingStep,
+              setStep: setOnboardingStep,
+              onFinish: () => finishOnboarding(),
+              onTutorial: () => finishOnboarding('tutorial'),
+              onClose: () => finishOnboarding(),
+            })
+          : null,
       )
 
       function renderTutorial() {
         const quickStarts = [
           {
-            label: '代码审查',
-            desc: '先看兼容性，再生成审查任务的精简方案',
+            zhLabel: '代码审查', enLabel: 'Code review',
+            zhDesc: '先看兼容性，再生成审查任务的精简方案', enDesc: 'Check compatibility, then build a review plan',
             run: () => {
               setTaskTag('review')
-              setGoal('审查当前改动，指出风险、回归点和需要补测的地方')
+              setGoal(tr('审查当前改动，指出风险、回归点和需要补测的地方', 'Review current changes: risks, regressions, and missing tests'))
               setTab('trim')
-              notify('已填入审查任务，点击“生成方案”继续')
+              notify(tr('已填入审查任务，点击“生成方案”继续', 'Review task filled; click “Build plan” to continue'))
             },
           },
           {
-            label: '修复问题',
-            desc: '排除无关插件，保留调试与文件工具',
+            zhLabel: '修复问题', enLabel: 'Fix an issue',
+            zhDesc: '排除无关插件，保留调试与文件工具', enDesc: 'Drop unrelated plugins; keep debugging and file tools',
             run: () => {
               setTaskTag('bugfix')
-              setGoal('修复一个可复现的 bug，并验证没有回归')
+              setGoal(tr('修复一个可复现的 bug，并验证没有回归', 'Fix a reproducible bug and verify no regressions'))
               setTab('trim')
-              notify('已填入修复任务，点击“生成方案”继续')
+              notify(tr('已填入修复任务，点击“生成方案”继续', 'Bugfix task filled; click “Build plan” to continue'))
             },
           },
           {
-            label: '整理周报',
-            desc: '进入工作流配方，生成可导出的周报蓝图',
+            zhLabel: '整理周报', enLabel: 'Weekly report',
+            zhDesc: '进入工作流配方，生成可导出的周报蓝图', enDesc: 'Open the recipe builder for an exportable report blueprint',
             run: () => {
               setTab('recipe')
-              notify('已打开工作流配方，按表单确认范围与交付方式')
+              notify(tr('已打开工作流配方，按表单确认范围与交付方式', 'Recipe builder opened; confirm scope and delivery'))
             },
           },
+        ]
+        const steps = [
+          ['先扫描。', 'Scan first.', ' 打开「插件减负」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。', ' Open Plugin diet to see attributable context, compatibility, and inventory. The Share column makes resident cost visible.'],
+          ['再生成方案。', 'Build a plan.', ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。', ' Pick a task or write a goal, then Build plan. It only creates a draft; no plugin is changed.'],
+          ['看判断依据。', 'Read the evidence.', ' 只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭；其余进入人工复核。', ' Only zero calls in the window, attributable cost, no schedule/trigger hint, and high task confidence produce a close candidate. Everything else goes to review.'],
+          ['确认后应用。', 'Confirm and apply.', ' 勾选低风险项，点击“应用选中”，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, apply, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
+          ['需要工作流时。', 'Need a workflow?', ' 打开「工作流配方」，生成带审批级别的蓝图，导出 Markdown/JSON 运行手册。', ' Open Workflow recipe to generate a blueprint with approval levels and export Markdown/JSON.'],
+        ]
+        const faq = [
+          [tr('为什么我几乎没有“建议关闭”？', 'Why do I see almost no close candidates?'), tr('这是默认的保守策略：没有使用账本、当前任务置信度不够、插件带周期/触发器语义，或已经有调用记录时，只会进入人工复核。', 'This is the conservative default: no usage ledger, low task confidence, schedule/trigger hints, or existing calls all route to review.')],
+          [tr('每月才用一次的插件会被误伤吗？', 'Will a once-a-month plugin be hurt?'), tr('带“每月/每周/定时/提醒/日程/dream”等语义的插件会被硬保护。仍不放心时，把它加入配置的 protect 列表。', 'Plugins with monthly/weekly/schedule/reminder/calendar/dream hints are hard-protected. Add it to the protect list if you want extra safety.')],
+          [tr('应用后出问题怎么办？', 'What if something breaks after apply?'), tr('每次应用前都会写入还原点；在精简方案底部点击“恢复最近”，或让 Agent 调用 trim_rollback_profile。恢复同样需要安全确认。', 'A restore point is written before every apply. Use Restore latest, or call trim_rollback_profile. Rollback also requires host approval.')],
+          [tr('为什么应用还需要确认和审批？', 'Why do apply actions need confirmation and approval?'), tr('confirm: true 只是提案标记，真正授权来自安全确认返回 allowed-once；被拒绝、取消或审批服务不可用时一律不写入。', 'confirm: true is only a proposal marker. Host approval returning allowed-once is the real grant; rejection, cancellation, or unavailable approval never writes.')],
         ]
         return h(
           'div',
           { className: 'eo-stack' },
           h(
             Card,
-            { title: '5 分钟上手', subtitle: '从扫描到应用，每一步都可回滚' },
+            { title: tr('5 分钟上手', 'Five-minute guide'), subtitle: tr('从扫描到应用，每一步都可恢复', 'From scan to apply, every step is recoverable') },
             h(
               'ol',
               { className: 'eo-steps' },
-              h('li', null, h('strong', null, '先扫描。'), ' 打开「减负与兼容」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。'),
-              h('li', null, h('strong', null, '再生成方案。'), ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。'),
-              h('li', null, h('strong', null, '看判断依据。'), ' 只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭；其余进入人工复核。'),
-              h('li', null, h('strong', null, '确认后应用。'), ' 勾选低风险项，点击“应用选中”，核对弹窗后写入快照并应用；需要时可一键回滚。'),
-              h('li', null, h('strong', null, '需要工作流时。'), ' 打开「工作流配方」，生成带审批级别的蓝图，导出 Markdown/JSON 运行手册。'),
+              steps.map(([zhTitle, enTitle, zhBody, enBody], index) =>
+                h('li', { key: enTitle }, h('strong', null, tr(zhTitle, enTitle)), tr(zhBody, enBody)),
+              ),
             ),
           ),
           h(
             Card,
-            { title: '按任务快速开始', subtitle: '只是填入表单，不会直接修改插件' },
+            { title: tr('按任务快速开始', 'Quick start by task'), subtitle: tr('只是填入表单，不会直接修改插件', 'Only fills the form; changes nothing') },
             h(
               'div',
               { className: 'eo-inline' },
               quickStarts.map((item) =>
                 h(
                   'div',
-                  { key: item.label, className: 'eo-issue', style: { flex: '1 1 180px', flexDirection: 'column', alignItems: 'flex-start' } },
-                  h('strong', null, item.label),
-                  h('span', { className: 'eo-muted' }, item.desc),
-                  h(Button, { variant: 'ghost', onClick: item.run }, '开始'),
+                  { key: item.enLabel, className: 'eo-issue', style: { flex: '1 1 180px', flexDirection: 'column', alignItems: 'flex-start' } },
+                  h('strong', null, tr(item.zhLabel, item.enLabel)),
+                  h('span', { className: 'eo-muted' }, tr(item.zhDesc, item.enDesc)),
+                  h(Button, { variant: 'ghost', onClick: item.run }, tr('开始', 'Start')),
                 ),
               ),
             ),
           ),
           h(
             Card,
-            { title: '常见问题', subtitle: '先看证据，再做决定' },
-            h('details', { className: 'eo-faq' },
-              h('summary', null, '为什么我几乎没有“建议关闭”？'),
-              h('p', null, '这是默认的保守策略：没有使用账本、当前任务置信度不够、插件带周期/触发器语义，或已经有调用记录时，只会进入人工复核，不会给出建议关闭。'),
-            ),
-            h('details', { className: 'eo-faq' },
-              h('summary', null, '每月才用一次的插件会被误伤吗？'),
-              h('p', null, '带“每月/每周/定时/提醒/日程/dream”等语义的插件会被硬保护。仍不放心时，把它加入配置的 protect 列表。'),
-            ),
-            h('details', { className: 'eo-faq' },
-              h('summary', null, '应用后出问题怎么办？'),
-              h('p', null, '每次应用前都会写入快照；在精简方案底部点击“回滚最近”，或让 Agent 调用 trim_rollback_profile。回滚同样需要宿主审批。'),
-            ),
-            h('details', { className: 'eo-faq' },
-              h('summary', null, '为什么应用还需要确认和审批？'),
-              h('p', null, 'confirm: true 只是提案标记，真正授权来自宿主审批返回 allowed-once；被拒绝、取消或审批服务不可用时一律不写入。'),
+            { title: tr('常见问题', 'FAQ'), subtitle: tr('先看依据，再做决定', 'Read the evidence first') },
+            faq.map(([q, a]) =>
+              h('details', { className: 'eo-faq', key: q },
+                h('summary', null, q),
+                h('p', null, a),
+              ),
             ),
           ),
         )
@@ -890,71 +1304,181 @@ window.__ModuleLoader__.load({
       async function copyConfig(data) {
         try {
           await navigator.clipboard.writeText(configPatch(data))
-          notify('配置片段已复制；写入配置补丁后生效')
+          notify(tr('配置片段已复制；写入配置补丁后生效', 'Snippet copied; apply it to the profile patch'))
         } catch {
-          notify('无法访问剪贴板，请手动复制配置片段', 'warn')
+          notify(tr('无法访问剪贴板，请手动复制配置片段', 'Clipboard unavailable; copy the snippet manually'), 'warn')
         }
       }
 
       function renderSettings() {
         if (settingsBusy && settings === null) {
-          return h('div', { className: 'eo-loading' }, h('span', { className: 'eo-spinner' }), '正在读取当前生效设置…')
+          return h('div', { className: 'eo-loading' }, h('span', { className: 'eo-spinner' }), tr('正在读取当前生效设置…', 'Loading effective settings…'))
         }
         if (settingsError && settings === null) {
-          return h('div', { className: 'eo-error' }, h('span', null, settingsError), h(Button, { variant: 'ghost', onClick: loadSettings }, '重试'))
+          return h('div', { className: 'eo-error' }, h('span', null, settingsError), h(Button, { variant: 'ghost', onClick: loadSettings }, tr('重试', 'Retry')))
         }
-        if (!settings) return h('div', { className: 'eo-empty' }, '暂无设置数据。')
-        const policyLabel = settings.suggestionPolicy === 'balanced' ? '旧评分（仍保护周期与已用插件）' : '证据优先（推荐）'
-        const approvalLabel = settings.approvalMode === 'risk-based' ? '仅超过阈值时审批' : '每次工具写入都审批'
+        if (!settings) return h('div', { className: 'eo-empty' }, tr('暂无设置数据。', 'No settings data.'))
+        const policyLabel = settings.suggestionPolicy === 'balanced' ? tr('旧评分（仍保护周期与已用插件）', 'Legacy score (still protects scheduled/used plugins)') : tr('证据优先（推荐）', 'Evidence-first (recommended)')
+        const approvalLabel = settings.approvalMode === 'risk-based' ? tr('仅超过阈值时审批', 'Approve only above threshold') : tr('每次工具写入都审批', 'Approve every tool write')
         return h(
           'div',
           { className: 'eo-stack' },
           h(
             Card,
             {
-              title: '当前生效设置',
-              subtitle: '只读视图；修改请写入配置补丁',
-              extra: h(Button, { variant: 'ghost', onClick: loadSettings, disabled: settingsBusy }, settingsBusy ? '读取中…' : '刷新'),
+              title: tr('当前生效设置', 'Effective settings'),
+              subtitle: tr('只读视图；修改请写入配置补丁', 'Read-only; edit the profile patch to change'),
+              extra: h(Button, { variant: 'ghost', onClick: loadSettings, disabled: settingsBusy }, settingsBusy ? tr('读取中…', 'Loading…') : tr('刷新', 'Refresh')),
             },
             h(
               'div',
               { className: 'eo-settings-grid' },
-              h('div', { className: 'eo-settings-row' }, h('span', null, '配置集'), h('code', null, settings.profile)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '运行模式'), h('code', null, settings.mode === 'auto-safe' ? '自动安全（收窄建议）' : '建议模式')),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '审批策略'), h('code', null, approvalLabel)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '审批阈值'), h('code', null, String(settings.approvalThreshold) + ' 项')),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '建议策略'), h('code', null, policyLabel)),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '使用账本'), h('code', null, settings.trackUsage ? '开启' : '关闭')),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '账本保留'), h('code', null, settings.usageRetentionDays + ' 天')),
-              h('div', { className: 'eo-settings-row' }, h('span', null, '草稿/快照上限'), h('code', null, String(settings.maxDrafts))),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前配置', 'Profile')), h('code', null, settings.profile)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('运行模式', 'Mode')), h('code', null, settings.mode === 'auto-safe' ? tr('自动安全（收窄建议）', 'Auto-safe (narrower)') : tr('建议模式', 'Advice mode'))),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批策略', 'Approval')), h('code', null, approvalLabel)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), h('code', null, String(settings.approvalThreshold) + tr(' 项', ' items'))),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('建议策略', 'Suggestion policy')), h('code', null, policyLabel)),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('使用账本', 'Usage ledger')), h('code', null, settings.trackUsage ? tr('开启', 'On') : tr('关闭', 'Off'))),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('账本保留', 'Ledger retention')), h('code', null, settings.usageRetentionDays + tr(' 天', ' days'))),
+              h('div', { className: 'eo-settings-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), h('code', null, String(settings.maxDrafts))),
             ),
-            h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, '配置目录：' + settings.profileDir),
+            h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('配置目录：', 'Config directory: ') + settings.profileDir),
           ),
           h(
             Card,
-            { title: '保护与固定', subtitle: '这些插件永远不会进入自动建议' },
+            { title: tr('保护与固定', 'Protect & pin'), subtitle: tr('这些插件永远不会进入自动建议', 'These plugins never become automatic candidates') },
             settings.protect.length === 0 && settings.pinned.length === 0
-              ? h('div', { className: 'eo-empty' }, '尚未配置保护 / 固定名单。可在配置补丁中添加需要保底的插件。')
+              ? h('div', { className: 'eo-empty' }, tr('尚未配置保护 / 固定名单。可在配置补丁中添加需要保底的插件。', 'No protect/pinned entries. Add must-keep plugins to the profile patch.'))
               : h(
                   'div',
                   { className: 'eo-inline' },
-                  settings.protect.map((name) => h(Badge, { key: 'protect-' + name, tone: 'warn' }, '保护 · ' + name)),
-                  settings.pinned.map((name) => h(Badge, { key: 'pinned-' + name, tone: 'neutral' }, '固定 · ' + name)),
+                  settings.protect.map((name) => h(Badge, { key: 'protect-' + name, tone: 'warn' }, tr('保护 · ', 'Protect · ') + name)),
+                  settings.pinned.map((name) => h(Badge, { key: 'pinned-' + name, tone: 'neutral' }, tr('固定 · ', 'Pinned · ') + name)),
                 ),
           ),
           h(
             Card,
             {
-              title: '配置片段',
-              subtitle: '复制到配置补丁；写入后由 DSH 重新加载',
-              extra: h(Button, { variant: 'accent', onClick: () => void copyConfig(settings) }, '复制片段'),
+              title: tr('配置片段', 'Configuration snippet'),
+              subtitle: tr('复制到配置补丁；写入后由 DSH 重新加载', 'Copy into the profile patch; DSH reloads after writing'),
+              extra: h(Button, { variant: 'accent', onClick: () => void copyConfig(settings) }, tr('复制片段', 'Copy snippet')),
             },
             h('pre', { className: 'eo-codeblock' }, configPatch(settings)),
           ),
           h(
             Card,
-            { title: '说明', subtitle: '设置页不会直接改配置' },
-            h('div', { className: 'eo-muted' }, '为避免 UI 绕过 DSH 的配置边界，这里只展示当前生效值与可复制片段。修改后请重新加载插件；审批与保护逻辑不会因为改设置而跳过。'),
+            { title: tr('说明', 'Notes'), subtitle: tr('设置页不会直接改配置', 'This page does not edit config directly') },
+            h('div', { className: 'eo-muted' }, tr('为避免 UI 绕过 DSH 的配置边界，这里只展示当前生效值与可复制片段。修改后请重新加载插件；审批与保护逻辑不会因为改设置而跳过。', 'To avoid bypassing DSH configuration boundaries, this page only shows effective values and a copyable snippet. Reload the plugin after editing; approval and protection are never skipped.')),
+          ),
+        )
+      }
+
+      async function copyInstall() {
+        try {
+          await navigator.clipboard.writeText('dsh plugin --profile web add dsh-plugin-trim\ndsh plugin --profile web add dsh-plugin-recipe')
+          notify(tr('安装命令已复制', 'Install commands copied'))
+        } catch {
+          notify(tr('无法访问剪贴板，请手动复制安装命令', 'Clipboard unavailable; copy the commands manually'), 'warn')
+        }
+      }
+
+      function renderAbout() {
+        const links = [
+          ['GitHub', ABOUT_LINKS.repo],
+          [tr('npm · 插件减负', 'npm · plugin diet'), ABOUT_LINKS.npmTrim],
+          [tr('npm · 工作流配方', 'npm · workflow recipe'), ABOUT_LINKS.npmRecipe],
+          [tr('发布记录', 'Releases'), ABOUT_LINKS.releases],
+          [tr('问题反馈', 'Issues'), ABOUT_LINKS.issues],
+        ]
+        return h(
+          'div',
+          { className: 'eo-stack' },
+          h(
+            Card,
+            {
+              title: tr('关于项目', 'About the project'),
+              subtitle: tr('插件减负、兼容性检查与工作流蓝图', 'Plugin diet, compatibility checks, and workflow recipes'),
+              section: 'about',
+            },
+            h(
+              'div',
+              { className: 'eo-about-grid' },
+              h(
+                'div',
+                { className: 'eo-about-card' },
+                h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Experience Optimizer')),
+                h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
+                h('p', null, tr('版本：', 'Version: ') + '0.3.5 · AGPL-3.0-only'),
+                h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
+              ),
+              h(
+                'div',
+                { className: 'eo-about-card' },
+                h('h4', null, tr('项目链接', 'Project links')),
+                h(
+                  'ul',
+                  { className: 'eo-link-list' },
+                  links.map(([label, href]) =>
+                    h('li', { key: label }, h('a', { href, target: '_blank', rel: 'noreferrer' }, label, ' ↗')),
+                  ),
+                ),
+              ),
+            ),
+            h(
+              'div',
+              { className: 'eo-inline', style: { marginTop: '12px' } },
+              h(Button, { variant: 'accent', onClick: () => void copyInstall() }, tr('复制安装命令', 'Copy install commands')),
+              h(Button, { variant: 'ghost', onClick: () => setTab('tutorial') }, tr('打开完整教程', 'Open full guide')),
+              h(Button, { variant: 'ghost', onClick: replayOnboarding }, tr('重新查看新手引导', 'Replay first-run guide')),
+            ),
+          ),
+          h(
+            Card,
+            {
+              title: tr('交流与支持', 'Community & support'),
+              subtitle: tr('真实链接优先；未填写的内容明确标为待补充', 'Real links first; unset items are clearly marked'),
+              section: 'about',
+            },
+            h(
+              'div',
+              { className: 'eo-about-grid' },
+              h(
+                'div',
+                { className: 'eo-about-card' },
+                h('h4', null, tr('交流群', 'Community')),
+                h('p', null, tr('QQ 群：', 'QQ group: ') + (ABOUT_LINKS.qqGroup || tr('待补充', 'To be added'))),
+                ABOUT_LINKS.qqLink
+                  ? h('a', { href: ABOUT_LINKS.qqLink, target: '_blank', rel: 'noreferrer' }, tr('加入群聊', 'Join group'))
+                  : h('span', { className: 'eo-muted' }, tr('群号/链接待补充', 'Group number/link to be added')),
+              ),
+              h(
+                'div',
+                { className: 'eo-about-card' },
+                h('h4', null, tr('支持项目', 'Support the project')),
+                ABOUT_LINKS.donate.length === 0
+                  ? h('p', null, tr('捐赠方式：待补充。当前可通过反馈、文档和插件试用支持项目。', 'Donation methods: to be added. Feedback, docs, and trying the plugins are the best support today.'))
+                  : ABOUT_LINKS.donate.map((item) =>
+                      h('p', { key: item.label }, h('a', { href: item.href, target: '_blank', rel: 'noreferrer' }, item.label)),
+                    ),
+              ),
+            ),
+            h('p', { className: 'eo-copyright' }, COPYRIGHT),
+          ),
+          h(
+            Card,
+            {
+              title: tr('隐私与边界', 'Privacy & boundaries'),
+              subtitle: tr('本地优先，只读分析，写入需确认', 'Local-first, read-only analysis, confirmed writes'),
+              section: 'about',
+            },
+            h(
+              'ul',
+              { className: 'eo-link-list' },
+              h('li', null, tr('不执行 !!js、不 import 未加载插件、不联网分析。', 'No !!js execution, no importing unloaded plugins, no network analysis.')),
+              h('li', null, tr('应用前写入还原点；恢复同样需要安全确认。', 'A restore point is written before apply; rollback also needs host approval.')),
+              h('li', null, tr('定时/触发插件、已有调用记录、无使用账本项不会自动建议关闭。', 'Scheduled/trigger plugins, used plugins, and items without a ledger never become automatic close candidates.')),
+              h('li', null, tr('Copyright © 2026 Starlit Sky · AGPL-3.0-only', 'Copyright © 2026 Starlit Sky · AGPL-3.0-only')),
+            ),
           ),
         )
       }
@@ -966,36 +1490,41 @@ window.__ModuleLoader__.load({
           h('div', { className: 'eo-grid eo-metrics' }, [
             h(Metric, {
               key: 'tokens',
-              label: '可归属上下文',
+              label: tr('可归属上下文', 'Attributable context'),
               value: formatTokens(overview.context.totalTokens),
-              hint: 'tokens · 不含未归属',
+              hint: tr('tokens · 不含未归属', 'tokens · excludes unattributed') + ' · ' + Math.round(contextPct) + '%',
+              progress: contextPct,
+              progressTone: 'ok',
             }),
             h(Metric, {
               key: 'bundles',
-              label: '启用插件',
+              label: tr('启用插件', 'Enabled plugins'),
               value: enabledBundles + ' / ' + totalBundles,
-              hint: '已启用 / 全部插件',
+              hint: tr('已启用 / 全部插件', 'enabled / total plugins'),
+              progress: enabledPct,
             }),
             h(Metric, {
               key: 'compat',
-              label: '兼容性',
-              value: compat.error + ' 错 · ' + compat.warn + ' 警',
-              hint: '错误 / 警告 · 信息 ' + compat.info,
+              label: tr('兼容性', 'Compatibility'),
+              value: compat.error + tr(' 错 · ', ' err · ') + compat.warn + tr(' 警', ' warn'),
+              hint: tr('错误 / 警告 · 信息 ', 'errors / warnings · info ') + compat.info,
               tone: compat.error > 0 ? 'danger' : compat.warn > 0 ? 'warn' : 'ok',
+              progress: compatPct,
+              progressTone: compat.error > 0 ? 'danger' : compat.warn > 0 ? 'warn' : 'ok',
             }),
             h(Metric, {
               key: 'manage',
-              label: '写操作',
-              value: overview.managementAvailable ? '可应用' : '只读',
-              hint: overview.managementAvailable ? '插件管理器可用' : '缺少插件管理器',
+              label: tr('写操作', 'Write access'),
+              value: overview.managementAvailable ? tr('可应用', 'Ready') : tr('只读', 'Read-only'),
+              hint: overview.managementAvailable ? tr('插件管理器可用', 'Plugin manager available') : tr('缺少插件管理器', 'Plugin manager unavailable'),
               tone: overview.managementAvailable ? 'ok' : 'danger',
             }),
           ]),
           h(
             Card,
             {
-              title: '兼容性矩阵',
-              subtitle: '插件 ↔ 插件 · 插件 ↔ DSH · 配置集 / 工作区',
+              title: tr('兼容性检查', 'Compatibility check'),
+              subtitle: tr('插件 ↔ 插件 · 插件 ↔ DSH · 当前配置 / 工作区', 'Plugin ↔ plugin · plugin ↔ DSH · profile / workspace'),
               section: 'compat',
               extra: h(
                 'div',
@@ -1007,7 +1536,7 @@ window.__ModuleLoader__.load({
                         variant: 'ghost',
                         onClick: () => setShowAllFindings((value) => !value),
                       },
-                      showAllFindings ? '收起' : '查看全部 ' + findings.length,
+                      showAllFindings ? tr('收起', 'Collapse') : tr('查看全部', 'Show all') + ' ' + findings.length,
                     )
                   : null,
                 h(
@@ -1016,9 +1545,9 @@ window.__ModuleLoader__.load({
                     variant: 'ghost',
                     onClick: () => setShowInfo((value) => !value),
                   },
-                  showInfo ? '隐藏信息' : '显示信息',
+                  showInfo ? tr('隐藏信息', 'Hide info') : tr('显示信息', 'Show info'),
                 ),
-                h(Badge, { tone: compat.error ? 'danger' : 'ok' }, compat.error ? '需要处理' : '无阻断'),
+                h(Badge, { tone: compat.error ? 'danger' : 'ok' }, compat.error ? tr('需要处理', 'Needs attention') : tr('无阻断', 'No blockers')),
               ),
             },
             h(
@@ -1026,17 +1555,17 @@ window.__ModuleLoader__.load({
               { className: 'eo-toolbar', style: { marginBottom: '10px' } },
               h(
                 Field,
-                { label: '搜索兼容性' },
+                { label: tr('搜索兼容性', 'Search findings') },
                 h('input', {
                   className: 'eo-input',
-                  placeholder: '代码 / 标题 / 对象',
+                  placeholder: tr('代码 / 标题 / 对象', 'Code / title / subject'),
                   value: findingQuery,
                   onChange: (event) => setFindingQuery(event.target.value),
                 }),
               ),
               h(
                 Field,
-                { label: '级别' },
+                { label: tr('级别', 'Severity') },
                 h(
                   'select',
                   {
@@ -1044,15 +1573,26 @@ window.__ModuleLoader__.load({
                     value: findingSeverity,
                     onChange: (event) => setFindingSeverity(event.target.value),
                   },
-                  h('option', { value: 'all' }, '全部'),
-                  h('option', { value: 'error' }, '错误'),
-                  h('option', { value: 'warn' }, '警告'),
-                  h('option', { value: 'info' }, '信息'),
+                  h('option', { value: 'all' }, tr('全部', 'All')),
+                  h('option', { value: 'error' }, tr('错误', 'Error')),
+                  h('option', { value: 'warn' }, tr('警告', 'Warning')),
+                  h('option', { value: 'info' }, tr('信息', 'Info')),
                 ),
               ),
             ),
+            h(
+              'div',
+              { className: 'eo-severity-bar', 'aria-label': tr('兼容性分布', 'Compatibility distribution') },
+              compat.error + compat.warn + compat.info === 0
+                ? h('span', { className: 'eo-severity-empty' })
+                : [
+                    compat.error > 0 ? h('span', { key: 'e', className: 'eo-severity-error', style: { flex: compat.error } }) : null,
+                    compat.warn > 0 ? h('span', { key: 'w', className: 'eo-severity-warn', style: { flex: compat.warn } }) : null,
+                    compat.info > 0 ? h('span', { key: 'i', className: 'eo-severity-info', style: { flex: compat.info } }) : null,
+                  ],
+            ),
             findings.length === 0
-              ? h('div', { className: 'eo-empty' }, '没有匹配的兼容性问题。')
+              ? h('div', { className: 'eo-empty' }, tr('没有匹配的兼容性问题。', 'No matching compatibility findings.'))
               : h(
                   'div',
                   { className: 'eo-findings' },
@@ -1094,7 +1634,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
-              title: '上下文成本',
+              title: tr('上下文成本', 'Context cost'),
               section: 'context',
               subtitle:
                 '总计 ' +
@@ -1104,7 +1644,7 @@ window.__ModuleLoader__.load({
               extra: h(
                 Button,
                 { variant: 'ghost', onClick: () => setShowContext((value) => !value) },
-                showContext ? '收起明细' : '查看明细',
+                showContext ? tr('收起明细', 'Collapse details') : tr('查看明细', 'View details'),
               ),
             },
             h(
@@ -1142,7 +1682,7 @@ window.__ModuleLoader__.load({
                   null,
                   h('th', null, 'Section / Tool'),
                   h('th', null, 'Owner'),
-                  h('th', null, '上下文'),
+                  h('th', null, tr('上下文', 'Context')),
                 ),
               ),
               h(
@@ -1184,8 +1724,8 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
-              title: '插件清单',
-              subtitle: `${filteredBundles.length} / ${totalBundles} 个匹配 · 只读`,
+              title: tr('插件清单', 'Plugin inventory'),
+              subtitle: `${filteredBundles.length} / ${totalBundles} ` + tr('个匹配 · 只读', 'matched · read-only'),
               section: 'inventory',
               extra: h(
                 Button,
@@ -1198,7 +1738,7 @@ window.__ModuleLoader__.load({
               { className: 'eo-toolbar', style: { marginBottom: '10px' } },
               h(
                 Field,
-                { label: '搜索插件' },
+                { label: tr('搜索插件', 'Search plugins') },
                 h('input', {
                   className: 'eo-input',
                   placeholder: '名称 / 描述',
@@ -1208,7 +1748,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '状态' },
+                { label: tr('状态', 'Status') },
                 h(
                   'select',
                   {
@@ -1216,15 +1756,15 @@ window.__ModuleLoader__.load({
                     value: bundleFilter,
                     onChange: (event) => setBundleFilter(event.target.value),
                   },
-                  h('option', { value: 'all' }, '全部'),
-                  h('option', { value: 'enabled' }, '启用'),
-                  h('option', { value: 'disabled' }, '禁用'),
-                  h('option', { value: 'protected' }, '受保护'),
+                  h('option', { value: 'all' }, tr('全部', 'All')),
+                  h('option', { value: 'enabled' }, tr('启用', 'Enabled')),
+                  h('option', { value: 'disabled' }, tr('禁用', 'Disabled')),
+                  h('option', { value: 'protected' }, tr('受保护', 'Protected')),
                 ),
               ),
               h(
                 Field,
-                { label: '排序' },
+                { label: tr('排序', 'Sort') },
                 h(
                   'select',
                   {
@@ -1232,15 +1772,18 @@ window.__ModuleLoader__.load({
                     value: bundleSort,
                     onChange: (event) => setBundleSort(event.target.value),
                   },
-                  h('option', { value: 'tokens' }, '上下文 tokens'),
-                  h('option', { value: 'usage' }, '调用次数'),
-                  h('option', { value: 'name' }, '名称'),
+                  h('option', { value: 'tokens' }, tr('上下文 tokens', 'Context tokens')),
+                  h('option', { value: 'usage' }, tr('调用次数', 'Call count')),
+                  h('option', { value: 'name' }, tr('名称', 'Name')),
                 ),
               ),
             ),
             filteredBundles.length === 0
-              ? h('div', { className: 'eo-empty' }, '没有匹配的插件。')
+              ? h('div', { className: 'eo-empty' }, tr('没有匹配的插件。', 'No matching plugins.'))
               : h(
+                  'div',
+                  { className: 'eo-table-wrap' },
+                  h(
                   'table',
                   { className: 'eo-table' },
                   h(
@@ -1249,13 +1792,13 @@ window.__ModuleLoader__.load({
                     h(
                       'tr',
                       null,
-                      h('th', null, '插件'),
-                      h('th', null, '状态'),
-                      h('th', null, '保护'),
-                      h('th', null, '守卫'),
-                      h('th', null, '上下文'),
-                      h('th', null, '占比'),
-                      h('th', null, '调用'),
+                      h('th', null, tr('插件', 'Plugin')),
+                      h('th', null, tr('状态', 'Status')),
+                      h('th', { className: 'eo-col-secondary' }, tr('保护', 'Protected')),
+                      h('th', { className: 'eo-col-secondary' }, tr('兼容状态', 'Compatibility')),
+                      h('th', null, tr('上下文', 'Context')),
+                      h('th', null, tr('占比', 'Share')),
+                      h('th', null, tr('调用', 'Calls')),
                     ),
                   ),
                   h(
@@ -1279,19 +1822,19 @@ window.__ModuleLoader__.load({
                           h(
                             Badge,
                             { tone: bundle.enabled ? 'ok' : 'neutral' },
-                            bundle.enabled ? '已启用' : '已禁用',
+                            bundle.enabled ? tr('已启用', 'Enabled') : tr('已禁用', 'Disabled'),
                           ),
                         ),
                         h(
                           'td',
-                          null,
-                          bundle.protected ? h(Badge, { tone: 'warn' }, '受保护') : '—',
+                          { className: 'eo-col-secondary' },
+                          bundle.protected ? h(Badge, { tone: 'warn' }, tr('受保护', 'Protected')) : '—',
                         ),
-                        h('td', { className: 'eo-muted' }, bundle.guardStatus ? guardLabel(bundle.guardStatus) : '—'),
+                        h('td', { className: 'eo-muted eo-col-secondary' }, bundle.guardStatus ? guardLabel(bundle.guardStatus) : '—'),
                         h('td', null, formatNumber(bundle.contextTokens)),
                         h(
                           'td',
-                          { className: 'eo-muted', title: '占可归属上下文的比例' },
+                          { className: 'eo-muted eo-share-cell', title: tr('占可归属上下文的比例', 'Share of attributable context') },
                           totalContextTokens > 0
                             ? Math.round((bundle.contextTokens / totalContextTokens) * 100) + '%'
                             : '—',
@@ -1307,12 +1850,13 @@ window.__ModuleLoader__.load({
                     ),
                   ),
                 ),
+                ),
           ),
           h(
             Card,
             {
-              title: '精简方案',
-              subtitle: '先建议，后确认；受保护项永不改动',
+              title: tr('插件减负方案', 'Slim plan'),
+              subtitle: tr('先建议，后确认；受保护项永不改动', 'Suggest first, confirm later; protected items never change'),
               section: 'draft',
             },
             h(
@@ -1320,7 +1864,7 @@ window.__ModuleLoader__.load({
               { className: 'eo-toolbar' },
               h(
                 Field,
-                { label: '任务类型' },
+                { label: tr('任务类型', 'Task type') },
                 h(
                   'select',
                   {
@@ -1328,18 +1872,18 @@ window.__ModuleLoader__.load({
                     value: taskTag,
                     onChange: (event) => setTaskTag(event.target.value),
                   },
-                  TASK_TAGS.map(([value, label]) =>
-                    h('option', { value, key: value }, label),
+                  TASK_TAGS.map(([value]) =>
+                    h('option', { value, key: value }, value === 'unknown' ? tr('自动识别', 'Auto-detect') : taskLabel(value)),
                   ),
                 ),
               ),
               h(
                 Field,
-                { label: '任务目标（可选）' },
+                { label: tr('任务目标（可选）', 'Goal (optional)') },
                 h('input', {
                   className: 'eo-input',
                   value: goal,
-                  placeholder: '例如：修复登录页崩溃',
+                  placeholder: tr('例如：修复登录页崩溃', 'e.g. fix a login crash'),
                   onChange: (event) => setGoal(event.target.value),
                   onKeyDown: (event) => {
                     if (event.key === 'Enter') void generateDraft()
@@ -1349,7 +1893,7 @@ window.__ModuleLoader__.load({
               h(
                 Button,
                 { variant: 'accent', onClick: generateDraft, disabled: draftBusy },
-                draftBusy ? '生成中…' : '生成方案',
+                draftBusy ? tr('生成中…', 'Building…') : tr('生成方案', 'Build plan'),
               ),
             ),
             draft
@@ -1359,25 +1903,25 @@ window.__ModuleLoader__.load({
                   h(
                     'div',
                     { className: 'eo-note' },
-                    '判断依据：描述匹配只说明“可能相关”；出现周期/触发器语义、已有调用记录、无使用账本或任务置信度不足时，只进入人工复核。只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭，且仍需确认与宿主审批。',
+                    tr('判断依据：描述匹配只说明“可能相关”；出现定时/触发语义、已有调用记录、无使用账本或任务置信度不足时，只进入人工复核。只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭，且仍需确认与安全确认。', 'Evidence rule: a description match only means “possibly relevant”. Scheduled/trigger plugins, plugins with calls, an empty usage ledger, or low task confidence go to review. A close candidate requires zero calls in the window, attributable context cost, no schedule/trigger hint, and high task confidence — and still needs confirmation and host approval.'),
                   ),
                   h(
                     'div',
                     { className: 'eo-summary', style: { marginTop: '10px' } },
-                    h(Badge, { tone: 'neutral' }, '保留 ' + draft.summary.keep),
-                    h(Badge, { tone: 'ok' }, '启用 ' + draft.summary.enable),
-                    h(Badge, { tone: 'danger' }, '建议关闭 ' + draft.summary.disable),
-                    h(Badge, { tone: 'info' }, '复核 ' + draft.summary.review),
-                    h(Badge, { tone: 'neutral' }, '受保护 ' + draft.summary.protected),
-                    h(Badge, { tone: 'warn' }, '周期保护 ' + periodicDraftCount),
-                    h(Badge, { tone: 'ok' }, '证据强 ' + strongDraftCount),
-                    h(Badge, { tone: 'warn' }, '任务：' + taskLabel(draft.task.tag)),
+                    h(Badge, { tone: 'neutral' }, tr('保留', 'Keep') + ' ' + draft.summary.keep),
+                    h(Badge, { tone: 'ok' }, tr('启用', 'Enable') + ' ' + draft.summary.enable),
+                    h(Badge, { tone: 'danger' }, tr('建议关闭', 'Close') + ' ' + draft.summary.disable),
+                    h(Badge, { tone: 'info' }, tr('复核', 'Review') + ' ' + draft.summary.review),
+                    h(Badge, { tone: 'neutral' }, tr('受保护', 'Protected') + ' ' + draft.summary.protected),
+                    h(Badge, { tone: 'warn' }, tr('周期保护', 'Scheduled') + ' ' + periodicDraftCount),
+                    h(Badge, { tone: 'ok' }, tr('证据强', 'Strong evidence') + ' ' + strongDraftCount),
+                    h(Badge, { tone: 'warn' }, tr('任务：', 'Task: ') + taskLabel(draft.task.tag)),
                   ),
                   actionableDraftItems.length === 0
                     ? h(
                         'div',
                         { className: 'eo-empty' },
-                        '本轮没有强证据候选：周期/触发器、已有调用记录、无使用账本或低置信项只进入人工复核。',
+                        tr('本轮没有强证据候选：周期/触发器、已有调用记录、无使用账本或低置信项只进入人工复核。', 'No strong candidates this round: scheduled/trigger plugins, used plugins, missing ledger, or low confidence all go to review.'),
                       )
                     : h(
                     'div',
@@ -1397,9 +1941,9 @@ window.__ModuleLoader__.load({
                                 type: 'checkbox',
                                 checked: selected[item.id] === true,
                                 onChange: () => toggleItem(item.id),
-                                'aria-label': '选择 ' + item.name,
+                                'aria-label': tr('选择 ', 'Select ') + item.name,
                               })
-                            : h('span', { className: 'eo-lock', title: '受保护或非低风险' }),
+                            : h('span', { className: 'eo-lock', title: tr('受保护或非低风险', 'Protected or not low-risk') }),
                           h(
                             'div',
                             { className: 'eo-item-main' },
@@ -1412,9 +1956,9 @@ window.__ModuleLoader__.load({
                                 { tone: actionTone(item.action) },
                                 actionLabel(item.action),
                               ),
-                              h(Badge, { tone: riskTone(item.risk) }, '风险：' + riskLabel(item.risk)),
-                              item.protected ? h(Badge, { tone: 'neutral' }, '受保护') : null,
-                              item.periodic ? h(Badge, { tone: 'warn' }, '周期/触发器') : null,
+                              h(Badge, { tone: riskTone(item.risk) }, tr('风险：', 'Risk: ') + riskLabel(item.risk)),
+                              item.protected ? h(Badge, { tone: 'neutral' }, tr('受保护', 'Protected')) : null,
+                              item.periodic ? h(Badge, { tone: 'warn' }, tr('周期/触发器', 'Scheduled / trigger')) : null,
                               item.usageState
                                 ? h(
                                     Badge,
@@ -1430,9 +1974,9 @@ window.__ModuleLoader__.load({
                                   )
                                 : null,
                               item.evidenceLevel === 'strong'
-                                ? h(Badge, { tone: 'ok' }, '证据强')
+                                ? h(Badge, { tone: 'ok' }, tr('证据强', 'Strong evidence'))
                                 : item.evidenceLevel === 'insufficient'
-                                  ? h(Badge, { tone: 'neutral' }, '证据不足')
+                                  ? h(Badge, { tone: 'neutral' }, tr('证据不足', 'Insufficient evidence'))
                                   : null,
                             ),
                             h('div', { className: 'eo-item-reason' }, item.reason),
@@ -1452,7 +1996,7 @@ window.__ModuleLoader__.load({
                             'div',
                             { className: 'eo-item-side' },
                             h('span', null, Number(item.score).toFixed(2)),
-                            h('small', null, '评分'),
+                            h('small', null, tr('评分', 'Score')),
                           ),
                         ),
                       ),
@@ -1463,13 +2007,13 @@ window.__ModuleLoader__.load({
                     h(
                       'span',
                       { className: 'eo-applybar-text' },
-                      selectedCount + ' 个低风险项已选择 · 应用前会写入回滚快照',
+                      selectedCount + tr(' 个低风险项已选择 · 应用前会写入还原点', ' low-risk items selected · a restore point is written before apply'),
                     ),
                     h(
                       'div',
                       { className: 'eo-inline' },
-                      h(Button, { variant: 'ghost', onClick: selectAll }, '全选低风险'),
-                      h(Button, { variant: 'ghost', onClick: clearSelection }, '清空'),
+                      h(Button, { variant: 'ghost', onClick: selectAll }, tr('全选低风险', 'Select low-risk')),
+                      h(Button, { variant: 'ghost', onClick: clearSelection }, tr('清空', 'Clear')),
                       h(
                         Button,
                         {
@@ -1477,12 +2021,12 @@ window.__ModuleLoader__.load({
                           onClick: openApply,
                           disabled: selectedCount === 0 || draftBusy,
                         },
-                        '应用选中',
+                        tr('应用选中', 'Apply selected'),
                       ),
                       h(
                         Button,
                         { variant: 'danger', onClick: openRollback, disabled: draftBusy },
-                        '回滚最近',
+                        tr('恢复最近', 'Restore latest'),
                       ),
                     ),
                   ),
@@ -1490,20 +2034,20 @@ window.__ModuleLoader__.load({
               : h(
                   'div',
                   { className: 'eo-empty' },
-                  '生成方案后，这里会出现可解释的保留/启用/禁用建议。建议默认不会改动任何插件。',
+                  tr('生成方案后，这里会出现可解释的保留/启用/禁用建议。建议默认不会改动任何插件。', 'After building a plan, explainable keep/enable/disable suggestions appear here. Nothing changes by default.'),
                 ),
           ),
           applyResult
             ? h(
                 Card,
                 {
-                  title: '应用结果',
-                  subtitle: applyResult.rolledBack ? '中途失败，已自动回滚' : '变更已写入配置集',
+                  title: tr('应用结果', 'Apply result'),
+                  subtitle: applyResult.rolledBack ? tr('中途失败，已自动恢复', 'Failed midway; automatically restored') : tr('变更已写入当前配置', 'Changes written to the current profile'),
                   section: 'result',
                   extra: h(
                     Badge,
                     { tone: applyResult.rolledBack ? 'warn' : 'ok' },
-                    applyResult.rolledBack ? '已回滚' : '完成',
+                    applyResult.rolledBack ? tr('已恢复', 'Restored') : tr('完成', 'Done'),
                   ),
                 },
                 h(
@@ -1515,10 +2059,10 @@ window.__ModuleLoader__.load({
                     h(
                       'tr',
                       null,
-                      h('th', null, 'Item'),
-                      h('th', null, 'Status'),
-                      h('th', null, 'Application'),
-                      h('th', null, 'Note'),
+                      h('th', null, tr('项目', 'Item')),
+                      h('th', null, tr('状态', 'Status')),
+                      h('th', null, tr('应用方式', 'Application')),
+                      h('th', null, tr('说明', 'Note')),
                     ),
                   ),
                   h(
@@ -1570,7 +2114,7 @@ window.__ModuleLoader__.load({
                           onClick: () => {
                             if (navigator.clipboard) {
                               void navigator.clipboard.writeText(applyResult.token)
-                              notify('token 已复制')
+                              notify(tr('还原点已复制', 'Restore point copied'))
                             }
                           },
                         },
@@ -1645,26 +2189,26 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
-              title: '工作流配方',
-              subtitle: '把业务目标翻译成可校验、可导出的工作流蓝图',
-              extra: h(Badge, { tone: 'info' }, '最多 4 组追问'),
+              title: tr('工作流配方', 'Workflow recipe'),
+              subtitle: tr('把业务目标翻译成可校验、可导出的工作流蓝图', 'Turn a business goal into a validated, exportable workflow blueprint'),
+              extra: h(Badge, { tone: 'info' }, tr('最多 4 组追问', 'At most 4 question groups')),
             },
             h(
               'div',
               { className: 'eo-form-grid' },
               h(
                 Field,
-                { label: '业务目标', className: 'eo-wide' },
+                { label: tr('业务目标', 'Goal'), className: 'eo-wide' },
                 h('textarea', {
                   className: 'eo-textarea',
                   value: recipeForm.goal,
-                  placeholder: '例如：我想每周自动整理项目周报，数据来自 Git log',
+                  placeholder: tr('例如：我想每周自动整理项目周报，数据来自 Git log', 'e.g. a weekly project report from Git log'),
                   onChange: (event) => updateRecipe('goal', event.target.value),
                 }),
               ),
               h(
                 Field,
-                { label: '项目 / 范围' },
+                { label: tr('项目 / 范围', 'Project / scope') },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.scope,
@@ -1673,7 +2217,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '频率' },
+                { label: tr('频率', 'Frequency') },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.frequency,
@@ -1682,7 +2226,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '数据来源', hint: '逗号分隔' },
+                { label: tr('数据来源', 'Sources'), hint: tr('逗号分隔', 'comma-separated') },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.sources,
@@ -1691,7 +2235,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '输出格式' },
+                { label: tr('输出格式', 'Output format') },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.outputFormat,
@@ -1700,7 +2244,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '交付方式' },
+                { label: tr('交付方式', 'Delivery') },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.delivery,
@@ -1709,7 +2253,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '失败处理' },
+                { label: tr('失败处理', 'Failure handling') },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.onFailure,
@@ -1718,7 +2262,7 @@ window.__ModuleLoader__.load({
               ),
               h(
                 Field,
-                { label: '验收标准', hint: '逗号分隔', className: 'eo-wide' },
+                { label: tr('验收标准', 'Acceptance criteria'), hint: tr('逗号分隔', 'comma-separated'), className: 'eo-wide' },
                 h('input', {
                   className: 'eo-input',
                   value: recipeForm.acceptance,
@@ -1732,12 +2276,12 @@ window.__ModuleLoader__.load({
               h(
                 'span',
                 { className: 'eo-muted' },
-                'UI 预览按内置能力目录判断可用性；精确 agent-scope 校验以 recipe_plan_workflow 工具为准。',
+                tr('UI 预览按内置能力目录判断可用性；精确 agent-scope 校验以 recipe_plan_workflow 工具为准。', 'The UI preview uses the built-in capability catalog; exact agent-scope validation is provided by recipe_plan_workflow.'),
               ),
               h(
                 Button,
                 { variant: 'accent', onClick: generateRecipe, disabled: recipeBusy },
-                recipeBusy ? '生成中…' : '生成工作流蓝图',
+                recipeBusy ? tr('生成中…', 'Building…') : tr('生成工作流蓝图', 'Build workflow blueprint'),
               ),
             ),
           ),
@@ -1746,7 +2290,7 @@ window.__ModuleLoader__.load({
             : h(
                 'div',
                 { className: 'eo-empty' },
-                '填写目标后生成蓝图。这里只生成计划，不会创建 schedule，也不会修改插件。',
+                tr('填写目标后生成蓝图。这里只生成计划，不会创建 schedule，也不会修改插件。', 'Fill in a goal to generate a blueprint. This only plans; it creates no schedule and changes no plugin.'),
               ),
         )
       }
@@ -1759,19 +2303,19 @@ window.__ModuleLoader__.load({
           h(
             Card,
             {
-              title: '蓝图预览',
+              title: tr('蓝图预览', 'Blueprint preview'),
               subtitle:
-                '模板 ' +
+                tr('模板 ', 'Template ') +
                 blueprint.template +
                 ' · ' +
                 blueprint.steps.length +
-                ' 个步骤 · ' +
+                tr(' 个步骤 · ', ' steps · ') +
                 blueprint.minPluginSet.length +
-                ' 个最小插件',
+                tr(' 个最小插件', ' minimum plugins'),
               extra: h(
                 'div',
                 { className: 'eo-inline' },
-                h(Button, { variant: 'ghost', onClick: exportRecipe }, '导出运行手册'),
+                h(Button, { variant: 'ghost', onClick: exportRecipe }, tr('导出运行手册', 'Export runbook')),
               ),
             },
             h(
@@ -1849,7 +2393,7 @@ window.__ModuleLoader__.load({
               h(
                 'div',
                 { className: 'eo-issue' },
-                h('span', null, h('strong', null, '回滚：'), blueprint.rollback),
+                h('span', null, h('strong', null, tr('恢复：', 'Restore: ')), blueprint.rollback),
               ),
             ),
             h(
@@ -1939,13 +2483,13 @@ window.__ModuleLoader__.load({
         h(
           'div',
           { className: 'eo-modal', onClick: (event) => event.stopPropagation() },
-          h('h3', null, isApply ? '确认应用精简方案' : '确认回滚'),
+          h('h3', null, isApply ? tr('确认应用精简方案', 'Confirm slim plan') : tr('确认恢复', 'Confirm restore')),
           h(
             'p',
             null,
             isApply
-              ? '只会应用低风险项；受保护项不会被改动。应用前会写入可回滚快照。'
-              : '将恢复最近一次应用前的插件启用状态；已被外部改动的项会跳过。',
+              ? tr('只会应用低风险项；受保护项不会被改动。应用前会写入还原点。', 'Only low-risk items are applied; protected items never change. A restore point is written first.')
+              : tr('将恢复最近一次应用前的插件启用状态；已被外部改动的项会跳过。', 'Restores plugin state before the latest apply; externally changed items are skipped.'),
           ),
           isApply
             ? h(
@@ -1963,7 +2507,7 @@ window.__ModuleLoader__.load({
                         { className: 'eo-item-title' },
                         h('span', { className: 'eo-item-name' }, item.name),
                         h(Badge, { tone: actionTone(item.action) }, actionLabel(item.action)),
-                        h(Badge, { tone: riskTone(item.risk) }, '风险：' + riskLabel(item.risk)),
+                        h(Badge, { tone: riskTone(item.risk) }, tr('风险：', 'Risk: ') + riskLabel(item.risk)),
                       ),
                       h('div', { className: 'eo-item-reason' }, item.reason),
                     ),
@@ -1974,11 +2518,11 @@ window.__ModuleLoader__.load({
           h(
             'div',
             { className: 'eo-modal-actions' },
-            h(Button, { variant: 'ghost', onClick: onCancel, disabled: busy }, '取消'),
+            h(Button, { variant: 'ghost', onClick: onCancel, disabled: busy }, tr('取消', 'Cancel')),
             h(
               Button,
               { variant: isApply ? 'accent' : 'danger', onClick: onConfirm, disabled: busy },
-              busy ? '处理中…' : isApply ? '确认应用' : '确认回滚',
+              busy ? tr('处理中…', 'Working…') : isApply ? tr('确认应用', 'Confirm apply') : tr('确认恢复', 'Confirm restore'),
             ),
           ),
         ),

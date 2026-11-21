@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-plugin-trim · 34s promo</title>
+<link rel="stylesheet" href="./fonts/fonts.css">
+<style>
+  html, body { margin: 0; background: #05070c; overflow: hidden; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+import { DUR } from './timeline.js';
+import { seg, lerp, clamp, ease, glide, spring, pulse, shake, camera, stageSize, setupCanvas, loadImage, tween, hash } from './motion.js';
+import { SANS, MONO, txt, measure, rr, panel, spark, imageFrame, riseText, wipeText, dot, hairline, chip, fmt } from './art.js';
+
+const { W, H } = stageSize();
+const ctx = setupCanvas(document.getElementById('c'), W, H);
+const M = 96;
+
+// ── type scale ────────────────────────────────────────────────────────────
+const T = {
+  n1: 200, n2: 96, claim: 92, hero: 52, word: 40, row: 26,
+  body: 20, sub: 17, mono: 14, micro: 13,
+};
+
+const C = {
+  bg0: '#05070C', bg1: '#0B1322',
+  ink: '#F2F5FA', mut: '#93A3B8', faint: '#5A6B82', ghost: '#3A485C',
+  amber: '#F2A33A', amberHi: '#FFC46B', blue: '#8FB7FF', mint: '#9FE0C0', coral: '#FF7A66',
+};
+
+const PLUGINS = [
+  { cn: '语音输入', en: 'voice-input', tok: 486, drop: true, why: 'usage 0 · 本任务不涉及语音' },
+  { cn: '推荐卡片', en: 'recommendations', tok: 372, drop: true, why: 'no session usage · 与本任务无关' },
+  { cn: '实验工具', en: 'forge-bundle', tok: 264, drop: true, why: 'workspace 无 Git 仓库' },
+  { cn: '网页搜索', en: 'search-web', tok: 128, drop: true, why: '本任务不需要联网' },
+  { cn: '文档导出', en: 'export-doc', tok: 62, drop: true, why: '本任务不导出文档' },
+  { cn: '桌面操作', en: 'cua-bundle', tok: 318 },
+  { cn: '插件 A', en: 'plugin-a', tok: 210 },
+  { cn: '插件 B', en: 'plugin-b', tok: 188 },
+  { cn: '工作目录', en: 'tool-workdir', tok: 162 },
+  { cn: '提示词包', en: 'prompt-pack', tok: 106 },
+  { cn: '代码审查', en: 'code-review', tok: 92 },
+  { cn: '会话记忆', en: 'session-memory', tok: 29 },
+];
+const TOK_ALL = 2417, TOK_DROP = 1312, TOK_KEPT = TOK_ALL - TOK_DROP;
+const DROP_IDX = PLUGINS.map((p, i) => p.drop ? i : null).filter(i => i !== null);
+const KEPT_IDX = PLUGINS.map((p, i) => p.drop ? null : i).filter(i => i !== null);
+const KEPT = PLUGINS.filter(p => !p.drop);
+
+// ── panel geometry (fills the frame: 96 → 1824) ───────────────────────────
+const PN = { x: 96, y: 108, w: 1728, h: 832 };
+const GRID = { x0: 152, y0: 276, cw: 386, ch: 188, gx: 24, gy: 20 };
+const gridPos = s => ({ x: GRID.x0 + (s % 4) * (GRID.cw + GRID.gx), y: GRID.y0 + Math.floor(s / 4) * (GRID.ch + GRID.gy) });
+const HOOK = { x0: 560, y0: 286, cw: 296, ch: 148, sx: 320, sy: 194 };
+const hookPos = i => ({
+  x: HOOK.x0 + (i % 4) * HOOK.sx + (hash(i, 1) - 0.5) * 30,
+  y: HOOK.y0 + Math.floor(i / 4) * HOOK.sy + (hash(i, 2) - 0.5) * 30,
+  r: (hash(i, 3) - 0.5) * 0.16,
+});
+
+const CUTS = [0, 4.0, 12.0, 16.0, 18.0, 24.0, 28.0];
+const CHAPTERS = [
+  { t: 0, name: '纠缠' }, { t: 4, name: '减负' }, { t: 12, name: '体检' }, { t: 16, name: '结论' },
+  { t: 18, name: '留下' }, { t: 24, name: '星徽' }, { t: 28, name: '落版' },
+];
+
+function bg(t) {
+  const g = ctx.createLinearGradient(0, 0, W * 0.35, H);
+  g.addColorStop(0, C.bg0); g.addColorStop(0.55, C.bg1); g.addColorStop(1, '#0A1120');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  const step = 32, ox = (t * 4) % step;
+  for (let y = 16; y < H; y += step) for (let x = 16 - ox; x < W; x += step) ctx.fillRect(x, y, 1.5, 1.5);
+  ctx.restore();
+  const lx = W * 0.24 + Math.sin(t * 0.19) * 36, ly = H * 0.14 + Math.cos(t * 0.15) * 22;
+  const warm = ctx.createRadialGradient(lx, ly, 0, lx, ly, W * 0.62);
+  warm.addColorStop(0, 'rgba(242,163,58,0.12)'); warm.addColorStop(0.45, 'rgba(242,163,58,0.035)'); warm.addColorStop(1, 'rgba(242,163,58,0)');
+  ctx.fillStyle = warm; ctx.fillRect(0, 0, W, H);
+  const cool = ctx.createRadialGradient(W * 0.86, H * 0.9, 0, W * 0.86, H * 0.9, W * 0.55);
+  cool.addColorStop(0, 'rgba(143,183,255,0.09)'); cool.addColorStop(1, 'rgba(143,183,255,0)');
+  ctx.fillStyle = cool; ctx.fillRect(0, 0, W, H);
+  const v = ctx.createRadialGradient(W / 2, H / 2, H * 0.36, W / 2, H / 2, H * 1.0);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+}
+
+function eyebrow(t = 0) {
+  dot(ctx, M + 4, 84, 3.2, C.amber);
+  txt(ctx, 'DSH · EXPERIENCE OPTIMIZER', M + 18, 89, { size: 13, weight: 500, family: MONO, color: 'rgba(242,163,58,0.9)', track: 2.4 });
+  const a = 1 - clamp(seg(t, 28.0, 28.3));
+  if (a > 0.01) {
+    ctx.save(); ctx.globalAlpha = a;
+    txt(ctx, 'dsh-plugin-trim', W - M, 81, { size: 13, weight: 500, family: MONO, color: C.faint, align: 'right', track: 1.2 });
+    txt(ctx, 'v0.2.7', W - M, 100, { size: 13, weight: 400, family: MONO, color: C.ghost, align: 'right', track: 1 });
+    ctx.restore();
+  }
+}
+
+/** straight arrow that draws itself */
+function arrow(t, x1, y1, x2, y2, k, color = C.amber, w = 1.4, dash = null) {
+  if (k <= 0.001) return;
+  const xe = lerp(x1, x2, k), ye = lerp(y1, y2, k);
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w;
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(xe, ye); ctx.stroke();
+  if (k > 0.9) {
+    const a = Math.atan2(y2 - y1, x2 - x1), h = 9;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(xe, ye); ctx.lineTo(xe - Math.cos(a - 0.45) * h, ye - Math.sin(a - 0.45) * h);
+    ctx.moveTo(xe, ye); ctx.lineTo(xe - Math.cos(a + 0.45) * h, ye - Math.sin(a + 0.45) * h);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function pointer(x, y, k = 1) {
+  if (k <= 0.01) return;
+  ctx.save(); ctx.globalAlpha *= clamp(k);
+  ctx.translate(x, y); ctx.scale(0.92, 0.92);
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(0, 30); ctx.lineTo(8, 23); ctx.lineTo(13.5, 34); ctx.lineTo(19, 31.4);
+  ctx.lineTo(13.4, 20.6); ctx.lineTo(23, 20.2); ctx.closePath();
+  ctx.shadowColor = 'rgba(0,0,0,0.55)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 5;
+  ctx.fillStyle = '#F7F9FE'; ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = 'rgba(6,10,18,0.8)'; ctx.lineWidth = 1.4; ctx.stroke();
+  ctx.restore();
+}
+
+function clickRing(x, y, t, t0) {
+  const k = clamp(seg(t, t0, t0 + 0.45));
+  if (k <= 0 || k >= 1) return;
+  ctx.save(); ctx.globalAlpha *= (1 - k) * 0.8;
+  ctx.strokeStyle = C.amberHi; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(x, y, 10 + 34 * ease.outCubic(k), 0, Math.PI * 2); ctx.stroke();
+  ctx.restore();
+}
+
+function toggleSw(x, y, w, h, on, a = 1) {
+  if (a <= 0.01) return;
+  ctx.save(); ctx.globalAlpha *= a;
+  rr(ctx, x, y, w, h, h / 2);
+  ctx.fillStyle = on > 0.5 ? `rgba(242,163,58,${0.18 + 0.62 * on})` : 'rgba(255,255,255,0.10)';
+  ctx.fill();
+  ctx.strokeStyle = on > 0.5 ? 'rgba(255,196,107,0.55)' : 'rgba(255,255,255,0.16)';
+  ctx.lineWidth = 1; ctx.stroke();
+  const kr = h / 2 - 4;
+  const kx = lerp(x + h / 2, x + w - h / 2, on);
+  dot(ctx, kx, y + h / 2, kr, on > 0.5 ? C.amberHi : 'rgba(220,230,245,0.6)');
+  ctx.restore();
+}
+
+// ═══ S1 · 0–4.0 — twelve plugins, tangled, cut open ═══════════════════════
+function tangle(t) {
+  const a = clamp(seg(t, 0.02, 0.5)) * (1 - clamp(seg(t, 2.5, 3.1)));
+  if (a <= 0.01) return;
+  const c = PLUGINS.map((p, i) => { const r = hookPos(i); return [r.x + HOOK.cw / 2, r.y + HOOK.ch / 2]; });
+  ctx.save(); ctx.globalAlpha = a;
+  for (let i = 0; i < 12; i++) {
+    for (let k = 1; k <= 2; k++) {
+      const j = (i + k * 5 + 1) % 12;
+      if (j <= i) continue;
+      const [x1, y1] = c[i], [x2, y2] = c[j];
+      const bow = (hash(i * 9 + j, 21) - 0.5) * 300;
+      const mx = (x1 + x2) / 2 + bow * 0.3, my = (y1 + y2) / 2 - Math.abs(bow) * 0.7;
+      const cut = clamp((beamX(t) - Math.min(x1, x2)) / 200);
+      ctx.strokeStyle = hash(i + j, 3) > 0.75 ? `rgba(242,163,58,${0.26 * cut + 0.05})` : `rgba(170,198,255,${0.3 * cut + 0.05})`;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo(mx, my, x2, y2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+const beamX = t => t < 2.0 ? 9999 : lerp(500, 1840, ease.inOutSine(clamp(seg(t, 2.0, 2.62))));
+
+function cutBeam(t) {
+  if (t < 2.0 || t > 2.72) return;
+  const k = clamp(seg(t, 2.0, 2.62));
+  const x = lerp(500, 1840, ease.inOutSine(k));
+  const a = clamp(seg(t, 2.0, 2.06)) * (1 - clamp(seg(t, 2.58, 2.72)));
+  if (a <= 0.01) return;
+  ctx.save(); ctx.globalAlpha = a;
+  const g = ctx.createLinearGradient(x - 110, 0, x + 110, 0);
+  g.addColorStop(0, 'rgba(255,196,107,0)'); g.addColorStop(0.5, 'rgba(255,196,107,0.22)'); g.addColorStop(1, 'rgba(255,196,107,0)');
+  ctx.fillStyle = g; ctx.fillRect(x - 110, 0, 220, H);
+  hairline(ctx, x, 0, x, H, 'rgba(255,238,210,1)', 2, 1);
+  dot(ctx, x, H * 0.5, 4.5, 'rgba(255,242,218,0.95)');
+  const tip = ctx.createRadialGradient(x, H * 0.5, 0, x, H * 0.5, 150);
+  tip.addColorStop(0, 'rgba(255,220,170,0.34)'); tip.addColorStop(1, 'rgba(255,220,170,0)');
+  ctx.fillStyle = tip; ctx.fillRect(x - 150, H * 0.5 - 150, 300, 300);
+  ctx.restore();
+}
+
+function hookShot(t) {
+  tangle(t);
+  PLUGINS.forEach((p, i) => {
+    const r = hookPos(i);
+    const k = clamp(spring(t - (0.03 + i * 0.032), { freq: 2.5, damp: 0.8 }));
+    if (k <= 0.01) return;
+    const bx = beamX(t);
+    const hot = bx > r.x && bx < r.x + 400 ? 1 : 0;
+    const fl = pulse(t, [2.0 + 0.05 + (r.x - 500) / 1340 * 0.6], 0.22);
+    const a = clamp(k) * (1 - clamp(seg(t, 2.55, 3.15)) * 0.55);
+    ctx.save(); ctx.globalAlpha = a;
+    ctx.translate(r.x + HOOK.cw / 2, r.y + HOOK.ch / 2);
+    ctx.rotate(r.r * (1 - clamp(seg(t, 2.6, 3.4))));
+    ctx.scale(1 + 0.02 * fl, 1 + 0.02 * fl);
+    ctx.translate(-HOOK.cw / 2, -HOOK.ch / 2);
+    rr(ctx, 0, 0, HOOK.cw, HOOK.ch, 14);
+    ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fill();
+    ctx.strokeStyle = fl > 0.04 ? `rgba(242,163,58,${0.16 + fl * 0.65})` : (hot ? 'rgba(255,214,150,0.5)' : 'rgba(255,255,255,0.10)');
+    ctx.lineWidth = 1; ctx.stroke();
+    dot(ctx, 22, 30, 3.6, p.drop ? C.amber : C.faint);
+    txt(ctx, p.cn, 38, 37, { size: 24, weight: 600, color: C.ink, track: 0.2 });
+    txt(ctx, p.en, 38, 60, { size: 13, weight: 400, family: MONO, color: C.ghost, track: 0.4 });
+    txt(ctx, String(p.tok), HOOK.cw - 20, 92, { size: 30, weight: 700, family: MONO, color: p.drop ? C.amberHi : C.mut, align: 'right', track: -1 });
+    txt(ctx, 'tokens', HOOK.cw - 20, 112, { size: 13, weight: 400, family: MONO, color: C.ghost, align: 'right', track: 1 });
+    rr(ctx, 20, 124, HOOK.cw - 40, 4, 2); ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fill();
+    rr(ctx, 20, 124, (HOOK.cw - 40) * (p.tok / 486), 4, 2); ctx.fillStyle = p.drop ? C.amber : 'rgba(255,255,255,0.25)'; ctx.fill();
+    ctx.restore();
+  });
+  cutBeam(t);
+
+  // left column: the problem, in one number
+  riseText(ctx, '12', M - 8, 372, spring(t - 0.10, { freq: 2.0, damp: 0.9 }), { size: T.n1, weight: 800, family: MONO, color: C.ink, track: -10 });
+  txt(ctx, 'ENABLED · 启用中', M, 408, { size: 14, weight: 500, family: MONO, color: C.amber, track: 2.2 });
+
+  ctx.save(); ctx.globalAlpha = clamp(seg(t, 0.5, 0.85));
+  txt(ctx, '每个插件都在往', M, 492, { size: 30, weight: 400, color: C.mut, track: 0.4 });
+  txt(ctx, 'prompt 里塞东西。', M, 536, { size: 30, weight: 400, color: C.mut, track: 0.4 });
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha = clamp(seg(t, 2.55, 2.95));
+  hairline(ctx, M, 600, M + 300, 600, 'rgba(255,255,255,0.12)', 1);
+  txt(ctx, '用不上，就先拿掉。', M, 650, { size: 30, weight: 600, color: C.amberHi, track: 0.4 });
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha = clamp(seg(t, 0.9, 1.3));
+  txt(ctx, '12 个插件 · 2,417 tokens 上下文', M, 818, { size: 14, weight: 500, family: MONO, color: C.faint, track: 1.2 });
+  txt(ctx, '示例 profile', M, 842, { size: 13, weight: 400, family: MONO, color: C.ghost, track: 1 });
+  ctx.restore();
+}
+
+// ═══ S2 · 4.0–12.0 — the actual panel: 体检 → 建议 → 应用 → 回滚 ══════════
+const BTN_CURE = { x: 1150, y: 886, w: 300, h: 46 };
+const BTN_APPLY = { x: 1472, y: 886, w: 296, h: 46 };
+const TOAST = { x: 1216, y: 596, w: 552, h: 76 };
+
+function button(x, y, w, h, label, { primary = false, k = 1, active = 1, sub = null } = {}) {
+  if (k <= 0.01) return;
+  ctx.save(); ctx.globalAlpha *= clamp(k);
+  rr(ctx, x, y, w, h, 10);
+  ctx.fillStyle = primary ? `rgba(242,163,58,${0.16 * active})` : 'rgba(255,255,255,0.05)';
+  ctx.fill();
+  ctx.strokeStyle = primary ? `rgba(242,163,58,${0.55 * active})` : 'rgba(255,255,255,0.16)';
+  ctx.lineWidth = 1; ctx.stroke();
+  txt(ctx, label, x + w / 2, y + (sub ? h / 2 - 2 : h / 2 + 6), { size: 18, weight: 600, color: primary ? C.amberHi : C.mut, align: 'center', track: 0.3 });
+  if (sub) txt(ctx, sub, x + w / 2, y + h / 2 + 15, { size: 13, weight: 400, family: MONO, color: C.ghost, align: 'center', track: 0.6 });
+  ctx.restore();
+}
+
+const totalTokens = t => tween(t, [[4.32, 0], [5.05, TOK_ALL], [8.95, TOK_ALL], [10.55, TOK_KEPT]], glide);
+
+function drawUICard(t, i) {
+  const p = PLUGINS[i];
+  const isDrop = !!p.drop;
+  const j = isDrop ? DROP_IDX.indexOf(i) : KEPT_IDX.indexOf(i);
+  const k = clamp(spring(t - (4.08 + i * 0.045), { freq: 2.4, damp: 0.82 }));
+  if (k <= 0.01) return;
+
+  const base = gridPos(i);
+  let x = base.x, y = base.y + 20 * (1 - clamp(k));
+  let a = clamp(k), sc = 1;
+
+  if (isDrop) {
+    const leave = clamp(seg(t, 8.98 + j * 0.05, 9.5 + j * 0.05));
+    if (leave >= 1) return;
+    y -= 44 * ease.inCubic(leave);
+    a *= 1 - leave; sc = 1 - 0.04 * leave;
+  } else {
+    const to = gridPos(KEPT_IDX.indexOf(i));
+    const rk = glide(clamp(seg(t, 9.52 + j * 0.035, 10.28 + j * 0.035)));
+    x = lerp(base.x, to.x, rk); y = lerp(base.y, to.y, rk);
+  }
+
+  const sug = isDrop ? clamp(seg(t, 7.3 + j * 0.09, 7.62 + j * 0.09)) : 0;
+  const off = isDrop ? clamp(seg(t, 8.8 + j * 0.06, 9.24 + j * 0.06)) : 0;
+  const bx = beamXScan(t);
+  const hot = bx > 0 && bx > x - 60 && bx < x + GRID.cw + 60 ? 1 - clamp(Math.abs(bx - (x + GRID.cw / 2)) / 420) : 0;
+
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.translate(x + GRID.cw / 2, y + GRID.ch / 2); ctx.scale(sc, sc); ctx.translate(-GRID.cw / 2, -GRID.ch / 2);
+
+  rr(ctx, 0, 0, GRID.cw, GRID.ch, 14);
+  ctx.fillStyle = sug > 0.5 ? 'rgba(242,163,58,0.055)' : 'rgba(255,255,255,0.04)'; ctx.fill();
+  if (hot > 0.02) { ctx.strokeStyle = `rgba(255,214,150,${0.10 + hot * 0.45})`; ctx.lineWidth = 1.4; }
+  else { ctx.strokeStyle = sug > 0.5 ? 'rgba(242,163,58,0.34)' : 'rgba(255,255,255,0.11)'; ctx.lineWidth = 1; }
+  ctx.stroke();
+
+  toggleSw(GRID.cw - 68, 22, 44, 24, 1 - off, a > 0.2 ? 1 : 0.4);
+
+  txt(ctx, p.cn, 26, 54, { size: T.row, weight: 600, color: C.ink, track: 0.2 });
+  if (sug > 0.02) {
+    const eq = clamp(seg(t, 7.34 + j * 0.09, 7.7 + j * 0.09));
+    chip(ctx, GRID.cw - 26 - 118, 18, '建议禁用', { h: 30, pad: 12, size: 13, color: C.amber, fill: 'rgba(242,163,58,0.16)', border: 'rgba(242,163,58,0.55)', textColor: C.amberHi, dotColor: C.amber, alpha: sug * eq });
+  }
+  txt(ctx, sug > 0.5 ? p.why : p.en, 26, 82, {
+    size: 13, weight: 400, family: MONO,
+    color: sug > 0.5 ? 'rgba(242,163,58,0.9)' : C.ghost, track: 0.3,
+  });
+
+  const numCol = off > 0.5 ? C.ghost : (isDrop ? C.amberHi : C.mut);
+  const nw = txt(ctx, String(p.tok), 26, 134, { size: 32, weight: 700, family: MONO, color: numCol, track: -1 });
+  txt(ctx, 'tokens', 26 + nw + 10, 134, { size: 13, weight: 400, family: MONO, color: C.ghost, track: 1 });
+
+  rr(ctx, 26, 158, GRID.cw - 52, 5, 2.5); ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fill();
+  rr(ctx, 26, 158, (GRID.cw - 52) * (p.tok / 486), 5, 2.5);
+  ctx.fillStyle = off > 0.5 ? 'rgba(255,255,255,0.18)' : (isDrop ? C.amber : 'rgba(255,255,255,0.3)'); ctx.fill();
+  ctx.restore();
+}
+
+const beamXScan = t => (t > 6.28 && t < 7.2) ? lerp(140, 1790, ease.inOutSine(clamp(seg(t, 6.28, 7.12)))) : -1;
+
+function scanSweep(t) {
+  const k = clamp(seg(t, 6.28, 7.12));
+  if (k <= 0 || k >= 1) return;
+  const x = lerp(140, 1790, ease.inOutSine(k));
+  ctx.save();
+  const g = ctx.createLinearGradient(x - 120, 0, x + 60, 0);
+  g.addColorStop(0, 'rgba(242,163,58,0)'); g.addColorStop(0.7, 'rgba(242,163,58,0.10)'); g.addColorStop(1, 'rgba(242,163,58,0.02)');
+  ctx.fillStyle = g; ctx.fillRect(x - 120, 262, 180, 630);
+  hairline(ctx, x, 262, x, 892, 'rgba(255,196,107,0.55)', 1.4);
+  dot(ctx, x, 266, 3, C.amberHi, 0.9);
+  ctx.restore();
+}
+
+function panelShot(t) {
+  if (t < 3.98) return;
+  const ai = clamp(seg(t, 3.98, 4.2));
+  const sc = lerp(0.985, 1, ease.outCubic(clamp(seg(t, 3.98, 4.45))));
+  ctx.save();
+  ctx.globalAlpha = ai;
+  ctx.translate(PN.x + PN.w / 2, PN.y + PN.h / 2); ctx.scale(sc, sc); ctx.translate(-(PN.x + PN.w / 2), -(PN.y + PN.h / 2));
+
+  panel(ctx, PN.x, PN.y, PN.w, PN.h, { r: 22, fill: 'rgba(9,15,27,0.94)', stroke: 'rgba(255,255,255,0.13)', shadow: 'rgba(0,0,0,0.55)' });
+  hairline(ctx, PN.x + 40, PN.y + 116, PN.x + PN.w - 40, PN.y + 116, 'rgba(255,255,255,0.07)', 1);
+  hairline(ctx, PN.x + 40, 880, PN.x + PN.w - 40, 880, 'rgba(255,255,255,0.07)', 1);
+
+  // header — left
+  const hk = clamp(seg(t, 4.15, 4.55));
+  ctx.save(); ctx.globalAlpha *= hk;
+  txt(ctx, '设置 / 技能中枢', 152, 144, { size: 13, weight: 500, family: MONO, color: C.ghost, track: 1.4 });
+  txt(ctx, '技能中枢', 152, 190, { size: 34, weight: 700, color: C.ink, track: 0.6 });
+  txt(ctx, '按当前任务，只留用得上的插件', 152, 224, { size: 17, weight: 400, color: C.mut, track: 0.3 });
+  ctx.restore();
+
+  // header — right: context cost
+  ctx.save(); ctx.globalAlpha *= hk;
+  txt(ctx, '上下文占用 / CONTEXT COST', 1768, 142, { size: 13, weight: 500, family: MONO, color: C.faint, align: 'right', track: 1.4 });
+  const tok = totalTokens(t);
+  const col = tok < TOK_ALL - 30 ? C.amberHi : C.ink;
+  const nw = txt(ctx, fmt(tok), 1712, 196, { size: 44, weight: 700, family: MONO, color: col, align: 'right', track: -1.4 });
+  txt(ctx, 'tokens', 1724, 196, { size: 13, weight: 500, family: MONO, color: C.ghost, track: 1.2 });
+  rr(ctx, 1452, 212, 316, 5, 2.5); ctx.fillStyle = 'rgba(255,255,255,0.09)'; ctx.fill();
+  rr(ctx, 1452, 212, 316 * clamp(tok / TOK_ALL), 5, 2.5); ctx.fillStyle = col; ctx.fill();
+  const dk = clamp(seg(t, 9.0, 9.4)) * (1 - clamp(seg(t, 11.2, 11.6)));
+  if (dk > 0.01) {
+    ctx.save(); ctx.globalAlpha *= dk;
+    txt(ctx, `−${fmt(TOK_DROP)}`, 1452, 250, { size: 22, weight: 700, family: MONO, color: C.amberHi, track: -0.5 });
+    txt(ctx, '已移除', 1560, 249, { size: 13, weight: 400, family: MONO, color: C.faint, track: 1.2 });
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // cards
+  DROP_IDX.concat(KEPT_IDX).sort((a, b) => a - b).forEach(i => drawUICard(t, i));
+  scanSweep(t);
+
+  // footer
+  ctx.save(); ctx.globalAlpha *= hk;
+  const applied = clamp(seg(t, 9.4, 9.8));
+  txt(ctx, applied > 0.5 ? '示例 profile · 7 个插件 · 快照 #t-0927' : '示例 profile · 12 个插件 · 只读扫描',
+    152, 916, { size: 14, weight: 500, family: MONO, color: C.faint, track: 0.8 });
+  button(BTN_CURE.x, BTN_CURE.y, BTN_CURE.w, BTN_CURE.h,
+    applied > 0.5 ? '已体检 · 1E 2W' : '按当前任务体检', { k: clamp(seg(t, 4.5, 4.8)), active: 1 - 0.45 * applied });
+  button(BTN_APPLY.x, BTN_APPLY.y, BTN_APPLY.w, BTN_APPLY.h,
+    applied > 0.5 ? '已应用 5 项' : '应用低风险项',
+    { primary: true, k: clamp(seg(t, 4.6, 4.9)), active: 1 - 0.4 * applied });
+  ctx.restore();
+
+  // toast: the promise, proven
+  const tk = clamp(seg(t, 10.78, 11.12));
+  if (tk > 0.01) {
+    ctx.save(); ctx.globalAlpha *= tk;
+    const ty = TOAST.y + 16 * (1 - ease.outCubic(tk));
+    panel(ctx, TOAST.x, ty, TOAST.w, TOAST.h, { r: 14, fill: 'rgba(16,28,44,0.97)', stroke: 'rgba(159,224,192,0.45)', shadow: 'rgba(0,0,0,0.5)' });
+    dot(ctx, TOAST.x + 30, ty + 28, 4.2, C.mint);
+    txt(ctx, '快照已保存 · 可一键回滚', TOAST.x + 48, ty + 34, { size: 20, weight: 600, color: C.ink, track: 0.3 });
+    txt(ctx, 'trim/rollback · 只写 sidecar，源码不动', TOAST.x + 48, ty + 58, { size: 13, weight: 400, family: MONO, color: C.faint, track: 0.2 });
+    ctx.restore();
+  }
+
+  // cursor: 体检 → 应用
+  const c1 = clamp(seg(t, 5.55, 6.12)), c2 = clamp(seg(t, 8.15, 8.68));
+  let px = lerp(980, BTN_CURE.x + BTN_CURE.w - 70, ease.inOutCubic(c1));
+  let py = lerp(700, BTN_CURE.y + 30, ease.inOutCubic(c1));
+  if (c2 > 0) {
+    px = lerp(px, BTN_APPLY.x + BTN_APPLY.w - 90, ease.inOutCubic(c2));
+    py = lerp(py, BTN_APPLY.y + 28, ease.inOutCubic(c2));
+  }
+  const press = 1 - 0.16 * (pulse(t, [6.18, 8.7], 0.16) + pulse(t, [6.18, 8.7], 0.16) * 0.4);
+  ctx.save(); ctx.translate(px, py); ctx.scale(press, press); ctx.translate(-px, -py);
+  pointer(px, py, clamp(seg(t, 5.4, 5.7)) * (1 - clamp(seg(t, 11.2, 11.5))));
+  ctx.restore();
+  clickRing(BTN_CURE.x + BTN_CURE.w - 70, BTN_CURE.y + 30, t, 6.18);
+  clickRing(BTN_APPLY.x + BTN_APPLY.w - 90, BTN_APPLY.y + 28, t, 8.7);
+  ctx.restore();
+}
+
+// ═══ S3 · 12.0–16.0 — compatibility sheet ════════════════════════════════
+const SHEET = { x: 120, y: 336, w: 1680, h: 580 };
+const CONFLICTS = [
+  { kind: 'PLUGIN × RUNTIME', code: 'RT_PLATFORM_UNSUPPORTED', desc: 'dsh-cua-bundle 不支持当前平台', sev: 'E', ev: ['linux-x64 · dsh 0.2.2-rc.1', '可选 bundle 在当前平台不可用'], fix: 'disable bundle' },
+  { kind: 'PLUGIN × PLUGIN', code: 'PP_DUPLICATE_PROMPT', desc: '3 个插件注入重叠的 context section', sev: 'W', ev: ['3 owners · 同一段 context', '保留一个 owner，禁用重复 section'], fix: 'keep one owner' },
+  { kind: 'PROFILE / WORKSPACE', code: 'WS_PATH_OVERLAP', desc: 'workspace 指令与 profile 层重叠', sev: 'W', ev: ['2 layers · dsh/AGENTS.md', '把重叠内容收进一层'], fix: 'move to one layer' },
+];
+
+function compatShot(t) {
+  const rise = ease.outCubic(clamp(seg(t, 12.06, 12.56)));
+  const fold = ease.inCubic(clamp(seg(t, 15.28, 15.86)));
+  const y = lerp(940, SHEET.y, rise) + (1 - fold) * 0 + fold * 620;
+  if (rise <= 0.01) return;
+  const a = clamp(seg(t, 12.06, 12.3));
+  ctx.save(); ctx.globalAlpha = a;
+
+  // the grid behind, dimmed
+  ctx.save(); ctx.globalAlpha = 0.18 * (1 - rise * 0.4);
+  DROP_IDX.concat(KEPT_IDX).forEach(i => {
+    if (PLUGINS[i].drop) return;
+    const s = gridPos(KEPT_IDX.indexOf(i));
+    rr(ctx, s.x, s.y, GRID.cw, GRID.ch, 14); ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+  });
+  ctx.restore();
+
+  panel(ctx, SHEET.x, y, SHEET.w, SHEET.h, { r: 22, fill: 'rgba(10,18,32,0.985)', stroke: 'rgba(255,255,255,0.16)', shadow: 'rgba(0,0,0,0.6)' });
+  hairline(ctx, SHEET.x + 40, y + 1, SHEET.x + SHEET.w - 40, y + 1, 'rgba(196,214,255,0.22)', 1);
+
+  ctx.save(); ctx.globalAlpha = a * clamp(seg(t, 12.3, 12.6));
+  txt(ctx, '兼容性体检', 168, y + 56, { size: 30, weight: 700, color: C.ink, track: 0.4 });
+  txt(ctx, 'COMPATIBILITY · 只读分析 · 不修改任何源码', 168, y + 82, { size: 13, weight: 500, family: MONO, color: C.faint, track: 1.4 });
+  const nE = Math.round(tween(t, [[12.4, 0], [12.9, 1]], glide));
+  const nW = Math.round(tween(t, [[12.5, 0], [13.2, 2]], glide));
+  const badge = `${nE}E · ${nW}W`;
+  const bw = measure(ctx, badge, { size: 15, weight: 700, family: MONO, track: 0.6 }) + 52;
+  rr(ctx, SHEET.x + SHEET.w - 40 - bw, y + 34, bw, 38, 19);
+  ctx.fillStyle = 'rgba(255,122,102,0.14)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(255,122,102,0.45)'; ctx.lineWidth = 1; ctx.stroke();
+  dot(ctx, SHEET.x + SHEET.w - 40 - bw + 20, y + 53, 3.8, C.coral);
+  txt(ctx, badge, SHEET.x + SHEET.w - 40 - bw + 32, y + 58, { size: 15, weight: 700, family: MONO, color: '#FFB3A6', track: 0.6 });
+  hairline(ctx, 168, y + 112, SHEET.x + SHEET.w - 40, y + 112, 'rgba(255,255,255,0.10)', 1);
+  ctx.restore();
+
+  CONFLICTS.forEach((r, i) => {
+    const k = clamp(seg(t, 12.56 + i * 0.3, 12.94 + i * 0.3));
+    if (k <= 0.01) return;
+    const ry = y + 128 + i * 122;
+    const col = r.sev === 'E' ? C.coral : C.amber;
+    ctx.save(); ctx.globalAlpha = a * k;
+    ctx.translate(0, 14 * (1 - k));
+    dot(ctx, 176, ry + 34, 4.6, col);
+    txt(ctx, r.kind, 196, ry + 28, { size: 13, weight: 500, family: MONO, color: C.faint, track: 1.5 });
+    txt(ctx, r.code, 196, ry + 62, { size: 23, weight: 600, family: MONO, color: r.sev === 'E' ? '#FFB3A6' : C.amberHi, track: 0.2 });
+    txt(ctx, r.desc, 196, ry + 94, { size: 18, weight: 400, color: C.mut, track: 0.2 });
+    hairline(ctx, 700, ry + 14, 700, ry + 100, 'rgba(255,255,255,0.10)', 1);
+    txt(ctx, '证据 EVIDENCE', 728, ry + 28, { size: 13, weight: 500, family: MONO, color: C.faint, track: 1.2 });
+    txt(ctx, r.ev[0], 728, ry + 60, { size: 15, weight: 500, family: MONO, color: C.mut, track: 0.2 });
+    txt(ctx, r.ev[1], 728, ry + 86, { size: 15, weight: 400, family: MONO, color: C.ghost, track: 0.2 });
+    hairline(ctx, 1250, ry + 14, 1250, ry + 100, 'rgba(255,255,255,0.10)', 1);
+    arrow(t, 1278, ry + 62, 1330, ry + 62, clamp(seg(t, 13.0 + i * 0.24, 13.3 + i * 0.24)), 'rgba(242,163,58,0.7)', 1.3);
+    txt(ctx, '修复建议 FIX', 1348, ry + 40, { size: 13, weight: 500, family: MONO, color: C.faint, track: 1.2 });
+    txt(ctx, r.fix, 1348, ry + 72, { size: 19, weight: 600, family: MONO, color: C.ink, track: 0.2 });
+    hairline(ctx, 168, ry + 110, SHEET.x + SHEET.w - 40, ry + 110, 'rgba(255,255,255,0.07)', 1);
+    ctx.restore();
+  });
+
+  const sk = clamp(seg(t, 13.66, 14.0));
+  if (sk > 0.01) {
+    ctx.save(); ctx.globalAlpha = a * sk;
+    const fy = y + 520;
+    hairline(ctx, 168, fy, SHEET.x + SHEET.w - 40, fy, 'rgba(255,255,255,0.10)', 1);
+    [['3', '条冲突', C.coral], ['3', '条修复建议', C.amber], ['0', '个受保护项改动', C.mint]].forEach(([n, label, c], i) => {
+      const cx = 168 + i * 300;
+      dot(ctx, cx + 3, fy + 34, 3.4, c);
+      txt(ctx, n, cx + 16, fy + 42, { size: 30, weight: 700, family: MONO, color: C.ink, track: -1 });
+      txt(ctx, label, cx + 52, fy + 38, { size: 18, weight: 400, color: C.mut, track: 0.3 });
+    });
+    txt(ctx, '每条冲突都给出可执行的修复建议', SHEET.x + SHEET.w - 40, fy + 38, { size: 15, weight: 400, family: MONO, color: C.faint, align: 'right', track: 0.4 });
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// ═══ S4 · 16.0–18.0 — the claim ══════════════════════════════════════════
+function claimShot(t) {
+  ['少一点插件负担，', '多一点兼容确定性。'].forEach((s, i) => {
+    riseText(ctx, s, M, 500 + i * 128, spring(t - (16.0 + i * 0.08), { freq: 1.7, damp: 0.95 }), { size: T.claim, weight: 900, color: C.ink, track: -2 });
+  });
+  ctx.save(); ctx.globalAlpha = clamp(seg(t, 16.5, 16.85));
+  txt(ctx, '先建议 · 后确认 · 可回滚', M, 700, { size: 18, weight: 400, family: MONO, color: C.mut, track: 1.6 });
+  ctx.restore();
+
+  // right: the seven that stayed, named
+  const lx = 1216, lw = 552;
+  txt(ctx, 'KEPT · 留下的 7 个', lx, 300, { size: 13, weight: 500, family: MONO, color: C.amber, track: 2 });
+  KEPT.forEach((p, i) => {
+    const k = clamp(seg(t, 16.15 + i * 0.055, 16.5 + i * 0.055));
+    if (k <= 0.01) return;
+    const yy = 336 + i * 74 + 14 * (1 - ease.outCubic(k));
+    ctx.save(); ctx.globalAlpha = k;
+    rr(ctx, lx, yy, lw, 62, 10);
+    ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.09)'; ctx.lineWidth = 1; ctx.stroke();
+    dot(ctx, lx + 24, yy + 31, 3.4, C.amber);
+    txt(ctx, p.cn, lx + 42, yy + 38, { size: 20, weight: 500, color: C.ink, track: 0.3 });
+    txt(ctx, p.en, lx + lw - 90, yy + 37, { size: 13, weight: 400, family: MONO, color: C.ghost, align: 'right', track: 0.2 });
+    txt(ctx, String(p.tok), lx + lw - 22, yy + 38, { size: 15, weight: 600, family: MONO, color: C.mut, align: 'right', track: 0 });
+    ctx.restore();
+  });
+}
+
+// ═══ S5 · 18.0–24.0 — seven kept → constellation ═════════════════════════
+const CN = { cx: 1180, cy: 500, r: 360 };
+const orbitPt = (j, t = 0) => {
+  const a = -Math.PI / 2 + (j / 7) * Math.PI * 2 + 0.22 + (hash(j, 81) - 0.5) * 0.2 + Math.max(0, t - 18) * 0.045;
+  const r = CN.r + (hash(j, 82) - 0.5) * 88;
+  return [CN.cx + Math.cos(a) * r, CN.cy + Math.sin(a) * r];
+};
+
+function afterShot(t) {
+  const a = clamp(seg(t, 17.98, 18.12));
+  ctx.save(); ctx.globalAlpha = a * 0.7;
+  for (let i = 0; i < 36; i++) {
+    const ang = hash(i, 71) * Math.PI * 2, rad = 220 + hash(i, 72) * 560;
+    dot(ctx, CN.cx + Math.cos(ang) * rad, CN.cy + Math.sin(ang) * rad * 0.7, 0.7 + hash(i, 73) * 1.3, '#C9D6F2', 0.10 + hash(i, 74) * 0.28);
+  }
+  ctx.restore();
+
+  KEPT.forEach((p, i) => {
+    const [x1, y1] = orbitPt(i, t);
+    const enter = clamp(spring(t - (18.12 + i * 0.06), { freq: 1.8, damp: 0.86 }));
+    if (enter <= 0.01) return;
+    const px = lerp(x1 - 300, x1, clamp(enter)), py = lerp(y1 + 120, y1, clamp(enter));
+    // node
+    dot(ctx, px, py, 6 * clamp(enter) * (0.9 + 0.1 * Math.sin(t * 1.6 + i)), C.amber, 0.95);
+    dot(ctx, px, py, 12 * clamp(enter), 'rgba(242,163,58,0.18)', 0.9);
+    // name label, pushed outward
+    const ang = Math.atan2(py - CN.cy, px - CN.cx);
+    const lxp = px + Math.cos(ang) * 26, lyp = py + Math.sin(ang) * 26;
+    txt(ctx, p.cn, lxp, lyp + 6, { size: 15, weight: 500, color: C.mut, track: 0.4, align: Math.cos(ang) < -0.3 ? 'right' : 'left', alpha: clamp(seg(t, 19.6 + i * 0.05, 19.95 + i * 0.05)) });
+    // ring
+    const link = clamp(seg(t, 18.5 + i * 0.05, 18.95 + i * 0.05));
+    if (link > 0) {
+      const [x2, y2] = orbitPt((i + 1) % 7, t);
+      const mx = (px + x2) / 2 + (CN.cx - (px + x2) / 2) * 0.16, my = (py + y2) / 2 + (CN.cy - (py + y2) / 2) * 0.16;
+      ctx.save(); ctx.strokeStyle = 'rgba(242,163,58,0.26)'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(px, py);
+      ctx.quadraticCurveTo(mx, my, lerp(px, x2, link), lerp(py, y2, link)); ctx.stroke();
+      ctx.restore();
+    }
+    const ak = clamp(seg(t, 19.4 + i * 0.07, 19.85 + i * 0.07));
+    if (ak > 0) {
+      const dx = CN.cx - px, dy = CN.cy - py, d = Math.hypot(dx, dy);
+      arrow(t, px + dx / d * 46, py + dy / d * 46, CN.cx - dx / d * 168, CN.cy - dy / d * 168, ak, 'rgba(170,198,255,0.36)', 1.2);
+    }
+  });
+
+  // the mark
+  const ik = clamp(spring(t - 18.02, { freq: 1.9, damp: 0.9 }));
+  if (ik > 0.01) {
+    const r = 150 * ik;
+    ctx.save(); ctx.globalAlpha = a * ik;
+    const glow = ctx.createRadialGradient(CN.cx, CN.cy, r * 0.6, CN.cx, CN.cy, r * 2.3);
+    glow.addColorStop(0, 'rgba(242,163,58,0.10)'); glow.addColorStop(1, 'rgba(242,163,58,0)');
+    ctx.fillStyle = glow; ctx.fillRect(CN.cx - r * 2.4, CN.cy - r * 2.4, r * 4.8, r * 4.8);
+    ctx.save(); ctx.beginPath(); ctx.arc(CN.cx, CN.cy, r, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(IMG.icon, CN.cx - r, CN.cy - r, r * 2, r * 2); ctx.restore();
+    ctx.strokeStyle = 'rgba(242,163,58,0.5)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(CN.cx, CN.cy, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.save(); ctx.translate(CN.cx, CN.cy); ctx.rotate(t * 0.09);
+    ctx.strokeStyle = 'rgba(242,163,58,0.26)'; ctx.lineWidth = 1; ctx.setLineDash([2, 16]);
+    ctx.beginPath(); ctx.arc(0, 0, r + 34, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+    ctx.restore();
+  }
+
+  // left column
+  ctx.save(); ctx.globalAlpha = a;
+  wipeText(ctx, 'AFTER · 减负之后', M, 300, clamp(seg(t, 18.0, 18.25)), { size: 14, weight: 500, color: C.amber, track: 2.6 });
+  riseText(ctx, '7', M - 4, 420, spring(t - 17.99, { freq: 1.9, damp: 0.95 }), { size: T.n2, weight: 800, family: MONO, color: C.ink, track: -4 });
+  txt(ctx, '/ 12 KEPT · 保留', M + 62, 420, { size: 18, weight: 500, family: MONO, color: C.faint, track: 1.6 });
+  hairline(ctx, M, 470, M + 420, 470, 'rgba(255,255,255,0.12)', 1);
+  const fk = clamp(seg(t, 18.9, 19.25));
+  ctx.globalAlpha = a * fk;
+  [['只读体检', '扫描不改插件', C.blue], ['低风险才应用', '受保护项永不改动', C.amber], ['一键回滚', '快照在手，随时恢复', C.mint]].forEach(([h, d, c], i) => {
+    const yy = 512 + i * 52;
+    dot(ctx, M + 4, yy - 6, 3.4, c);
+    txt(ctx, h, M + 18, yy, { size: 20, weight: 600, color: C.ink, track: 0.3 });
+    txt(ctx, d, M + 18, yy + 24, { size: 14, weight: 400, family: MONO, color: C.faint, track: 0.3 });
+  });
+  ctx.restore();
+}
+
+// ═══ S6 · 24.0–28.0 — the spark ══════════════════════════════════════════
+const SP = { x: 1180, y: 500 };
+
+function sparkShot(t) {
+  if (t < 24.0) return;
+  const burst = spring(t - 24.0, { freq: 2.05, damp: 0.62 });
+  const fly = ease.inOutCubic(clamp(seg(t, 26.9, 27.7)));
+  const sx = lerp(SP.x, 1768, fly);
+  const sy = lerp(SP.y, 300, fly);
+  const r = lerp(150 * burst, 48, fly);
+  const a = clamp(seg(t, 24.0, 24.06));
+  ctx.save(); ctx.globalAlpha = a;
+
+  const fl = Math.exp(-(t - 24.0) / 0.14);
+  if (fl > 0.01) {
+    const fg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 480);
+    fg.addColorStop(0, `rgba(255,214,150,${0.7 * fl})`); fg.addColorStop(0.4, `rgba(242,163,58,${0.22 * fl})`); fg.addColorStop(1, 'rgba(242,163,58,0)');
+    ctx.fillStyle = fg; ctx.fillRect(0, 0, W, H);
+  }
+  const hg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 320);
+  hg.addColorStop(0, 'rgba(242,163,58,0.22)'); hg.addColorStop(0.5, 'rgba(242,163,58,0.06)'); hg.addColorStop(1, 'rgba(242,163,58,0)');
+  ctx.fillStyle = hg; ctx.fillRect(sx - 340, sy - 340, 680, 680);
+
+  const age = clamp(seg(t, 24.0, 25.0));
+  if (t < 25.2) {
+    const k = clamp(age / 0.85), fade = 1 - k;
+    ctx.save(); ctx.globalAlpha = fade * 0.4;
+    ctx.strokeStyle = 'rgba(255,196,107,0.8)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(SP.x, SP.y, 90 + 460 * ease.outCubic(k), 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    for (let i = 0; i < 26; i++) {
+      const ang = (i / 26) * Math.PI * 2 + 0.1;
+      const r1 = 120 + 320 * ease.outCubic(k) + hash(i, 3) * 90;
+      const r2 = r1 + (80 + hash(i, 8) * 170) * fade;
+      ctx.globalAlpha = fade * (0.14 + hash(i, 5) * 0.25);
+      hairline(ctx, SP.x + Math.cos(ang) * r1, SP.y + Math.sin(ang) * r1, SP.x + Math.cos(ang) * r2, SP.y + Math.sin(ang) * r2, 'rgba(255,196,107,0.9)', 1);
+    }
+    ctx.restore();
+  }
+  spark(ctx, sx, sy, Math.max(0, r), C.amber, Math.sin(t * 0.4) * 0.06);
+  spark(ctx, sx, sy, Math.max(0, r * 0.36), C.amberHi, -Math.sin(t * 0.4) * 0.06);
+
+  const sa = clamp(seg(t, 24.55, 24.95));
+  if (sa > 0.01) {
+    ctx.save(); ctx.globalAlpha = sa;
+    txt(ctx, '把杂乱，剪成星光。', SP.x, SP.y + 262, { size: 56, weight: 700, color: C.ink, align: 'center', track: 1 });
+    txt(ctx, 'TRIM THE NOISE · KEEP THE STARS', SP.x, SP.y + 302, { size: 14, weight: 500, family: MONO, color: 'rgba(242,163,58,0.85)', align: 'center', track: 3 });
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// ═══ S7 · 28.0–34.0 — end card ═══════════════════════════════════════════
+function endShot(t) {
+  if (t < 28.0) return;
+  const a = clamp(seg(t, 28.0, 28.35));
+  ctx.save(); ctx.globalAlpha = a;
+  for (let i = 0; i < 48; i++) {
+    const sx = hash(i, 61) * W, sy = hash(i, 62) * H;
+    const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * (0.5 + hash(i, 63)) + i));
+    dot(ctx, sx, sy, 0.7 + hash(i, 64) * 1.4, hash(i, 65) > 0.8 ? C.amber : '#C9D6F2', 0.09 + tw * 0.3);
+  }
+
+  // right half: the mark + its constellation, a callback
+  const cons = [[1768, 300], [1606, 224], [1452, 262], [1352, 372], [1408, 500], [1560, 558], [1712, 470]];
+  ctx.save();
+  ctx.strokeStyle = 'rgba(143,183,255,0.16)'; ctx.lineWidth = 1;
+  for (let i = 0; i < cons.length; i++) {
+    const [x1, y1] = cons[i], [x2, y2] = cons[(i + 1) % cons.length];
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  cons.forEach(([x, y], i) => { if (i) dot(ctx, x, y, 2 + (i % 3), 'rgba(201,214,242,0.45)'); });
+  ctx.restore();
+
+  const wg = ctx.createRadialGradient(170, 340, 0, 170, 340, 460);
+  wg.addColorStop(0, 'rgba(242,163,58,0.09)'); wg.addColorStop(1, 'rgba(242,163,58,0)');
+  ctx.fillStyle = wg; ctx.fillRect(0, 0, W, H);
+
+  const sk = spring(t - 27.96, { freq: 1.9, damp: 0.9 });
+  const sr = 48 * clamp(sk);
+  if (sr > 0.5) {
+    const sg = ctx.createRadialGradient(1768, 300, 0, 1768, 300, 230);
+    sg.addColorStop(0, 'rgba(242,163,58,0.28)'); sg.addColorStop(0.5, 'rgba(242,163,58,0.07)'); sg.addColorStop(1, 'rgba(242,163,58,0)');
+    ctx.fillStyle = sg; ctx.fillRect(1538, 70, 460, 460);
+    spark(ctx, 1768, 300, sr, C.amber, 0.02);
+    spark(ctx, 1768, 300, sr * 0.36, C.amberHi, -0.02);
+  }
+
+  const ik = spring(t - 28.04, { freq: 2.0, damp: 0.9 });
+  ctx.save(); ctx.globalAlpha = a * clamp(ik);
+  const iy = 300 + 18 * (1 - clamp(ik));
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 36; ctx.shadowOffsetY = 12;
+  rr(ctx, M, iy, 146, 146, 36); ctx.fillStyle = '#0A111F'; ctx.fill(); ctx.restore();
+  imageFrame(ctx, IMG.icon, M, iy, 146, 146, 36, 1);
+  rr(ctx, M, iy, 146, 146, 36); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.2; ctx.stroke();
+  ctx.restore();
+
+  const x = 300;
+  wipeText(ctx, 'DSH EXPERIENCE OPTIMIZER', x, 348, clamp(seg(t, 28.1, 28.4)), { size: 13, weight: 500, color: C.amber, track: 2.6 });
+  wipeText(ctx, 'dsh-plugin-trim', x, 412, clamp(seg(t, 28.12, 28.45)), { size: T.word, weight: 800, family: MONO, color: C.ink, track: -1 });
+  riseText(ctx, '轻一点，走得更远。', x, 496, spring(t - 28.16, { freq: 1.8, damp: 0.95 }), { size: T.hero, weight: 700, color: C.ink, track: 0.6 });
+  ctx.save(); ctx.globalAlpha = a * clamp(seg(t, 28.3, 28.6));
+  txt(ctx, '少一点插件负担，多一点兼容确定性。', x, 540, { size: 20, weight: 400, color: C.mut, track: 0.4 });
+  ctx.restore();
+
+  // npm, typed
+  const nk = spring(t - 28.38, { freq: 2.2, damp: 0.85 });
+  if (nk > 0.01) {
+    ctx.save(); ctx.globalAlpha = a * clamp(nk);
+    const by = 578 + 16 * (1 - clamp(nk));
+    panel(ctx, x, by, 760, 66, { fill: 'rgba(255,255,255,0.05)', stroke: 'rgba(255,255,255,0.15)', r: 12 });
+    txt(ctx, '$', x + 24, by + 41, { size: 20, weight: 600, family: MONO, color: C.amber, track: 0 });
+    const cmd = 'npm i dsh-plugin-trim@0.2.7';
+    const n = Math.min(cmd.length, Math.floor(Math.max(0, t - 28.7) / 0.045));
+    const shown = cmd.slice(0, n);
+    if (n > 0) txt(ctx, shown, x + 54, by + 41, { size: 20, weight: 500, family: MONO, color: C.ink, track: 0.2 });
+    if (n < cmd.length && t > 28.7) {
+      const cw = measure(ctx, shown, { size: 20, weight: 500, family: MONO, track: 0.2 });
+      ctx.fillStyle = C.amberHi; ctx.fillRect(x + 54 + cw + 2, by + 24, 2, 22);
+    }
+    ctx.restore();
+  }
+
+  ctx.save(); ctx.globalAlpha = a * clamp(seg(t, 28.5, 28.85));
+  txt(ctx, 'github.com/Starlit-Sky-code/dsh-experience-optimizer', x, 690, { size: 17, weight: 400, family: MONO, color: C.faint, track: 0.2 });
+  txt(ctx, 'LICENSE', x, 728, { size: 13, weight: 500, family: MONO, color: C.ghost, track: 2 });
+  txt(ctx, 'AGPL-3.0', x + 82, 730, { size: 18, weight: 700, family: MONO, color: C.amberHi, track: 0.4 });
+  txt(ctx, '· 最严格许可证 · 受保护项永不改动', x + 190, 730, { size: 14, weight: 400, family: MONO, color: C.faint, track: 0.3 });
+  ctx.restore();
+
+  // bottom feature rail across the frame
+  const fk = clamp(seg(t, 28.7, 29.1));
+  if (fk > 0.01) {
+    ctx.save(); ctx.globalAlpha = a * fk;
+    hairline(ctx, x, 800, W - M, 800, 'rgba(255,255,255,0.10)', 1);
+    [['只读体检', '扫描不改插件，先看清楚再动手', C.blue], ['低风险才应用', '受保护项永不改动，逐条可解释', C.amber], ['一键回滚', '快照在手，随时恢复原样', C.mint]].forEach(([h, d, c], i) => {
+      const cx = x + i * 512;
+      dot(ctx, cx + 3, 848, 3.6, c);
+      txt(ctx, h, cx + 18, 855, { size: 22, weight: 600, color: C.ink, track: 0.3 });
+      txt(ctx, d, cx + 18, 884, { size: 14, weight: 400, family: MONO, color: C.faint, track: 0.2 });
+    });
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// ═══ bottom rail: chapter progress + timecode ════════════════════════════
+function progressRail(t) {
+  const x0 = M, x1 = W - M, y = H - 34;
+  const p = clamp(t / DUR);
+  let ci = 0; for (let i = 0; i < CHAPTERS.length; i++) if (t >= CHAPTERS[i].t) ci = i;
+  const ch = CHAPTERS[ci];
+  const tc = s => `00:${String(Math.floor(s)).padStart(2, '0')}.${Math.floor((s % 1) * 10)}`;
+  ctx.save();
+  ctx.globalAlpha = 0.92;
+  txt(ctx, `${String(ci + 1).padStart(2, '0')} / 07`, x0, y - 20, { size: 13, weight: 600, family: MONO, color: C.amber, track: 2 });
+  txt(ctx, ch.name, x0 + 74, y - 20, { size: 13, weight: 500, family: MONO, color: C.faint, track: 1.4 });
+  txt(ctx, `${tc(t)} / ${tc(DUR)}`, x1, y - 20, { size: 13, weight: 500, family: MONO, color: C.faint, align: 'right', track: 0.6 });
+  hairline(ctx, x0, y, x1, y, 'rgba(255,255,255,0.13)', 1);
+  ctx.fillStyle = C.amber;
+  ctx.fillRect(x0, y - 1, (x1 - x0) * p, 2);
+  CUTS.slice(1).forEach(c => {
+    const x = x0 + (x1 - x0) * c / DUR;
+    ctx.fillStyle = t >= c ? 'rgba(242,163,58,0.75)' : 'rgba(255,255,255,0.22)';
+    ctx.fillRect(x, y - 5, 1, 10);
+  });
+  dot(ctx, x0 + (x1 - x0) * p, y, 3.2, C.amberHi);
+  ctx.restore();
+}
+
+// ── boot ─────────────────────────────────────────────────────────────────
+const IMG = {};
+const SHOT_CAM = [
+  { z: 1.00, x: 0, y: 0 }, { z: 1.00, x: 0, y: 0 }, { z: 1.00, x: 0, y: 0 },
+  { z: 1.00, x: 0, y: 0 }, { z: 1.00, x: 0, y: 0 }, { z: 1.00, x: 0, y: 0 }, { z: 1.00, x: 0, y: 0 },
+];
+const shotIndex = t => (t >= 28 ? 6 : t >= 24 ? 5 : t >= 18 ? 4 : t >= 16 ? 3 : t >= 12 ? 2 : t >= 4 ? 1 : 0);
+
+function frame(t) {
+  bg(t);
+  const sh = shake(t, [12.0, 16.0, 18.0, 24.0], 7, 0.18);
+  const s = shotIndex(t), since = t - CUTS[s], base = SHOT_CAM[s];
+  const punch = 1 + 0.014 * Math.exp(-since / 0.16);
+  const push = 1 + 0.025 * clamp(since / 6);
+  const zoom = base.z * punch * push;
+  ctx.save();
+  camera(ctx, W, H, { x: W / 2 + base.x + sh[0], y: H / 2 + base.y + sh[1], zoom, rot: sh[2] });
+
+  eyebrow(t);
+  if (t < 4.0) hookShot(t);
+  else if (t < 12.0) panelShot(t);
+  else if (t < 16.0) compatShot(t);
+  else if (t < 18.0) claimShot(t);
+  else if (t < 24.0) afterShot(t);
+  else if (t < 28.0) sparkShot(t);
+  else endShot(t);
+
+  ctx.restore();
+  progressRail(t);
+
+  const top = ctx.createLinearGradient(0, 0, 0, 140);
+  top.addColorStop(0, 'rgba(255,255,255,0.03)'); top.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = top; ctx.fillRect(0, 0, W, 140);
+}
+
+async function boot() {
+  IMG.icon = await loadImage('assets/icon.png');
+  await Promise.all(Array.from(document.fonts, f => f.load().catch(() => null)));
+  await document.fonts.ready;
+}
+
+window.DUR = DUR;
+window.render = t => { ctx.save(); frame(t); ctx.restore(); };
+
+await boot();
+window.render(0);
+window.READY = true;
+</script>
+</body>
+</html>

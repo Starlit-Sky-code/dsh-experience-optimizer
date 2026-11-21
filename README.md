@@ -1,6 +1,8 @@
 # DSH 体验优化器
 
-![DSH 体验优化器 — 少一点插件负担，多一点兼容确定性](assets/readme/hero.svg)
+<p align="center"><a href="README.en.md">English</a> · <strong>简体中文</strong></p>
+
+![DSH 体验优化器](assets/banner.svg)
 
 <p align="center">
   <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="持续集成" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>
@@ -15,11 +17,17 @@
 ## 安装
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.4
-dsh plugin --profile web add dsh-plugin-recipe@0.3.4
+dsh plugin --profile web add dsh-plugin-trim
+dsh plugin --profile web add dsh-plugin-recipe
 ```
 
-> 如果 npm CDN 对某个版本的 tarball 暂时返回 404，请使用下方 Release tarball；这是 registry 缓存问题，不是包内容问题。
+> 安装命令省略版本号即取 latest。`npm i` 是 `npm install` 的官方别名；如果 npm CDN 暂时返回 404，请使用下方 Release tarball。
+
+如果只是安装 npm 包（作为依赖或在项目里使用）：
+
+```bash
+npm i dsh-plugin-trim dsh-plugin-recipe
+```
 
 安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
 
@@ -28,8 +36,8 @@ dsh plugin --profile web add dsh-plugin-recipe@0.3.4
 
 ```bash
 # Release tarball
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.4/dsh-plugin-trim-0.3.4.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.4/dsh-plugin-recipe-0.3.4.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-trim-0.3.5.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-recipe-0.3.5.tgz"
 
 # 开发版（跟随 main）
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
@@ -123,6 +131,7 @@ Markdown/JSON 运行手册与网页控制台都会展示，供下游执行者继
 - **减负与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
 - **工作流配方**：目标表单、蓝图步骤、审批级别、校验问题、Markdown/JSON 导出
 - **教程**：5 分钟上手、按任务快速开始、常见问题
+- **关于**：项目链接、版本、许可证、版权、QQ/捐赠占位
 - **设置**：当前生效的审批/建议策略、保护名单、可复制的配置片段
 - 同源 JSON API 校验 DSH 浏览器会话与 `Origin`；未登录返回 401
 - 网页界面的应用/回滚按钮本身就是用户操作，因此不重复弹宿主审批；Agent 工具路径默认走审批
@@ -183,4 +192,5 @@ pnpm verify
 
 [AGPL-3.0-only](LICENSE)。修改后通过网络向用户提供服务时，需要按 AGPL 提供对应源代码。
 
-<p align="center"><img src="icon.png" width="44" alt="Starlit Sky 插件图标"> <sub>built by Starlit Sky · AGPL-3.0</sub></p>
+<p align="center"><img src="icon.png" width="56" alt="DSH 体验优化器图标"></p>
+<p align="center"><sub>Copyright © 2026 Starlit Sky · AGPL-3.0-only</sub></p>

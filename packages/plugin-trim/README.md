@@ -7,13 +7,13 @@ DSH 插件生态的**减负**与**兼容性体检**插件。
 从 npm 安装（推荐）：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.4
+dsh plugin --profile web add dsh-plugin-trim
 ```
 
 从 GitHub Release 安装（备用，无需 npm）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.4/dsh-plugin-trim-0.3.4.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-trim-0.3.5.tgz"
 ```
 
 本地开发：
@@ -21,6 +21,8 @@ dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience
 ```bash
 dsh plugin --profile web add /absolute/path/to/packages/plugin-trim
 ```
+
+> English overview: [README.en.md](../../README.en.md)
 
 ## Web 控制台
 

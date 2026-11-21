@@ -3,6 +3,31 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.5] - 2026-11-21
+
+### Added
+
+- First-run **3-step onboarding** modal with progress dots, skip/start actions, and a
+  “replay guide” entry in About.
+- **About** tab with real project links, license/version, community and donation
+  placeholders, copyright, and privacy boundaries.
+- **English UI** (`中文 / EN` switch, persisted per browser) and a full
+  `README.en.md`.
+- Inline SVG icons, context/plugin/compatibility progress bars, inventory context
+  share bars, and a severity distribution bar.
+- `NOTICE` with copyright information.
+
+### Changed
+
+- `guardStatus` user label changed from the literal “守卫” to **兼容状态**; other
+  high-friction terms were simplified (还原点, 恢复, 安全确认, 当前配置).
+- Primary install commands now omit the version (`dsh plugin add dsh-plugin-trim`)
+  and the README shows `npm i` as the official shorthand for latest.
+- README uses the supplied `assets/banner.svg`; the icon is now a separate
+  near-bottom block, followed by an independent copyright line.
+- Tabs are now 插件减负 / 工作流配方 / 教程 / 关于 / 设置; the slim plan is shown
+  before the inventory, and secondary table columns collapse on narrow screens.
+
 ## [0.3.4] - 2026-11-21
 
 ### Fixed

@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-plugin-trim · 24s promo</title>
+<link rel="stylesheet" href="./fonts/fonts.css">
+<style>
+  html, body { margin: 0; background: #05070c; overflow: hidden; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+import { DUR, SHOTS, CUES, b, BEAT, BAR } from './timeline.js';
+import { seg, lerp, clamp, ease, snap, glide, spring, springTo, stagger, pulse, shake, camera, stageSize, setupCanvas, loadFonts, loadImage, tween, hash } from './motion.js';
+import { SANS, MONO, txt, measure, rr, panel, spark, imageFrame, riseText, wipeText, dot, hairline, chip, fmt } from './art.js';
+
+const { W, H } = stageSize();
+const canvas = document.getElementById('c');
+const ctx = setupCanvas(canvas, W, H);
+const M = 96;
+
+const C = {
+  bg0: '#05070C', bg1: '#0B1322',
+  ink: '#F2F5FA', mut: '#93A3B8', faint: '#5A6B82', ghost: '#3A485C',
+  amber: '#F2A33A', amberHi: '#FFC46B', blue: '#8FB7FF', mint: '#9FE0C0', coral: '#FF7A66',
+};
+
+const PLUGINS = [
+  { cn: '语音输入', en: 'voice-input', tok: 486, drop: true, why: 'usage 0 · 本任务不需要' },
+  { cn: '推荐卡片', en: 'recommendations', tok: 372, drop: true, why: 'no session usage · 与本任务无关' },
+  { cn: '实验工具', en: 'forge-bundle', tok: 264, drop: true, why: 'workspace 无 Git 仓库' },
+  { cn: '网页搜索', en: 'search-web', tok: 128, drop: true, why: '本任务不需要联网' },
+  { cn: '文档导出', en: 'export-doc', tok: 62, drop: true, why: '本任务不导出文档' },
+  { cn: '桌面操作', en: 'cua-bundle', tok: 318 },
+  { cn: '插件 A', en: 'plugin-a', tok: 210 },
+  { cn: '插件 B', en: 'plugin-b', tok: 188 },
+  { cn: '工作目录', en: 'tool-workdir', tok: 162 },
+  { cn: '提示词包', en: 'prompt-pack', tok: 106 },
+  { cn: '代码审查', en: 'code-review', tok: 92 },
+  { cn: '会话记忆', en: 'session-memory', tok: 29 },
+];
+const TOK_ALL = 2417, TOK_DROP = 1312;
+const DROPPED = PLUGINS.filter(p => p.drop);
+const KEPT = PLUGINS.filter(p => !p.drop);
+const dockRect = j => ({ x: M + j * 152, y: 948, w: 146, h: 46 });
+
+// ── camera: hard cuts between shots, one slow push inside each ─────────────
+const CUTS = [0, 2.0, 6.0, 8.0, 14.0, 18.2, 19.2];
+const SHOT_CAM = [
+  { z: 1.00, x: 0, y: 0 },
+  { z: 1.03, x: -90, y: 26 },
+  { z: 0.99, x: 0, y: 0 },
+  { z: 1.00, x: 18, y: 0 },
+  { z: 1.00, x: 0, y: -8 },
+  { z: 1.02, x: 0, y: 0 },
+  { z: 1.00, x: 0, y: 0 },
+];
+const shotIndex = t => (t >= 19.2 ? 6 : t >= 18.2 ? 5 : t >= 14 ? 4 : t >= 8 ? 3 : t >= 6 ? 2 : t >= 2 ? 1 : 0);
+
+function bg(t) {
+  const g = ctx.createLinearGradient(0, 0, W * 0.35, H);
+  g.addColorStop(0, C.bg0); g.addColorStop(0.55, C.bg1); g.addColorStop(1, '#0A1120');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  const step = 32, ox = (t * 4) % step;
+  for (let y = 16; y < H; y += step) for (let x = 16 - ox; x < W; x += step) ctx.fillRect(x, y, 1.5, 1.5);
+  ctx.restore();
+  const lx = W * 0.24 + Math.sin(t * 0.19) * 36, ly = H * 0.14 + Math.cos(t * 0.15) * 22;
+  const warm = ctx.createRadialGradient(lx, ly, 0, lx, ly, W * 0.62);
+  warm.addColorStop(0, 'rgba(242,163,58,0.12)'); warm.addColorStop(0.45, 'rgba(242,163,58,0.035)'); warm.addColorStop(1, 'rgba(242,163,58,0)');
+  ctx.fillStyle = warm; ctx.fillRect(0, 0, W, H);
+  const cool = ctx.createRadialGradient(W * 0.86, H * 0.9, 0, W * 0.86, H * 0.9, W * 0.55);
+  cool.addColorStop(0, 'rgba(143,183,255,0.09)'); cool.addColorStop(1, 'rgba(143,183,255,0)');
+  ctx.fillStyle = cool; ctx.fillRect(0, 0, W, H);
+  const v = ctx.createRadialGradient(W / 2, H / 2, H * 0.36, W / 2, H / 2, H * 1.0);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+}
+
+function eyebrow(t) {
+  dot(ctx, M + 4, 86, 3.2, C.amber);
+  txt(ctx, 'DSH · EXPERIENCE OPTIMIZER', M + 18, 91, { size: 12, weight: 500, family: MONO, color: 'rgba(242,163,58,0.9)', track: 2.6 });
+}
+
+function checkMark(x, y, s, k, color = C.amber) {
+  if (k <= 0.01) return;
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const p1 = [x - s * 0.42, y], p2 = [x - s * 0.1, y + s * 0.34], p3 = [x + s * 0.46, y - s * 0.36];
+  const a = clamp(k * 2), b2 = clamp(k * 2 - 1);
+  ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.lineTo(lerp(p1[0], p2[0], a), lerp(p1[1], p2[1], a));
+  if (b2 > 0) { ctx.moveTo(p2[0], p2[1]); ctx.lineTo(lerp(p2[0], p3[0], b2), lerp(p2[1], p3[1], b2)); }
+  ctx.stroke(); ctx.restore();
+}
+
+function checkbox(x, y, s, k) {
+  ctx.save();
+  rr(ctx, x, y, s, s, 5);
+  ctx.fillStyle = `rgba(242,163,58,${0.08 + 0.14 * k})`; ctx.fill();
+  ctx.strokeStyle = k > 0.05 ? C.amber : 'rgba(255,255,255,0.24)'; ctx.lineWidth = 1.2; ctx.stroke();
+  checkMark(x + s / 2, y + s / 2, s * 0.9, k);
+  ctx.restore();
+}
+
+function headline(linesArr, y0, size, k0, alpha = 1) {
+  linesArr.forEach((s, i) => {
+    const k = spring(t_ - (k0 + i * 0.1), { freq: 1.9, damp: 0.93 });
+    riseText(ctx, s, M, y0 + i * size * 1.08, k, { size, weight: 900, color: C.ink, track: -size * 0.02, alpha });
+  });
+}
+
+// ── SHOT 1 · 0–2.0 — the tangle ────────────────────────────────────────────
+const barRect = i => ({ x: 820 + (i % 3) * 330, y: 206 + Math.floor(i / 3) * 116, w: 310, h: 86 });
+
+function tangle(t) {
+  const a = clamp(seg(t, 0.02, 0.5)) * (1 - clamp(seg(t, 1.82, 1.98)));
+  if (a <= 0.01) return;
+  const beamX = t > 1.0 ? lerp(700, 1860, ease.inOutSine(clamp(seg(t, 1.0, 1.6)))) : 9999;
+  const c = PLUGINS.map((p, i) => { const r = barRect(i); return [r.x + r.w / 2, r.y + r.h / 2]; });
+  ctx.save(); ctx.globalAlpha = a;
+  for (let i = 0; i < 12; i++) {
+    for (let k = 1; k <= 2; k++) {
+      const j = (i + k * 4 + 1) % 12;
+      if (j <= i) continue;
+      const [x1, y1] = c[i], [x2, y2] = c[j];
+      const bow = (hash(i * 9 + j, 21) - 0.5) * 300;
+      const mx = (x1 + x2) / 2 + bow * 0.3, my = (y1 + y2) / 2 - Math.abs(bow) * 0.7;
+      const cut = clamp((beamX - Math.min(x1, x2)) / 200);
+      ctx.strokeStyle = hash(i + j, 3) > 0.75 ? `rgba(242,163,58,${0.22 * cut + 0.05})` : `rgba(170,198,255,${0.24 * cut + 0.05})`;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo(mx, my, x2, y2); ctx.stroke();
+    }
+  }
+  for (let s = 0; s < 10; s++) {
+    const y0 = 220 + hash(s, 31) * 470;
+    ctx.strokeStyle = `rgba(170,198,255,${0.07 + hash(s, 34) * 0.06})`; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(760, y0); ctx.bezierCurveTo(1050, 220 + hash(s, 32) * 470, 1400, 220 + hash(s, 33) * 470, 1820, y0 + (hash(s, 35) - 0.5) * 160); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function cutBeam(t) {
+  if (t < 1.0 || t > 1.68) return;
+  const k = clamp(seg(t, 1.0, 1.6));
+  const x = lerp(700, 1860, ease.inOutSine(k));
+  const a = clamp(seg(t, 1.0, 1.06)) * (1 - clamp(seg(t, 1.56, 1.68)));
+  if (a <= 0.01) return;
+  ctx.save(); ctx.globalAlpha = a;
+  const g = ctx.createLinearGradient(x - 90, 0, x + 90, 0);
+  g.addColorStop(0, 'rgba(255,196,107,0)'); g.addColorStop(0.5, 'rgba(255,196,107,0.20)'); g.addColorStop(1, 'rgba(255,196,107,0)');
+  ctx.fillStyle = g; ctx.fillRect(x - 90, 0, 180, H);
+  hairline(ctx, x, 0, x, H, 'rgba(255,238,210,1)', 2, 1);
+  dot(ctx, x, H * 0.5, 4.5, 'rgba(255,242,218,0.95)');
+  const tip = ctx.createRadialGradient(x, H * 0.5, 0, x, H * 0.5, 130);
+  tip.addColorStop(0, 'rgba(255,220,170,0.32)'); tip.addColorStop(1, 'rgba(255,220,170,0)');
+  ctx.fillStyle = tip; ctx.fillRect(x - 130, H * 0.5 - 130, 260, 260);
+  ctx.restore();
+}
+
+function shot1(t) {
+  tangle(t);
+  PLUGINS.forEach((p, i) => {
+    const r = barRect(i);
+    const enter = 0.04 + i * 0.036;
+    const k = spring(t - enter, { freq: 2.5, damp: 0.8 });
+    if (k <= 0.01) return;
+    const x = r.x + 60 * (1 - clamp(k)), y = r.y + 10 * (1 - clamp(k));
+    ctx.save(); ctx.globalAlpha = clamp(k);
+    rr(ctx, x, y, r.w, r.h, 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fill();
+    const hit = t > 0.95 ? 1.0 + clamp((r.x - 700) / 1160) * 0.6 : 99;
+    const fl = pulse(t, [hit], 0.22);
+    ctx.strokeStyle = fl > 0.04 ? `rgba(242,163,58,${0.14 + fl * 0.6})` : 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1; ctx.stroke();
+    dot(ctx, x + 22, y + r.h / 2, 3.4, C.faint);
+    txt(ctx, p.cn, x + 38, y + 34, { size: 20, weight: 500, color: C.ink, track: 0.2 });
+    txt(ctx, `${p.tok} tok`, x + r.w - 18, y + 34, { size: 12, weight: 500, family: MONO, color: C.faint, align: 'right' });
+    txt(ctx, p.en, x + 38, y + 55, { size: 10, weight: 400, family: MONO, color: C.ghost, track: 0.4 });
+    ctx.restore();
+  });
+  cutBeam(t);
+
+  const numK = spring(t - 0.12, { freq: 2.0, damp: 0.9 });
+  riseText(ctx, '12', M - 6, 350, numK, { size: 188, weight: 800, family: MONO, color: C.ink, track: -8 });
+  txt(ctx, '启用插件 / ENABLED', M, 392, { size: 11, weight: 500, family: MONO, color: C.amber, track: 2.2 });
+  const ca = clamp(seg(t, 0.45, 0.8));
+  ctx.save(); ctx.globalAlpha = ca;
+  txt(ctx, '多装一个插件，', M, 486, { size: 26, weight: 400, color: C.mut, track: 0.4 });
+  txt(ctx, '就多一份上下文成本。', M, 524, { size: 26, weight: 400, color: C.mut, track: 0.4 });
+  ctx.restore();
+}
+
+// ── SHOT 2 · 2.0–6.0 — trim, close up ──────────────────────────────────────
+const rowRect = i => ({ x: 660, y: 226 + i * 114, w: 1060, h: 96 });
+
+function shot2(t) {
+  txt(ctx, '扫描 / SCAN', M, 210, { size: 11, weight: 500, family: MONO, color: C.amber, track: 2.6 });
+  txt(ctx, '建议禁用 5 项 · 低风险', M, 238, { size: 15, weight: 400, color: C.mut, track: 0.4 });
+
+  // number 12 → 7
+  const nv = tween(t, [[3.9, 12], [4.7, 7]], glide);
+  const sz = tween(t, [[2.0, 120], [2.35, 120]], glide);
+  txt(ctx, String(Math.round(nv)), M - 4, 430, { size: sz, weight: 800, family: MONO, color: C.ink, track: -4 });
+  txt(ctx, '启用插件 / ENABLED', M, 462, { size: 11, weight: 500, family: MONO, color: C.amber, track: 2.2 });
+
+  // token meter
+  const tokens = TOK_ALL - TOK_DROP * glide(clamp(seg(t, 3.95, 4.75)));
+  const tk = clamp(seg(t, 2.0, 2.4));
+  ctx.save(); ctx.globalAlpha = tk;
+  txt(ctx, '可归属上下文', M, 522, { size: 11, weight: 500, family: MONO, color: C.faint, track: 1.4 });
+  txt(ctx, `${fmt(tokens)} tokens`, M + 420, 522, { size: 12, weight: 600, family: MONO, color: tokens < TOK_ALL - 20 ? C.amberHi : C.mut, align: 'right' });
+  rr(ctx, M, 540, 420, 5, 2.5); ctx.fillStyle = 'rgba(255,255,255,0.09)'; ctx.fill();
+  rr(ctx, M, 540, 420 * tokens / TOK_ALL, 5, 2.5); ctx.fillStyle = C.amber; ctx.fill();
+  txt(ctx, '示例 profile', M, 570, { size: 9, weight: 400, family: MONO, color: C.ghost, track: 1 });
+  ctx.restore();
+
+  // the five suggestions
+  DROPPED.forEach((p, i) => {
+    const r = rowRect(i);
+    const enter = 1.99 + i * 0.07;
+    const k = spring(t - enter, { freq: 2.4, damp: 0.84 });
+    const leave = clamp(seg(t, 3.9 + i * 0.06, 4.35 + i * 0.06));
+    if (k <= 0.01 || leave >= 1) return;
+    const x = r.x + 40 * (1 - clamp(k)) + 220 * ease.inCubic(leave);
+    const y = r.y + 14 * (1 - clamp(k));
+    ctx.save(); ctx.globalAlpha = clamp(k) * (1 - leave);
+    rr(ctx, x, y, r.w, r.h, 12);
+    ctx.fillStyle = 'rgba(242,163,58,0.055)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(242,163,58,0.28)'; ctx.lineWidth = 1; ctx.stroke();
+    const ck = clamp(seg(t, 2.55 + i * 0.24, 2.8 + i * 0.24));
+    checkbox(x + 22, y + 34, 26, ck);
+    txt(ctx, p.cn, x + 66, y + 42, { size: 28, weight: 600, color: C.ink, track: 0.2 });
+    txt(ctx, p.why, x + 66, y + 68, { size: 12, weight: 400, family: MONO, color: C.faint, track: 0.2 });
+    txt(ctx, `${p.tok}`, x + r.w - 174, y + 44, { size: 15, weight: 600, family: MONO, color: C.amberHi, align: 'right' });
+    chip(ctx, x + r.w - 150, y + 32, '建议禁用', { h: 30, pad: 12, size: 12, color: C.amber, fill: 'rgba(242,163,58,0.14)', border: 'rgba(242,163,58,0.5)', textColor: C.amberHi, dotColor: C.amber });
+    ctx.restore();
+  });
+
+  // dock of the seven kept plugins
+  dock(t, 4.7);
+}
+
+function dock(t, t0 = 4.7) {
+  KEPT.forEach((p, j) => {
+    const r = dockRect(j);
+    const k = spring(t - (t0 + j * 0.05), { freq: 2.4, damp: 0.82 });
+    if (k <= 0.01) return;
+    const y = r.y + 26 * (1 - clamp(k));
+    ctx.save(); ctx.globalAlpha = clamp(k);
+    rr(ctx, r.x, y, r.w, r.h, 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1; ctx.stroke();
+    dot(ctx, r.x + 15, y + r.h / 2, 3.2, C.amber);
+    txt(ctx, p.cn, r.x + 27, y + r.h / 2 + 5, { size: 13, weight: 500, color: C.ink, track: 0.3 });
+    ctx.restore();
+  });
+}
+
+// ── SHOT 3 · 6.0–8.0 — claim 1 ─────────────────────────────────────────────
+function shot3(t) {
+  headline(['少一点', '插件负担'], 686, 104, 6.0);
+  const k = clamp(seg(t, 6.7, 7.05));
+  ctx.save(); ctx.globalAlpha = k;
+  txt(ctx, '先建议，后确认，可回滚。', M, 840, { size: 18, weight: 400, family: MONO, color: C.mut, track: 1.2 });
+  ctx.restore();
+  dock(t, 4.7);
+}
+
+// ── SHOT 4 · 8.0–14.0 — compatibility matrix + claim 2 ─────────────────────
+const MAT = { x: 660, y: 190, w: 1120, h: 520 };
+
+function matrix(t) {
+  const enter = spring(t - 7.93, { freq: 2.2, damp: 0.86 });
+  const out = ease.inCubic(clamp(seg(t, 13.4, 13.9)));
+  const a = clamp(enter) * (1 - out);
+  if (a <= 0.004) return;
+  const x = MAT.x + 50 * (1 - clamp(enter)) + 120 * out;
+  const y = MAT.y + 30 * (1 - clamp(enter));
+  const w = MAT.w, h = MAT.h;
+  ctx.save(); ctx.globalAlpha = a;
+  panel(ctx, x, y, w, h, { fill: 'rgba(10,18,32,0.88)', stroke: 'rgba(255,255,255,0.14)', r: 20, shadow: 'rgba(0,0,0,0.5)' });
+  hairline(ctx, x + 24, y + 1, x + w - 24, y + 1, 'rgba(196,214,255,0.18)', 1);
+
+  txt(ctx, '兼容性矩阵', x + 34, y + 54, { size: 24, weight: 700, color: C.ink, track: 0.3 });
+  txt(ctx, 'COMPATIBILITY', x + 34, y + 76, { size: 10, weight: 500, family: MONO, color: C.faint, track: 2.2 });
+  const nE = Math.round(tween(t, [[8.3, 0], [8.9, 1]], glide));
+  const nW = Math.round(tween(t, [[8.4, 0], [9.2, 2]], glide));
+  rr(ctx, x + w - 34 - 118, y + 40, 118, 36, 18);
+  ctx.fillStyle = 'rgba(255,122,102,0.12)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(255,122,102,0.4)'; ctx.lineWidth = 1; ctx.stroke();
+  dot(ctx, x + w - 34 - 118 + 18, y + 58, 3.6, C.coral);
+  txt(ctx, `${nE}E · ${nW}W`, x + w - 34 - 118 + 30, y + 63, { size: 12, weight: 600, family: MONO, color: '#FFB3A6', track: 0.4 });
+
+  const rows = [
+    ['PLUGIN × RUNTIME', 'RT_PLATFORM_UNSUPPORTED', 'dsh-cua-bundle 不支持当前平台', 'E'],
+    ['PLUGIN × PLUGIN', 'PP_DUPLICATE_PROMPT', '3 个插件注入重叠的 context section', 'W'],
+    ['PROFILE / WORKSPACE', 'WS_PATH_OVERLAP', 'workspace 指令与 profile 层重叠', 'W'],
+  ];
+  rows.forEach((r, i) => {
+    const k = clamp(seg(t, 8.12 + i * 0.22, 8.52 + i * 0.22));
+    if (k <= 0) return;
+    const ry = y + 118 + i * 116, rx = x + 34 + 26 * (1 - k);
+    const col = r[3] === 'E' ? C.coral : C.amber;
+    ctx.save(); ctx.globalAlpha = a * k;
+    rr(ctx, rx, ry, w - 68, 98, 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.028)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.075)'; ctx.lineWidth = 1; ctx.stroke();
+    dot(ctx, rx + 24, ry + 30, 4.2, col);
+    txt(ctx, r[0], rx + 42, ry + 27, { size: 9.5, weight: 500, family: MONO, color: C.faint, track: 1.6 });
+    txt(ctx, r[1], rx + 42, ry + 58, { size: 19, weight: 600, family: MONO, color: col === C.coral ? '#FFB3A6' : C.amberHi, track: 0.2 });
+    txt(ctx, r[2], rx + 42, ry + 82, { size: 14, weight: 400, color: C.mut, track: 0.2 });
+    ctx.restore();
+  });
+  txt(ctx, '每条冲突都有修复建议 · 只读分析，不修改第三方源码', x + 34, y + h - 28, { size: 10, weight: 400, family: MONO, color: C.ghost, track: 0.6 });
+  ctx.restore();
+
+  // claim 2 rides alongside
+  const ca = clamp(seg(t, 10.3, 13.7));
+  if (ca > 0) {
+    const co = 1 - clamp(seg(t, 13.35, 13.7));
+    headline(['多一点', '兼容确定性'], 596, 96, 10.3, co);
+    ctx.save(); ctx.globalAlpha = co * clamp(seg(t, 11.0, 11.35));
+    txt(ctx, '插件 × 插件 · 插件 × DSH · Profile', M, 752, { size: 15, weight: 400, family: MONO, color: C.mut, track: 0.4 });
+    ctx.restore();
+  }
+}
+
+// ── SHOT 5 · 14.0–18.2 — what is kept ──────────────────────────────────────
+const CN = { cx: 1120, cy: 490, r: 330 };
+const orbitPt = (j, t = 0) => {
+  const a = -Math.PI / 2 + (j / 7) * Math.PI * 2 + 0.22 + (hash(j, 81) - 0.5) * 0.2 + Math.max(0, t - 14) * 0.05;
+  const r = CN.r + (hash(j, 82) - 0.5) * 84;
+  return [CN.cx + Math.cos(a) * r, CN.cy + Math.sin(a) * r];
+};
+
+function constellation(t) {
+  const a = clamp(seg(t, 13.98, 14.12));
+  ctx.save(); ctx.globalAlpha = a * 0.7;
+  for (let i = 0; i < 30; i++) {
+    const ang = hash(i, 71) * Math.PI * 2, rad = 200 + hash(i, 72) * 520;
+    dot(ctx, CN.cx + Math.cos(ang) * rad, CN.cy + Math.sin(ang) * rad * 0.7, 0.7 + hash(i, 73) * 1.3, '#C9D6F2', 0.10 + hash(i, 74) * 0.28);
+  }
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha = a;
+  for (let i = 0; i < 7; i++) {
+    const k = clamp(seg(t, 14.02 + i * 0.1, 14.5 + i * 0.1));
+    if (k <= 0) continue;
+    const [x1, y1] = orbitPt(i, t), [x2, y2] = orbitPt((i + 1) % 7, t);
+    const mx = (x1 + x2) / 2 + (CN.cx - (x1 + x2) / 2) * 0.16, my = (y1 + y2) / 2 + (CN.cy - (y1 + y2) / 2) * 0.16;
+    ctx.strokeStyle = 'rgba(242,163,58,0.32)'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo(mx, my, lerp(x1, x2, k), lerp(y1, y2, k)); ctx.stroke();
+    if (k > 0.98) {
+      const f = (t * 0.3 + hash(i, 85)) % 1;
+      const bx = (1 - f) * (1 - f) * x1 + 2 * (1 - f) * f * mx + f * f * x2;
+      const by = (1 - f) * (1 - f) * y1 + 2 * (1 - f) * f * my + f * f * y2;
+      dot(ctx, bx, by, 1.7, C.amberHi, 0.5);
+    }
+  }
+  ctx.restore();
+
+  // the mark
+  const ik = spring(t - 13.99, { freq: 1.9, damp: 0.9 });
+  if (ik > 0.01) {
+    const r = 136 * clamp(ik);
+    ctx.save(); ctx.globalAlpha = a * clamp(ik);
+    const glow = ctx.createRadialGradient(CN.cx, CN.cy, r * 0.6, CN.cx, CN.cy, r * 2.3);
+    glow.addColorStop(0, 'rgba(242,163,58,0.10)'); glow.addColorStop(1, 'rgba(242,163,58,0)');
+    ctx.fillStyle = glow; ctx.fillRect(CN.cx - r * 2.4, CN.cy - r * 2.4, r * 4.8, r * 4.8);
+    ctx.save(); ctx.beginPath(); ctx.arc(CN.cx, CN.cy, r, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(IMG.icon, CN.cx - r, CN.cy - r, r * 2, r * 2); ctx.restore();
+    ctx.strokeStyle = 'rgba(242,163,58,0.5)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(CN.cx, CN.cy, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.save(); ctx.translate(CN.cx, CN.cy); ctx.rotate(t * 0.09);
+    ctx.strokeStyle = 'rgba(242,163,58,0.28)'; ctx.lineWidth = 1; ctx.setLineDash([2, 16]);
+    ctx.beginPath(); ctx.arc(0, 0, r + 28, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+    ctx.restore();
+  }
+
+  // the kept count, one line of facts
+  ctx.save(); ctx.globalAlpha = a;
+  wipeText(ctx, 'AFTER', M, 300, clamp(seg(t, 14.0, 14.2)), { size: 11, weight: 500, color: C.amber, track: 3 });
+  riseText(ctx, '7 / 12', M - 4, 408, spring(t - 13.99, { freq: 1.9, damp: 0.95 }), { size: 90, weight: 800, family: MONO, color: C.ink, track: -3 });
+  txt(ctx, 'KEPT · 保留', M, 444, { size: 11, weight: 500, family: MONO, color: C.faint, track: 2.2 });
+  hairline(ctx, M, 486, M + 400, 486, 'rgba(255,255,255,0.10)', 1, a);
+  const fk = clamp(seg(t, 14.85, 15.15));
+  ctx.globalAlpha = a * fk;
+  dot(ctx, M + 4, 534, 3.2, C.blue);
+  txt(ctx, '只读体检', M + 16, 540, { size: 17, weight: 500, color: C.mut, track: 0.3 });
+  dot(ctx, M + 132, 534, 3.2, C.amber);
+  txt(ctx, '低风险才应用', M + 144, 540, { size: 17, weight: 500, color: C.mut, track: 0.3 });
+  dot(ctx, M + 300, 534, 3.2, C.mint);
+  txt(ctx, '一键回滚', M + 312, 540, { size: 17, weight: 500, color: C.mut, track: 0.3 });
+  ctx.restore();
+}
+
+// ── SHOT 6 · 18.2–19.2 — the spark ─────────────────────────────────────────
+const P = { x: 1120, y: 490 };
+
+function sparkAct(t) {
+  if (t < 18.2) return;
+  const burst = spring(t - 18.2, { freq: 2.15, damp: 0.62 });
+  const fly = clamp(seg(t, 18.95, 19.5));
+  const sx = lerp(P.x, 1768, ease.inOutCubic(fly));
+  const sy = lerp(P.y, 300, ease.inOutCubic(fly));
+  const r = lerp(146 * burst, 48, ease.inOutCubic(fly));
+  const a = clamp(seg(t, 18.2, 18.28));
+  ctx.save(); ctx.globalAlpha = a;
+  const fl = Math.exp(-(t - 18.2) / 0.13);
+  if (fl > 0.01) {
+    const fg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 440);
+    fg.addColorStop(0, `rgba(255,214,150,${0.7 * fl})`); fg.addColorStop(0.4, `rgba(242,163,58,${0.22 * fl})`); fg.addColorStop(1, 'rgba(242,163,58,0)');
+    ctx.fillStyle = fg; ctx.fillRect(0, 0, W, H);
+  }
+  const hg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 280);
+  hg.addColorStop(0, 'rgba(242,163,58,0.24)'); hg.addColorStop(0.5, 'rgba(242,163,58,0.06)'); hg.addColorStop(1, 'rgba(242,163,58,0)');
+  ctx.fillStyle = hg; ctx.fillRect(sx - 300, sy - 300, 600, 600);
+  const age = clamp(seg(t, 18.2, 18.9));
+  if (t < 19.0) {
+    const k = Math.min(1, age / 0.6), fade = 1 - k;
+    ctx.save(); ctx.globalAlpha = fade * 0.45;
+    ctx.strokeStyle = 'rgba(255,196,107,0.8)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(P.x, P.y, 90 + 380 * ease.outCubic(k), 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  }
+  spark(ctx, sx, sy, Math.max(0, r), C.amber, Math.sin(t * 0.4) * 0.06);
+  spark(ctx, sx, sy, Math.max(0, r * 0.36), C.amberHi, -Math.sin(t * 0.4) * 0.06);
+  const sa = clamp(seg(t, 18.42, 18.7)) * (1 - clamp(seg(t, 18.95, 19.18)));
+  if (sa > 0.01) {
+    ctx.save(); ctx.globalAlpha = sa;
+    txt(ctx, '把杂乱，剪成星光。', P.x, P.y + 236, { size: 42, weight: 700, color: C.ink, align: 'center', track: 0.6 });
+    txt(ctx, 'TRIM THE NOISE · KEEP THE STARS', P.x, P.y + 276, { size: 11, weight: 500, family: MONO, color: 'rgba(242,163,58,0.8)', align: 'center', track: 3 });
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// ── SHOT 7 · 19.2–24.0 — end card ──────────────────────────────────────────
+function endCard(t) {
+  if (t < 19.2) return;
+  const a = clamp(seg(t, 19.2, 19.55));
+  ctx.save(); ctx.globalAlpha = a;
+  for (let i = 0; i < 48; i++) {
+    const sx = hash(i, 61) * W, sy = hash(i, 62) * H;
+    const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * (0.5 + hash(i, 63)) + i));
+    dot(ctx, sx, sy, 0.7 + hash(i, 64) * 1.4, hash(i, 65) > 0.8 ? C.amber : '#C9D6F2', 0.09 + tw * 0.3);
+  }
+  const cons = [[1768, 300], [1606, 224], [1452, 262], [1352, 372], [1408, 500], [1560, 558], [1698, 470]];
+  ctx.save();
+  ctx.strokeStyle = 'rgba(143,183,255,0.18)'; ctx.lineWidth = 1;
+  for (let i = 0; i < cons.length; i++) {
+    const [x1, y1] = cons[i], [x2, y2] = cons[(i + 1) % cons.length];
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  cons.forEach(([x, y], i) => { if (i) dot(ctx, x, y, 2 + (i % 3), 'rgba(201,214,242,0.5)'); });
+  ctx.restore();
+  const wg = ctx.createRadialGradient(170, 340, 0, 170, 340, 460);
+  wg.addColorStop(0, 'rgba(242,163,58,0.09)'); wg.addColorStop(1, 'rgba(242,163,58,0)');
+  ctx.fillStyle = wg; ctx.fillRect(0, 0, W, H);
+
+  const ik = spring(t - 19.24, { freq: 2.0, damp: 0.9 });
+  ctx.save(); ctx.globalAlpha = a * clamp(ik);
+  const iy = 236 + 18 * (1 - clamp(ik));
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 36; ctx.shadowOffsetY = 12;
+  rr(ctx, M, iy, 146, 146, 36); ctx.fillStyle = '#0A111F'; ctx.fill(); ctx.restore();
+  imageFrame(ctx, IMG.icon, M, iy, 146, 146, 36, 1);
+  rr(ctx, M, iy, 146, 146, 36); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.2; ctx.stroke();
+  ctx.restore();
+
+  const x = 300;
+  wipeText(ctx, 'DSH EXPERIENCE OPTIMIZER', x, 282, clamp(seg(t, 19.3, 19.55)), { size: 12, weight: 500, color: C.amber, track: 2.8 });
+  wipeText(ctx, 'dsh-plugin-trim', x, 344, clamp(seg(t, 19.32, 19.6)), { size: 40, weight: 800, family: MONO, color: C.ink, track: -1 });
+  riseText(ctx, '轻一点，走得更远。', x, 424, spring(t - 19.36, { freq: 1.8, damp: 0.95 }), { size: 52, weight: 700, color: C.ink, track: 0.4 });
+  ctx.save(); ctx.globalAlpha = a * clamp(seg(t, 19.5, 19.8));
+  txt(ctx, '少一点插件负担，多一点兼容确定性。', x, 466, { size: 18, weight: 400, color: C.mut, track: 0.4 });
+  ctx.restore();
+
+  // npm install command
+  const nk = spring(t - 19.58, { freq: 2.2, damp: 0.85 });
+  if (nk > 0.01) {
+    ctx.save(); ctx.globalAlpha = a * clamp(nk);
+    const by = 506 + 16 * (1 - clamp(nk));
+    panel(ctx, x, by, 720, 62, { fill: 'rgba(255,255,255,0.045)', stroke: 'rgba(255,255,255,0.14)', r: 12 });
+    txt(ctx, '$', x + 24, by + 39, { size: 18, weight: 600, family: MONO, color: C.amber, track: 0 });
+    txt(ctx, 'npm i dsh-plugin-trim@0.2.7', x + 52, by + 39, { size: 18, weight: 500, family: MONO, color: C.ink, track: 0.2 });
+    ctx.restore();
+  }
+
+  ctx.save(); ctx.globalAlpha = a * clamp(seg(t, 19.72, 20.05));
+  txt(ctx, 'github.com/Starlit-Sky-code/dsh-experience-optimizer', x, 622, { size: 15, weight: 400, family: MONO, color: C.faint, track: 0.2 });
+  txt(ctx, 'LICENSE', x, 660, { size: 9, weight: 500, family: MONO, color: C.ghost, track: 2 });
+  txt(ctx, 'AGPL-3.0', x + 68, 662, { size: 15, weight: 700, family: MONO, color: C.amberHi, track: 0.4 });
+  txt(ctx, '· 最严格许可证 · 受保护项永不改动', x + 158, 662, { size: 12, weight: 400, family: MONO, color: C.faint, track: 0.3 });
+  ctx.restore();
+
+  ctx.restore();
+}
+
+// ── boot ───────────────────────────────────────────────────────────────────
+const IMG = {};
+let t_ = 0;
+
+function frame(t) {
+  t_ = t;
+  bg(t);
+  const sh = shake(t, [8.0, 18.2], 8, 0.2);
+  const s = shotIndex(t), since = t - CUTS[s], base = SHOT_CAM[s];
+  const punch = 1 + 0.014 * Math.exp(-since / 0.16);
+  const push = 1 + 0.018 * clamp(since / 4.2);
+  const zoom = base.z * punch * push;
+  ctx.save();
+  camera(ctx, W, H, { x: W / 2 + base.x + sh[0], y: H / 2 + base.y + sh[1], zoom, rot: sh[2] });
+
+  eyebrow(t);
+  if (t < 2.0) shot1(t);
+  else if (t < 6.0) shot2(t);
+  else if (t < 8.0) shot3(t);
+  else if (t < 14.0) matrix(t);
+  else if (t < 18.2) constellation(t);
+  else if (t < 19.2) sparkAct(t);
+  else endCard(t);
+
+  ctx.restore();
+
+  const top = ctx.createLinearGradient(0, 0, 0, 140);
+  top.addColorStop(0, 'rgba(255,255,255,0.03)'); top.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = top; ctx.fillRect(0, 0, W, 140);
+}
+
+const IMG_OK = {};
+async function boot() {
+  IMG.icon = await loadImage('assets/icon.png');
+  await Promise.all(Array.from(document.fonts, f => f.load().catch(() => null)));
+  await document.fonts.ready;
+}
+
+window.DUR = DUR;
+window.render = t => { ctx.save(); frame(t); ctx.restore(); };
+
+await boot();
+window.render(0);
+window.READY = true;
+</script>
+</body>
+</html>
