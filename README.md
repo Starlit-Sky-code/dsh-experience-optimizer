@@ -19,6 +19,8 @@ dsh plugin --profile web add dsh-plugin-trim@0.3.4
 dsh plugin --profile web add dsh-plugin-recipe@0.3.4
 ```
 
+> 如果 npm CDN 对某个版本的 tarball 暂时返回 404，请使用下方 Release tarball；这是 registry 缓存问题，不是包内容问题。
+
 安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
 
 <details>
