@@ -11,7 +11,7 @@
 
 **Entry type**
 
-`dsh plugin (installable via dsh plugin add)`
+`dsh plugin (installable via npm i)`
 
 **标题**
 
@@ -47,8 +47,8 @@ DSH: `>=0.2.2-rc.1 <0.3.0`; Node: `>=20`.
 **安装命令**
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.7
-dsh plugin --profile web add dsh-plugin-recipe@0.3.7
+npm i dsh-plugin-trim
+npm i dsh-plugin-recipe
 ```
 
 **Topics**

@@ -127,6 +127,16 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('1134419871')
     expect(container.querySelector('.eo-about-hero')).not.toBeNull()
 
+    const clipboardWrite = vi.fn(async () => undefined)
+    Object.defineProperty(window.navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: clipboardWrite },
+    })
+    const copyInstall = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '复制安装命令')
+    expect(copyInstall).toBeDefined()
+    await act(async () => { copyInstall?.click(); await sleep(30) })
+    expect(clipboardWrite).toHaveBeenCalledWith('npm i dsh-plugin-trim\nnpm i dsh-plugin-recipe')
+
     const settings = tabs.find((button) => button.textContent?.trim() === '设置')
     await act(async () => { settings?.click(); await sleep(80) })
     const settingsText = container.textContent || ''

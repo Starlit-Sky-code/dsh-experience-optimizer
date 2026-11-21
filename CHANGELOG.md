@@ -10,11 +10,15 @@ All notable changes to this repository are documented here. Versions follow
 - Settings puts the read-only configuration boundary notice at the very top.
   The UI never writes config; editing the profile patch still requires a plugin
   reload, and approval/protection logic is never skipped.
-- README install now leads with `npm i dsh-plugin-trim`; the optional recipe and
-  profile-scoped install remain documented as fallbacks.
+- Public install surfaces now use `npm i <package>` everywhere: root READMEs,
+  package READMEs, the Settings “copy install command” action, marketplace copy,
+  and the promo page. The optional recipe is `npm i dsh-plugin-recipe`.
 - The promo page is live at
   <https://starlit-sky-code.github.io/dsh-experience-optimizer/> and deploys from
   the `promo-site` branch.
+- Promo typography and motion refined: a deliberate four-line hero, fluid display
+  scale, balanced section headings, a live ticker, pointer spotlight, instrument
+  tilt, scroll progress, staggered reveals, and a blinking terminal cursor.
 
 ### Fixed
 

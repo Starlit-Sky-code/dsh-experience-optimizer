@@ -21,17 +21,19 @@ npm i dsh-plugin-trim
 ```
 
 > No `@version` means latest. The workflow recipe is optional: `npm i dsh-plugin-recipe`.
-> If the plugin does not appear in Settings, install it into the current profile with `dsh plugin --profile web add dsh-plugin-trim`; use the Release tarball below if npm CDN returns 404.
+> If the plugin does not appear in Settings, reload DSH and confirm the dependency is installed in the current workspace; use the Release tarball below if npm CDN returns 404.
 
 Open **Settings → Experience Optimizer** after installing.
 
 <details>
-<summary>GitHub Release / source fallback</summary>
+<summary>GitHub Release fallback</summary>
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
 ```
+
+For source development, see [Development](#development).
 
 </details>
 
@@ -67,6 +69,20 @@ A close candidate requires **zero calls in the usage window + non-zero attributa
 - `confirm: true` is a proposal marker; host approval returning `allowed-once` is the real grant.
 - Rollback is also approval-gated.
 - Data lives under `$DSH_HOME/experience-optimizer/` with `0700` / `0600` permissions.
+
+## Development
+
+```bash
+pnpm install
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm verify
+```
+
+- Design: [architecture](docs/architecture.md)
+- Compatibility rules: [compatibility](docs/compatibility.md)
+- UI and API: [UI](docs/ui.md)
 
 ## Links
 

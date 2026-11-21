@@ -1693,7 +1693,7 @@ window.__ModuleLoader__.load({
 
       async function copyInstall() {
         try {
-          await navigator.clipboard.writeText('dsh plugin --profile web add dsh-plugin-trim\ndsh plugin --profile web add dsh-plugin-recipe')
+          await navigator.clipboard.writeText('npm i dsh-plugin-trim\nnpm i dsh-plugin-recipe')
           notify(tr('安装命令已复制', 'Install commands copied'))
         } catch {
           notify(tr('无法访问剪贴板，请手动复制安装命令', 'Clipboard unavailable; copy the commands manually'), 'warn')

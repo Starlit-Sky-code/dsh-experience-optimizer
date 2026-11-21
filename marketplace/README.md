@@ -30,7 +30,7 @@ pnpm market:index
 
 - 公开 GitHub 仓库；
 - 仓库 Topics 包含 `dsh-plugin`；
-- README 包含 `dsh plugin --profile web add <包名>` 形式的安装命令；
+- README 包含 `npm i <包名>` 形式的安装命令；
 - 插件导出 `apply(ctx)`；
 - 许可证清晰；
 - 不在名称上冒充官方。
@@ -66,13 +66,13 @@ pnpm market:index
 发布后，dsh-plugin.org / dsh.so 可以直接用 npm 包名收录，用户也可以：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-trim@0.3.7
-dsh plugin --profile web add dsh-plugin-recipe@0.3.7
+npm i dsh-plugin-trim
+npm i dsh-plugin-recipe
 ```
 
 ## 5. GitHub Release tarball
 
 当前未发布 npm 时，推荐直接安装 release tarball：
 
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"

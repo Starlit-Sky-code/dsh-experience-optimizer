@@ -7,19 +7,19 @@
 从 npm 安装（推荐）：
 
 ```bash
-dsh plugin --profile web add dsh-plugin-recipe
+npm i dsh-plugin-recipe
 ```
 
-从 GitHub Release 安装（备用，无需 npm）：
+从 GitHub Release 安装（备用）：
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
 ```
 
-本地开发：
+本地包：
 
 ```bash
-dsh plugin --profile web add /absolute/path/to/packages/plugin-recipe
+npm i /absolute/path/to/packages/plugin-recipe
 ```
 
 ## Web 控制台

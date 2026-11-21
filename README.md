@@ -21,22 +21,20 @@ npm i dsh-plugin-trim
 ```
 
 > 省略版本号即取 latest。工作流配方是可选的：`npm i dsh-plugin-recipe`。
-> 如果插件没有出现在设置页，用 `dsh plugin --profile web add dsh-plugin-trim` 装进当前 profile；npm CDN 返回 404 时请使用下方 Release tarball。
+> 安装后如果设置页没有出现，重新加载 DSH，并确认当前工作区已安装该依赖；npm CDN 返回 404 时请使用下方 Release tarball。
 
 安装后打开 **设置 → 体验优化**（Agent 预设下方），或 **设置 → 插件 → 体验优化**。
 
 <details>
-<summary>GitHub Release / 源码安装（备用）</summary>
+<summary>GitHub Release（备用）</summary>
 
 ```bash
 # Release tarball
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
-
-# 开发版（跟随 main）
-dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"
-dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-recipe"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-trim-0.3.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.7/dsh-plugin-recipe-0.3.7.tgz"
 ```
+
+源码开发见下方[开发](#开发)一节。
 
 </details>
 
