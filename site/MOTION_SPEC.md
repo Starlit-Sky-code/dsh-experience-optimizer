@@ -10,9 +10,10 @@
 
 ## 2. Choreography
 
-- **Opening beat**: four-line hero mask-in with a drawn amber underline, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
+- **Opening beat**: a short 1.5s boot overlay builds a radar/grid, counts 0→14 nodes and 0→2,417 tokens, reveals a two-line CONTEXT OBSERVATORY wordmark, then wipes upward.
+- **Hero beat**: four-line mask-in with a drawn amber underline, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
 - **Scroll rhythm**: ticker strip → poster interlude → paper problem statement → dark evidence gates → paper product → dark safety → paper install/FAQ → dark about.
-- **Interaction rhythm**: language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, FAQ details, terminal typing.
+- **Interaction rhythm**: intro skip, language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, FAQ details, terminal typing.
 - **Transition rhythm**: reveal only at section entry; no scroll-jacking.
 - **Closing beat**: quiet safety seal and install terminal; page ends on project links, QQ, copyright.
 
@@ -21,6 +22,7 @@
 - Fast interaction: 160ms
 - Standard transition: 280ms
 - Slow reveal: 600–900ms
+- Intro: 1500ms; exit wipe: 680ms
 - Hero line stagger: 80ms
 - Hero scan: 1700ms
 - Cost count-up: 1500ms
@@ -31,8 +33,9 @@
 ## 4. Interaction Map
 
 - **Hover/focus**: buttons lift 1px, border turns teal; node tooltip on canvas.
-- **Click/tap**: copy command; language toggle; FAQ opens natively.
-- **Keyboard**: skip link, visible focus ring, native details/links.
+- **Click/tap**: intro skip; copy command; language toggle; FAQ opens natively.
+- **Keyboard**: intro skip is tabbable and Escape exits the intro; skip link, visible focus ring, native details/links.
+- **Scroll cue**: desktop has a centered mouse-track cue in the hero footer; mobile has a fixed bottom pill that hides after 60px.
 - **Pointer**: canvas parallax capped at 16px / 12px; poster parallax capped at ±22px; hero spotlight follows the cursor; instrument tilts at most 2.4°.
 - **Scroll**: top progress hairline, ticker marquee, staggered card/gate entry.
 - **Touch**: pointer parallax, spotlight, and tilt disabled; content and terminal remain.
@@ -42,7 +45,8 @@
 
 | Section | Trigger | Animation | Failure mode |
 |---|---|---|---|
-| Hero | load + canvas visible | four-line masks, underline draw, scan, HUD count | static final if reduced motion |
+| Intro | load | grid, radar, node/token count, wordmark, upward wipe | skipped immediately |
+| Hero | intro exit + canvas visible | four-line masks, underline draw, scan, HUD count | static final if reduced motion |
 | Ticker | load | 34s marquee; pause on hover | static strip |
 | Poster | scroll | image parallax ±22px | no transform if reduced/mobile |
 | Problem | 35% visible | 54% count-up, 46% bar | final values immediately |
@@ -65,14 +69,15 @@
 - Display: system Noto Sans SC / Source Han Sans SC, 700 weight, 52–104px, four deliberate lines, `-0.04em` tracking, amber underline on the last line.
 - Section display: 650 weight, 34–68px, `-0.035em`, balanced wrapping.
 - Body: 16px, 1.75 line-height, 34em measure.
+- Metadata: 10.5–12px (raised from the previous 8–10px floor); no user-facing prose below 12px except instrument labels.
 - Code/data: JetBrains Maple Mono fallback; tabular numbers for scores.
 - Palette: ink #07101d, teal #5eead4, amber #fbbf24, paper #f2f4f7.
 - 8px spacing rhythm, 18px cards, max width 1280.
 
 ## 8. Accessibility / Performance
 
-- `prefers-reduced-motion`: static constellation, final numbers, no typing/parallax/seal.
-- `?motion=off` mirrors the same fallback for testing.
+- `prefers-reduced-motion`: no intro, static constellation, final numbers, no typing/parallax/seal.
+- `?motion=off` mirrors the same fallback; `?intro=off` skips only the opening sequence.
 - Focus-visible rings; skip link; alt text; native details.
 - LCP: preload cover; no font network.
 - Canvas ≤ 14 nodes; pause when offscreen/hidden.
@@ -88,9 +93,11 @@
 
 ## 10. Acceptance
 
+- [x] A short, skippable opening sequence establishes the observatory metaphor.
 - [x] Hero has a distinct mechanic, not a stock hero.
 - [x] Seven motion beats: four-line title, underlined accent, scan, count-up, gates, seal, terminal.
 - [x] Ticker, scroll progress, spotlight, and instrument tilt add a second motion layer.
+- [x] Desktop and mobile both have a visible scroll cue.
 - [x] One quiet section: safety.
 - [x] Reduced-motion fallback covers all content.
 - [x] 1440 / 768 / 390 no horizontal overflow.

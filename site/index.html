@@ -15,6 +15,45 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <div class="intro" id="intro">
+    <div class="intro-visual" aria-hidden="true">
+      <div class="intro-grid"></div>
+      <div class="intro-hud intro-hud-tl">CONTEXT OBSERVATORY</div>
+      <div class="intro-hud intro-hud-tr"><span id="intro-count">00</span> / 14 NODES</div>
+      <div class="intro-hud intro-hud-bl">BOOT SEQUENCE / 01</div>
+      <div class="intro-hud intro-hud-br">LOCAL FIRST · HOST APPROVED</div>
+      <div class="intro-stage">
+        <div class="intro-radar">
+          <span class="intro-ring intro-ring-1"></span>
+          <span class="intro-ring intro-ring-2"></span>
+          <span class="intro-ring intro-ring-3"></span>
+          <span class="intro-axis intro-axis-x"></span>
+          <span class="intro-axis intro-axis-y"></span>
+          <span class="intro-sweep"></span>
+          <span class="intro-node" style="--x:-39%;--y:-24%;--i:0"></span>
+          <span class="intro-node" style="--x:-4%;--y:-42%;--i:1"></span>
+          <span class="intro-node" style="--x:35%;--y:-28%;--i:2"></span>
+          <span class="intro-node" style="--x:45%;--y:8%;--i:3"></span>
+          <span class="intro-node" style="--x:29%;--y:37%;--i:4"></span>
+          <span class="intro-node" style="--x:-4%;--y:43%;--i:5"></span>
+          <span class="intro-node" style="--x:-34%;--y:31%;--i:6"></span>
+          <span class="intro-node" style="--x:-46%;--y:3%;--i:7"></span>
+          <span class="intro-node" style="--x:-22%;--y:-38%;--i:8"></span>
+          <span class="intro-node" style="--x:19%;--y:22%;--i:9"></span>
+          <span class="intro-core">CTX</span>
+        </div>
+        <div class="intro-copy">
+          <p class="intro-kicker">INITIALIZING RESIDENT CONTEXT</p>
+          <div class="intro-title"><span>CONTEXT</span><span>OBSERVATORY</span></div>
+          <p class="intro-status">SCANNING PLUGIN TOPOLOGY · <b id="intro-token">0</b> TOKENS</p>
+        </div>
+      </div>
+      <div class="intro-progress"><i></i></div>
+    </div>
+    <button class="intro-skip" id="intro-skip" type="button">跳过 <span>SKIP</span></button>
+  </div>
+  <noscript><style>.intro{display:none}</style></noscript>
+
   <div class="progress" id="progress" aria-hidden="true"></div>
   <a class="skip" href="#main" data-i18n="skip">跳到主要内容</a>
 
@@ -86,9 +125,15 @@
       </div>
       <div class="hero-foot">
         <p data-i18n="heroFoot">不是工具白名单，是插件常驻上下文。</p>
-        <a class="scroll-cue" href="#why"><span data-i18n="scroll">向下看</span><i></i></a>
+        <a class="scroll-cue" href="#why">
+          <span class="scroll-cue-copy"><b data-i18n="scrollCue">向下滑动</b><small data-i18n="scrollHint">SCROLL TO INSPECT</small></span>
+          <span class="scroll-cue-track" aria-hidden="true"><i></i></span>
+        </a>
+        <span class="hero-index">01 / 09</span>
       </div>
     </section>
+
+    <a class="scroll-float" href="#why"><span data-i18n="scrollCue">向下滑动</span><i></i></a>
 
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">

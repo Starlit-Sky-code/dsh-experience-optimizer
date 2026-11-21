@@ -21,13 +21,14 @@ Motion-off / reduced-motion test:
 
 ```text
 http://127.0.0.1:4173/?motion=off
+http://127.0.0.1:4173/?intro=off
 ```
 
 ## Structure
 
-- `index.html` — hero instrument, ticker, poster, evidence gates, product, safety, install, FAQ, about
+- `index.html` — opening sequence, hero instrument, ticker, poster, evidence gates, product, safety, install, FAQ, about
 - `styles.css` — dark observatory + paper editorial sections, fluid type scale, responsive layout
-- `main.js` — canvas constellation, scan, counters, spotlight, tilt, scroll progress, terminal typing, copy
+- `main.js` — intro timeline, canvas constellation, scan, counters, spotlight, tilt, scroll progress, terminal typing, copy
 - `i18n.js` — Chinese/English copy, four-line hero
 - `MOTION_SPEC.md` — concept, beats, tokens, fallback, acceptance
 - `assets/` — cover, mobile cover, UI screenshot, banner, icon, flow

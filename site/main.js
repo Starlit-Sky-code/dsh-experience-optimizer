@@ -8,7 +8,11 @@
   if (lang) lang.addEventListener('click', () => window.siteLocale?.toggle())
 
   const header = document.getElementById('site-header')
-  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 24)
+  const scrollFloat = document.querySelector('.scroll-float')
+  const onScroll = () => {
+    header?.classList.toggle('scrolled', window.scrollY > 24)
+    scrollFloat?.classList.toggle('is-hidden', window.scrollY > 60)
+  }
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
 
@@ -42,9 +46,75 @@
     })
   })
 
-  // Hero entrance
+  // Opening sequence
   const hero = document.querySelector('.hero')
-  requestAnimationFrame(() => hero?.classList.add('is-ready'))
+  const intro = document.getElementById('intro')
+  const introSkip = document.getElementById('intro-skip')
+  const introCount = document.getElementById('intro-count')
+  const introToken = document.getElementById('intro-token')
+  const introOff = !intro || reduce || new URLSearchParams(location.search).get('intro') === 'off'
+  const pageRegions = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')]
+  let heroStarted = false
+  let introDone = false
+
+  const setPageInert = (on) => {
+    pageRegions.forEach((region) => {
+      if (!region) return
+      if (on) region.setAttribute('inert', '')
+      else region.removeAttribute('inert')
+    })
+  }
+
+  const startHero = () => {
+    if (heroStarted) return
+    heroStarted = true
+    hero?.classList.add('is-ready')
+    document.dispatchEvent(new CustomEvent('dsh:hero-start'))
+  }
+
+  const finishIntro = (immediate = false) => {
+    if (introDone) return
+    introDone = true
+    document.body.classList.remove('intro-active')
+    setPageInert(false)
+    if (!intro) { startHero(); return }
+    if (immediate || reduce) {
+      intro.style.display = 'none'
+      startHero()
+      return
+    }
+    intro.classList.add('is-out')
+    startHero()
+    window.setTimeout(() => { intro.style.display = 'none' }, 700)
+  }
+
+  if (introOff) {
+    finishIntro(true)
+  } else {
+    document.body.classList.add('intro-active')
+    setPageInert(true)
+    requestAnimationFrame(() => { if (!introDone) intro.classList.add('is-live') })
+    const countStart = performance.now()
+    const countTick = (now) => {
+      const progress = Math.min(1, (now - countStart) / 950)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      if (introCount) introCount.textContent = String(Math.round(14 * eased)).padStart(2, '0')
+      if (introToken) introToken.textContent = Math.round(2417 * eased).toLocaleString('en-US')
+      if (progress < 1 && !introDone) requestAnimationFrame(countTick)
+    }
+    requestAnimationFrame(countTick)
+    const introTimer = window.setTimeout(() => finishIntro(false), 1500)
+    introSkip?.addEventListener('click', () => {
+      window.clearTimeout(introTimer)
+      finishIntro(false)
+    })
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !introDone) {
+        window.clearTimeout(introTimer)
+        finishIntro(false)
+      }
+    })
+  }
 
   if (hero && !reduce && window.matchMedia('(pointer: fine)').matches) {
     let glowRaf = 0
@@ -134,11 +204,18 @@
       }
       requestAnimationFrame(tick)
     }
-    const hudObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => { if (entry.isIntersecting) { runHud(); hudObserver.disconnect() } })
-    }, { threshold: .45 })
-    hudObserver.observe(instrument)
-    if (reduce) runHud()
+    const armHud = () => {
+      const hudObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { if (entry.isIntersecting) { runHud(); hudObserver.disconnect() } })
+      }, { threshold: .45 })
+      hudObserver.observe(instrument)
+      if (reduce) runHud()
+    }
+    if (document.body.classList.contains('intro-active') && !reduce) {
+      document.addEventListener('dsh:hero-start', armHud, { once: true })
+    } else {
+      armHud()
+    }
   }
 
   if (instrument && !reduce && window.matchMedia('(pointer: fine)').matches) {
@@ -242,7 +319,13 @@
 
   // Constellation canvas
   const canvas = document.getElementById('constellation')
-  if (canvas) initConstellation(canvas, reduce)
+  if (canvas) {
+    if (document.body.classList.contains('intro-active') && !reduce) {
+      document.addEventListener('dsh:hero-start', () => initConstellation(canvas, reduce), { once: true })
+    } else {
+      initConstellation(canvas, reduce)
+    }
+  }
   function initConstellation(canvas, reduce) {
     const ctx = canvas.getContext('2d')
     const tip = document.getElementById('node-tip')
