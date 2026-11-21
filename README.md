@@ -36,8 +36,8 @@ npm i dsh-plugin-trim dsh-plugin-recipe
 
 ```bash
 # Release tarball
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-trim-0.3.5.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-recipe-0.3.5.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-trim-0.3.6.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-recipe-0.3.6.tgz"
 
 # 开发版（跟随 main）
 dsh plugin --profile web add "git+https://github.com/Starlit-Sky-code/dsh-experience-optimizer.git#main&path:/packages/plugin-trim"

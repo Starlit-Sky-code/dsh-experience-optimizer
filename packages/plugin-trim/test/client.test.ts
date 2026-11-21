@@ -108,6 +108,18 @@ describe('client onboarding and pages', () => {
     await act(async () => { skip?.click(); await sleep(30) })
     expect(window.localStorage.getItem('dsh-experience-optimizer.onboarding.v1')).toBe('1')
 
+    const planToggle = [...container.querySelectorAll('.eo-card-toggle')].find((button) => button.textContent?.includes('插件减负方案'))
+    expect(planToggle).toBeDefined()
+    await act(async () => { (planToggle as HTMLButtonElement).click(); await sleep(30) })
+    expect(container.textContent).not.toContain('任务类型')
+    await act(async () => { (planToggle as HTMLButtonElement).click(); await sleep(30) })
+    expect(container.textContent).toContain('任务类型')
+
+    const twoColumn = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '双列')
+    expect(twoColumn).toBeDefined()
+    await act(async () => { twoColumn?.click(); await sleep(30) })
+    expect(container.querySelector('.eo-layout-two')).not.toBeNull()
+
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')
     expect(tutorial).toBeDefined()
@@ -117,7 +129,8 @@ describe('client onboarding and pages', () => {
     const about = tabs.find((button) => button.textContent?.trim() === '关于')
     await act(async () => { about?.click(); await sleep(30) })
     expect(container.textContent).toContain('关于项目')
-    expect(container.textContent).toContain('待补充')
+    expect(container.textContent).toContain('1134419871')
+    expect(container.querySelector('.eo-about-hero')).not.toBeNull()
 
     const settings = tabs.find((button) => button.textContent?.trim() === '设置')
     await act(async () => { settings?.click(); await sleep(80) })

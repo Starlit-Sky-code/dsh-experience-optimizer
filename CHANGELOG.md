@@ -3,6 +3,22 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.6] - 2026-11-21
+
+### Added
+
+- All content-heavy cards are now collapsible: slim plan, inventory, compatibility,
+  context, apply result, and dedupe. The context card starts collapsed.
+- A view bar adds **standard / two-column** layout, **comfortable / compact** density,
+  and **collapse all / expand all**; preferences persist per browser.
+- About now includes an inline **hero SVG**, real project links, and QQ group
+  `1134419871`; donation methods remain explicitly marked as to-be-added.
+
+### Changed
+
+- Two-column mode pairs compatibility and context on wider screens and falls back to
+  one column below 820px; secondary inventory columns still collapse on narrow screens.
+
 ## [0.3.5] - 2026-11-21
 
 ### Added

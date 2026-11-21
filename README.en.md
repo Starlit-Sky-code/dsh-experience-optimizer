@@ -33,8 +33,8 @@ Open **Settings → Experience Optimizer** after installing.
 <summary>GitHub Release / source fallback</summary>
 
 ```bash
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-trim-0.3.5.tgz"
-dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.5/dsh-plugin-recipe-0.3.5.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-trim-0.3.6.tgz"
+dsh plugin --profile web add "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.6/dsh-plugin-recipe-0.3.6.tgz"
 ```
 
 </details>

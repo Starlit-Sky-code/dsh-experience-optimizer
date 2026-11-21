@@ -32,7 +32,7 @@ window.__ModuleLoader__.load({
       releases: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases',
       issues: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues',
       homepage: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
-      qqGroup: '',
+      qqGroup: '1134419871',
       qqLink: '',
       donate: [],
     }
@@ -191,6 +191,14 @@ window.__ModuleLoader__.load({
       const storage = browserStorage()
       try { if (storage) storage.removeItem(ONBOARDING_KEY) } catch { /* ignore */ }
     }
+    function readPref(key, fallback) {
+      const storage = browserStorage()
+      try { return (storage && storage.getItem('dsh-experience-optimizer.' + key)) || fallback } catch { return fallback }
+    }
+    function writePref(key, value) {
+      const storage = browserStorage()
+      try { if (storage) storage.setItem('dsh-experience-optimizer.' + key, value) } catch { /* ignore */ }
+    }
 
     const CSS = `
 .eo-root{--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
@@ -261,6 +269,24 @@ window.__ModuleLoader__.load({
 .eo-metric-hint{font-size:11px;line-height:16px;color:var(--eo-tertiary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eo-card{padding:14px;border:.5px solid var(--eo-card-stroke);border-radius:var(--eo-radius);background:var(--eo-card-bg)}
 .eo-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+        .eo-card-toggle{appearance:none;border:0;background:transparent;color:inherit;font:inherit;padding:0;margin:0;display:flex;align-items:flex-start;gap:7px;text-align:left;cursor:pointer;min-width:0}
+        .eo-card-toggle:hover .eo-card-title{text-decoration:underline;text-underline-offset:3px}
+        .eo-card-chevron{display:inline-flex;align-items:center;color:var(--eo-tertiary);margin-top:3px;transition:transform .15s ease}
+        .eo-card-toggle[aria-expanded="false"] .eo-card-chevron{transform:rotate(-90deg)}
+        .eo-card-body{min-width:0}
+        .eo-viewbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 2px;padding:8px 10px;border:.5px solid var(--eo-border);border-radius:8px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.03))}
+        .eo-viewbar-label{font-size:11px;color:var(--eo-tertiary);white-space:nowrap}
+        .eo-viewbar .eo-inline{gap:4px}
+        .eo-viewbar .eo-btn{height:26px;font-size:11px;padding:0 8px;border-radius:6px}
+        .eo-viewbar .eo-btn-active{border-color:var(--eo-primary);color:var(--eo-primary);background:var(--dsw-alias-bg-layer-1,rgba(127,127,127,.06))}
+        .eo-density-compact .eo-card{padding:10px}
+        .eo-density-compact .eo-stack,.eo-stack.eo-density-compact{gap:8px}
+        .eo-density-compact .eo-item{padding:7px 0}
+        .eo-density-compact .eo-metric{padding:9px 11px}
+        .eo-layout-two.eo-stack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+        .eo-layout-two>.eo-viewbar,.eo-layout-two>.eo-metrics,.eo-layout-two>[data-section="draft"],.eo-layout-two>[data-section="inventory"],.eo-layout-two>[data-section="result"],.eo-layout-two>[data-section="dedupe"],.eo-layout-two>[data-section="diagnostics"]{grid-column:1/-1}
+        .eo-layout-two>[data-section="compat"],.eo-layout-two>[data-section="context"]{grid-column:span 1}
+        .eo-about-hero{display:block;width:100%;height:auto;border-radius:12px;background:#0b1422;margin:0 0 10px}
 .eo-card-title{margin:0;font-size:14px;line-height:22px;font-weight:500;letter-spacing:0}
 .eo-card-sub{margin:2px 0 0;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
 .eo-btn{appearance:none;height:32px;padding:0 12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:transparent;color:var(--eo-primary);font:inherit;font-size:13px;line-height:20px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;transition:background .14s ease,border-color .14s ease,opacity .14s ease}
@@ -368,7 +394,7 @@ window.__ModuleLoader__.load({
 .eo-spacer{height:0}
 @keyframes eo-spin{to{transform:rotate(360deg)}}
 @keyframes eo-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-@media(max-width:820px){.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
+@media(max-width:820px){.eo-layout-two.eo-stack{grid-template-columns:1fr}.eo-layout-two>*{grid-column:1/-1!important}.eo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-metric:nth-child(2){border-right:0}.eo-metric:nth-child(-n+2){border-bottom:.5px solid var(--eo-border)}.eo-form-grid{grid-template-columns:1fr}.eo-hero{flex-wrap:wrap}.eo-hero-actions{margin-left:0}}
 @media(max-width:520px){.eo-metrics{grid-template-columns:1fr}.eo-metric{border-right:0;border-bottom:.5px solid var(--eo-border)}.eo-metric:last-child{border-bottom:0}}
 `
 
@@ -411,7 +437,13 @@ window.__ModuleLoader__.load({
       )
     }
 
-    function Card({ title, subtitle, extra, children, className = '', section }) {
+    function Card({ title, subtitle, extra, children, className = '', section, collapsible = false, collapsed = false, onToggle }) {
+      const heading = h(
+        'div',
+        null,
+        title ? h('h3', { className: 'eo-card-title' }, title) : null,
+        subtitle ? h('p', { className: 'eo-card-sub' }, subtitle) : null,
+      )
       return h(
         'section',
         { className: 'eo-card ' + className, 'data-section': section },
@@ -419,16 +451,25 @@ window.__ModuleLoader__.load({
           ? h(
               'div',
               { className: 'eo-card-head' },
-              h(
-                'div',
-                null,
-                title ? h('h3', { className: 'eo-card-title' }, title) : null,
-                subtitle ? h('p', { className: 'eo-card-sub' }, subtitle) : null,
-              ),
+              collapsible
+                ? h(
+                    'button',
+                    {
+                      type: 'button',
+                      className: 'eo-card-toggle',
+                      'aria-expanded': !collapsed,
+                      onClick: onToggle,
+                    },
+                    h('span', { className: 'eo-card-chevron' }, h(Icon, { name: 'chevron', size: 14 })),
+                    heading,
+                  )
+                : heading,
               extra || null,
             )
           : null,
-        children,
+        collapsible && collapsed
+          ? null
+          : h('div', { className: 'eo-card-body' }, children),
       )
     }
 
@@ -623,6 +664,7 @@ window.__ModuleLoader__.load({
         ['rect', { x: '4', y: '14', width: '6', height: '6', rx: '1' }],
         ['rect', { x: '14', y: '14', width: '6', height: '6', rx: '1' }],
       ],
+      chevron: [['path', { d: 'M6 9l6 6 6-6' }]],
     }
 
     function Icon({ name, size = 16 }) {
@@ -747,12 +789,57 @@ window.__ModuleLoader__.load({
       )
     }
 
+    function AboutHero() {
+      return h(
+        'svg',
+        {
+          viewBox: '0 0 1200 300',
+          className: 'eo-about-hero',
+          role: 'img',
+          'aria-label': tr('DSH 体验优化器', 'DSH Experience Optimizer'),
+        },
+        h('defs', null,
+          h('linearGradient', { id: 'eo-about-bg', x1: '0', y1: '0', x2: '1', y2: '1' },
+            h('stop', { offset: '0', stopColor: '#0a1220' }),
+            h('stop', { offset: '1', stopColor: '#101f34' }),
+          ),
+        ),
+        h('rect', { width: '1200', height: '300', rx: '18', fill: 'url(#eo-about-bg)' }),
+        h('circle', { cx: '1010', cy: '150', r: '94', fill: 'none', stroke: '#2a405e' }),
+        h('circle', { cx: '1010', cy: '150', r: '58', fill: 'none', stroke: '#355070' }),
+        h('path', { d: 'M944 116 L1004 88 L1076 112 L1092 174 L1038 214 L962 190 Z', fill: 'none', stroke: '#45658a', strokeWidth: '1.4' }),
+        h('path', { d: 'M944 116 L1038 214 M1004 88 L962 190 M1076 112 L944 116', stroke: '#334d6b' }),
+        [[944,116],[1004,88],[1076,112],[1092,174],[1038,214],[962,190]].map(([cx,cy],i) =>
+          h('circle', { key: i, cx, cy, r: 8, fill: '#0f1b2c', stroke: '#5eead4', strokeWidth: 1.5 }),
+        ),
+        h('circle', { cx: '1010', cy: '150', r: '34', fill: '#0c1728', stroke: '#fbbf24', strokeWidth: 1.5 }),
+        h('path', { d: 'M1010 127 L1028 136 L1028 154 C1028 168 1019 177 1010 181 C1001 177 992 168 992 154 L992 136 Z', fill: 'none', stroke: '#fbbf24', strokeWidth: 1.8 }),
+        h('path', { d: 'M1002 151 L1008 157 L1019 144', fill: 'none', stroke: '#fbbf24', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }),
+        h('text', { x: '64', y: '72', fill: '#5eead4', fontFamily: 'ui-monospace, monospace', fontSize: '13', letterSpacing: '2.4' }, 'DSH PLUGIN SUITE · AGPL-3.0'),
+        h('text', { x: '62', y: '142', fill: '#f2f7ff', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '44', fontWeight: '700' }, tr('DSH 体验优化器', 'DSH Experience Optimizer')),
+        h('text', { x: '64', y: '184', fill: '#c3d3e8', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '20' }, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
+        h('g', { transform: 'translate(64 220)' },
+          [tr('插件减负', 'Plugin diet'), tr('兼容性', 'Compatibility'), tr('工作流配方', 'Workflow recipe')].map((label, i) =>
+            h('g', { key: label, transform: `translate(${i * 150} 0)` },
+              h('rect', { width: '138', height: '30', rx: '15', fill: 'rgba(94,234,212,.08)', stroke: 'rgba(94,234,212,.35)' }),
+              h('circle', { cx: '16', cy: '15', r: '3', fill: ['#5eead4','#60a5fa','#fbbf24'][i] }),
+              h('text', { x: '28', y: '20', fill: '#dce9f9', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '13' }, label),
+            ),
+          ),
+        ),
+        h('text', { x: '64', y: '286', fill: '#7f93b0', fontFamily: 'ui-monospace, monospace', fontSize: '11', letterSpacing: '1.2' }, 'github.com/Starlit-Sky-code/dsh-experience-optimizer'),
+      )
+    }
+
     function ExperiencePanel() {
 
       const [tab, setTab] = useState('trim')
       const [locale, setLocale] = useState(detectLocale)
       const [showOnboarding, setShowOnboarding] = useState(false)
       const [onboardingStep, setOnboardingStep] = useState(0)
+      const [collapsedCards, setCollapsedCards] = useState({ context: true })
+      const [layout, setLayout] = useState(() => readPref('layout', 'standard'))
+      const [density, setDensity] = useState(() => readPref('density', 'comfortable'))
       const [overview, setOverview] = useState(null)
       const [loading, setLoading] = useState(true)
       const [error, setError] = useState('')
@@ -843,6 +930,22 @@ window.__ModuleLoader__.load({
         resetOnboarding()
         setOnboardingStep(0)
         setShowOnboarding(true)
+      }, [])
+
+      const toggleCard = useCallback((id) => {
+        setCollapsedCards((current) => ({ ...current, [id]: !current[id] }))
+      }, [])
+      const collapseAllCards = useCallback(() => {
+        setCollapsedCards({ draft: true, inventory: true, compat: true, context: true, result: true, dedupe: true, diagnostics: true })
+      }, [])
+      const expandAllCards = useCallback(() => setCollapsedCards({}), [])
+      const changeLayout = useCallback((value) => {
+        setLayout(value)
+        writePref('layout', value)
+      }, [])
+      const changeDensity = useCallback((value) => {
+        setDensity(value)
+        writePref('density', value)
       }, [])
 
       const loadSettings = useCallback(async () => {
@@ -1400,6 +1503,7 @@ window.__ModuleLoader__.load({
               subtitle: tr('插件减负、兼容性检查与工作流蓝图', 'Plugin diet, compatibility checks, and workflow recipes'),
               section: 'about',
             },
+            h(AboutHero),
             h(
               'div',
               { className: 'eo-about-grid' },
@@ -1408,7 +1512,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Experience Optimizer')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.3.5 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.3.6 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -1486,7 +1590,69 @@ window.__ModuleLoader__.load({
       function renderTrim() {
         return h(
           'div',
-          { className: 'eo-stack' },
+          {
+            className:
+              'eo-stack' +
+              (layout === 'two' ? ' eo-layout-two' : '') +
+              (density === 'compact' ? ' eo-density-compact' : ''),
+          },
+          h(
+            'div',
+            { className: 'eo-viewbar' },
+            h('span', { className: 'eo-viewbar-label' }, tr('视图', 'View')),
+            h(
+              'div',
+              { className: 'eo-inline' },
+              h(
+                Button,
+                {
+                  variant: 'ghost',
+                  className: layout === 'standard' ? 'eo-btn-active' : '',
+                  onClick: () => changeLayout('standard'),
+                },
+                tr('标准', 'Standard'),
+              ),
+              h(
+                Button,
+                {
+                  variant: 'ghost',
+                  className: layout === 'two' ? 'eo-btn-active' : '',
+                  onClick: () => changeLayout('two'),
+                },
+                tr('双列', 'Two-column'),
+              ),
+            ),
+            h('span', { className: 'eo-viewbar-label' }, tr('密度', 'Density')),
+            h(
+              'div',
+              { className: 'eo-inline' },
+              h(
+                Button,
+                {
+                  variant: 'ghost',
+                  className: density === 'comfortable' ? 'eo-btn-active' : '',
+                  onClick: () => changeDensity('comfortable'),
+                },
+                tr('舒适', 'Comfortable'),
+              ),
+              h(
+                Button,
+                {
+                  variant: 'ghost',
+                  className: density === 'compact' ? 'eo-btn-active' : '',
+                  onClick: () => changeDensity('compact'),
+                },
+                tr('紧凑', 'Compact'),
+              ),
+            ),
+            h('span', { className: 'eo-viewbar-label', style: { marginLeft: 'auto' } }, tr('折叠', 'Collapse')),
+            h(
+              'div',
+              { className: 'eo-inline' },
+              h(Button, { variant: 'ghost', onClick: collapseAllCards }, tr('全部折叠', 'Collapse all')),
+              h(Button, { variant: 'ghost', onClick: expandAllCards }, tr('全部展开', 'Expand all')),
+            ),
+          ),
           h('div', { className: 'eo-grid eo-metrics' }, [
             h(Metric, {
               key: 'tokens',
@@ -1525,7 +1691,7 @@ window.__ModuleLoader__.load({
             {
               title: tr('兼容性检查', 'Compatibility check'),
               subtitle: tr('插件 ↔ 插件 · 插件 ↔ DSH · 当前配置 / 工作区', 'Plugin ↔ plugin · plugin ↔ DSH · profile / workspace'),
-              section: 'compat',
+              section: 'compat', collapsible: true, collapsed: collapsedCards.compat === true, onToggle: () => toggleCard('compat'),
               extra: h(
                 'div',
                 { className: 'eo-inline' },
@@ -1635,7 +1801,7 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: tr('上下文成本', 'Context cost'),
-              section: 'context',
+              section: 'context', collapsible: true, collapsed: collapsedCards.context === true, onToggle: () => toggleCard('context'),
               subtitle:
                 '总计 ' +
                 formatNumber(overview.context.totalTokens) +
@@ -1726,7 +1892,7 @@ window.__ModuleLoader__.load({
             {
               title: tr('插件清单', 'Plugin inventory'),
               subtitle: `${filteredBundles.length} / ${totalBundles} ` + tr('个匹配 · 只读', 'matched · read-only'),
-              section: 'inventory',
+              section: 'inventory', collapsible: true, collapsed: collapsedCards.inventory === true, onToggle: () => toggleCard('inventory'),
               extra: h(
                 Button,
                 { variant: 'ghost', onClick: () => setShowAllBundles((value) => !value) },
@@ -1857,7 +2023,7 @@ window.__ModuleLoader__.load({
             {
               title: tr('插件减负方案', 'Slim plan'),
               subtitle: tr('先建议，后确认；受保护项永不改动', 'Suggest first, confirm later; protected items never change'),
-              section: 'draft',
+              section: 'draft', collapsible: true, collapsed: collapsedCards.draft === true, onToggle: () => toggleCard('draft'),
             },
             h(
               'div',
@@ -2043,7 +2209,7 @@ window.__ModuleLoader__.load({
                 {
                   title: tr('应用结果', 'Apply result'),
                   subtitle: applyResult.rolledBack ? tr('中途失败，已自动恢复', 'Failed midway; automatically restored') : tr('变更已写入当前配置', 'Changes written to the current profile'),
-                  section: 'result',
+                  section: 'result', collapsible: true, collapsed: collapsedCards.result === true, onToggle: () => toggleCard('result'),
                   extra: h(
                     Badge,
                     { tone: applyResult.rolledBack ? 'warn' : 'ok' },
@@ -2134,7 +2300,7 @@ window.__ModuleLoader__.load({
           draft && draft.dedupe && draft.dedupe.length > 0
             ? h(
                 Card,
-                { title: '跨插件 prompt 重复', subtitle: '只建议，不修改第三方源码', section: 'dedupe' },
+                { title: tr('跨插件提示词重复', 'Cross-plugin prompt duplication'), subtitle: tr('只建议，不修改第三方源码', 'Suggestion only; never edits third-party source'), section: 'dedupe', collapsible: true, collapsed: collapsedCards.dedupe === true, onToggle: () => toggleCard('dedupe') },
                 h(
                   'div',
                   { className: 'eo-list' },
