@@ -5,15 +5,15 @@
 - **Page type**: developer-tool promotional landing page
 - **Audience**: DSH users, plugin authors, developers paying for resident context
 - **Primary action**: install `dsh-plugin-trim` / open the npm package
-- **Motion concept**: **Context Observatory** — a live plugin constellation is scanned; evidence gates filter weak signals; approval and recovery close the loop.
+- **Motion concept**: **Context Observatory** — a live plugin constellation is scanned; a full-screen dual-lens chapter separates cost from evidence; approval and recovery close the loop.
 - **Baseline UI role**: the white/paper sections carry the argument; the dark instrument is the proof.
 
 ## 2. Choreography
 
 - **Opening beat**: a 12s five-scene sequence — boot radar → resident cost → evidence gates → workflow recipe → ready lockup — then wipes upward. It is skippable at any point.
 - **Hero beat**: four-line mask-in with a drawn amber underline, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
-- **Scroll rhythm**: ticker strip → poster interlude → paper problem statement → dark evidence gates → paper product → dark safety → paper install/FAQ → dark about.
-- **Interaction rhythm**: intro skip, language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, FAQ details, terminal typing.
+- **Scroll rhythm**: ticker strip → poster interlude → paper problem statement → dark evidence gates → full-screen dual-lens interlude → paper product → dark safety → paper install/FAQ → dark about.
+- **Interaction rhythm**: intro skip, language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, bidirectional hero depth, dual-lens counter-scroll, back-to-top, FAQ details, terminal typing.
 - **Transition rhythm**: reveal only at section entry; no scroll-jacking.
 - **Closing beat**: quiet safety seal and install terminal; page ends on project links, QQ, copyright.
 
@@ -27,6 +27,9 @@
 - Hero scan: 1700ms
 - Cost count-up: 1500ms
 - Ticker loop: 34s
+- Ambient aurora: 19s / 24s; hero orbit: 37s; dual orbit: 52s
+- Dual-lens sheen: 8s; meter breathe: 4.8s
+- Back-to-top reveal: 320ms; progress ring follows page scroll
 - Primary easing: `cubic-bezier(.16,1,.3,1)` / soft `cubic-bezier(.22,.61,.36,1)`
 - No spring library; CSS transitions + rAF.
 
@@ -37,7 +40,7 @@
 - **Keyboard**: intro skip is tabbable and Escape exits the intro; skip link, visible focus ring, native details/links.
 - **Scroll cue**: desktop has a centered mouse-track cue in the hero footer; mobile has a fixed bottom pill that hides after 60px.
 - **Pointer**: canvas parallax capped at 16px / 12px; poster parallax capped at ±22px; hero spotlight follows the cursor; instrument tilts at most 2.4°.
-- **Scroll**: top progress hairline, ticker marquee, staggered card/gate entry.
+- **Scroll**: top progress hairline, ticker marquee, staggered card/gate entry, counter-scrolling dual lenses, back-to-top after 50% of the page.
 - **Touch**: pointer parallax, spotlight, and tilt disabled; content and terminal remain.
 - **Mobile**: no hover dependency; canvas static-ish, fewer moving parts.
 
@@ -51,10 +54,12 @@
 | Poster | scroll | image parallax ±22px | no transform if reduced/mobile |
 | Problem | 35% visible | 54% count-up, 46% bar | final values immediately |
 | Evidence | gate 20% visible | gate opacity/translate, sticky text | all gates visible |
+| Dual lens | sticky scroll progress | cost card down / evidence card up, slow orbit, sheen | static two-column stack |
 | Product | section entry | card/console reveal | visible |
 | Safety | section entry | seal stamp once, quiet | static |
 | Install | terminal 35% visible | `npm i` commands typed once, blinking cursor | full command immediately |
 | FAQ/About | entry | subtle reveal | visible |
+| Back to top | page progress ≥ 50% | fade + rise, conic progress ring | hidden; no scroll hijack |
 
 ## 6. Canvas / Media
 
@@ -72,13 +77,13 @@
 - Metadata: 10.5–12px (raised from the previous 8–10px floor); no user-facing prose below 12px except instrument labels.
 - Code/data: JetBrains Maple Mono fallback; tabular numbers for scores.
 - Palette: ink #07101d, teal #5eead4, amber #fbbf24, paper #f2f4f7.
-- 8px spacing rhythm, 18px cards, max width 1280.
+- 8px spacing rhythm, 18px cards, 14px primary CTAs, 8px utility buttons, max width 1280.
 
 ## 8. Accessibility / Performance
 
 - `prefers-reduced-motion`: no intro, static constellation, final numbers, no typing/parallax/seal.
 - `?motion=off` mirrors the same fallback; `?intro=off` skips only the opening sequence.
-- Focus-visible rings; skip link; alt text; native details.
+- Focus-visible rings; skip link; alt text; native details; back-to-top is a real button with `aria-label`, hidden from tab order until it appears.
 - LCP: preload cover; no font network.
 - Canvas ≤ 14 nodes; pause when offscreen/hidden.
 - Do not ship if horizontal overflow at 390/768/1440 or console errors.
@@ -96,7 +101,9 @@
 - [x] A five-scene, skippable opening sequence establishes the observatory metaphor and shows cost, evidence, recipe, and approval.
 - [x] Hero has a distinct mechanic, not a stock hero.
 - [x] Five-scene intro plus seven hero/section motion beats.
-- [x] Ticker, scroll progress, spotlight, and instrument tilt add a second motion layer.
+- [x] Ticker, scroll progress, spotlight, instrument tilt, ambient aurora, and slow orbit add a second motion layer.
+- [x] A full-screen dual-lens chapter counter-scrolls; the animation reverses when scrolling up.
+- [x] A back-to-top ring appears after 50% and returns to the top without scroll hijacking.
 - [x] Desktop and mobile both have a visible scroll cue.
 - [x] One quiet section: safety.
 - [x] Reduced-motion fallback covers all content.

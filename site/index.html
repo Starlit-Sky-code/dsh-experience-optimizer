@@ -163,6 +163,8 @@
   <main id="main">
     <section class="hero" id="top">
       <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-aurora" aria-hidden="true"><i></i><i></i></div>
+      <div class="hero-orbit" aria-hidden="true"></div>
       <div class="hero-grid">
         <div class="hero-copy">
           <p class="eyebrow" data-i18n="heroEyebrow">DSH · PLUGIN CHECKUP</p>
@@ -212,7 +214,7 @@
           <span class="scroll-cue-copy"><b data-i18n="scrollCue">向下滑动</b><small data-i18n="scrollHint">SCROLL TO INSPECT</small></span>
           <span class="scroll-cue-track" aria-hidden="true"><i></i></span>
         </a>
-        <span class="hero-index">01 / 09</span>
+        <span class="hero-index">01 / 10</span>
       </div>
     </section>
 
@@ -221,10 +223,10 @@
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
         <div class="ticker-group">
-          <span>CONTEXT COST</span><i></i><span>PLUGIN DIET</span><i></i><span>COMPATIBILITY</span><i></i><span>HOST APPROVAL</span><i></i><span>ALLOWED · ONCE</span><i></i><span>2,417 → 1,105 TOKENS</span><i></i><span>READ-ONLY SCAN</span><i></i><span>RESTORE POINT</span><i></i>
+          <span>CONTEXT COST</span><i></i><span>PLUGIN CHECKUP</span><i></i><span>COMPATIBILITY</span><i></i><span>HOST APPROVAL</span><i></i><span>ALLOWED · ONCE</span><i></i><span>2,417 → 1,105 TOKENS</span><i></i><span>READ-ONLY SCAN</span><i></i><span>RESTORE POINT</span><i></i>
         </div>
         <div class="ticker-group">
-          <span>CONTEXT COST</span><i></i><span>PLUGIN DIET</span><i></i><span>COMPATIBILITY</span><i></i><span>HOST APPROVAL</span><i></i><span>ALLOWED · ONCE</span><i></i><span>2,417 → 1,105 TOKENS</span><i></i><span>READ-ONLY SCAN</span><i></i><span>RESTORE POINT</span><i></i>
+          <span>CONTEXT COST</span><i></i><span>PLUGIN CHECKUP</span><i></i><span>COMPATIBILITY</span><i></i><span>HOST APPROVAL</span><i></i><span>ALLOWED · ONCE</span><i></i><span>2,417 → 1,105 TOKENS</span><i></i><span>READ-ONLY SCAN</span><i></i><span>RESTORE POINT</span><i></i>
         </div>
       </div>
     </div>
@@ -304,6 +306,37 @@
           <p data-i18n="gateResultBody">即使成为候选，也仍然需要确认与 host 审批 allowed-once。</p>
           <span class="seal-inline">ALLOWED · ONCE</span>
         </article>
+      </div>
+    </section>
+
+    <section class="dual-lens" id="lenses" aria-labelledby="dual-title">
+      <div class="dual-orbit" aria-hidden="true"></div>
+      <div class="dual-sticky">
+        <div class="dual-head">
+          <p class="kicker" data-i18n="dualKicker">INTERLUDE 02 / TWO LENSES</p>
+          <h2 class="dual-title" id="dual-title">
+            <span data-i18n="dualTitle1">一边是成本，</span><br>
+            <span data-i18n="dualTitle2">一边是证据。</span>
+          </h2>
+          <p class="dual-body" data-i18n="dualBody">成本告诉你去哪里看；证据决定你能不能关。</p>
+        </div>
+        <div class="dual-grid">
+          <article class="dual-card dual-card-cost">
+            <div class="dual-card-head"><span>COST / 01</span><i></i></div>
+            <h3 data-i18n="dualCostTitle">先看见钱花在哪。</h3>
+            <p data-i18n="dualCostBody">常驻 token、可归属与未归属，只说明成本，不是关闭理由。</p>
+            <div class="dual-meter" aria-hidden="true"><i></i><i></i><i></i></div>
+            <small data-i18n="dualCostNote">2,417 → 1,105 · sample profile</small>
+          </article>
+          <article class="dual-card dual-card-evidence">
+            <div class="dual-card-head"><span>EVIDENCE / 02</span><i></i></div>
+            <h3 data-i18n="dualEvidenceTitle">再确认它是否真的没用。</h3>
+            <p data-i18n="dualEvidenceBody">调用、周期、账本与置信度，缺一项就进入复核。</p>
+            <div class="dual-chips" aria-hidden="true"><span>CALLS</span><span>SCHEDULE</span><span>LEDGER</span></div>
+            <small data-i18n="dualEvidenceNote">strong evidence → candidate</small>
+          </article>
+        </div>
+        <div class="dual-spine" aria-hidden="true"><span>TWO LENSES</span><i></i><span>ONE DECISION</span></div>
       </div>
     </section>
 
@@ -419,6 +452,10 @@
     <p class="copyright">Copyright © 2026 Starlit Sky · AGPL-3.0-only</p>
     <p><a href="./README.md" data-i18n="siteReadme">站点说明</a> · <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer" target="_blank" rel="noreferrer">GitHub</a></p>
   </footer>
+
+  <button class="to-top" id="to-top" type="button" aria-label="回到顶部" aria-hidden="true" data-i18n-aria="backToTop">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18V6M6.5 11.5 12 6l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 
   <script src="./i18n.js"></script>
   <script src="./main.js"></script>

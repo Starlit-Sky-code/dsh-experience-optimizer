@@ -31,6 +31,16 @@
     gate4Kicker: '上下文成本', gate4Title: '成本 > 0，才值得优化', gate4Body: '没有可归属成本的插件，进入复核而不是候选。',
     gateResultKicker: 'RESULT', gateResultTitle: '强证据 → 候选；其余 → 复核',
     gateResultBody: '即使成为候选，也仍然需要确认与 host 审批 allowed-once。',
+    dualKicker: 'INTERLUDE 02 / TWO LENSES',
+    dualTitle1: '一边是成本，', dualTitle2: '一边是证据。',
+    dualBody: '成本告诉你去哪里看；证据决定你能不能关。',
+    dualCostTitle: '先看见钱花在哪。',
+    dualCostBody: '常驻 token、可归属与未归属，只说明成本，不是关闭理由。',
+    dualCostNote: '2,417 → 1,105 · 示例 profile',
+    dualEvidenceTitle: '再确认它是否真的没用。',
+    dualEvidenceBody: '调用、周期、账本与置信度，缺一项就进入复核。',
+    dualEvidenceNote: '强证据 → 候选',
+    backToTop: '回到顶部',
     productKicker: '一个套件，两条路径',
     trimTitle: '插件体检', trimBody: '先量上下文占比与兼容性，再给出可解释的保留/启用/关闭建议；低风险项经确认与安全审批后应用。',
     trim1: '插件清单搜索 / 筛选 / 排序', trim2: '定时/触发与已用插件保护', trim3: '还原点、恢复与逐项解释', trimLink: '查看 npm 包 ↗',
@@ -89,6 +99,16 @@
     gate4Kicker: 'Context cost', gate4Title: 'Cost > 0 makes it worth optimizing', gate4Body: 'Without attributable cost, an item goes to review, not a candidate.',
     gateResultKicker: 'RESULT', gateResultTitle: 'Strong evidence → candidate; everything else → review',
     gateResultBody: 'Even a candidate still needs confirmation and host approval returning allowed-once.',
+    dualKicker: 'INTERLUDE 02 / TWO LENSES',
+    dualTitle1: 'One side is cost.', dualTitle2: 'The other is evidence.',
+    dualBody: 'Cost tells you where to look; evidence decides whether you can close it.',
+    dualCostTitle: 'See where the money goes.',
+    dualCostBody: 'Resident tokens, attributable and unattributed, only describe cost. They are not a reason to close.',
+    dualCostNote: '2,417 → 1,105 · sample profile',
+    dualEvidenceTitle: 'Then confirm it is really unused.',
+    dualEvidenceBody: 'Calls, schedule, ledger, and confidence: miss one and it goes to review.',
+    dualEvidenceNote: 'strong evidence → candidate',
+    backToTop: 'Back to top',
     productKicker: 'One suite, two paths',
     trimTitle: 'Plugin checkup', trimBody: 'Measure context share and compatibility first, then build an explainable keep/enable/close plan. Low-risk items apply only after confirmation and safety approval.',
     trim1: 'Inventory search / filter / sort', trim2: 'Scheduled/trigger and used-plugin protection', trim3: 'Restore points, recovery, and item-level reasons', trimLink: 'View npm package ↗',
@@ -132,6 +152,10 @@
     document.querySelectorAll('[data-i18n]').forEach((element) => {
       const key = element.getAttribute('data-i18n')
       if (key && Object.prototype.hasOwnProperty.call(dict, key)) element.textContent = dict[key]
+    })
+    document.querySelectorAll('[data-i18n-aria]').forEach((element) => {
+      const key = element.getAttribute('data-i18n-aria')
+      if (key && Object.prototype.hasOwnProperty.call(dict, key)) element.setAttribute('aria-label', dict[key])
     })
     const lang = document.getElementById('lang')
     if (lang) {

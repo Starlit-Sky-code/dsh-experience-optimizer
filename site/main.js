@@ -29,6 +29,40 @@
   window.addEventListener('scroll', requestProgress, { passive: true })
   window.addEventListener('resize', requestProgress)
 
+  // Bidirectional hero depth + dual-lens progress + back-to-top ring
+  const toTop = document.getElementById('to-top')
+  const dualLens = document.querySelector('.dual-lens')
+  const heroStage = document.querySelector('.hero')
+  let depthRaf = 0
+  const updateDepth = () => {
+    depthRaf = 0
+    const max = document.documentElement.scrollHeight - window.innerHeight
+    const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
+    if (toTop) {
+      toTop.style.setProperty('--to-top', (ratio * 100).toFixed(1) + '%')
+      const visible = ratio >= .5
+      toTop.classList.toggle('is-visible', visible)
+      toTop.tabIndex = visible ? 0 : -1
+      toTop.setAttribute('aria-hidden', String(!visible))
+    }
+    if (!reduce && heroStage && window.innerWidth > 760) {
+      const heroProgress = Math.min(1, Math.max(0, window.scrollY / Math.max(1, window.innerHeight)))
+      heroStage.style.setProperty('--hero-shift', (heroProgress * 42).toFixed(2))
+    }
+    if (!reduce && dualLens && window.innerWidth > 900) {
+      const total = Math.max(1, dualLens.offsetHeight - window.innerHeight)
+      const progress = Math.min(1, Math.max(0, -dualLens.getBoundingClientRect().top / total))
+      dualLens.style.setProperty('--dual-progress', progress.toFixed(3))
+    }
+  }
+  const requestDepth = () => { if (!depthRaf) depthRaf = requestAnimationFrame(updateDepth) }
+  updateDepth()
+  window.addEventListener('scroll', requestDepth, { passive: true })
+  window.addEventListener('resize', requestDepth)
+  toTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
+  })
+
   // Copy controls
   document.querySelectorAll('.copy').forEach((button) => {
     button.addEventListener('click', async () => {
