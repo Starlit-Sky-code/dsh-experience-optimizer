@@ -7,6 +7,10 @@ All notable changes to this repository are documented here. Versions follow
 
 ### Changed
 
+- Dashboard visuals now use a context-composition donut, owner bar chart, inventory
+  share bars, a wider compatibility severity bar with legend, and larger metric
+  progress bars. The attributable-context metric now shows the attributable value
+  instead of the total including unattributed tokens.
 - Settings numeric parameters now show their position on a full-width range bar,
   with custom up/down stepper buttons, recommended-range labels, and the config
   cap. The three parameter rows moved out of the two-column grid so the bars and

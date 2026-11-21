@@ -214,17 +214,17 @@ window.__ModuleLoader__.load({
         .eo-tabs::-webkit-scrollbar{display:none}
 .eo-tab{appearance:none;border:0;background:transparent;color:var(--eo-tertiary);font:inherit;font-size:13px;line-height:20px;padding:7px 1px 9px;cursor:pointer;position:relative;border-radius:0;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
         .eo-icon{flex:0 0 auto}
-        .eo-progress-track{display:block;width:100%;min-width:40px;height:4px;border-radius:4px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));overflow:hidden;margin-top:5px}
-        .eo-progress-track i{display:block;height:100%;border-radius:4px;background:var(--eo-primary);opacity:.65;transition:width .2s ease;min-width:2px}
-        .eo-severity-bar{display:flex;gap:3px;height:5px;margin:0 0 10px}
-        .eo-severity-bar span{display:block;height:100%;border-radius:3px}
+        .eo-progress-track{display:block;width:100%;min-width:40px;height:6px;border-radius:6px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));overflow:hidden;margin-top:7px;box-shadow:inset 0 0 0 .5px var(--eo-border)}
+        .eo-progress-track i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--eo-primary),color-mix(in srgb,var(--eo-primary) 55%,var(--dsw-alias-state-business-primary,#4a7fd6)));transition:width .45s var(--eo-ease,cubic-bezier(.16,1,.3,1));min-width:2px}
+        .eo-severity-bar{display:flex;gap:3px;height:8px;margin:0 0 8px;border-radius:5px;overflow:hidden;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1))}
+        .eo-severity-bar span{display:block;height:100%;border-radius:4px}
         .eo-severity-error{background:var(--eo-error)}
         .eo-severity-warn{background:var(--dsw-alias-state-warning-primary,#9a6700)}
         .eo-severity-info{background:var(--dsw-alias-state-business-primary,#4a7fd6)}
         .eo-severity-empty{background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.12));flex:1}
-        .eo-progress-ok i{background:var(--eo-success)}
-        .eo-progress-warn i{background:var(--dsw-alias-state-warning-primary,#9a6700)}
-        .eo-progress-danger i{background:var(--eo-error)}
+        .eo-progress-ok i{background:linear-gradient(90deg,var(--eo-success),color-mix(in srgb,var(--eo-success) 65%,var(--dsw-alias-state-business-primary,#4a7fd6)))}
+        .eo-progress-warn i{background:linear-gradient(90deg,var(--dsw-alias-state-warning-primary,#9a6700),var(--amber,#fbbf24))}
+        .eo-progress-danger i{background:linear-gradient(90deg,var(--eo-error),color-mix(in srgb,var(--eo-error) 70%,var(--dsw-alias-state-warning-primary,#9a6700)))}
         .eo-progress-dots{display:flex;gap:6px;align-items:center;margin:12px 0 2px}
         .eo-progress-dot{width:6px;height:6px;border-radius:50%;background:var(--eo-border-strong)}
         .eo-progress-dot-active{width:18px;border-radius:4px;background:var(--eo-primary)}
@@ -386,8 +386,30 @@ window.__ModuleLoader__.load({
 .eo-owner-list{display:flex;flex-direction:column;gap:7px}
 .eo-owner-head{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
 .eo-owner-head span:first-child{font-family:var(--eo-code);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.eo-bar{height:3px;border-radius:3px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));margin-top:4px;overflow:hidden}
-.eo-bar i{display:block;height:100%;border-radius:3px;background:var(--eo-primary);opacity:.55}
+.eo-context-mix{display:flex;align-items:center;gap:18px;padding:2px 0 12px;margin-bottom:10px;border-bottom:.5px solid var(--eo-border)}
+.eo-context-donut{position:relative;width:82px;height:82px;border-radius:50%;flex:0 0 auto;background:conic-gradient(var(--eo-success) 0 var(--eo-ok,0%),var(--dsw-alias-state-warning-primary,#9a6700) var(--eo-ok,0%) 100%)}
+.eo-context-donut:after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--eo-card-bg,#fff)}
+.eo-context-donut-label{position:absolute;inset:10px;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.eo-context-donut-label b{font-size:17px;line-height:22px;font-weight:600;color:var(--eo-primary)}
+.eo-context-donut-label small{font-size:9px;line-height:13px;color:var(--eo-tertiary);margin-top:2px}
+.eo-context-legend{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.eo-context-legend-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto auto;gap:7px;align-items:center;font-size:11px;line-height:17px;color:var(--eo-tertiary)}
+.eo-context-legend-row strong{color:var(--eo-primary);font-weight:500;font-family:var(--eo-code);font-size:11px}
+.eo-context-legend-row em{font-style:normal;color:var(--eo-tertiary);font-family:var(--eo-code);font-size:10px;min-width:34px;text-align:right}
+.eo-dot-ok,.eo-dot-warn,.eo-dot-error,.eo-dot-info{display:inline-block;width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.eo-dot-ok{background:var(--eo-success)}
+.eo-dot-warn{background:var(--dsw-alias-state-warning-primary,#9a6700)}
+.eo-dot-error{background:var(--eo-error)}
+.eo-dot-info{background:var(--dsw-alias-state-business-primary,#4a7fd6)}
+.eo-severity-legend{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px;color:var(--eo-tertiary);font-size:11px;line-height:17px}
+.eo-severity-legend span{display:inline-flex;align-items:center;gap:5px}
+.eo-share-cell{display:flex;flex-direction:column;gap:3px;min-width:64px}
+.eo-share-bar{width:52px;height:4px;border-radius:4px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));overflow:hidden}
+.eo-share-bar i{display:block;height:100%;min-width:2px;border-radius:4px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-business-primary,#4a7fd6))}
+.eo-inventory-share{height:4px;border-radius:4px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));overflow:hidden;margin-top:9px}
+.eo-inventory-share i{display:block;height:100%;min-width:2px;border-radius:4px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-business-primary,#4a7fd6));opacity:.85}
+.eo-bar{height:6px;border-radius:6px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));margin-top:5px;overflow:hidden;box-shadow:inset 0 0 0 .5px var(--eo-border)}
+.eo-bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-business-primary,#4a7fd6));opacity:.85;transition:width .45s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
 .eo-issue{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:var(--dsw-radius-md,8px);font-size:12px;line-height:18px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.06));border:.5px solid var(--eo-border)}
 .eo-issue-error{border-color:color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error)}
 .eo-issue-warn{border-color:color-mix(in srgb,var(--dsw-alias-state-warning-primary,#9a6700) 35%,transparent)}
@@ -2152,6 +2174,9 @@ window.__ModuleLoader__.load({
       }
 
       function renderTrim() {
+        const shareOf = (bundle) => totalContextTokens > 0
+          ? Math.min(100, Math.max(0, (bundle.contextTokens / totalContextTokens) * 100))
+          : 0
         const renderInventoryCards = () =>
           h(
             'div',
@@ -2194,6 +2219,9 @@ window.__ModuleLoader__.load({
                   bundle.protected ? h('span', null, tr('受保护', 'Protected')) : null,
                   h('span', null, bundle.guardStatus ? guardLabel(bundle.guardStatus) : '—'),
                 ),
+                h('div', { className: 'eo-inventory-share', title: tr('占可归属上下文的比例', 'Share of attributable context') },
+                  h('i', { style: { width: shareOf(bundle) + '%' } }),
+                ),
               ),
             ),
           )
@@ -2209,8 +2237,8 @@ window.__ModuleLoader__.load({
             h(Metric, {
               key: 'tokens',
               label: tr('可归属上下文', 'Attributable context'),
-              value: formatTokens(overview.context.totalTokens),
-              hint: tr('tokens · 不含未归属', 'tokens · excludes unattributed') + ' · ' + Math.round(contextPct) + '%',
+              value: formatTokens(attributedContext),
+              hint: Math.round(contextPct) + tr('% 占比 · 未归属 ', '% share · unattributed ') + formatTokens(overview.context.unattributedTokens),
               progress: contextPct,
               progressTone: 'ok',
             }),
@@ -2309,6 +2337,13 @@ window.__ModuleLoader__.load({
                     compat.info > 0 ? h('span', { key: 'i', className: 'eo-severity-info', style: { flex: compat.info } }) : null,
                   ],
             ),
+            compat.error + compat.warn + compat.info > 0
+              ? h('div', { className: 'eo-severity-legend' },
+                  h('span', null, h('i', { className: 'eo-dot-error' }), compat.error + tr(' 错误', ' errors')),
+                  h('span', null, h('i', { className: 'eo-dot-warn' }), compat.warn + tr(' 警告', ' warnings')),
+                  h('span', null, h('i', { className: 'eo-dot-info' }), compat.info + tr(' 信息', ' info')),
+                )
+              : null,
             findings.length === 0
               ? h('div', { className: 'eo-empty' }, tr('没有匹配的兼容性问题。', 'No matching compatibility findings.'))
               : h(
@@ -2367,6 +2402,23 @@ window.__ModuleLoader__.load({
             },
             h(
               'div',
+              { className: 'eo-context-mix' },
+              h('div', {
+                className: 'eo-context-donut',
+                style: { '--eo-ok': contextPct + '%' },
+                role: 'img',
+                'aria-label': tr('可归属与未归属上下文的构成', 'Attributable vs unattributed context'),
+                title: tr('可归属与未归属上下文的构成', 'Attributable vs unattributed context'),
+              }, h('div', { className: 'eo-context-donut-label' }, h('b', null, Math.round(contextPct) + '%'), h('small', null, tr('可归属', 'attributed')))),
+              h(
+                'div',
+                { className: 'eo-context-legend' },
+                h('div', { className: 'eo-context-legend-row' }, h('i', { className: 'eo-dot-ok' }), h('span', null, tr('可归属', 'Attributable')), h('strong', null, formatNumber(attributedContext)), h('em', null, Math.round(contextPct) + '%')),
+                h('div', { className: 'eo-context-legend-row' }, h('i', { className: 'eo-dot-warn' }), h('span', null, tr('未归属', 'Unattributed')), h('strong', null, formatNumber(overview.context.unattributedTokens)), h('em', null, Math.round(100 - contextPct) + '%')),
+              ),
+            ),
+            h(
+              'div',
               { className: 'eo-owner-list' },
               byOwner.slice(0, 7).map((owner) =>
                 h(
@@ -2376,11 +2428,11 @@ window.__ModuleLoader__.load({
                     'div',
                     { className: 'eo-owner-head' },
                     h('span', null, owner.owner),
-                    h('span', null, formatNumber(owner.tokens)),
+                    h('span', null, formatNumber(owner.tokens) + ' · ' + Math.round((owner.tokens / Math.max(1, totalContextTokens)) * 100) + '%'),
                   ),
                   h(
                     'div',
-                    { className: 'eo-bar' },
+                    { className: 'eo-bar', title: owner.owner + ' · ' + formatNumber(owner.tokens) + ' tokens' },
                     h('i', {
                       style: { width: Math.max(3, (owner.tokens / maxOwner) * 100) + '%' },
                     }),
@@ -2555,9 +2607,8 @@ window.__ModuleLoader__.load({
                         h(
                           'td',
                           { className: 'eo-muted eo-share-cell', title: tr('占可归属上下文的比例', 'Share of attributable context') },
-                          totalContextTokens > 0
-                            ? Math.round((bundle.contextTokens / totalContextTokens) * 100) + '%'
-                            : '—',
+                          h('span', null, Math.round(shareOf(bundle)) + '%'),
+                          h('div', { className: 'eo-share-bar' }, h('i', { style: { width: shareOf(bundle) + '%' } })),
                         ),
                         h(
                           'td',

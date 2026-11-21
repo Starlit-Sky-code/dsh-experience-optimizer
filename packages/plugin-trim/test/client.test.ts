@@ -125,6 +125,8 @@ describe('client onboarding and pages', () => {
     expect(planBody?.getAttribute('aria-hidden')).toBeNull()
     expect(planBody?.hasAttribute('inert')).toBe(false)
     expect(container.textContent).toContain('任务类型')
+    expect(container.querySelector('.eo-progress-track')).not.toBeNull()
+    expect(container.querySelectorAll('.eo-share-bar').length).toBeGreaterThan(0)
 
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')

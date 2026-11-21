@@ -77,6 +77,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 ### 体检与兼容
 
 - 四张指标卡：可归属上下文、启用插件数、兼容性 error/warn、写操作可用性。
+- 指标卡带渐变进度条；上下文卡有可归属/未归属环形图与 owner 横向柱状图；清单“占比”列有迷你条；兼容性分布带图例。
 - 兼容性矩阵：按 `plugin-plugin`、`plugin-runtime`、`profile`、`workspace`
   展示发现、证据与建议修复；默认隐藏 info。
 - 上下文成本：按 owner / section / tool 展示 token 估算。
