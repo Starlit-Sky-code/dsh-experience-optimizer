@@ -127,6 +127,7 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('任务类型')
     expect(container.querySelector('.eo-progress-track')).not.toBeNull()
     expect(container.querySelectorAll('.eo-share-bar').length).toBeGreaterThan(0)
+    expect(container.querySelector('.eo-compat-footer')).not.toBeNull()
 
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')

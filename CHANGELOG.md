@@ -5,8 +5,14 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.3.9] - 2026-11-21
+
 ### Changed
 
+- The compatibility card now ends with a **处理兼容性** action that copies a
+  read-only fix checklist; the button is disabled when there is nothing to handle.
+- The context card starts expanded so the composition donut, owner bars, and
+  inventory share bars are visible without an extra click.
 - Dashboard visuals now use a context-composition donut, owner bar chart, inventory
   share bars, a wider compatibility severity bar with legend, and larger metric
   progress bars. The attributable-context metric now shows the attributable value

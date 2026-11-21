@@ -30,8 +30,8 @@ npm i dsh-plugin-trim
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-trim-0.3.8.tgz"
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.8/dsh-plugin-recipe-0.3.8.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.9/dsh-plugin-trim-0.3.9.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.9/dsh-plugin-recipe-0.3.9.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。

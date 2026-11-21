@@ -7,13 +7,13 @@
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`、`workflow`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.3.8>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.3.9>
 - Release assets：
-  - `dsh-plugin-trim-0.3.8.tgz`
-  - `dsh-plugin-recipe-0.3.8.tgz`
+  - `dsh-plugin-trim-0.3.9.tgz`
+  - `dsh-plugin-recipe-0.3.9.tgz`
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
-- 安装验证：`npm view` 返回 0.3.2；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.3.8` / `dsh-plugin-recipe@0.3.8` 成功，`--dump-config` 出现两个 bundle row
+- 安装验证：`npm view` 返回 0.3.2；在临时 DSH profile 中 `dsh plugin add dsh-plugin-trim@0.3.9` / `dsh-plugin-recipe@0.3.9` 成功，`--dump-config` 出现两个 bundle row
 
 ## 自定义 DSH 插件市场索引
 

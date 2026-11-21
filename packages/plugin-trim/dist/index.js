@@ -4588,7 +4588,7 @@ function registerCompatTool(ctx, config) {
 }
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
-const CURRENT_VERSION = "0.3.8";
+const CURRENT_VERSION = "0.3.9";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",

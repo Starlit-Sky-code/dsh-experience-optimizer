@@ -403,6 +403,7 @@ window.__ModuleLoader__.load({
 .eo-dot-info{background:var(--dsw-alias-state-business-primary,#4a7fd6)}
 .eo-severity-legend{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px;color:var(--eo-tertiary);font-size:11px;line-height:17px}
 .eo-severity-legend span{display:inline-flex;align-items:center;gap:5px}
+.eo-compat-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:.5px solid var(--eo-border)}
 .eo-share-cell{display:flex;flex-direction:column;gap:3px;min-width:64px}
 .eo-share-bar{width:52px;height:4px;border-radius:4px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.1));overflow:hidden}
 .eo-share-bar i{display:block;height:100%;min-width:2px;border-radius:4px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-business-primary,#4a7fd6))}
@@ -1231,7 +1232,7 @@ window.__ModuleLoader__.load({
       const [locale, setLocale] = useState(detectLocale)
       const [showOnboarding, setShowOnboarding] = useState(false)
       const [onboardingStep, setOnboardingStep] = useState(0)
-      const [collapsedCards, setCollapsedCards] = useState({ context: true })
+      const [collapsedCards, setCollapsedCards] = useState({})
       const [layout, setLayout] = useState(() => readPref('layout', 'standard'))
       const [density, setDensity] = useState(() => readPref('density', 'comfortable'))
       const [overview, setOverview] = useState(null)
@@ -1413,7 +1414,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.3.8',
+            current: '0.3.9',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -1891,6 +1892,32 @@ window.__ModuleLoader__.load({
         }
       }
 
+      async function copyCompatibilityPlan() {
+        const all = overview ? overview.findings.filter((finding) => finding.severity !== 'info') : []
+        if (all.length === 0) {
+          notify(tr('没有需要处理的兼容性问题。', 'No compatibility findings to handle.'), 'warn')
+          return
+        }
+        const lines = [
+          tr('# 兼容性处理清单', '# Compatibility checklist'),
+          '',
+          tr('只读生成；不会自动修改任何插件。', 'Generated read-only; no plugin is changed automatically.'),
+          '',
+        ]
+        for (const finding of all) {
+          lines.push('- [ ] [' + finding.severity + '] ' + finding.code + ' — ' + finding.title)
+          if (finding.subjects?.length) lines.push('  ' + tr('对象：', 'Subjects: ') + finding.subjects.join(', '))
+          if (finding.fix?.summary) lines.push('  ' + tr('建议：', 'Fix: ') + finding.fix.summary)
+          if (finding.evidence) lines.push('  ' + tr('证据：', 'Evidence: ') + (Array.isArray(finding.evidence) ? finding.evidence.join('; ') : String(finding.evidence)))
+        }
+        try {
+          await navigator.clipboard.writeText(lines.join('\n'))
+          notify(tr('已复制 ' + all.length + ' 项兼容性处理清单', 'Copied ' + all.length + ' compatibility items'))
+        } catch {
+          notify(tr('无法访问剪贴板，请手动复制问题详情', 'Clipboard unavailable; copy the findings manually'), 'warn')
+        }
+      }
+
       function renderSettings() {
         if (settingsBusy && settings === null) {
           return h('div', { className: 'eo-loading' }, h('span', { className: 'eo-spinner' }), tr('正在读取当前生效设置…', 'Loading effective settings…'))
@@ -2039,7 +2066,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.8')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.9')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2098,7 +2125,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.3.8 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.3.9 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2383,6 +2410,22 @@ window.__ModuleLoader__.load({
                     ),
                   ),
                 ),
+            h(
+              'div',
+              { className: 'eo-compat-footer' },
+              h('span', { className: 'eo-muted' }, tr('生成只读修复清单；不会自动修改插件。', 'Creates a read-only fix checklist; no plugin is changed.')),
+              h(
+                Button,
+                {
+                  variant: 'accent',
+                  onClick: () => void copyCompatibilityPlan(),
+                  disabled: compat.error + compat.warn === 0,
+                },
+                compat.error + compat.warn > 0
+                  ? tr('处理兼容性 · ' + (compat.error + compat.warn) + ' 项', 'Handle compatibility · ' + (compat.error + compat.warn))
+                  : tr('没有待处理项', 'Nothing to handle'),
+              ),
+            ),
           ),
           h(
             Card,

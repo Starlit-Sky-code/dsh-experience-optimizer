@@ -20,7 +20,7 @@ import type { UsageLedger } from './usage.ts'
 import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
-const CURRENT_VERSION = '0.3.8'
+const CURRENT_VERSION = '0.3.9'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
