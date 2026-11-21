@@ -2,6 +2,14 @@
 
 Static, dependency-free promotional page for DSH Experience Optimizer.
 
+## Live
+
+<https://starlit-sky-code.github.io/dsh-experience-optimizer/>
+
+Deployed by `.github/workflows/pages.yml` on every push to `promo-site` that
+changes `site/**`. GitHub Pages uses the GitHub Actions source; no `gh-pages`
+branch is needed.
+
 ## Preview
 
 ```bash
@@ -33,3 +41,4 @@ http://127.0.0.1:4173/?motion=off
 - AGPL-3.0-only · Copyright © 2026 Starlit Sky.
 
 This directory lives on the `promo-site` branch and is not merged to `main`.
+The published page is the `site/` artifact; the branch itself is the source.
