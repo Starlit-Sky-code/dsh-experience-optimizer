@@ -13,6 +13,14 @@
 <p align="center"><strong>Plugin checkup · compatibility checks · safe trimming</strong><br>
 Read-only context and conflict analysis; low-risk actions apply only after confirmation, with snapshots and rollback.</p>
 
+## Not another context dashboard
+
+| Tool | Answers |
+|---|---|
+| `dsh-context` | What did this request/session cost in tokens, money, and cache hits? |
+| `dsh-plugin-health` | Which plugin broke, and can it be repaired? |
+| `dsh-plugin-trim` | **Which plugin is expensive at rest, is the compaction stack coherent, and what did an apply actually save?** |
+
 ## Install
 
 ```bash

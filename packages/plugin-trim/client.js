@@ -1120,10 +1120,17 @@ window.__ModuleLoader__.load({
       const steps = [
         {
           icon: 'gauge',
-          zh: '先量成本',
-          en: 'Measure first',
-          zhBody: '插件清单会显示每个插件占用的上下文比例；未归属部分单独标出。你砍掉的不只是工具白名单。',
-          enBody: 'The plugin inventory shows each plugin’s share of attributable context. Unattributed context is kept separate — the cost is not only the tool allowlist.',
+          zh: '先看结论',
+          en: 'Read the verdict',
+          zhBody: '顶部四维结论：加载 / 兼容 / 上下文 / 压缩链路。先知道有没有事，再决定要不要动插件。',
+          enBody: 'A four-check verdict — load, compatibility, context, compaction — tells you whether anything needs attention before you touch a plugin.',
+        },
+        {
+          icon: 'context',
+          zh: '看压缩链路',
+          en: 'Check the compaction stack',
+          zhBody: '只读列出后端、裁剪、图像、命令与阈值；双后端或缺失后端会直接提示，不会被建议关掉。',
+          enBody: 'A read-only view of backends, pruners, image offload, commands, and thresholds. Duplicate or missing backends are flagged and never suggested for disable.',
         },
         {
           icon: 'recipe',
@@ -1134,10 +1141,10 @@ window.__ModuleLoader__.load({
         },
         {
           icon: 'shield',
-          zh: '最后安全确认',
-          en: 'Confirm safely',
-          zhBody: '只有依据充分才标建议关闭；定时/触发插件、有调用记录的插件只进入复核。应用前写入还原点，随时恢复。',
-          enBody: 'Only strong evidence becomes a close candidate. Scheduled/trigger plugins and plugins with calls go to review. A restore point is written before any change.',
+          zh: '应用并验证',
+          en: 'Apply and verify',
+          zhBody: '低风险项经确认后应用；重启后打开体检，自动结算实测收益。需要时可一键回滚。',
+          enBody: 'Low-risk items apply only after confirmation. Reopen the checkup after a restart to measure the actual change; roll back in one click if needed.',
         },
       ]
       const current = steps[step] || steps[0]
@@ -1258,8 +1265,8 @@ window.__ModuleLoader__.load({
         [tr('点击「更多」', 'Open “More”'), tr('在 DSH 主界面打开更多菜单。', 'Open the More menu on the DSH main screen.')],
         [tr('点击「设置」', 'Open “Settings”'), tr('进入设置页。', 'Open Settings.')],
         [tr('点击「插件体检」', 'Open “Plugin checkup”'), tr('在 Agent 预设下方或插件页签里找到插件体检。', 'Find it below Agent presets or in the plugins tab.')],
-        [tr('生成体检方案', 'Build a checkup plan'), tr('选任务或写目标，先看依据，再决定是否应用。', 'Pick a task or goal, read the evidence, then decide.')],
-        [tr('需要时看教程', 'Open the guide'), tr('教程、常见问题和关于都在同一页。', 'Guide, FAQ, and About live in the same panel.')],
+        [tr('先看结论', 'Read the verdict'), tr('四维结论和压缩链路先给判断。', 'The four-check verdict and compaction stack come first.')],
+        [tr('生成并验证', 'Build and verify'), tr('生成方案、确认应用、重启后看实测收益。', 'Build a plan, confirm apply, then measure after a restart.')],
       ]
       return h(
         React.Fragment,
@@ -1304,10 +1311,10 @@ window.__ModuleLoader__.load({
     function ActivationGuide({ onDismiss, onOpenDetails }) {
       const steps = [
         [tr('打开插件体检', 'Open Plugin checkup'), tr('设置 → 插件体检，或在插件页签里找到它。', 'Settings → Plugin checkup, or find it in the Plugins tab.')],
-        [tr('先扫描', 'Scan first'), tr('看可归属上下文、兼容性和插件清单，不急着关任何东西。', 'Review attributable context, compatibility, and inventory before closing anything.')],
-        [tr('生成体检方案', 'Build a checkup plan'), tr('选任务或写目标；默认只生成草稿。', 'Pick a task or write a goal; the default is a draft only.')],
-        [tr('看依据再决定', 'Read the evidence'), tr('周期、已有调用、无账本都会先保护或复核。', 'Schedules, prior calls, or no ledger go to protection or review first.')],
-        [tr('需要时看完整教程', 'Open the full guide'), tr('「教程」页有 5 分钟上手和常见问题。', 'The Guide tab has the five-minute walkthrough and FAQ.')],
+        [tr('先看结论', 'Read the verdict'), tr('加载 / 兼容 / 上下文 / 压缩链路，先知道有没有事。', 'Load, compatibility, context, and compaction at a glance.')],
+        [tr('看压缩链路', 'Check compaction'), tr('双后端、缺失后端、阈值冲突会被直接点名。', 'Duplicate backends, missing backends, and threshold conflicts are called out.')],
+        [tr('生成方案并应用', 'Build and apply'), tr('选任务或写目标；低风险项确认后应用。', 'Pick a task or goal; low-risk items apply only after confirmation.')],
+        [tr('重启后看实测', 'Measure after restart'), tr('打开体检自动结算实测收益；需要时回滚。', 'Reopen the checkup to settle the measured change; roll back if needed.')],
       ]
       return h(
         'section',
@@ -2000,11 +2007,11 @@ window.__ModuleLoader__.load({
           },
         ]
         const steps = [
-          ['先扫描。', 'Scan first.', ' 打开「插件体检」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。', ' Open Plugin checkup to see attributable context, compatibility, and inventory. The Share column makes resident cost visible.'],
+          ['先看结论。', 'Read the verdict.', ' 顶部四维结论：加载 / 兼容 / 上下文 / 压缩链路；先知道有没有事，再决定动不动插件。', ' The four-check verdict covers load, compatibility, context, and compaction before you touch anything.'],
+          ['看压缩链路。', 'Check compaction.', ' 只读列出后端、裁剪、图像、命令和阈值；双后端、缺失后端会直接提示。', ' Read-only backends, pruners, image offload, commands, and thresholds; duplicate or missing backends are flagged.'],
           ['再生成方案。', 'Build a plan.', ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。', ' Pick a task or write a goal, then Build plan. It only creates a draft; no plugin is changed.'],
-          ['看判断依据。', 'Read the evidence.', ' 只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭；其余进入人工复核。', ' Only zero calls in the window, attributable cost, no schedule/trigger hint, and high task confidence produce a close candidate. Everything else goes to review.'],
-          ['确认后应用。', 'Confirm and apply.', ' 勾选低风险项，点击“应用选中”，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, apply, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
-          ['确认能回滚。', 'Confirm you can roll back.', ' 每次应用前都会写入还原点；应用后可在精简方案底部恢复最近一次状态。', ' Every apply writes a restore point; restore the latest state from the slim-plan card.'],
+          ['确认后应用。', 'Confirm and apply.', ' 勾选低风险项，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
+          ['重启后看实测。', 'Measure after restart.', ' 重启后打开体检，自动结算实测收益；同窗口其他插件变化会标记“仅供参考”。', ' Reopen the checkup after a restart to settle the measured result; unrelated changes are marked indicative.'],
         ]
         const faq = [
           [tr('为什么我几乎没有“建议关闭”？', 'Why do I see almost no close candidates?'), tr('这是默认的保守策略：没有使用账本、当前任务置信度不够、插件带周期/触发器语义，或已经有调用记录时，只会进入人工复核。', 'This is the conservative default: no usage ledger, low task confidence, schedule/trigger hints, or existing calls all route to review.')],
