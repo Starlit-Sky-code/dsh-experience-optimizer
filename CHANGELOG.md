@@ -10,6 +10,11 @@ All notable changes to this repository are documented here. Versions follow
 - The post-apply measurement now treats a positive delta as a regression:
   “优化后反而增加” plus a one-click rollback; zero change is labelled neutral.
 
+### Fixed
+
+- GitHub Release bodies are generated from this file by `scripts/release-notes.mjs`
+  (≤10 lines, install command, no bare Full Changelog link).
+
 ## [0.5.9] - 2026-11-22
 
 ### Changed
