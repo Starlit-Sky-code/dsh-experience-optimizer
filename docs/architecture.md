@@ -24,11 +24,13 @@ tool call
       → loader.entries() / pluginInventory / pluginManager / manifests
       → systemPrompt.assemble()
       → runtime/profile/lockfile/workspace rules
-      → CompatReport → <dataDir>/compat/report.json
+      → inspectCompactionStack() (read-only backend/role/threshold audit)
+      → CompatReport (+ optional compaction stack) → <dataDir>/compat/report.json
   → scanPlugins()
       → prompt sections/tools 的真实 token 估算与 owner 归属
       → usage ledger + 当前会话使用量
       → 保护名单
+  → buildVerdict() 生成四维结论（加载/兼容/上下文/压缩链路）
   → buildSlimProfile() 评分 + 去重 + 兼容性硬约束
   → <dataDir>/trim/profiles/<profileId>.json
   → 返回 Markdown（未改插件状态）
@@ -92,8 +94,25 @@ src/compat/
   finding.ts       finding 构造/去重/排序
   report.ts        规则汇总、矩阵、Markdown/JSON
   analyze.ts       采集 + 缓存 + 落盘 + 审计
+  compaction.ts    压缩链路只读归类与 PP_COMPACTION_* 规则
   tool.ts          trim_analyze_compatibility
 ```
+
+## 体检结论与压缩链路
+
+```text
+src/verdict.ts
+  load      ← RT_/peer/registration/MCP/duplicate-version 发现 + diagnostics
+  compat    ← 其余兼容性发现
+  context   ← 可归属 token / Top owner / 重复提示词
+  compaction← CompactionStack.health
+  overall   ← error > attention > ok；不生成 0–100 分
+```
+
+`compaction.ts` 只读地读取 `loaderEntries`、patch/config、bundle 描述和 prompt 工具名，
+输出参与者、角色计数、显式阈值、冲突发现与 `criticalModules`。`scan.ts` 把
+`criticalModules` 加到 `buildProtection` 的 `extraProtect`，因此唯一/活跃压缩后端不会被
+建议关闭。
 
 ## 保护名单
 

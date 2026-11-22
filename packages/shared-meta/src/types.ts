@@ -369,6 +369,64 @@ export interface WorkspaceCompatSummary {
   findings: CompatFinding[]
 }
 
+/** One row in the compaction stack of the current profile. */
+export type CompactionRole =
+  | 'backend'
+  | 'pruner'
+  | 'image'
+  | 'command'
+  | 'threshold'
+  | 'archive'
+  | 'participant'
+
+export interface CompactionParticipant {
+  /** Loader entry id. */
+  id: string
+  moduleName: string
+  bundleName?: string
+  role: CompactionRole
+  enabled: boolean
+  confidence: 'high' | 'medium' | 'low'
+  evidence: CompatEvidence[]
+  thresholds?: Array<{ key: string; value: number }>
+}
+
+/** Read-only view of the profile's compaction pipeline. */
+export interface CompactionStack {
+  health: 'ok' | 'warn' | 'error' | 'absent'
+  roles: Record<CompactionRole, number>
+  backendCount: number
+  participants: CompactionParticipant[]
+  findings: string[]
+  notes: string[]
+  /** Active backends that trim must never suggest disabling. */
+  criticalModules: string[]
+}
+
+/** One top-level check in the plugin checkup verdict. */
+export type CheckStatus = 'ok' | 'warn' | 'error' | 'info'
+
+export interface CheckResult {
+  id: 'load' | 'compat' | 'context' | 'compaction'
+  status: CheckStatus
+  label: string
+  detail: string
+  count?: number
+}
+
+export interface VerdictAction {
+  id: string
+  label: string
+  target: 'compat' | 'compaction' | 'draft'
+}
+
+export interface Verdict {
+  overall: 'ok' | 'attention' | 'risk'
+  headline: string
+  checks: CheckResult[]
+  actions: VerdictAction[]
+}
+
 export interface CompatReport {
   schemaVersion: 1
   generatedAt: string
@@ -390,6 +448,7 @@ export interface CompatReport {
     info: number
     byDomain: Record<CompatDomain, number>
   }
+  compaction?: CompactionStack
   profiles: ProfileCompatSummary[]
   workspaces: WorkspaceCompatSummary[]
   diagnostics: string[]

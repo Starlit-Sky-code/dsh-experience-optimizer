@@ -13,6 +13,7 @@ import { dedupeFindings, sortFindings } from './finding.ts'
 import { runRuntimeRules } from './rules-runtime.ts'
 import { runPluginRules } from './rules-plugin.ts'
 import { runProfileRules } from './rules-profile.ts'
+import { inspectCompactionStack } from './compaction.ts'
 
 export interface ReportOptions {
   includeInfo: boolean
@@ -28,7 +29,8 @@ export async function runCompatibilityRules(
     runPluginRules(context),
     runProfileRules(context),
   ])
-  return sortFindings(dedupeFindings([...runtime, ...plugin, ...profile]))
+  const compaction = inspectCompactionStack(context)
+  return sortFindings(dedupeFindings([...runtime, ...plugin, ...profile, ...compaction.findings]))
 }
 
 /** Build the serializable report. */
@@ -65,6 +67,7 @@ export function buildReport(
     },
     findings: selected,
     summary: { error, warn, info, byDomain },
+    compaction: inspectCompactionStack(context).stack,
     profiles: context.profiles.map((profile) => ({
       name: profile.name,
       dir: profile.dir,

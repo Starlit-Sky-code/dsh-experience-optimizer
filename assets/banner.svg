@@ -49,16 +49,16 @@
   <text x="390" y="282" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="24" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
   
     <g transform="translate(390 320)">
-      <rect width="139" height="44" rx="22" fill="#f2a33a" fill-opacity="0.10" stroke="#f2a33a" stroke-opacity="0.45"/>
+      <rect width="118" height="44" rx="22" fill="#f2a33a" fill-opacity="0.10" stroke="#f2a33a" stroke-opacity="0.45"/>
       <circle cx="21" cy="22" r="4" fill="#f2a33a"/>
-      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">兼容性体检</text>
+      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">四维体检</text>
     </g>
   
   
     <g transform="translate(550 320)">
       <rect width="118" height="44" rx="22" fill="#8fb7ff" fill-opacity="0.10" stroke="#8fb7ff" stroke-opacity="0.45"/>
       <circle cx="21" cy="22" r="4" fill="#8fb7ff"/>
-      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">插件减负</text>
+      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">压缩链路</text>
     </g>
   
   

@@ -10,6 +10,7 @@ import { normalizeConfig } from './config.ts'
 import type { Config } from './config.ts'
 import { analyzeCompatibility } from './compat/analyze.ts'
 import { getInventory, getPluginManager, resolveProfileFacts } from './compat/adapters.ts'
+import { buildVerdict } from './verdict.ts'
 import { attachFindings, buildSlimProfile } from './draft.ts'
 import { scanPlugins } from './scan.ts'
 import { detectTask } from './task.ts'
@@ -21,7 +22,7 @@ import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
-const CURRENT_VERSION = '0.4.0'
+const CURRENT_VERSION = '0.5.0'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -297,6 +298,8 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     .sort((a, b) => b.tokens - a.tokens)
     .slice(0, 12)
   return {
+    verdict: buildVerdict(compat, scan),
+    compaction: scan.compaction,
     runtime: compat.report.runtime,
     profile: compat.report.profile,
     compat: compat.report.summary,

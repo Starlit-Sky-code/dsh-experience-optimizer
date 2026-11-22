@@ -23,7 +23,7 @@ DSH Plugin Checkup
 **短描述**
 
 ```text
-Read-only plugin context cost and compatibility diagnostics for DeepSeek Harness.
+Four-check plugin context, compatibility, and compaction-stack diagnostics for DeepSeek Harness.
 ```
 
 **长描述**
@@ -35,6 +35,8 @@ plugins and now face context cost and plugin conflicts. The active package is
 - scans installed bundles and the live prompt context, builds a compatibility matrix
   across plugin↔plugin, plugin↔DSH runtime, and profile/workspace boundaries, and drafts
   an explainable keep/enable/disable plan.
+- adds a four-check verdict (load, compatibility, context, compaction) and a read-only
+  compaction-stack audit; active backends are protected from disable suggestions.
 - Nothing changes until the user explicitly confirms; every apply is snapshot-backed and
   reversible. Core, preset, and user-pinned items are protected.
 - The analysis is local and read-only: no network requests, no `!!js` execution, no

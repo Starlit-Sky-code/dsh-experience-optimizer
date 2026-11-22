@@ -5,6 +5,31 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-22
+
+### Added
+
+- **体检结论**: `GET /overview` now returns a four-check verdict (load,
+  compatibility, context, compaction). The settings page shows one summary bar
+  with status pills and action buttons; no arbitrary 0–100 score.
+- **压缩链路体检**: a read-only compaction stack audit classifies backends,
+  tool-result pruners, image offload, `/compact`, threshold owners, archives,
+  and other participants. It warns on duplicate backends, missing backends,
+  conflicting explicit thresholds, and out-of-range thresholds.
+- **Backend protection**: active compaction backends are added to the trim
+  protection set, so the checkup never suggests disabling the only backend.
+- **Issue-aware composer warning**: the composer reminder now speaks only when
+  the verdict needs attention (for example two compaction backends); otherwise
+  it keeps the existing one-time gentle reminder.
+
+### Changed
+
+- `CompatReport` gains an optional `compaction` stack; `GET /overview` returns
+  `verdict`, `compaction`, and `recipeAvailable`.
+- New compatibility codes: `PP_COMPACTION_BACKEND_DUPLICATE`,
+  `PP_COMPACTION_BACKEND_MISSING`, `PP_COMPACTION_THRESHOLD_CONFLICT`,
+  `PP_COMPACTION_THRESHOLD_OUT_OF_RANGE`, `PP_COMPACTION_PRUNE_WITHOUT_BACKEND`.
+
 ## [0.4.0] - 2026-11-22
 
 ### Deprecated

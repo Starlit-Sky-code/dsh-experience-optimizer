@@ -249,15 +249,45 @@ window.__ModuleLoader__.load({
 .eo-tab-active{color:var(--eo-primary);font-weight:500}
 .eo-tab-active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1.5px;background:var(--eo-primary);border-radius:1px}
 .eo-stack{display:flex;flex-direction:column;gap:14px}
+.eo-stack>.eo-verdict{order:-1}
 .eo-stack>.eo-metrics{order:0}
 .eo-stack>[data-section="draft"]{order:1}
 .eo-stack>[data-section="inventory"]{order:2}
-.eo-stack>[data-section="compat"]{order:3}
-.eo-stack>[data-section="context"]{order:4}
-.eo-stack>[data-section="result"]{order:5}
-.eo-stack>[data-section="dedupe"]{order:6}
-.eo-stack>[data-section="diagnostics"]{order:7}
+.eo-stack>[data-section="compaction"]{order:3}
+.eo-stack>[data-section="compat"]{order:4}
+.eo-stack>[data-section="context"]{order:5}
+.eo-stack>[data-section="result"]{order:6}
+.eo-stack>[data-section="dedupe"]{order:7}
+.eo-stack>[data-section="diagnostics"]{order:8}
 .eo-grid{display:grid;gap:10px}
+.eo-verdict{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:.5px solid var(--eo-border-strong);border-radius:var(--eo-radius);background:var(--eo-card-bg);font-size:12px;line-height:18px}
+.eo-verdict-ok{border-color:color-mix(in srgb,var(--eo-success) 35%,transparent);background:color-mix(in srgb,var(--eo-success) 5%,transparent)}
+.eo-verdict-attention{border-color:color-mix(in srgb,var(--eo-warn) 38%,transparent);background:color-mix(in srgb,var(--eo-warn) 6%,transparent)}
+.eo-verdict-risk{border-color:color-mix(in srgb,var(--eo-error) 38%,transparent);background:color-mix(in srgb,var(--eo-error) 6%,transparent)}
+.eo-verdict-main{display:flex;align-items:center;gap:8px;min-width:170px}
+.eo-verdict-dot{width:8px;height:8px;border-radius:50%;background:var(--eo-success);flex:none}
+.eo-verdict-attention .eo-verdict-dot{background:var(--eo-warn)}
+.eo-verdict-risk .eo-verdict-dot{background:var(--eo-error)}
+.eo-verdict-copy{display:flex;flex-direction:column;gap:1px;min-width:0}
+.eo-verdict-copy b{font-size:11px;font-weight:500;color:var(--eo-tertiary);letter-spacing:.02em}
+.eo-verdict-copy span{font-size:13px;font-weight:600;line-height:19px}
+.eo-verdict-checks{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.eo-check{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:999px;border:.5px solid var(--eo-border);color:var(--eo-secondary);white-space:nowrap}
+.eo-check i{width:6px;height:6px;border-radius:50%;background:var(--eo-tertiary);flex:none}
+.eo-check-ok i{background:var(--eo-success)}
+.eo-check-warn i{background:var(--eo-warn)}
+.eo-check-error i{background:var(--eo-error)}
+.eo-check-info i{background:var(--eo-tertiary)}
+.eo-verdict-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eo-compaction-roles{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.eo-compaction-role{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;border:.5px solid var(--eo-border);color:var(--eo-tertiary);font-size:11px;line-height:16px}
+.eo-compaction-role b{font-size:12px;color:var(--eo-secondary)}
+.eo-compaction-role.is-on{border-color:color-mix(in srgb,var(--eo-success) 40%,transparent);color:var(--eo-secondary)}
+.eo-compaction-list{display:flex;flex-direction:column;gap:5px}
+.eo-compaction-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 9px;border:.5px solid var(--eo-border);border-radius:8px}
+.eo-compaction-main{min-width:0;display:flex;flex-direction:column;gap:2px}
+.eo-compaction-main code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
+.eo-compaction-note{padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--eo-warn) 7%,transparent);border:.5px solid color-mix(in srgb,var(--eo-warn) 30%,transparent);color:var(--eo-secondary)}
 .eo-metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:.5px solid var(--eo-card-stroke);border-radius:var(--eo-radius);background:var(--eo-card-bg);overflow:hidden}
 .eo-metric{padding:12px 14px;border-right:.5px solid var(--eo-border);min-width:0}
 .eo-metric:last-child{border-right:0}
@@ -492,6 +522,8 @@ window.__ModuleLoader__.load({
 /* Conversation checkup bubble */
 .eo-bubble-toast{display:inline-flex;align-items:center;gap:8px;max-width:min(360px,calc(100vw - 32px));padding:7px 8px 7px 10px;border:.5px solid var(--dsw-alias-border-l2,rgba(127,127,127,.2));border-radius:10px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.8));color:var(--dsw-alias-label-secondary,#5f6b7a);box-shadow:0 8px 24px rgba(0,0,0,.1);animation:eo-bubble-in .45s var(--eo-ease,cubic-bezier(.16,1,.3,1)) both}
 .eo-bubble-pulse{width:6px;height:6px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#1a7f37);box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-state-success-primary,#1a7f37) 16%,transparent);flex:0 0 auto;animation:eo-pulse 2.4s ease-in-out infinite}
+.eo-bubble-toast.is-warning{border-color:color-mix(in srgb,var(--eo-warn,#b26a00) 38%,transparent);background:color-mix(in srgb,var(--eo-warn,#b26a00) 7%,var(--dsw-alias-bg-layer-1,#fff))}
+.eo-bubble-toast.is-warning .eo-bubble-pulse{background:var(--eo-warn,#b26a00);box-shadow:0 0 0 3px color-mix(in srgb,var(--eo-warn,#b26a00) 16%,transparent)}
 .eo-bubble-copy{display:flex;flex-direction:column;min-width:0;gap:1px}
 .eo-bubble-copy b{color:var(--dsw-alias-label-primary,#1a1a1a);font-size:11px;line-height:15px;font-weight:500}
 .eo-bubble-copy span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary,#8b96a5);font-size:10.5px;line-height:15px}
@@ -713,6 +745,17 @@ window.__ModuleLoader__.load({
     }
 
     function CheckupBubble({ sessionId }) {
+      const snapshot = useTrimOverview()
+      const data = snapshot.data
+      const warning = data && data.verdict && data.verdict.overall !== 'ok'
+      const warningText = warning
+        ? data.compaction && (data.compaction.health === 'warn' || data.compaction.health === 'error')
+          ? tr('压缩链路：' + (data.compaction.backendCount || 0) + ' 个后端同时启用', 'Compaction: ' + (data.compaction.backendCount || 0) + ' backends active')
+          : tr(
+              '插件体检：' + data.verdict.checks.filter((check) => check.status === 'warn' || check.status === 'error').length + ' 项需处理',
+              'Checkup: ' + data.verdict.checks.filter((check) => check.status === 'warn' || check.status === 'error').length + ' item(s) need attention',
+            )
+        : ''
       const dismissKey = 'dsh-experience-optimizer.bubble.' + (sessionId || 'default')
       const [visible, setVisible] = useState(false)
       const [dismissed, setDismissed] = useState(() => {
@@ -746,9 +789,9 @@ window.__ModuleLoader__.load({
 
       useEffect(() => {
         if (!visible) return undefined
-        const timer = setTimeout(() => setVisible(false), 7000)
+        const timer = setTimeout(() => setVisible(false), warning ? 9000 : 7000)
         return () => clearTimeout(timer)
-      }, [visible])
+      }, [visible, warning])
 
       if (!visible || dismissed) return null
 
@@ -759,13 +802,13 @@ window.__ModuleLoader__.load({
 
       return h(
         'div',
-        { className: 'eo-bubble-toast', role: 'status' },
+        { className: 'eo-bubble-toast' + (warning ? ' is-warning' : ''), role: 'status' },
         h('span', { className: 'eo-bubble-pulse', 'aria-hidden': 'true' }),
         h(
           'div',
           { className: 'eo-bubble-copy' },
           h('b', null, tr('插件体检', 'Plugin checkup')),
-          h('span', null, tr('先量成本，再决定关什么。', 'Measure first, then decide what to close.')),
+          h('span', null, warning ? warningText : tr('先量成本，再决定关什么。', 'Measure first, then decide what to close.')),
         ),
         h('button', { type: 'button', className: 'eo-bubble-close', onClick: close, 'aria-label': tr('关闭提醒', 'Dismiss') }, '×'),
       )
@@ -1319,6 +1362,14 @@ window.__ModuleLoader__.load({
         setToast({ message, kind: kind || 'ok', id: Date.now() })
       }, [])
 
+      const scrollToSection = useCallback((target) => {
+        if (typeof document === 'undefined') return
+        const element = document.querySelector('[data-section="' + target + '"]')
+        if (element && typeof element.scrollIntoView === 'function') {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, [])
+
       useEffect(() => {
         if (!toast) return undefined
         const timer = setTimeout(() => setToast(null), 4200)
@@ -1471,7 +1522,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.4.0',
+            current: '0.5.0',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2117,7 +2168,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.4.0')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.0')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2175,7 +2226,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.4.0 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.0 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2250,6 +2301,184 @@ window.__ModuleLoader__.load({
         )
       }
 
+      function renderVerdict() {
+        const verdict = overview.verdict
+        if (!verdict) return null
+        const checkLabels = {
+          load: tr('加载', 'Load'),
+          compat: tr('兼容', 'Compat'),
+          context: tr('上下文', 'Context'),
+          compaction: tr('压缩链路', 'Compaction'),
+        }
+        const checkDetail = (check) => {
+          if (check.id === 'load') {
+            return check.count > 0 ? tr(check.count + ' 个加载/运行时问题', check.count + ' load/runtime issues') : check.detail
+          }
+          if (check.id === 'compat') {
+            return check.count > 0 ? tr(check.count + ' 项发现', check.count + ' findings') : check.detail
+          }
+          if (check.id === 'context' && check.status === 'warn') {
+            return tr(check.detail, check.count + ' duplicate prompt groups')
+          }
+          return check.detail
+        }
+        const actionLabel = (action) => {
+          if (action.target === 'compaction') return tr('查看压缩链路', 'View compaction stack')
+          if (action.target === 'draft') return tr('生成瘦身方案', 'Build slim plan')
+          if (action.id === 'load') return tr('查看加载问题', 'View load issues')
+          return tr('处理兼容性', 'Fix compatibility')
+        }
+        const headline = verdict.overall === 'ok'
+          ? tr('通过', 'Pass')
+          : verdict.overall === 'risk'
+            ? tr('有阻断项', 'Blocking issues')
+            : tr('需处理 ', 'Attention: ') + verdict.checks.filter((check) => check.status === 'warn' || check.status === 'error').length + tr(' 项', ' items')
+        return h(
+          'div',
+          { className: 'eo-verdict eo-verdict-' + verdict.overall, role: 'status' },
+          h(
+            'div',
+            { className: 'eo-verdict-main' },
+            h('span', { className: 'eo-verdict-dot', 'aria-hidden': 'true' }),
+            h(
+              'div',
+              { className: 'eo-verdict-copy' },
+              h('b', null, tr('体检结论', 'Checkup verdict')),
+              h('span', null, headline),
+            ),
+          ),
+          h(
+            'div',
+            { className: 'eo-verdict-checks' },
+            verdict.checks.map((check) =>
+              h(
+                'span',
+                { key: check.id, className: 'eo-check eo-check-' + check.status, title: checkDetail(check) },
+                h('i', { 'aria-hidden': 'true' }),
+                checkLabels[check.id] || check.label,
+              ),
+            ),
+          ),
+          h(
+            'div',
+            { className: 'eo-verdict-actions' },
+            verdict.actions.map((action) =>
+              h(
+                Button,
+                {
+                  key: action.id + ':' + action.target,
+                  variant: 'ghost',
+                  onClick: () => scrollToSection(action.target),
+                },
+                actionLabel(action),
+              ),
+            ),
+          ),
+        )
+      }
+
+      function renderCompaction() {
+        const stack = overview.compaction
+        if (!stack) return null
+        const roleLabels = {
+          backend: tr('后端', 'Backend'),
+          pruner: tr('裁剪', 'Pruner'),
+          image: tr('图像', 'Image'),
+          command: tr('命令', 'Command'),
+          threshold: tr('阈值', 'Threshold'),
+          archive: tr('归档', 'Archive'),
+          participant: tr('参与', 'Participant'),
+        }
+        const confidenceLabels = {
+          high: tr('高置信', 'high confidence'),
+          medium: tr('中等置信', 'medium confidence'),
+          low: tr('低置信', 'low confidence'),
+        }
+        const roleOrder = ['backend', 'pruner', 'image', 'command', 'threshold', 'archive', 'participant']
+        const tone = stack.health === 'error' ? 'danger' : stack.health === 'warn' ? 'warn' : stack.health === 'ok' ? 'ok' : 'neutral'
+        const healthLabel = stack.health === 'error'
+          ? tr('有冲突', 'Conflict')
+          : stack.health === 'warn'
+            ? tr('需确认', 'Review')
+            : stack.health === 'ok'
+              ? tr('完整', 'Coherent')
+              : tr('未检测到', 'Not detected')
+        return h(
+          Card,
+          {
+            title: tr('压缩链路', 'Compaction stack'),
+            subtitle: tr('后端 / 裁剪 / 阈值只读检查；多个插件可以替换同一段', 'Read-only backend / pruner / threshold audit; plugins can replace the same segment'),
+            section: 'compaction',
+            collapsible: true,
+            collapsed: collapsedCards.compaction === true,
+            onToggle: () => toggleCard('compaction'),
+            extra: h(Badge, { tone }, healthLabel),
+          },
+          stack.participants.length === 0
+            ? h('div', { className: 'eo-empty' }, tr('当前 profile 没有检测到压缩链路行。', 'No compaction rows were detected in this profile.'))
+            : h(
+                'div',
+                { className: 'eo-stack' },
+                h(
+                  'div',
+                  { className: 'eo-compaction-roles' },
+                  roleOrder.map((role) =>
+                    h(
+                      'span',
+                      { key: role, className: 'eo-compaction-role' + (stack.roles[role] > 0 ? ' is-on' : '') },
+                      h('b', null, String(stack.roles[role] || 0)),
+                      roleLabels[role],
+                    ),
+                  ),
+                ),
+                h(
+                  'div',
+                  { className: 'eo-compaction-list' },
+                  stack.participants.slice(0, 16).map((participant) =>
+                    h(
+                      'div',
+                      { className: 'eo-compaction-row', key: participant.id + ':' + participant.moduleName },
+                      h(
+                        'div',
+                        { className: 'eo-compaction-main' },
+                        h('code', null, participant.moduleName),
+                        h(
+                          'div',
+                          { className: 'eo-muted' },
+                          roleLabels[participant.role] +
+                            ' · ' +
+                            confidenceLabels[participant.confidence] +
+                            (participant.thresholds && participant.thresholds.length > 0
+                              ? ' · ' + participant.thresholds.map((item) => item.key + '=' + item.value).join(', ')
+                              : ''),
+                        ),
+                      ),
+                      h(Badge, { tone: participant.enabled ? 'ok' : 'neutral' }, participant.enabled ? tr('启用', 'On') : tr('停用', 'Off')),
+                    ),
+                  ),
+                ),
+                stack.findings.length > 0
+                  ? h(
+                      'div',
+                      { className: 'eo-compaction-note' },
+                      tr(
+                        '检测到 ' + stack.findings.length + ' 项链路问题；完整证据在兼容性卡里。',
+                        stack.findings.length + ' stack issue(s) detected; full evidence is in the compatibility card.',
+                      ),
+                    )
+                  : null,
+                h(
+                  'div',
+                  { className: 'eo-muted' },
+                  tr(
+                    '只读分析：不会改任何压缩配置，也不会执行第三方插件代码。',
+                    'Read-only: no compaction config is changed and no third-party plugin code is executed.',
+                  ),
+                ),
+              ),
+        )
+      }
+
       function renderTrim() {
         const shareOf = (bundle) => totalContextTokens > 0
           ? Math.min(100, Math.max(0, (bundle.contextTokens / totalContextTokens) * 100))
@@ -2310,6 +2539,7 @@ window.__ModuleLoader__.load({
               (layout === 'two' ? ' eo-layout-two' : '') +
               (density === 'compact' ? ' eo-density-compact' : ''),
           },
+          renderVerdict(),
           h('div', { className: 'eo-grid eo-metrics' }, [
             h(Metric, {
               key: 'tokens',
@@ -2343,6 +2573,7 @@ window.__ModuleLoader__.load({
               tone: overview.managementAvailable ? 'ok' : 'danger',
             }),
           ]),
+          renderCompaction(),
           h(
             Card,
             {

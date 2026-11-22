@@ -89,9 +89,9 @@ const promo = `<?xml version="1.0" encoding="UTF-8"?>
   <text x="450" y="176" font-family="${mono}" font-size="19" letter-spacing="2.4" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
   <text x="450" y="253" font-family="${font}" font-size="48" font-weight="700" fill="#f4f7ff">DSH 插件体检</text>
   <text x="450" y="312" font-family="${font}" font-size="27" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
-  <text x="450" y="354" font-family="${font}" font-size="19" fill="#8fa3bd">插件减负 × 兼容性体检 × 安全瘦身</text>
-  ${chip(450, 395, '兼容性体检', '#f2a33a')}
-  ${chip(610, 395, '插件减负', '#8fb7ff')}
+  <text x="450" y="354" font-family="${font}" font-size="19" fill="#8fa3bd">四维体检 × 压缩链路 × 安全瘦身</text>
+  ${chip(450, 395, '四维体检', '#f2a33a')}
+  ${chip(610, 395, '压缩链路', '#8fb7ff')}
   ${chip(740, 395, '安全瘦身', '#9fe0c0')}
   <rect x="450" y="470" width="600" height="1" fill="url(#rule)"/>
   <text x="450" y="512" font-family="${mono}" font-size="20" fill="#cfd9ea">dsh-plugin-trim</text>
@@ -107,8 +107,8 @@ const banner = `<?xml version="1.0" encoding="UTF-8"?>
   <text x="390" y="158" font-family="${mono}" font-size="18" letter-spacing="2.2" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
   <text x="390" y="228" font-family="${font}" font-size="42" font-weight="700" fill="#f4f7ff">DSH 插件体检</text>
   <text x="390" y="282" font-family="${font}" font-size="24" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
-  ${chip(390, 320, '兼容性体检', '#f2a33a')}
-  ${chip(550, 320, '插件减负', '#8fb7ff')}
+  ${chip(390, 320, '四维体检', '#f2a33a')}
+  ${chip(550, 320, '压缩链路', '#8fb7ff')}
   ${chip(680, 320, '安全瘦身', '#9fe0c0')}
   <text x="390" y="424" font-family="${mono}" font-size="17" fill="#8fa3bd">dsh-plugin-trim</text>
   <text x="390" y="454" font-family="${mono}" font-size="15" fill="#62758d">github.com/${repo}</text>

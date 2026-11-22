@@ -52,7 +52,15 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
    - 写 `<dshHome>/experience-optimizer/compat/report.json`；
    - 明确“未修改任何插件”。
 
-### B. 精简方案与回滚
+### B. 体检结论与压缩链路
+
+1. 打开设置：顶部四维结论条出现；点击“查看压缩链路”滚动到压缩卡。
+2. 正常 profile：压缩卡显示内置后端 1、裁剪 1、图像 1、命令 1；无 `PP_COMPACTION_*`。
+3. 用夹具模拟两个后端：结论变“需处理”，压缩卡显示 2 个后端，兼容卡出现 `PP_COMPACTION_BACKEND_DUPLICATE`。
+4. 生成精简方案：活跃压缩后端不得出现在可关闭建议里。
+5. 对话上方：有问题时显示“压缩链路：2 个后端同时启用”；无问题时回退到一次性轻提醒。
+
+### C. 精简方案与回滚
 
 1. 说：“为当前修 bug 任务生成精简方案”。
 2. 期望 `trim_suggest_profile`：
@@ -68,14 +76,14 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 5. 说：“回滚刚才的变更”。
 6. 期望 `trim_rollback_profile` 恢复应用前状态；若用户手动改过，标 `externally-changed` 而不是覆盖。
 
-### C. 兼容性驱动的建议
+### D. 兼容性驱动的建议
 
 1. 在测试 profile 中制造一个可安全复现的冲突（例如启用两个声明同一 row id 的可选 bundle）。
 2. 运行 `trim_analyze_compatibility`，期望出现 `PP_ROW_DUPLICATE` 或 `PP_RUNTIME_REGISTRATION_FAILED`。
 3. 运行 `trim_suggest_profile`，期望冲突主体进入 `review` 或受保护的 disable 建议，而不是自动应用。
 4. 若用户显式选择其中一项并确认，`trim_apply_profile` 可将其标为 `fixKind: conflict`。
 
-### D. 周报蓝图（legacy，已冻结）
+### E. 周报蓝图（legacy，已冻结）
 
 > 仅验证现有安装不被破坏；不再新增能力。
 
@@ -96,5 +104,6 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 - 默认不改插件；应用只改低风险项；受保护项永不改。
 - 兼容性报告能发现服务/row/MCP/运行时/ profile 漂移，并给出修复方向。
 - `dsh-plugin-recipe` 冻结后，现有生成/校验/导出仍可用；未安装时不显示页签，已安装时显示冻结说明。
+- 四维结论与压缩链路只读、可解释；活跃后端不会被建议关闭。
 - 失败时能恢复，不静默覆盖用户手动改动。
 - 不出现“为了优化而新增更多上下文/规则”的副作用。

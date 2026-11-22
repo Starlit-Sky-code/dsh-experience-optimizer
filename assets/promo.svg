@@ -48,19 +48,19 @@
   <text x="450" y="176" font-family="JetBrains Maple Mono, monospace" font-size="19" letter-spacing="2.4" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
   <text x="450" y="253" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="48" font-weight="700" fill="#f4f7ff">DSH 插件体检</text>
   <text x="450" y="312" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="27" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
-  <text x="450" y="354" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="19" fill="#8fa3bd">插件减负 × 兼容性体检 × 安全瘦身</text>
+  <text x="450" y="354" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="19" fill="#8fa3bd">四维体检 × 压缩链路 × 安全瘦身</text>
   
     <g transform="translate(450 395)">
-      <rect width="139" height="44" rx="22" fill="#f2a33a" fill-opacity="0.10" stroke="#f2a33a" stroke-opacity="0.45"/>
+      <rect width="118" height="44" rx="22" fill="#f2a33a" fill-opacity="0.10" stroke="#f2a33a" stroke-opacity="0.45"/>
       <circle cx="21" cy="22" r="4" fill="#f2a33a"/>
-      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">兼容性体检</text>
+      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">四维体检</text>
     </g>
   
   
     <g transform="translate(610 395)">
       <rect width="118" height="44" rx="22" fill="#8fb7ff" fill-opacity="0.10" stroke="#8fb7ff" stroke-opacity="0.45"/>
       <circle cx="21" cy="22" r="4" fill="#8fb7ff"/>
-      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">插件减负</text>
+      <text x="34" y="29" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="18" fill="#e8eefb">压缩链路</text>
     </g>
   
   
@@ -73,5 +73,5 @@
   <rect x="450" y="470" width="600" height="1" fill="url(#rule)"/>
   <text x="450" y="512" font-family="JetBrains Maple Mono, monospace" font-size="20" fill="#cfd9ea">dsh-plugin-trim</text>
   <text x="450" y="548" font-family="JetBrains Maple Mono, monospace" font-size="17" fill="#7f92aa">github.com/Starlit-Sky-code/dsh-experience-optimizer</text>
-  <text x="450" y="582" font-family="JetBrains Maple Mono, monospace" font-size="15" fill="#5f728a">v0.4.0  ·  AGPL-3.0  ·  DSH 0.2.2-rc.1</text>
+  <text x="450" y="582" font-family="JetBrains Maple Mono, monospace" font-size="15" fill="#5f728a">v0.5.0  ·  AGPL-3.0  ·  DSH 0.2.2-rc.1</text>
 </svg>

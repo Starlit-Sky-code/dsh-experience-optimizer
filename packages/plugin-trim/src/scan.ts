@@ -4,6 +4,7 @@ import {
 } from 'dsh-shared-meta'
 import type {
   BundleProfile,
+  CompactionStack,
   DedupeGroup,
   Evidence,
   GuardStatus,
@@ -61,6 +62,7 @@ export interface ScanResult {
     byOwner: Record<string, UsageStats>
   }
   dedupe: DedupeGroup[]
+  compaction?: CompactionStack
   diagnostics: string[]
 }
 
@@ -78,11 +80,12 @@ export interface ScanOptions {
 /** Normalize plugin metadata, prompt costs, usage, and compat findings into one scan result. */
 export async function scanPlugins(options: ScanOptions): Promise<ScanResult> {
   const { config, compat } = options
+  const compaction = compat.report.compaction
   const protection = buildProtection({
     bundles: compat.context.bundles,
     entries: compat.context.entriesInfo,
     inventory: options.inventory,
-    extraProtect: config.protect,
+    extraProtect: [...config.protect, ...(compaction?.criticalModules ?? [])],
     pinned: config.pinned,
   })
   const findingsMap = findingsBySubject(compat.findings)
@@ -224,6 +227,7 @@ export async function scanPlugins(options: ScanOptions): Promise<ScanResult> {
     presetModules,
     usage: { byTool: usageByTool, byOwner: usageByOwner },
     dedupe,
+    compaction,
     diagnostics: [...compat.context.diagnostics],
   }
 }

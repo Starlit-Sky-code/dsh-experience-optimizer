@@ -235,6 +235,33 @@ interface WorkspaceCompatSummary {
   mcpEntries: string[];
   findings: CompatFinding[];
 }
+/** One row in the compaction stack of the current profile. */
+type CompactionRole = 'backend' | 'pruner' | 'image' | 'command' | 'threshold' | 'archive' | 'participant';
+interface CompactionParticipant {
+  /** Loader entry id. */
+  id: string;
+  moduleName: string;
+  bundleName?: string;
+  role: CompactionRole;
+  enabled: boolean;
+  confidence: 'high' | 'medium' | 'low';
+  evidence: CompatEvidence[];
+  thresholds?: Array<{
+    key: string;
+    value: number;
+  }>;
+}
+/** Read-only view of the profile's compaction pipeline. */
+interface CompactionStack {
+  health: 'ok' | 'warn' | 'error' | 'absent';
+  roles: Record<CompactionRole, number>;
+  backendCount: number;
+  participants: CompactionParticipant[];
+  findings: string[];
+  notes: string[];
+  /** Active backends that trim must never suggest disabling. */
+  criticalModules: string[];
+}
 interface CompatReport {
   schemaVersion: 1;
   generatedAt: string;
@@ -256,6 +283,7 @@ interface CompatReport {
     info: number;
     byDomain: Record<CompatDomain, number>;
   };
+  compaction?: CompactionStack;
   profiles: ProfileCompatSummary[];
   workspaces: WorkspaceCompatSummary[];
   diagnostics: string[];
@@ -577,6 +605,7 @@ interface ScanResult {
     byOwner: Record<string, UsageStats>;
   };
   dedupe: DedupeGroup[];
+  compaction?: CompactionStack;
   diagnostics: string[];
 }
 interface ScanOptions {

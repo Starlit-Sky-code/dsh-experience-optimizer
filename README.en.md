@@ -32,7 +32,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.4.0/dsh-plugin-trim-0.4.0.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.0/dsh-plugin-trim-0.5.0.tgz"
 ```
 
 For source development, see [Development](#development).
@@ -51,6 +51,20 @@ For source development, see [Development](#development).
 - **English and Chinese UI** can be switched at runtime.
 
 ![Two paths, one authorization boundary](assets/readme/flow.svg)
+
+## Verdict first, details second
+
+The settings page opens with a four-check verdict: **load**, **compatibility**,
+**context**, and **compaction stack**. Each check has a status dot, a count, and
+an action that scrolls to the evidence. There is deliberately no 0–100 health
+score: different severities are not compressed into one scary number.
+
+The compaction card classifies backends, tool-result pruners, image offload,
+`/compact`, threshold owners, archives, and other participants. It warns on
+duplicate backends, a missing backend, conflicting explicit thresholds, and
+out-of-range thresholds. Active backends are protected, so the checkup never
+suggests disabling the only compaction engine. The composer reminder only
+interrupts when the verdict needs attention.
 
 ## How “close candidate” is decided
 

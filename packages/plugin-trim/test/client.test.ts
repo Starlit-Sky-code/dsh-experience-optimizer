@@ -16,6 +16,28 @@ const overview = {
     runtime: { dshVersion: '0.2.2-rc.1' },
     profile: { name: 'web', dir: '/tmp/web' },
     compat: { error: 0, warn: 0, info: 0, byDomain: {} },
+    verdict: {
+      overall: 'ok',
+      headline: '通过',
+      checks: [
+        { id: 'load', status: 'ok', label: '加载', detail: '插件行已加载' },
+        { id: 'compat', status: 'ok', label: '兼容', detail: '未发现冲突' },
+        { id: 'context', status: 'ok', label: '上下文', detail: '1,000 tokens' },
+        { id: 'compaction', status: 'ok', label: '压缩链路', detail: '1 个后端' },
+      ],
+      actions: [{ id: 'draft', label: '生成瘦身方案', target: 'draft' }],
+    },
+    compaction: {
+      health: 'ok',
+      roles: { backend: 1, pruner: 1, image: 0, command: 1, threshold: 0, archive: 0, participant: 0 },
+      backendCount: 1,
+      participants: [
+        { id: 'compaction-basic', moduleName: '@deepseek-ai/dsh-compaction-basic', role: 'backend', enabled: true, confidence: 'high', evidence: [] },
+      ],
+      findings: [],
+      notes: [],
+      criticalModules: ['@deepseek-ai/dsh-compaction-basic'],
+    },
     findings: [],
     context: { totalTokens: 1000, unattributedTokens: 400, topSections: [], topTools: [], byOwner: [] },
     bundles: [
@@ -103,6 +125,10 @@ describe('client onboarding and pages', () => {
 
   afterEach(async () => {
     overview.data.recipeAvailable = false
+    overview.data.verdict.overall = 'ok'
+    overview.data.verdict.headline = '通过'
+    overview.data.compaction.health = 'ok'
+    overview.data.compaction.backendCount = 1
     await act(async () => { root.unmount() })
     vi.unstubAllGlobals()
   })
@@ -130,6 +156,10 @@ describe('client onboarding and pages', () => {
     expect(container.querySelector('.eo-progress-track')).not.toBeNull()
     expect(container.querySelectorAll('.eo-share-bar').length).toBeGreaterThan(0)
     expect(container.querySelector('.eo-compat-footer')).not.toBeNull()
+    expect(container.querySelector('.eo-verdict')).not.toBeNull()
+    expect(container.textContent).toContain('体检结论')
+    expect(container.textContent).toContain('压缩链路')
+    expect(container.querySelector('.eo-compaction-row')).not.toBeNull()
 
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')
@@ -225,6 +255,24 @@ describe('client onboarding and pages', () => {
     })
     expect(container.textContent).toContain('Plugin checkup is enabled')
     expect(container.textContent).toContain('Five steps')
+  })
+
+  it('warns in the composer when the checkup verdict needs attention', async () => {
+    overview.data.verdict.overall = 'attention'
+    overview.data.verdict.headline = '需处理 1 项'
+    overview.data.verdict.checks[3].status = 'warn'
+    overview.data.compaction.health = 'warn'
+    overview.data.compaction.backendCount = 2
+
+    const Bubble = slotComponents['conversation.composer.dock']
+    expect(Bubble).toBeDefined()
+    await act(async () => { root.unmount() })
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(Bubble as React.ComponentType, { sessionId: 'warning' }))
+    })
+    await act(async () => { await sleep(1600) })
+    expect(container.textContent).toContain('压缩链路：2 个后端同时启用')
   })
 
   it('hides the frozen recipe tab when recipe is not installed', async () => {

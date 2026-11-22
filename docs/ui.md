@@ -75,6 +75,19 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 应用通过认证的 `POST /config` 写入 loader entry，审批与保护逻辑不跳过；
 - 仍提供可复制的 `dsh-plugin-trim` 配置补丁，便于审阅。
 
+### 体检结论
+
+- 顶部四维结论条：加载 / 兼容 / 上下文 / 压缩链路；状态灯 + 计数 + 待办按钮。
+- 不做 0–100 健康分；按钮滚动到对应卡片，不自动执行。
+- 对话上方只在结论需要处理时提醒（例如压缩链路双后端）；无事时回退到一次性轻提醒。
+
+### 压缩链路
+
+- 只读识别：后端、工具结果裁剪、图像卸载、`/compact`、阈值/控制面、归档、其他参与者。
+- 发现双后端、缺失后端、阈值冲突/越界时给出 `PP_COMPACTION_*` 警告。
+- 活跃后端加入保护名单，不会被建议关闭。
+- 不做自动配置修改，不执行第三方插件代码。
+
 ### 体检与兼容
 
 - 四张指标卡：可归属上下文、启用插件数、兼容性 error/warn、写操作可用性。
@@ -118,7 +131,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
-| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 |
+| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |

@@ -2281,6 +2281,252 @@ function workspaceOverlap(context) {
 	}
 	return findings;
 }
+// src/compat/compaction.ts
+const THRESHOLD_KEYS = [
+	"thresholdRatio",
+	"retainRatio",
+	"retainTokens",
+	"thresholdTokens",
+	"triggerRatio",
+	"compactThreshold"
+];
+const EMPTY_ROLES = {
+	backend: 0,
+	pruner: 0,
+	image: 0,
+	command: 0,
+	threshold: 0,
+	archive: 0,
+	participant: 0
+};
+/** Read the profile's compaction stack without executing or changing anything. */
+function inspectCompactionStack(context) {
+	const descriptions = bundleDescriptions(context);
+	const participants = dedupeParticipants(context.loaderEntries.filter((entry) => entry.source !== "mcp").map((entry) => participantOf(entry, descriptions))).sort((a, b) => a.moduleName.localeCompare(b.moduleName));
+	const roles = { ...EMPTY_ROLES };
+	for (const participant of participants) if (participant.enabled) roles[participant.role] += 1;
+	const activeBackends = participants.filter((participant) => participant.enabled && participant.role === "backend" && participant.confidence !== "low");
+	const findings = [];
+	if (activeBackends.length > 1) findings.push(makeFinding({
+		domain: "plugin-plugin",
+		code: "PP_COMPACTION_BACKEND_DUPLICATE",
+		severity: "warn",
+		title: `${activeBackends.length} compaction backends are active at the same time`,
+		subjects: activeBackends.map((participant) => participant.moduleName),
+		confidence: "high",
+		evidence: activeBackends.flatMap((participant) => participant.evidence),
+		fix: {
+			kind: "none",
+			summary: "keep one compaction backend and disable the others; only one should own the compaction service",
+			safe: true,
+			requiresConsent: false
+		}
+	}));
+	if (context.profile.bundles.some((name) => name === "@deepseek-ai/dsh-base" || name === "@deepseek-ai/dsh-web-app") && activeBackends.length === 0) findings.push(makeFinding({
+		domain: "plugin-runtime",
+		code: "PP_COMPACTION_BACKEND_MISSING",
+		severity: "warn",
+		title: "No active compaction backend was detected",
+		subjects: participants.filter((participant) => participant.role === "backend").map((participant) => participant.moduleName),
+		confidence: "medium",
+		evidence: [{
+			source: "profile-file",
+			ref: context.profile.dir,
+			summary: "the profile uses dsh-base/dsh-web-app but no active compaction backend is mounted"
+		}],
+		fix: {
+			kind: "none",
+			summary: "re-enable the built-in compaction row or mount one replacement backend",
+			safe: false,
+			requiresConsent: false
+		}
+	}));
+	const thresholdEntries = explicitThresholds(participants);
+	if (thresholdEntries.length > 1) {
+		if (new Set(thresholdEntries.map((entry) => entry.value)).size > 1) findings.push(makeFinding({
+			domain: "plugin-plugin",
+			code: "PP_COMPACTION_THRESHOLD_CONFLICT",
+			severity: "warn",
+			title: "Multiple compaction thresholds are explicitly configured",
+			subjects: [...new Set(thresholdEntries.map((entry) => entry.moduleName))],
+			confidence: "medium",
+			evidence: thresholdEntries.map((entry) => ({
+				source: "loader",
+				ref: entry.moduleName,
+				summary: `${entry.key}=${entry.value}`
+			})),
+			fix: {
+				kind: "none",
+				summary: "keep one threshold owner, or align the values before trusting the trigger point",
+				safe: true,
+				requiresConsent: false
+			}
+		}));
+	}
+	for (const entry of thresholdEntries) if (entry.value < .2 || entry.value > .95) findings.push(makeFinding({
+		domain: "plugin-runtime",
+		code: "PP_COMPACTION_THRESHOLD_OUT_OF_RANGE",
+		severity: "warn",
+		title: `Compaction threshold ${entry.value} is outside the safe range`,
+		subjects: [entry.moduleName],
+		confidence: "high",
+		evidence: [{
+			source: "loader",
+			ref: entry.moduleName,
+			summary: `${entry.key}=${entry.value}`
+		}],
+		fix: {
+			kind: "none",
+			summary: "use a threshold between 0.2 and 0.95; very low values compact too often and very high values risk overflow",
+			safe: false,
+			requiresConsent: false
+		}
+	}));
+	if (roles.pruner > 0 && activeBackends.length === 0) findings.push(makeFinding({
+		domain: "plugin-plugin",
+		code: "PP_COMPACTION_PRUNE_WITHOUT_BACKEND",
+		severity: "info",
+		title: "A tool-result pruner is active without a compaction backend",
+		subjects: participants.filter((participant) => participant.enabled && participant.role === "pruner").map((participant) => participant.moduleName),
+		confidence: "medium",
+		evidence: [{
+			source: "loader",
+			ref: "tool-result-pruner",
+			summary: "pruning can trim tool results, but conversation compaction still has no backend"
+		}],
+		fix: {
+			kind: "none",
+			summary: "mount one compaction backend if long sessions should be summarized automatically",
+			safe: true,
+			requiresConsent: false
+		}
+	}));
+	const notes = [];
+	if (participants.length === 0) notes.push("No compaction rows were detected in the current profile.");
+	else if (activeBackends.length === 1) notes.push("One compaction backend is active; the stack looks coherent.");
+	if (activeBackends.length > 1) notes.push("Only one backend should own the compaction service; the others may be dead or conflicting.");
+	return {
+		stack: {
+			health: participants.length === 0 ? "absent" : findings.some((finding) => finding.severity === "error") ? "error" : findings.some((finding) => finding.severity === "warn") ? "warn" : "ok",
+			roles,
+			backendCount: roles.backend,
+			participants,
+			findings: findings.map((finding) => finding.code),
+			notes,
+			criticalModules: [...new Set(activeBackends.map((participant) => participant.moduleName))]
+		},
+		findings
+	};
+}
+function participantOf(entry, descriptions) {
+	const bundle = descriptions.get(entry.moduleName);
+	const classified = classify(entry, bundle?.description);
+	if (classified === void 0) return void 0;
+	const thresholds = thresholdsOf(entry.config);
+	return {
+		id: entry.id,
+		moduleName: entry.moduleName,
+		bundleName: bundle?.bundleName,
+		role: classified.role,
+		enabled: entry.enabled && entry.fiberState !== "failed" && entry.fiberState !== "unloading",
+		confidence: classified.confidence,
+		evidence: [{
+			source: "loader",
+			ref: entry.id,
+			summary: `${entry.moduleName} → ${classified.role} (${classified.confidence})`
+		}],
+		...thresholds.length > 0 ? { thresholds } : {}
+	};
+}
+function classify(entry, description) {
+	const name = entry.moduleName.toLowerCase();
+	const id = entry.id.toLowerCase();
+	const provided = entry.provide.map((service) => service.toLowerCase());
+	const text = `${name} ${id} ${description ?? ""}`;
+	if (provided.includes("compaction") || provided.includes("ctx.compaction")) return {
+		role: "backend",
+		confidence: "high"
+	};
+	if (name.includes("compaction-tool-result-pruner") || name.includes("tool-result-pruner") || name.includes("context-fold")) return {
+		role: "pruner",
+		confidence: "high"
+	};
+	if (name.includes("compaction-image-offload") || name.includes("image-offload")) return {
+		role: "image",
+		confidence: "high"
+	};
+	if (name.includes("command-compact")) return {
+		role: "command",
+		confidence: "high"
+	};
+	if (name.includes("compaction-basic") || id === "compaction-basic") return {
+		role: "backend",
+		confidence: "high"
+	};
+	if (name.includes("compact-suite") || name.includes("compact-tuner") || name.includes("compact-threshold") || name.includes("compaction-threshold")) return {
+		role: "threshold",
+		confidence: "medium"
+	};
+	if (name.includes("compaction-weave") || name === "dsh-argp" || name.startsWith("dsh-argp/") || name.includes("context-zip") || name.includes("ctxopt-compaction") && !name.includes("pruner")) return {
+		role: "backend",
+		confidence: "medium"
+	};
+	if (thresholdsOf(entry.config).length > 0) return {
+		role: "threshold",
+		confidence: "medium"
+	};
+	if (/context compaction|compaction (engine|backend|policy)|上下文压缩/i.test(description ?? "")) return {
+		role: "backend",
+		confidence: "medium"
+	};
+	if (/compact|compaction|压缩|摘要/i.test(text)) return {
+		role: "participant",
+		confidence: "low"
+	};
+}
+function thresholdsOf(config) {
+	if (!isRecord(config)) return [];
+	const out = [];
+	for (const key of THRESHOLD_KEYS) {
+		const value = config[key];
+		if (typeof value === "number" && Number.isFinite(value)) out.push({
+			key,
+			value
+		});
+	}
+	return out;
+}
+function explicitThresholds(participants) {
+	const out = [];
+	for (const participant of participants) {
+		if (!participant.enabled) continue;
+		for (const threshold of participant.thresholds ?? []) {
+			if (threshold.key !== "thresholdRatio" && threshold.key !== "triggerRatio" && threshold.key !== "compactThreshold") continue;
+			out.push({
+				moduleName: participant.moduleName,
+				...threshold
+			});
+		}
+	}
+	return out;
+}
+function bundleDescriptions(context) {
+	const map = /* @__PURE__ */ new Map();
+	for (const bundle of context.bundles) for (const row of bundle.rows) map.set(row.moduleName, {
+		bundleName: bundle.name,
+		description: bundle.description
+	});
+	return map;
+}
+function dedupeParticipants(participants) {
+	const byModule = /* @__PURE__ */ new Map();
+	for (const participant of participants) {
+		if (participant === void 0) continue;
+		const existing = byModule.get(participant.moduleName);
+		if (existing === void 0 || !existing.enabled && participant.enabled) byModule.set(participant.moduleName, participant);
+	}
+	return [...byModule.values()];
+}
 // src/compat/report.ts
 /** Run every compatibility rule against one collected context. */
 async function runCompatibilityRules(context) {
@@ -2289,10 +2535,12 @@ async function runCompatibilityRules(context) {
 		runPluginRules(context),
 		runProfileRules(context)
 	]);
+	const compaction = inspectCompactionStack(context);
 	return sortFindings(dedupeFindings([
 		...runtime,
 		...plugin,
-		...profile
+		...profile,
+		...compaction.findings
 	]));
 }
 /** Build the serializable report. */
@@ -2330,6 +2578,7 @@ function buildReport(context, findings, options) {
 			info,
 			byDomain
 		},
+		compaction: inspectCompactionStack(context).stack,
 		profiles: context.profiles.map((profile) => ({
 			name: profile.name,
 			dir: profile.dir,
@@ -3520,11 +3769,12 @@ function latest(a, b) {
 /** Normalize plugin metadata, prompt costs, usage, and compat findings into one scan result. */
 async function scanPlugins(options) {
 	const { config, compat } = options;
+	const compaction = compat.report.compaction;
 	const protection = buildProtection({
 		bundles: compat.context.bundles,
 		entries: compat.context.entriesInfo,
 		inventory: options.inventory,
-		extraProtect: config.protect,
+		extraProtect: [...config.protect, ...compaction?.criticalModules ?? []],
 		pinned: config.pinned
 	});
 	const findingsMap = findingsBySubject(compat.findings);
@@ -3632,6 +3882,7 @@ async function scanPlugins(options) {
 			byOwner: usageByOwner
 		},
 		dedupe,
+		compaction,
 		diagnostics: [...compat.context.diagnostics]
 	};
 }
@@ -4586,10 +4837,133 @@ function registerCompatTool(ctx, config) {
 		})
 	}));
 }
+// src/verdict.ts
+const LOAD_CODES = /* @__PURE__ */ new Set([
+	"RT_PREFLIGHT_DENIED",
+	"RT_ENGINE_MISMATCH",
+	"PP_MISSING_PEER_BUNDLE",
+	"PP_RUNTIME_REGISTRATION_FAILED",
+	"PP_MCP_STARTUP_FAILED",
+	"PP_PACKAGE_VERSION_DUPLICATE"
+]);
+/** Build the top-level checkup verdict without changing any plugin state. */
+function buildVerdict(compat, scan) {
+	const checks = [
+		loadCheck(compat.findings, scan),
+		compatCheck(compat.findings),
+		contextCheck(scan),
+		compactionCheck(scan)
+	];
+	const overall = checks.some((check) => check.status === "error") ? "risk" : checks.some((check) => check.status === "warn") ? "attention" : "ok";
+	const pending = checks.filter((check) => check.status === "warn" || check.status === "error").length;
+	return {
+		overall,
+		headline: overall === "risk" ? "有阻断项" : overall === "attention" ? `需处理 ${pending} 项` : "通过",
+		checks,
+		actions: actionsFor(checks)
+	};
+}
+function loadCheck(findings, scan) {
+	const relevant = findings.filter((finding) => LOAD_CODES.has(finding.code));
+	const status = worstStatus(relevant);
+	return {
+		id: "load",
+		status: scan.diagnostics.length > 0 && status === "ok" ? "warn" : status,
+		label: "加载",
+		detail: relevant.length > 0 ? `${relevant.length} 个加载/运行时问题` : scan.diagnostics.length > 0 ? "部分元数据不可用" : "插件行已加载",
+		count: relevant.length
+	};
+}
+function compatCheck(findings) {
+	const relevant = findings.filter((finding) => !finding.code.startsWith("PP_COMPACTION_") && !LOAD_CODES.has(finding.code));
+	return {
+		id: "compat",
+		status: worstStatus(relevant),
+		label: "兼容",
+		detail: relevant.length > 0 ? `${relevant.length} 项发现` : "未发现冲突",
+		count: relevant.length
+	};
+}
+function contextCheck(scan) {
+	const total = scan.context.totalTokens;
+	const topOwner = Object.entries(scan.context.byOwner).sort((a, b) => b[1] - a[1])[0];
+	const detail = total > 0 ? `${total.toLocaleString("en-US")} tokens` + (topOwner === void 0 ? "" : ` · Top 1 ${topOwner[0]}`) : "暂无可归属上下文";
+	if (scan.dedupe.length > 0) return {
+		id: "context",
+		status: "warn",
+		label: "上下文",
+		detail: `${scan.dedupe.length} 组重复提示词`,
+		count: scan.dedupe.length
+	};
+	return {
+		id: "context",
+		status: total > 0 ? "ok" : "info",
+		label: "上下文",
+		detail
+	};
+}
+function compactionCheck(scan) {
+	const health = scan.compaction?.health;
+	if (health === "error") return {
+		id: "compaction",
+		status: "error",
+		label: "压缩链路",
+		detail: "存在冲突"
+	};
+	if (health === "warn") return {
+		id: "compaction",
+		status: "warn",
+		label: "压缩链路",
+		detail: `${scan.compaction?.backendCount ?? 0} 个后端 / 需确认`,
+		count: scan.compaction?.backendCount ?? 0
+	};
+	if (health === "ok") return {
+		id: "compaction",
+		status: "ok",
+		label: "压缩链路",
+		detail: `${scan.compaction?.backendCount ?? 0} 个后端`
+	};
+	return {
+		id: "compaction",
+		status: "info",
+		label: "压缩链路",
+		detail: "未检测到"
+	};
+}
+function worstStatus(findings) {
+	if (findings.some((finding) => finding.severity === "error")) return "error";
+	if (findings.some((finding) => finding.severity === "warn")) return "warn";
+	if (findings.some((finding) => finding.severity === "info")) return "info";
+	return "ok";
+}
+function actionsFor(checks) {
+	const actions = [];
+	if (checks.some((check) => check.id === "load" && (check.status === "error" || check.status === "warn"))) actions.push({
+		id: "load",
+		label: "查看加载问题",
+		target: "compat"
+	});
+	if (checks.some((check) => check.id === "compat" && (check.status === "error" || check.status === "warn"))) actions.push({
+		id: "compat",
+		label: "处理兼容性",
+		target: "compat"
+	});
+	if (checks.some((check) => check.id === "compaction" && (check.status === "error" || check.status === "warn"))) actions.push({
+		id: "compaction",
+		label: "查看压缩链路",
+		target: "compaction"
+	});
+	if (actions.length < 3) actions.push({
+		id: "draft",
+		label: "生成瘦身方案",
+		target: "draft"
+	});
+	return actions.slice(0, 3);
+}
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.4.0";
+const CURRENT_VERSION = "0.5.0";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -4838,6 +5212,8 @@ async function overview(ctx, config, ledger) {
 		tokens
 	})).sort((a, b) => b.tokens - a.tokens).slice(0, 12);
 	return {
+		verdict: buildVerdict(compat, scan),
+		compaction: scan.compaction,
 		runtime: compat.report.runtime,
 		profile: compat.report.profile,
 		compat: compat.report.summary,
