@@ -223,6 +223,7 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('预算 ')
     expect(container.querySelector('.eo-compat-footer')).not.toBeNull()
     expect(container.querySelector('.eo-verdict')).not.toBeNull()
+    expect(container.querySelectorAll('.eo-check-card').length).toBe(4)
     expect(container.textContent).toContain('体检结论')
     expect(container.textContent).toContain('压缩链路')
     expect(container.querySelector('.eo-compaction-row')).not.toBeNull()

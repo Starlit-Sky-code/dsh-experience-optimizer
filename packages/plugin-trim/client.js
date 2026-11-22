@@ -280,6 +280,25 @@ window.__ModuleLoader__.load({
 .eo-check-error i{background:var(--eo-error)}
 .eo-check-info i{background:var(--eo-tertiary)}
 .eo-verdict-actions{grid-area:actions;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.eo-cockpit{display:flex;flex-direction:column;gap:14px;padding:16px 18px}
+.eo-cockpit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.eo-cockpit-status{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.eo-cockpit-status small{display:block;font:500 11px/16px var(--eo-code);letter-spacing:.08em;color:var(--eo-tertiary);text-transform:uppercase}
+.eo-cockpit-status h2{margin:2px 0 0;font-size:clamp(22px,3.4vw,30px);line-height:1.2;letter-spacing:-.02em;color:var(--eo-primary)}
+.eo-cockpit-status p{margin:4px 0 0;color:var(--eo-tertiary);font-size:12px;line-height:18px}
+.eo-cockpit-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}
+.eo-cockpit-checks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.eo-check-card{appearance:none;text-align:left;padding:10px 11px;border-radius:10px;border:.5px solid var(--eo-border);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.03));color:var(--eo-primary);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0;transition:border-color .15s ease,background .15s ease,transform .15s ease}
+.eo-check-card:hover{border-color:var(--eo-border-strong);background:var(--eo-hover);transform:translateY(-1px)}
+.eo-check-card:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--eo-primary));outline-offset:2px}
+.eo-check-card-top{display:flex;align-items:center;gap:6px;color:var(--eo-secondary);font-size:11px;line-height:16px;font-weight:500}
+.eo-check-card-top i{width:7px;height:7px;border-radius:50%;background:var(--eo-success);flex:none}
+.eo-check-card-warn .eo-check-card-top i{background:var(--eo-warn)}
+.eo-check-card-error .eo-check-card-top i{background:var(--eo-error)}
+.eo-check-card-info .eo-check-card-top i{background:var(--eo-tertiary)}
+.eo-check-card strong{font-size:12px;line-height:18px;font-weight:500;color:var(--eo-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eo-check-card small{font-size:10px;line-height:15px;color:var(--eo-tertiary)}
+@media(max-width:700px){.eo-cockpit-checks{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-cockpit-actions{justify-content:flex-start}}
 .eo-categories{display:flex;flex-direction:column;gap:5px}
 .eo-category-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.06));border:.5px solid var(--eo-border)}
 .eo-category-bar i{display:block;height:100%}
@@ -2634,55 +2653,67 @@ window.__ModuleLoader__.load({
           : verdict.overall === 'risk'
             ? tr('有阻断项', 'Blocking issues')
             : tr('需处理 ', 'Attention: ') + verdict.checks.filter((check) => check.status === 'warn' || check.status === 'error').length + tr(' 项', ' items')
+        const targets = { load: 'compat', compat: 'compat', context: 'context', compaction: 'compaction' }
         return h(
-          'div',
-          { className: 'eo-verdict eo-verdict-' + verdict.overall, role: 'status' },
+          'section',
+          { className: 'eo-verdict eo-cockpit eo-verdict-' + verdict.overall, role: 'status' },
           h(
             'div',
-            { className: 'eo-verdict-main' },
-            h('span', { className: 'eo-verdict-dot', 'aria-hidden': 'true' }),
+            { className: 'eo-cockpit-head' },
             h(
               'div',
-              { className: 'eo-verdict-copy' },
-              h('b', null, tr('体检结论', 'Checkup verdict')),
-              h('span', null, headline),
+              { className: 'eo-cockpit-status' },
+              h('span', { className: 'eo-verdict-dot', 'aria-hidden': 'true' }),
+              h(
+                'div',
+                null,
+                h('small', null, tr('体检结论', 'Checkup verdict')),
+                h('h2', null, headline),
+                h('p', null, (overview.profile?.name || 'profile') + ' · ' + tr('加载 / 兼容 / 上下文 / 压缩链路', 'Load / compatibility / context / compaction')),
+              ),
+            ),
+            h(
+              'div',
+              { className: 'eo-cockpit-actions' },
+              verdict.actions.map((action) =>
+                h(
+                  Button,
+                  {
+                    key: action.id + ':' + action.target,
+                    variant: action.target === 'draft' ? 'accent' : 'ghost',
+                    disabled: action.target === 'draft' && draftBusy,
+                    onClick: () => {
+                      if (action.target === 'draft') {
+                        void generateDraft()
+                        scrollToSection('draft')
+                      } else {
+                        scrollToSection(action.target)
+                      }
+                    },
+                  },
+                  actionLabel(action),
+                ),
+              ),
+              h(Button, { variant: 'ghost', onClick: () => void copyCheckupReport() }, tr('复制报告', 'Copy report')),
             ),
           ),
           h(
             'div',
-            { className: 'eo-verdict-checks' },
+            { className: 'eo-cockpit-checks' },
             verdict.checks.map((check) =>
               h(
-                'span',
-                { key: check.id, className: 'eo-check eo-check-' + check.status, title: checkDetail(check) },
-                h('i', { 'aria-hidden': 'true' }),
-                checkLabels[check.id] || check.label,
-              ),
-            ),
-          ),
-          h(
-            'div',
-            { className: 'eo-verdict-actions' },
-            verdict.actions.map((action) =>
-              h(
-                Button,
+                'button',
                 {
-                  key: action.id + ':' + action.target,
-                  variant: 'ghost',
-                  disabled: action.target === 'draft' && draftBusy,
-                  onClick: () => {
-                    if (action.target === 'draft') {
-                      void generateDraft()
-                      scrollToSection('draft')
-                    } else {
-                      scrollToSection(action.target)
-                    }
-                  },
+                  key: check.id,
+                  type: 'button',
+                  className: 'eo-check-card eo-check-card-' + check.status,
+                  onClick: () => scrollToSection(targets[check.id] || 'compat'),
                 },
-                actionLabel(action),
+                h('span', { className: 'eo-check-card-top' }, h('i', { 'aria-hidden': 'true' }), checkLabels[check.id] || check.label),
+                h('strong', null, checkDetail(check)),
+                h('small', null, check.status === 'ok' ? tr('正常', 'OK') : check.status === 'warn' ? tr('需注意', 'Review') : check.status === 'error' ? tr('阻断', 'Blocking') : tr('信息', 'Info')),
               ),
             ),
-            h(Button, { variant: 'ghost', onClick: () => void copyCheckupReport() }, tr('复制报告', 'Copy report')),
           ),
         )
       }
