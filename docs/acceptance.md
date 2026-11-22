@@ -60,7 +60,15 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 4. 生成精简方案：活跃压缩后端不得出现在可关闭建议里。
 5. 对话上方：有问题时显示“压缩链路：2 个后端同时启用”；无问题时回退到一次性轻提醒。
 
-### C. 精简方案与回滚
+### C. 实测收益与能力面
+
+1. 应用一个需要重启的低风险项：结果卡显示“已记录应用前基线，等待下一次体检结算”。
+2. 重启 DSH 后打开体检：上下文卡显示“实测收益”，差值符号正确；同一进程内不提前结算。
+3. 若应用期间有其他插件变化：显示“差值仅供参考”，不把外部变化算成本次收益。
+4. 能力面卡显示 shell / 文件写入 / 网络 / MCP / `!!js` 五组；空组显示“未发现”。
+5. 能力面不改变任何建议或保护名单。
+
+### D. 精简方案与回滚
 
 1. 说：“为当前修 bug 任务生成精简方案”。
 2. 期望 `trim_suggest_profile`：
@@ -76,14 +84,14 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 5. 说：“回滚刚才的变更”。
 6. 期望 `trim_rollback_profile` 恢复应用前状态；若用户手动改过，标 `externally-changed` 而不是覆盖。
 
-### D. 兼容性驱动的建议
+### E. 兼容性驱动的建议
 
 1. 在测试 profile 中制造一个可安全复现的冲突（例如启用两个声明同一 row id 的可选 bundle）。
 2. 运行 `trim_analyze_compatibility`，期望出现 `PP_ROW_DUPLICATE` 或 `PP_RUNTIME_REGISTRATION_FAILED`。
 3. 运行 `trim_suggest_profile`，期望冲突主体进入 `review` 或受保护的 disable 建议，而不是自动应用。
 4. 若用户显式选择其中一项并确认，`trim_apply_profile` 可将其标为 `fixKind: conflict`。
 
-### E. 周报蓝图（legacy，已冻结）
+### F. 周报蓝图（legacy，已冻结）
 
 > 仅验证现有安装不被破坏；不再新增能力。
 

@@ -369,6 +369,25 @@ export interface WorkspaceCompatSummary {
   findings: CompatFinding[]
 }
 
+/** One static capability fact (tool name, MCP row, or !!js patch). */
+export interface CapabilityItem {
+  name: string
+  owner?: string
+  evidence: string
+}
+
+export interface CapabilityGroup {
+  id: 'shell' | 'filesystem-write' | 'network' | 'mcp' | 'dynamic-config'
+  label: string
+  count: number
+  items: CapabilityItem[]
+}
+
+export interface CapabilitySurface {
+  groups: CapabilityGroup[]
+  notes: string[]
+}
+
 /** One row in the compaction stack of the current profile. */
 export type CompactionRole =
   | 'backend'

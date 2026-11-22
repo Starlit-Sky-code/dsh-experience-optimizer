@@ -56,6 +56,29 @@ const overview = {
     dedupe: [],
     managementAvailable: true,
     recipeAvailable: false,
+    capability: {
+      groups: [
+        { id: 'shell', label: 'Shell', count: 1, items: [{ name: 'bash', owner: 'demo-plugin', evidence: '工具名推断' }] },
+        { id: 'filesystem-write', label: 'File write', count: 1, items: [{ name: 'write', owner: 'demo-plugin', evidence: '工具名推断' }] },
+        { id: 'network', label: 'Network', count: 0, items: [] },
+        { id: 'mcp', label: 'MCP', count: 0, items: [] },
+        { id: 'dynamic-config', label: 'Dynamic config', count: 0, items: [] },
+      ],
+      notes: [],
+    },
+    verification: {
+      last: {
+        token: 'tok',
+        at: '2026-11-22T00:00:00.000Z',
+        applied: [{ id: 'bundle:demo-plugin', kind: 'bundle', name: 'demo-plugin' }],
+        before: { attributed: 1000, total: 1400, enabledBundles: ['demo-plugin'], enabledEntries: [] },
+        after: { attributed: 800, total: 1200, enabledBundles: ['demo-plugin'], enabledEntries: [] },
+        deltaTokens: -200,
+        deltaPercent: -20,
+        confounded: false,
+        unexpectedChanges: [],
+      },
+    },
     diagnostics: [],
   },
 }
@@ -160,6 +183,10 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('体检结论')
     expect(container.textContent).toContain('压缩链路')
     expect(container.querySelector('.eo-compaction-row')).not.toBeNull()
+    expect(container.textContent).toContain('实测收益')
+    expect(container.textContent).toContain('-200 tokens')
+    expect(container.textContent).toContain('能力面')
+    expect(container.textContent).toContain('bash')
 
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')

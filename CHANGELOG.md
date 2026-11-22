@@ -5,6 +5,26 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-11-22
+
+### Added
+
+- **Apply verification**: before an apply, trim records attributable tokens and
+  the enabled bundle set; after the restart, the next checkup settles the
+  measured delta and marks the result as confounded when unrelated plugins
+  changed in the same window.
+- **Capability surface**: a read-only card lists shell, file-write, network,
+  MCP, and `!!js` patch capabilities. It is explicitly a static surface, not a
+  security audit, and never changes a plugin.
+- The context card now shows the last measured apply result next to the context
+  mix, and the apply-result card shows the pending baseline.
+
+### Changed
+
+- `GET /overview` returns `verification` and `capability`.
+- Versioning is now patch-first: minor/major requires explicit user approval and
+  at least 1000 net lines of code change (or a breaking API).
+
 ## [0.5.0] - 2026-11-22
 
 ### Added

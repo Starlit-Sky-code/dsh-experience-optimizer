@@ -13,7 +13,7 @@ npm i dsh-plugin-trim
 从 GitHub Release 安装（备用）：
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.0/dsh-plugin-trim-0.5.0.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.1/dsh-plugin-trim-0.5.1.tgz"
 ```
 
 本地包：
@@ -29,7 +29,8 @@ npm i /absolute/path/to/packages/plugin-trim
 安装后在 DSH **设置 → 插件体检**（Agent 预设下方）或 **设置 → 插件 → 插件体检** 打开：
 
 - 四维体检结论（加载 / 兼容 / 上下文 / 压缩链路）与可下钻证据；
-- 上下文成本、兼容性矩阵与压缩链路卡；
+- 上下文成本、兼容性矩阵、压缩链路卡与静态能力面；
+- 应用后实测收益（待重启 / 已结算 / 受其他变化影响）；
 - 按任务生成精简方案，勾选低风险项后显式应用；
 - 一键回滚；
 - 教程页：5 分钟上手、快速开始、常见问题；

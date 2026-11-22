@@ -255,10 +255,11 @@ window.__ModuleLoader__.load({
 .eo-stack>[data-section="inventory"]{order:2}
 .eo-stack>[data-section="compaction"]{order:3}
 .eo-stack>[data-section="compat"]{order:4}
-.eo-stack>[data-section="context"]{order:5}
-.eo-stack>[data-section="result"]{order:6}
-.eo-stack>[data-section="dedupe"]{order:7}
-.eo-stack>[data-section="diagnostics"]{order:8}
+.eo-stack>[data-section="capability"]{order:5}
+.eo-stack>[data-section="context"]{order:6}
+.eo-stack>[data-section="result"]{order:7}
+.eo-stack>[data-section="dedupe"]{order:8}
+.eo-stack>[data-section="diagnostics"]{order:9}
 .eo-grid{display:grid;gap:10px}
 .eo-verdict{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:.5px solid var(--eo-border-strong);border-radius:var(--eo-radius);background:var(--eo-card-bg);font-size:12px;line-height:18px}
 .eo-verdict-ok{border-color:color-mix(in srgb,var(--eo-success) 35%,transparent);background:color-mix(in srgb,var(--eo-success) 5%,transparent)}
@@ -279,6 +280,23 @@ window.__ModuleLoader__.load({
 .eo-check-error i{background:var(--eo-error)}
 .eo-check-info i{background:var(--eo-tertiary)}
 .eo-verdict-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eo-verification{display:flex;flex-direction:column;gap:3px;padding:9px 11px;border-radius:8px;border:.5px solid var(--eo-border);background:var(--eo-card-bg);font-size:12px;line-height:18px}
+.eo-verification-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.eo-verification-main b{font-size:11px;font-weight:500;color:var(--eo-tertiary)}
+.eo-verification-main span{font-weight:600}
+.eo-verification.is-good{border-color:color-mix(in srgb,var(--eo-success) 38%,transparent);background:color-mix(in srgb,var(--eo-success) 6%,transparent)}
+.eo-verification.is-warn{border-color:color-mix(in srgb,var(--eo-warn) 38%,transparent);background:color-mix(in srgb,var(--eo-warn) 6%,transparent)}
+.eo-verification.is-pending{border-color:color-mix(in srgb,var(--eo-warn) 30%,transparent);background:color-mix(in srgb,var(--eo-warn) 4%,transparent)}
+.eo-verification.is-neutral{background:var(--eo-card-bg)}
+.eo-capability-list{display:flex;flex-direction:column;gap:6px}
+.eo-capability-row{display:flex;align-items:flex-start;gap:10px;padding:7px 9px;border:.5px solid var(--eo-border);border-radius:8px}
+.eo-capability-head{display:flex;align-items:baseline;gap:6px;min-width:112px}
+.eo-capability-head b{font-size:12px;font-weight:500}
+.eo-capability-head span{font-size:11px;color:var(--eo-tertiary)}
+.eo-capability-items{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.eo-capability-chip{display:inline-flex;align-items:center;gap:5px;max-width:220px;padding:2px 7px;border-radius:6px;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.04));border:.5px solid var(--eo-border);min-width:0}
+.eo-capability-chip code{font:400 11px/16px var(--eo-code);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eo-capability-chip small{font-size:10px;color:var(--eo-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .eo-compaction-roles{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .eo-compaction-role{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;border:.5px solid var(--eo-border);color:var(--eo-tertiary);font-size:11px;line-height:16px}
 .eo-compaction-role b{font-size:12px;color:var(--eo-secondary)}
@@ -1522,7 +1540,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.0',
+            current: '0.5.1',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2168,7 +2186,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.0')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.1')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2226,7 +2244,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.0 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.1 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2479,6 +2497,117 @@ window.__ModuleLoader__.load({
         )
       }
 
+      function renderVerification(view) {
+        if (!view) return null
+        if (view.pending) {
+          return h(
+            'div',
+            { className: 'eo-verification is-pending' },
+            h(
+              'div',
+              { className: 'eo-verification-main' },
+              h('b', null, tr('待结算', 'Pending verification')),
+              h('span', null, view.pending.needsRestart
+                ? tr('已记录应用前基线；重启 DSH 后打开体检，自动计算实际变化。', 'Baseline recorded; reopen the checkup after restarting DSH to measure the actual change.')
+                : tr('已记录应用前基线；下次打开体检会自动结算实际变化。', 'Baseline recorded; the next checkup will settle the actual change.')),
+            ),
+          )
+        }
+        const last = view.last
+        if (!last) return null
+        const delta = Number(last.deltaTokens) || 0
+        const pct = last.deltaPercent === null || last.deltaPercent === undefined
+          ? null
+          : Number(last.deltaPercent)
+        const good = delta < 0
+        return h(
+          'div',
+          { className: 'eo-verification ' + (good ? 'is-good' : delta === 0 ? 'is-neutral' : 'is-warn') },
+          h(
+            'div',
+            { className: 'eo-verification-main' },
+            h('b', null, tr('实测收益', 'Measured result')),
+            h(
+              'span',
+              null,
+              (delta > 0 ? '+' : '') +
+                formatNumber(delta) +
+                ' tokens' +
+                (pct === null ? '' : ' (' + (pct > 0 ? '+' : '') + pct.toFixed(1) + '%)') +
+                ' · ' +
+                last.applied.length +
+                tr(' 项变更', ' change(s)'),
+            ),
+          ),
+          h(
+            'div',
+            { className: 'eo-muted' },
+            last.confounded
+              ? tr('期间检测到其他插件变化，差值仅供参考。', 'Other plugin changes were detected; treat the delta as indicative.')
+              : tr('期间没有检测到其他插件变化。', 'No other plugin changes were detected in the same window.'),
+          ),
+        )
+      }
+
+      function renderCapability() {
+        const capability = overview.capability
+        if (!capability) return null
+        const groups = capability.groups || []
+        const total = groups.reduce((sum, group) => sum + (group.count || 0), 0)
+        return h(
+          Card,
+          {
+            title: tr('能力面', 'Capability surface'),
+            subtitle: tr('只列事实：shell / 文件写入 / 网络 / MCP / 动态配置', 'Facts only: shell / file write / network / MCP / dynamic config'),
+            section: 'capability',
+            collapsible: true,
+            collapsed: collapsedCards.capability === true,
+            onToggle: () => toggleCard('capability'),
+            extra: h(Badge, { tone: total > 0 ? 'warn' : 'neutral' }, total > 0 ? tr(total + ' 项', total + ' item(s)') : tr('未发现', 'None')),
+          },
+          groups.length === 0
+            ? h('div', { className: 'eo-empty' }, tr('暂无可分析的工具或配置行。', 'No tools or config rows were available.'))
+            : h(
+                'div',
+                { className: 'eo-capability-list' },
+                groups.map((group) =>
+                  h(
+                    'div',
+                    { className: 'eo-capability-row', key: group.id },
+                    h(
+                      'div',
+                      { className: 'eo-capability-head' },
+                      h('b', null, group.label),
+                      h('span', null, String(group.count || 0)),
+                    ),
+                    group.items.length === 0
+                      ? h('div', { className: 'eo-muted' }, tr('未发现', 'None detected'))
+                      : h(
+                          'div',
+                          { className: 'eo-capability-items' },
+                          group.items.slice(0, 6).map((item, index) =>
+                            h(
+                              'span',
+                              { className: 'eo-capability-chip', key: group.id + ':' + item.name + ':' + index, title: item.evidence },
+                              h('code', null, item.name),
+                              item.owner ? h('small', null, item.owner) : null,
+                            ),
+                          ),
+                        ),
+                  ),
+                ),
+              ),
+          h(
+            'div',
+            { className: 'eo-muted' },
+            tr(
+              '静态能力面：按工具名、MCP 行和 !!js patch 推断，不是安全审计；插件代码仍可在运行时做任何事。',
+              'Static capability surface from tool names, MCP rows, and !!js patch sentinels; this is not a security audit. Plugin code can still do anything at runtime.',
+            ),
+          ),
+        )
+      }
+
       function renderTrim() {
         const shareOf = (bundle) => totalContextTokens > 0
           ? Math.min(100, Math.max(0, (bundle.contextTokens / totalContextTokens) * 100))
@@ -2708,6 +2837,7 @@ window.__ModuleLoader__.load({
               ),
             ),
           ),
+          renderCapability(),
           h(
             Card,
             {
@@ -2724,6 +2854,7 @@ window.__ModuleLoader__.load({
                 showContext ? tr('收起明细', 'Collapse details') : tr('查看明细', 'View details'),
               ),
             },
+            renderVerification(overview.verification),
             h(
               'div',
               { className: 'eo-context-mix' },
@@ -3221,7 +3352,14 @@ window.__ModuleLoader__.load({
                   ? h(
                       'div',
                       { className: 'eo-issue eo-issue-warn' },
-                      h('span', null, '部分变更需要重启 DSH 后生效。'),
+                      h('span', null, tr('部分变更需要重启 DSH 后生效；重启后打开体检会自动结算实际变化。', 'Some changes need a DSH restart; reopen the checkup afterwards to measure the actual change.')),
+                    )
+                  : null,
+                applyResult.verification && applyResult.verification.pending
+                  ? h(
+                      'div',
+                      { className: 'eo-issue' },
+                      h('span', null, tr('已记录应用前基线，等待下一次体检结算。', 'Baseline recorded; the next checkup will settle the measured change.')),
                     )
                   : null,
               )

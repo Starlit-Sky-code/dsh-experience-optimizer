@@ -88,6 +88,19 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 活跃后端加入保护名单，不会被建议关闭。
 - 不做自动配置修改，不执行第三方插件代码。
 
+### 实测收益
+
+- 应用前记录可归属 token、总 token、启用 bundle/entry 基线。
+- 需要重启的变更显示“待结算”；重启后打开体检自动结算实测差值。
+- 同一窗口有其他插件变化时标记“差值仅供参考”。
+- 只对比可归属 token，不拿会话增长后的总量冒充收益。
+
+### 能力面
+
+- shell / 文件写入 / 网络 / MCP / `!!js` 动态配置五组静态清单。
+- 按工具名、MCP 行、patch 哨兵推断；不是安全审计，不改变任何插件。
+- 只列事实，不打安全分。
+
 ### 体检与兼容
 
 - 四张指标卡：可归属上下文、启用插件数、兼容性 error/warn、写操作可用性。
@@ -131,7 +144,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
-| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` |
+| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |

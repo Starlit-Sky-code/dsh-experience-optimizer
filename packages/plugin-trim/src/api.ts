@@ -11,6 +11,12 @@ import type { Config } from './config.ts'
 import { analyzeCompatibility } from './compat/analyze.ts'
 import { getInventory, getPluginManager, resolveProfileFacts } from './compat/adapters.ts'
 import { buildVerdict } from './verdict.ts'
+import { capabilitiesOf } from './capability.ts'
+import {
+  beginVerification,
+  settleVerification,
+  snapshotOf,
+} from './verification.ts'
 import { attachFindings, buildSlimProfile } from './draft.ts'
 import { scanPlugins } from './scan.ts'
 import { detectTask } from './task.ts'
@@ -22,7 +28,7 @@ import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
-const CURRENT_VERSION = '0.5.0'
+const CURRENT_VERSION = '0.5.1'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -123,7 +129,7 @@ export async function handleTrimRequest(
     }
     if (req.method === 'POST' && path === '/apply') {
       const body = await readJsonBody<Record<string, unknown>>(req)
-      sendJson(res, 200, { ok: true, data: await apply(ctx, config, body) })
+      sendJson(res, 200, { ok: true, data: await apply(ctx, config, ledger, body) })
       return
     }
     if (req.method === 'POST' && path === '/rollback') {
@@ -293,6 +299,16 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     inventory: await inventoryOf(ctx),
     usageLedger: ledger,
   })
+  const profileName = resolveProfileFacts(ctx).name
+  const verification = await settleVerification({
+    profile: profileName,
+    after: snapshotOf(scan),
+  })
+  const capability = capabilitiesOf(
+    scan,
+    compat.context.loaderEntries,
+    compat.context.profile.patchRows,
+  )
   const byOwner = Object.entries(scan.context.byOwner)
     .map(([owner, tokens]) => ({ owner, tokens }))
     .sort((a, b) => b.tokens - a.tokens)
@@ -343,6 +359,8 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     recipeAvailable: scan.bundles.some(
       (bundle) => bundle.name === 'dsh-plugin-recipe' && bundle.enabled,
     ),
+    verification,
+    capability,
     diagnostics: scan.diagnostics,
   }
 }
@@ -392,6 +410,7 @@ async function suggest(
 async function apply(
   ctx: Context,
   config: Config,
+  ledger: UsageLedger,
   body: Record<string, unknown>,
 ): Promise<unknown> {
   if (body.confirm !== true) throw new ApplyRefusedError('confirm must be true')
@@ -408,14 +427,38 @@ async function apply(
     writeReport: true,
     force: true,
   })
-  return applySlimProfile(profileId, {
+  const profileName = resolveProfileFacts(ctx).name
+  const beforeScan = await scanPlugins({
+    config,
+    compat,
+    pluginManager: manager,
+    inventory: await inventoryOf(ctx),
+  })
+  const result = await applySlimProfile(profileId, {
     confirm: true,
     items,
     manager,
     maxDrafts: config.maxDrafts,
     findings: compat.findings,
-    profileName: resolveProfileFacts(ctx).name,
+    profileName,
   })
+  const applied = result.items
+    .filter((item) => item.status === 'applied' || item.status === 'applied-pending-restart')
+    .map((item) => ({ id: item.id, kind: item.kind, name: item.name }))
+  if (result.token !== undefined && applied.length > 0 && result.rolledBack !== true) {
+    await beginVerification({
+      profile: profileName,
+      token: result.token,
+      applied,
+      before: snapshotOf(beforeScan),
+      needsRestart: result.restartRequired === true,
+    })
+    return {
+      ...result,
+      verification: { pending: true, needsRestart: result.restartRequired === true },
+    }
+  }
+  return result
 }
 
 async function rollback(

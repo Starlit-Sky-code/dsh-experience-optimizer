@@ -32,7 +32,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.0/dsh-plugin-trim-0.5.0.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.1/dsh-plugin-trim-0.5.1.tgz"
 ```
 
 For source development, see [Development](#development).
@@ -65,6 +65,20 @@ duplicate backends, a missing backend, conflicting explicit thresholds, and
 out-of-range thresholds. Active backends are protected, so the checkup never
 suggests disabling the only compaction engine. The composer reminder only
 interrupts when the verdict needs attention.
+
+## Did it actually save anything?
+
+Before an apply, trim records attributable tokens and the enabled bundle/entry
+set. Restart-required changes stay pending; the next checkup after restart
+settles the measured delta. If unrelated plugins changed in the same window, the
+delta is marked as indicative instead of claiming the whole change.
+
+## Capability surface: facts only
+
+A read-only card lists shell, file-write, network, MCP, and `!!js` dynamic
+config. It is inferred from tool names, MCP rows, and patch sentinels; it is
+**not a security audit**, changes nothing, and deliberately does not produce a
+security score.
 
 ## How “close candidate” is decided
 

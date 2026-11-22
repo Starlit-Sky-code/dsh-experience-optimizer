@@ -95,8 +95,27 @@ src/compat/
   report.ts        规则汇总、矩阵、Markdown/JSON
   analyze.ts       采集 + 缓存 + 落盘 + 审计
   compaction.ts    压缩链路只读归类与 PP_COMPACTION_* 规则
+  capability.ts    静态能力面（shell/写文件/网络/MCP/!!js）
   tool.ts          trim_analyze_compatibility
 ```
+
+## 实测收益与能力面
+
+```text
+POST /apply
+  → scanPlugins() 记录 before（可归属 token / bundle / entry）
+  → applySlimProfile() → snapshot
+  → beginVerification() 写 pending（pid / bootAt / needsRestart）
+GET /overview
+  → settleVerification()：同一 boot 且 needsRestart → 继续 pending
+  → 否则计算 delta、检查非本次变更、写 last
+```
+
+`verification.ts` 只比较 bundle 集合，避免“关闭一个 bundle 同时关掉子 entry”被误判为外部变化。
+数据文件：`<dshHome>/experience-optimizer/trim/verification/<profile>.json`。
+
+`capability.ts` 只读工具名、MCP 行与 patch 哨兵，输出五组静态能力清单；它不是安全审计，
+也不参与建议或保护逻辑。
 
 ## 体检结论与压缩链路
 
@@ -135,6 +154,7 @@ src/verdict.ts
 │   ├── profiles/<profileId>.json
 │   ├── snapshots/<token>.json
 │   └── usage.jsonl
+├── trim/verification/<profile>.json
 └── recipe/blueprints/<id>.md|.json
 ```
 

@@ -3915,10 +3915,10 @@ function uniqFindings(items) {
 }
 // src/store.ts
 function draftPath(profileId) {
-	return dataDir("trim", "profiles", `${safeId(profileId)}.json`);
+	return dataDir("trim", "profiles", `${safeId$1(profileId)}.json`);
 }
 function snapshotPath(token) {
-	return dataDir("trim", "snapshots", `${safeId(token)}.json`);
+	return dataDir("trim", "snapshots", `${safeId$1(token)}.json`);
 }
 async function saveDraft(profile, maxDrafts) {
 	await writeJsonAtomic(draftPath(profile.id), profile);
@@ -3937,7 +3937,7 @@ async function loadSnapshot(token) {
 async function listSnapshots() {
 	return listJsonFiles(dataDir("trim", "snapshots"));
 }
-function safeId(value) {
+function safeId$1(value) {
 	return value.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
 }
 // src/apply.ts
@@ -4960,10 +4960,212 @@ function actionsFor(checks) {
 	});
 	return actions.slice(0, 3);
 }
+// src/capability.ts
+/** Build a static capability surface from tool names, MCP rows, and patch layers. */
+function inspectCapabilities(input) {
+	const groups = [
+		group("shell", "Shell", "工具名推断", input.tools.filter((tool) => SHELL.test(tool.name))),
+		group("filesystem-write", "File write", "工具名推断", input.tools.filter((tool) => FILE_WRITE.test(tool.name))),
+		group("network", "Network", "工具名推断", input.tools.filter((tool) => NETWORK.test(tool.name))),
+		{
+			id: "mcp",
+			label: "MCP",
+			count: 0,
+			items: mcpItems(input.loaderEntries)
+		},
+		{
+			id: "dynamic-config",
+			label: "Dynamic config",
+			count: 0,
+			items: dynamicItems(input.patchRows)
+		}
+	];
+	for (const item of groups) item.count = item.items.length;
+	return {
+		groups,
+		notes: ["Static capability surface: tool names, MCP rows, and !!js patch sentinels only.", "This is not a security audit; plugin code can still do anything at runtime."]
+	};
+}
+const SHELL = /(^|[_-])(bash|shell|terminal|exec|run_command|command)([_-]|$)/i;
+const FILE_WRITE = /(^|[_-])(write|edit|patch|apply_patch|mkdir|rm|delete|move|copy|fs_write)([_-]|$)/i;
+const NETWORK = /(^|[_-])(fetch|http|web|browser|curl|download|upload|request)([_-]|$)/i;
+function group(id, label, evidence, tools) {
+	const items = [];
+	const seen = /* @__PURE__ */ new Set();
+	for (const tool of tools) {
+		const key = `${tool.owner ?? "unattributed"}:${tool.name}`;
+		if (seen.has(key)) continue;
+		seen.add(key);
+		items.push({
+			name: tool.name,
+			owner: tool.owner,
+			evidence
+		});
+		if (items.length >= 20) break;
+	}
+	return {
+		id,
+		label,
+		count: items.length,
+		items
+	};
+}
+function mcpItems(entries) {
+	const items = [];
+	const seen = /* @__PURE__ */ new Set();
+	for (const entry of entries) {
+		if (entry.source !== "mcp") continue;
+		const name = entry.mcpServerName ?? entry.moduleName;
+		if (seen.has(name)) continue;
+		seen.add(name);
+		items.push({
+			name,
+			evidence: "MCP entry"
+		});
+		if (items.length >= 20) break;
+	}
+	return items;
+}
+function dynamicItems(rows) {
+	const items = [];
+	const seen = /* @__PURE__ */ new Set();
+	for (const row of rows) {
+		if (!containsJs(row.config) && !isJsSentinel(row.disabled)) continue;
+		const key = `${row.layer}:${row.id}`;
+		if (seen.has(key)) continue;
+		seen.add(key);
+		items.push({
+			name: key,
+			evidence: "!!js patch"
+		});
+		if (items.length >= 20) break;
+	}
+	return items;
+}
+function containsJs(value, depth = 0) {
+	if (depth > 6) return false;
+	if (isJsSentinel(value)) return true;
+	if (Array.isArray(value)) return value.some((item) => containsJs(item, depth + 1));
+	if (value !== null && typeof value === "object") return Object.values(value).some((item) => containsJs(item, depth + 1));
+	return false;
+}
+/** Convenience wrapper for the API layer. */
+function capabilitiesOf(scan, loaderEntries, patchRows) {
+	return inspectCapabilities({
+		tools: scan.context.tools,
+		loaderEntries,
+		patchRows
+	});
+}
+// src/verification.ts
+/** Snapshot only the numbers needed to verify one apply. */
+function snapshotOf(scan) {
+	return {
+		attributed: Math.max(0, scan.context.totalTokens - scan.context.unattributedTokens),
+		total: scan.context.totalTokens,
+		enabledBundles: scan.bundles.filter((bundle) => bundle.enabled).map((bundle) => bundle.name).sort(),
+		enabledEntries: scan.entries.filter((entry) => entry.enabled).map((entry) => entry.entryId).sort()
+	};
+}
+/** Persist the baseline for one apply, before the next checkup settles it. */
+async function beginVerification(input) {
+	const now = input.now ?? Date.now();
+	await withLock(async () => {
+		const state = await readState(input.profile);
+		state.pending = {
+			token: input.token,
+			at: new Date(now).toISOString(),
+			pid: process.pid,
+			bootAt: bootAt(now),
+			needsRestart: input.needsRestart,
+			applied: input.applied,
+			before: input.before
+		};
+		await saveState(state);
+	});
+}
+/** Settle a pending apply when the same profile is checked again. */
+async function settleVerification(input) {
+	const now = input.now ?? Date.now();
+	return withLock(async () => {
+		const state = await readState(input.profile);
+		const pending = state.pending;
+		if (pending === void 0) return viewOf(state);
+		const currentPid = input.pid ?? process.pid;
+		const currentBoot = input.bootAt ?? bootAt(now);
+		if (pending.needsRestart && currentPid === pending.pid && Math.abs(currentBoot - pending.bootAt) < 5e3) return viewOf(state);
+		const after = input.after;
+		const appliedKeys = new Set(pending.applied.map((item) => item.id));
+		const unexpectedChanges = symmetricDiff(pending.before.enabledBundles, after.enabledBundles).filter((name) => !appliedKeys.has(`bundle:${name}`));
+		const deltaTokens = after.attributed - pending.before.attributed;
+		state.last = {
+			token: pending.token,
+			at: new Date(now).toISOString(),
+			applied: pending.applied,
+			before: pending.before,
+			after,
+			deltaTokens,
+			deltaPercent: pending.before.attributed > 0 ? deltaTokens / pending.before.attributed * 100 : null,
+			confounded: unexpectedChanges.length > 0,
+			unexpectedChanges
+		};
+		state.pending = void 0;
+		await saveState(state);
+		return viewOf(state);
+	});
+}
+function viewOf(state) {
+	return {
+		...state.pending === void 0 ? {} : { pending: {
+			token: state.pending.token,
+			needsRestart: state.pending.needsRestart,
+			before: state.pending.before,
+			at: state.pending.at
+		} },
+		...state.last === void 0 ? {} : { last: state.last }
+	};
+}
+function symmetricDiff(left, right) {
+	const leftSet = new Set(left);
+	const rightSet = new Set(right);
+	return [...[...leftSet].filter((value) => !rightSet.has(value)), ...[...rightSet].filter((value) => !leftSet.has(value))].sort();
+}
+function bootAt(now) {
+	return now - process.uptime() * 1e3;
+}
+function pathFor(profile) {
+	return dataDir("trim", "verification", `${safeId(profile)}.json`);
+}
+async function readState(profile) {
+	try {
+		const state = await readJson(pathFor(profile));
+		if (state !== void 0 && state.schemaVersion === 1) return {
+			...state,
+			profile
+		};
+	} catch {}
+	return {
+		schemaVersion: 1,
+		profile
+	};
+}
+async function saveState(state) {
+	await writeJsonAtomic(pathFor(state.profile), state);
+}
+function safeId(value) {
+	const safe = value.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
+	return safe.length > 0 ? safe : "default";
+}
+let queue = Promise.resolve();
+function withLock(fn) {
+	const run = queue.then(fn, fn);
+	queue = run.catch(() => void 0);
+	return run;
+}
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.0";
+const CURRENT_VERSION = "0.5.1";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -5053,7 +5255,7 @@ async function handleTrimRequest(req, res, ctx, config, ledger) {
 		if (req.method === "POST" && path === "/apply") {
 			sendJson(res, 200, {
 				ok: true,
-				data: await apply$1(ctx, config, await readJsonBody(req))
+				data: await apply$1(ctx, config, ledger, await readJsonBody(req))
 			});
 			return;
 		}
@@ -5207,6 +5409,12 @@ async function overview(ctx, config, ledger) {
 		inventory: await inventoryOf(ctx),
 		usageLedger: ledger
 	});
+	const profileName = resolveProfileFacts(ctx).name;
+	const verification = await settleVerification({
+		profile: profileName,
+		after: snapshotOf(scan)
+	});
+	const capability = capabilitiesOf(scan, compat.context.loaderEntries, compat.context.profile.patchRows);
 	const byOwner = Object.entries(scan.context.byOwner).map(([owner, tokens]) => ({
 		owner,
 		tokens
@@ -5247,6 +5455,8 @@ async function overview(ctx, config, ledger) {
 		dedupe: scan.dedupe,
 		managementAvailable: scan.managementAvailable,
 		recipeAvailable: scan.bundles.some((bundle) => bundle.name === "dsh-plugin-recipe" && bundle.enabled),
+		verification,
+		capability,
 		diagnostics: scan.diagnostics
 	};
 }
@@ -5285,7 +5495,7 @@ async function suggest(ctx, config, ledger, body) {
 		findings: compat.findings.map(toFinding)
 	};
 }
-async function apply$1(ctx, config, body) {
+async function apply$1(ctx, config, ledger, body) {
 	if (body.confirm !== true) throw new ApplyRefusedError("confirm must be true");
 	const profileId = typeof body.profileId === "string" ? body.profileId : "";
 	if (profileId.length === 0) throw new Error("profileId is required");
@@ -5298,14 +5508,43 @@ async function apply$1(ctx, config, body) {
 		writeReport: true,
 		force: true
 	});
-	return applySlimProfile(profileId, {
+	const profileName = resolveProfileFacts(ctx).name;
+	const beforeScan = await scanPlugins({
+		config,
+		compat,
+		pluginManager: manager,
+		inventory: await inventoryOf(ctx)
+	});
+	const result = await applySlimProfile(profileId, {
 		confirm: true,
 		items,
 		manager,
 		maxDrafts: config.maxDrafts,
 		findings: compat.findings,
-		profileName: resolveProfileFacts(ctx).name
+		profileName
 	});
+	const applied = result.items.filter((item) => item.status === "applied" || item.status === "applied-pending-restart").map((item) => ({
+		id: item.id,
+		kind: item.kind,
+		name: item.name
+	}));
+	if (result.token !== void 0 && applied.length > 0 && result.rolledBack !== true) {
+		await beginVerification({
+			profile: profileName,
+			token: result.token,
+			applied,
+			before: snapshotOf(beforeScan),
+			needsRestart: result.restartRequired === true
+		});
+		return {
+			...result,
+			verification: {
+				pending: true,
+				needsRestart: result.restartRequired === true
+			}
+		};
+	}
+	return result;
 }
 async function rollback(ctx, config, body) {
 	const manager = getPluginManager(ctx);
