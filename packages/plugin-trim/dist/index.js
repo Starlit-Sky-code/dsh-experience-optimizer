@@ -23,6 +23,7 @@ const DEFAULT_CONFIG = {
 	maxDrafts: 20,
 	enableDedupe: true,
 	persistExcerpts: false,
+	contextBudget: 0,
 	tokenRatio: 3.5,
 	toolOwners: {},
 	compatEnabled: true,
@@ -55,6 +56,7 @@ const Config = z.object({
 	maxDrafts: z.natural().min(1).max(200).default(20),
 	enableDedupe: z.boolean().default(true),
 	persistExcerpts: z.boolean().default(false),
+	contextBudget: z.natural().min(0).max(1e6).default(0),
 	tokenRatio: z.number().min(1).max(10).default(3.5),
 	toolOwners: z.dict(z.string()).default({}),
 	compatEnabled: z.boolean().default(true),
@@ -3875,6 +3877,7 @@ async function scanPlugins(options) {
 		entries,
 		context: {
 			totalTokens,
+			budget: config.contextBudget,
 			byOwner,
 			sections,
 			tools,
@@ -4890,8 +4893,17 @@ function compatCheck(findings) {
 }
 function contextCheck(scan) {
 	const total = scan.context.totalTokens;
+	const attributable = Math.max(0, total - scan.context.unattributedTokens);
+	const budget = scan.context.budget;
 	const topOwner = Object.entries(scan.context.byOwner).sort((a, b) => b[1] - a[1])[0];
-	const detail = total > 0 ? `${total.toLocaleString("en-US")} tokens` + (topOwner === void 0 ? "" : ` · Top 1 ${topOwner[0]}`) : "暂无可归属上下文";
+	if (budget > 0 && attributable > budget) return {
+		id: "context",
+		status: "warn",
+		label: "上下文",
+		detail: `${attributable.toLocaleString("en-US")} / ${budget.toLocaleString("en-US")} tokens`,
+		count: 1
+	};
+	const detail = total > 0 ? `${total.toLocaleString("en-US")} tokens` + (budget > 0 ? ` · 预算 ${budget.toLocaleString("en-US")}` : "") + (topOwner === void 0 ? "" : ` · Top 1 ${topOwner[0]}`) : "暂无可归属上下文";
 	if (scan.dedupe.length > 0) return {
 		id: "context",
 		status: "warn",
@@ -5512,6 +5524,11 @@ function sanitizeConfigPatch(input) {
 		if (!Number.isInteger(value) || value < 1 || value > 100) throw new Error("invalid approvalThreshold");
 		patch.approvalThreshold = value;
 	}
+	if ("contextBudget" in raw) {
+		const value = Number(raw.contextBudget);
+		if (!Number.isInteger(value) || value < 0 || value > 1e6) throw new Error("invalid contextBudget");
+		patch.contextBudget = value;
+	}
 	if ("trackUsage" in raw) {
 		if (typeof raw.trackUsage !== "boolean") throw new Error("invalid trackUsage");
 		patch.trackUsage = raw.trackUsage;
@@ -5561,6 +5578,7 @@ function publicConfig(ctx, config) {
 		approvalMode: config.approvalMode,
 		suggestionPolicy: config.suggestionPolicy,
 		approvalThreshold: config.approvalThreshold,
+		contextBudget: config.contextBudget,
 		protect: [...config.protect],
 		pinned: [...config.pinned],
 		trackUsage: config.trackUsage,
@@ -5620,6 +5638,8 @@ async function overview(ctx, config, ledger) {
 		findings: compat.findings.map(toFinding),
 		context: {
 			totalTokens: scan.context.totalTokens,
+			attributableTokens: Math.max(0, scan.context.totalTokens - scan.context.unattributedTokens),
+			budget: scan.context.budget,
 			unattributedTokens: scan.context.unattributedTokens,
 			topSections: [...scan.context.sections].sort((a, b) => b.tokens - a.tokens).slice(0, 12),
 			topTools: [...scan.context.tools].sort((a, b) => b.tokens - a.tokens).slice(0, 12),

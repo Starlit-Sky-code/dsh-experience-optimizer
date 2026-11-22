@@ -76,6 +76,7 @@ function scan(input: {
     entries: input.entries ?? [entry('entry-a'), entry('entry-b')],
     context: {
       totalTokens: input.total ?? 1000,
+      budget: 0,
       byOwner: {},
       sections: [],
       tools: [],

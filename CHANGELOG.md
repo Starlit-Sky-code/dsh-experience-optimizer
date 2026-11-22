@@ -7,6 +7,12 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [0.5.7] - 2026-11-22
 
+### Added
+
+- A user-owned **context budget** (`contextBudget`, default 0 = off): when
+  attributable context exceeds the budget, the context verdict turns amber and
+  the metric shows budget usage. No arbitrary score is introduced.
+
 ### Changed
 
 - The compaction card names the single **effective backend** and explicitly says

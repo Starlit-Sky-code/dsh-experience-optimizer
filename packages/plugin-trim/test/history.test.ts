@@ -51,6 +51,7 @@ function scan(input: { attributed?: number; bundles?: BundleProfile[]; owners?: 
     entries: [],
     context: {
       totalTokens: attributed + 200,
+      budget: 0,
       byOwner: input.owners ?? { a: attributed, unattributed: 200 },
       sections: [],
       tools: [],

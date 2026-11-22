@@ -43,6 +43,8 @@ const overview = {
     findings: [],
     context: {
       totalTokens: 1000,
+      attributableTokens: 600,
+      budget: 2000,
       unattributedTokens: 400,
       topSections: [],
       topTools: [],
@@ -218,6 +220,7 @@ describe('client onboarding and pages', () => {
     await act(async () => { fullView?.click(); await sleep(40) })
     expect(container.querySelector('.eo-mode-simple')).toBeNull()
     expect(container.textContent).toContain('生效后端')
+    expect(container.textContent).toContain('预算 ')
     expect(container.querySelector('.eo-compat-footer')).not.toBeNull()
     expect(container.querySelector('.eo-verdict')).not.toBeNull()
     expect(container.textContent).toContain('体检结论')

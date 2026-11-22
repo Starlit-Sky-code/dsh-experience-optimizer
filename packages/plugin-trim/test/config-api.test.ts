@@ -25,6 +25,7 @@ describe('public config', () => {
     expect(data.approvalMode).toBe('risk-based')
     expect(data.suggestionPolicy).toBe('conservative')
     expect(data.approvalThreshold).toBe(7)
+    expect(data.contextBudget).toBe(0)
     expect(data.protect).toEqual(['my-monthly-plugin'])
     expect(data.pinned).toEqual(['my-pinned-plugin'])
     expect(data).not.toHaveProperty('toolOwners')
@@ -33,13 +34,16 @@ describe('public config', () => {
 
 describe('config patch', () => {
   it('accepts only known policy fields and validates ranges', () => {
-    expect(sanitizeConfigPatch({ mode: 'auto-safe', approvalThreshold: 8, protect: [' a ', ''] })).toEqual({
+    expect(sanitizeConfigPatch({ mode: 'auto-safe', approvalThreshold: 8, contextBudget: 20000, protect: [' a ', ''] })).toEqual({
       mode: 'auto-safe',
       approvalThreshold: 8,
+      contextBudget: 20000,
       protect: ['a'],
     })
     expect(() => sanitizeConfigPatch({ mode: 'nope' })).toThrow('invalid mode')
     expect(() => sanitizeConfigPatch({ usageRetentionDays: 0 })).toThrow('invalid usageRetentionDays')
+    expect(() => sanitizeConfigPatch({ contextBudget: -1 })).toThrow('invalid contextBudget')
+    expect(() => sanitizeConfigPatch({ contextBudget: 1_000_001 })).toThrow('invalid contextBudget')
     expect(() => sanitizeConfigPatch({})).toThrow('config patch is empty')
   })
 

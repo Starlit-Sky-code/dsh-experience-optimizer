@@ -24,6 +24,8 @@ export interface Config {
   enableDedupe: boolean;
   /** Persist a short dedupe excerpt locally; off by default. */
   persistExcerpts: boolean;
+  /** Soft cap for attributable context tokens; 0 disables the budget check. */
+  contextBudget: number;
   /** Non-CJK characters per token used for cost estimates. */
   tokenRatio: number;
   /** Extra tool name to owning package mapping. */
@@ -601,6 +603,8 @@ interface ScanResult {
   entries: PluginProfile[];
   context: {
     totalTokens: number;
+    /** User-defined soft cap for attributable tokens; 0 disables. */
+    budget: number;
     byOwner: Record<string, number>;
     sections: SectionCost[];
     tools: ToolCost[];

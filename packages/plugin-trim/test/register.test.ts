@@ -15,6 +15,7 @@ const config: Config = {
   maxDrafts: 20,
   enableDedupe: true,
   persistExcerpts: false,
+  contextBudget: 0,
   tokenRatio: 3.5,
   toolOwners: {},
   compatEnabled: true,

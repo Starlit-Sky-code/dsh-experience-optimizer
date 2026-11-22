@@ -24,6 +24,8 @@ export interface Config {
   enableDedupe: boolean
   /** Persist a short dedupe excerpt locally; off by default. */
   persistExcerpts: boolean
+  /** Soft cap for attributable context tokens; 0 disables the budget check. */
+  contextBudget: number
   /** Non-CJK characters per token used for cost estimates. */
   tokenRatio: number
   /** Extra tool name to owning package mapping. */
@@ -61,6 +63,7 @@ export const DEFAULT_CONFIG: Config = {
   maxDrafts: 20,
   enableDedupe: true,
   persistExcerpts: false,
+  contextBudget: 0,
   tokenRatio: 3.5,
   toolOwners: {},
   compatEnabled: true,
@@ -92,6 +95,7 @@ export const Config: z<Config> = z.object({
   maxDrafts: z.natural().min(1).max(200).default(20),
   enableDedupe: z.boolean().default(true),
   persistExcerpts: z.boolean().default(false),
+  contextBudget: z.natural().min(0).max(1_000_000).default(0),
   tokenRatio: z.number().min(1).max(10).default(3.5),
   toolOwners: z.dict(z.string()).default({}),
   compatEnabled: z.boolean().default(true),

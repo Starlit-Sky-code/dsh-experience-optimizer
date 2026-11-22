@@ -77,10 +77,21 @@ function compatCheck(findings: readonly CompatFinding[]): CheckResult {
 
 function contextCheck(scan: ScanResult): CheckResult {
   const total = scan.context.totalTokens
+  const attributable = Math.max(0, total - scan.context.unattributedTokens)
+  const budget = scan.context.budget
   const topOwner = Object.entries(scan.context.byOwner)
     .sort((a, b) => b[1] - a[1])[0]
+  if (budget > 0 && attributable > budget) {
+    return {
+      id: 'context',
+      status: 'warn',
+      label: '上下文',
+      detail: `${attributable.toLocaleString('en-US')} / ${budget.toLocaleString('en-US')} tokens`,
+      count: 1,
+    }
+  }
   const detail = total > 0
-    ? `${total.toLocaleString('en-US')} tokens` + (topOwner === undefined ? '' : ` · Top 1 ${topOwner[0]}`)
+    ? `${total.toLocaleString('en-US')} tokens` + (budget > 0 ? ` · 预算 ${budget.toLocaleString('en-US')}` : '') + (topOwner === undefined ? '' : ` · Top 1 ${topOwner[0]}`)
     : '暂无可归属上下文'
   if (scan.dedupe.length > 0) {
     return {

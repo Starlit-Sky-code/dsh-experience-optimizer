@@ -51,6 +51,8 @@ export interface ScanResult {
   entries: PluginProfile[]
   context: {
     totalTokens: number
+    /** User-defined soft cap for attributable tokens; 0 disables. */
+    budget: number
     byOwner: Record<string, number>
     sections: SectionCost[]
     tools: ToolCost[]
@@ -219,6 +221,7 @@ export async function scanPlugins(options: ScanOptions): Promise<ScanResult> {
     entries,
     context: {
       totalTokens,
+      budget: config.contextBudget,
       byOwner,
       sections,
       tools,

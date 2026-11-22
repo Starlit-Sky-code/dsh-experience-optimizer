@@ -217,6 +217,11 @@ export function sanitizeConfigPatch(input: unknown): Partial<Config> {
     if (!Number.isInteger(value) || value < 1 || value > 100) throw new Error('invalid approvalThreshold')
     patch.approvalThreshold = value
   }
+  if ('contextBudget' in raw) {
+    const value = Number(raw.contextBudget)
+    if (!Number.isInteger(value) || value < 0 || value > 1_000_000) throw new Error('invalid contextBudget')
+    patch.contextBudget = value
+  }
   if ('trackUsage' in raw) {
     if (typeof raw.trackUsage !== 'boolean') throw new Error('invalid trackUsage')
     patch.trackUsage = raw.trackUsage
@@ -281,6 +286,7 @@ export function publicConfig(ctx: Context, config: Config): unknown {
     approvalMode: config.approvalMode,
     suggestionPolicy: config.suggestionPolicy,
     approvalThreshold: config.approvalThreshold,
+    contextBudget: config.contextBudget,
     protect: [...config.protect],
     pinned: [...config.pinned],
     trackUsage: config.trackUsage,
@@ -340,6 +346,8 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     findings: compat.findings.map(toFinding),
     context: {
       totalTokens: scan.context.totalTokens,
+      attributableTokens: Math.max(0, scan.context.totalTokens - scan.context.unattributedTokens),
+      budget: scan.context.budget,
       unattributedTokens: scan.context.unattributedTokens,
       topSections: [...scan.context.sections]
         .sort((a, b) => b.tokens - a.tokens)

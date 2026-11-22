@@ -1626,7 +1626,7 @@ window.__ModuleLoader__.load({
 
       const settingsChanged = useMemo(() => {
         if (!settings || !settingsDraft) return false
-        const fields = ['mode', 'approvalMode', 'suggestionPolicy', 'approvalThreshold', 'trackUsage', 'usageRetentionDays', 'maxDrafts', 'protect', 'pinned']
+        const fields = ['mode', 'approvalMode', 'suggestionPolicy', 'approvalThreshold', 'contextBudget', 'trackUsage', 'usageRetentionDays', 'maxDrafts', 'protect', 'pinned']
         return JSON.stringify(fields.map((field) => settingsDraft[field])) !==
           JSON.stringify(fields.map((field) => settings[field]))
       }, [settings, settingsDraft])
@@ -1642,6 +1642,7 @@ window.__ModuleLoader__.load({
           approvalMode: 'always',
           suggestionPolicy: 'conservative',
           approvalThreshold: 5,
+          contextBudget: 0,
           trackUsage: true,
           usageRetentionDays: 30,
           maxDrafts: 20,
@@ -1665,6 +1666,7 @@ window.__ModuleLoader__.load({
             approvalMode: settingsDraft.approvalMode,
             suggestionPolicy: settingsDraft.suggestionPolicy,
             approvalThreshold: settingsDraft.approvalThreshold,
+            contextBudget: settingsDraft.contextBudget,
             trackUsage: settingsDraft.trackUsage,
             usageRetentionDays: settingsDraft.usageRetentionDays,
             maxDrafts: settingsDraft.maxDrafts,
@@ -2333,6 +2335,7 @@ window.__ModuleLoader__.load({
                 h('span', null, tr('上下箭头微调；进度条按推荐范围显示，右侧标注配置上限', 'Use the arrows to tune; the bar shows the recommended range, with the config cap on the right')),
               ),
               h('div', { className: 'eo-param-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), inputNumber('approvalThreshold', 1, 100, 20)),
+              h('div', { className: 'eo-param-row' }, h('span', null, tr('上下文预算', 'Context budget')), inputNumber('contextBudget', 0, 1000000, 20000)),
               h('div', { className: 'eo-param-row' }, h('span', null, tr('账本保留', 'Ledger retention')), inputNumber('usageRetentionDays', 1, 365, 90)),
               h('div', { className: 'eo-param-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), inputNumber('maxDrafts', 1, 200, 50)),
             ),
@@ -2988,9 +2991,11 @@ window.__ModuleLoader__.load({
               key: 'tokens',
               label: tr('可归属上下文', 'Attributable context'),
               value: formatTokens(attributedContext),
-              hint: Math.round(contextPct) + tr('% 占比 · 未归属 ', '% share · unattributed ') + formatTokens(overview.context.unattributedTokens),
-              progress: contextPct,
-              progressTone: 'ok',
+              hint: overview.context.budget > 0
+                ? tr('预算 ', 'Budget ') + formatTokens(overview.context.budget) + tr(' · 已用 ', ' · used ') + Math.round((attributedContext / Math.max(1, overview.context.budget)) * 100) + '%'
+                : Math.round(contextPct) + tr('% 占比 · 未归属 ', '% share · unattributed ') + formatTokens(overview.context.unattributedTokens),
+              progress: overview.context.budget > 0 ? Math.min(100, (attributedContext / Math.max(1, overview.context.budget)) * 100) : contextPct,
+              progressTone: overview.context.budget > 0 && attributedContext > overview.context.budget ? 'warn' : 'ok',
             }),
             h(Metric, {
               key: 'bundles',

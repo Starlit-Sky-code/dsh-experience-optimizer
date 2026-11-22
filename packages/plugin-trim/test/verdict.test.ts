@@ -70,6 +70,7 @@ function scan(overrides: Partial<ScanResult> = {}): ScanResult {
     entries: [],
     context: {
       totalTokens: 1200,
+      budget: 0,
       byOwner: { demo: 900, other: 300 },
       sections: [],
       tools: [],
@@ -85,6 +86,16 @@ function scan(overrides: Partial<ScanResult> = {}): ScanResult {
 }
 
 describe('checkup verdict', () => {
+  it('warns when attributable context exceeds the configured budget', () => {
+    const base = scan()
+    const verdict = buildVerdict(analysis([]), scan({
+      context: { ...base.context, budget: 1000 },
+    }))
+    const check = verdict.checks.find((item) => item.id === 'context')
+    expect(check?.status).toBe('warn')
+    expect(check?.detail).toContain('1,200 / 1,000')
+  })
+
   it('returns a clean verdict with a draft action', () => {
     const verdict = buildVerdict(analysis([]), scan())
     expect(verdict.overall).toBe('ok')
