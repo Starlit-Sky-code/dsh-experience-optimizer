@@ -1134,7 +1134,7 @@ window.__ModuleLoader__.load({
         },
         {
           icon: 'recipe',
-          zh: '再生成方案',
+          zh: '生成方案',
           en: 'Build a plan',
           zhBody: '选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。',
           enBody: 'Pick a task or describe the goal, then build a plan. It is a draft by default and changes nothing.',
@@ -1143,8 +1143,8 @@ window.__ModuleLoader__.load({
           icon: 'shield',
           zh: '应用并验证',
           en: 'Apply and verify',
-          zhBody: '低风险项经确认后应用；重启后打开体检，自动结算实测收益。需要时可一键回滚。',
-          enBody: 'Low-risk items apply only after confirmation. Reopen the checkup after a restart to measure the actual change; roll back in one click if needed.',
+          zhBody: '先写还原点，再应用低风险项；重启后看实测，打开体检即自动结算收益。需要时可一键回滚。',
+          enBody: 'Low-risk items apply only after confirmation and a restore point is written. After a restart, reopen the checkup to measure the actual change; roll back in one click if needed.',
         },
       ]
       const current = steps[step] || steps[0]
@@ -1265,8 +1265,11 @@ window.__ModuleLoader__.load({
         [tr('点击「更多」', 'Open “More”'), tr('在 DSH 主界面打开更多菜单。', 'Open the More menu on the DSH main screen.')],
         [tr('点击「设置」', 'Open “Settings”'), tr('进入设置页。', 'Open Settings.')],
         [tr('点击「插件体检」', 'Open “Plugin checkup”'), tr('在 Agent 预设下方或插件页签里找到插件体检。', 'Find it below Agent presets or in the plugins tab.')],
-        [tr('先看结论', 'Read the verdict'), tr('四维结论和压缩链路先给判断。', 'The four-check verdict and compaction stack come first.')],
-        [tr('生成并验证', 'Build and verify'), tr('生成方案、确认应用、重启后看实测收益。', 'Build a plan, confirm apply, then measure after a restart.')],
+        [tr('看结论', 'Read the verdict'), tr('四维结论先告诉你有没有事。', 'The four-check verdict tells you whether anything needs attention.')],
+        [tr('看压缩链路', 'Check the compaction stack'), tr('只读列出后端、裁剪、图像、命令和阈值。', 'Read-only backends, pruners, image offload, commands, and thresholds.')],
+        [tr('生成方案', 'Build a plan'), tr('选任务或写目标；默认只生成草稿。', 'Pick a task or write a goal; the default is a draft only.')],
+        [tr('应用', 'Apply'), tr('先写还原点，再应用低风险项。', 'Write a restore point first, then apply low-risk items.')],
+        [tr('重启后看实测', 'Measure after restart'), tr('重启后打开体检，自动结算实测收益。', 'Reopen the checkup after a restart to settle the measured result.')],
       ]
       return h(
         React.Fragment,
@@ -1292,16 +1295,16 @@ window.__ModuleLoader__.load({
           h('i', null, '→'),
           h('span', null, tr('插件体检', 'Plugin checkup')),
         ),
-        h('p', { className: 'eo-guide-note' }, tr('打开后会先出现新手引导；「教程」页有完整 5 步。', 'First-run onboarding opens there; the Guide tab has the full five steps.')),
+        h('p', { className: 'eo-guide-note' }, tr('打开后会先出现新手引导。进入后按「看结论 → 看压缩链路 → 生成方案 → 应用 → 重启后看实测」走一遍；「教程」页有分步说明。', 'First-run onboarding opens there. Then follow verdict → compaction → plan → apply → measure after restart; the Guide tab has the step-by-step version.')),
         stepsOpen
-          ? h('ol', { className: 'eo-guide-steps' }, steps.map(([title, body], index) =>
+          ? h('ol', { className: 'eo-guide-steps', style: { maxHeight: Math.max(180, steps.length * 36 + 8) + 'px' } }, steps.map(([title, body], index) =>
               h('li', { key: title }, h('b', null, String(index + 1).padStart(2, '0')), h('span', null, title), h('small', null, body)),
             ))
           : null,
         h(
           'div',
           { className: 'eo-guide-actions' },
-          h(Button, { variant: 'ghost', onClick: () => setStepsOpen((value) => !value) }, stepsOpen ? tr('收起步骤', 'Hide steps') : tr('查看 5 步教程', 'Show 5 steps')),
+          h(Button, { variant: 'ghost', onClick: () => setStepsOpen((value) => !value) }, stepsOpen ? tr('收起步骤', 'Hide steps') : tr('查看 ' + steps.length + ' 步路径', 'Show all ' + steps.length + ' steps')),
           h(Button, { variant: 'accent', onClick: dismiss }, tr('知道了', 'Got it')),
         ),
         ),
@@ -1310,11 +1313,11 @@ window.__ModuleLoader__.load({
 
     function ActivationGuide({ onDismiss, onOpenDetails }) {
       const steps = [
-        [tr('打开插件体检', 'Open Plugin checkup'), tr('设置 → 插件体检，或在插件页签里找到它。', 'Settings → Plugin checkup, or find it in the Plugins tab.')],
-        [tr('先看结论', 'Read the verdict'), tr('加载 / 兼容 / 上下文 / 压缩链路，先知道有没有事。', 'Load, compatibility, context, and compaction at a glance.')],
-        [tr('看压缩链路', 'Check compaction'), tr('双后端、缺失后端、阈值冲突会被直接点名。', 'Duplicate backends, missing backends, and threshold conflicts are called out.')],
-        [tr('生成方案并应用', 'Build and apply'), tr('选任务或写目标；低风险项确认后应用。', 'Pick a task or goal; low-risk items apply only after confirmation.')],
-        [tr('重启后看实测', 'Measure after restart'), tr('打开体检自动结算实测收益；需要时回滚。', 'Reopen the checkup to settle the measured change; roll back if needed.')],
+        [tr('先看结论', 'Read the verdict'), tr('打开插件体检，先看加载 / 兼容 / 上下文 / 压缩链路。', 'Open Plugin checkup and read load, compatibility, context, and compaction first.')],
+        [tr('看压缩链路', 'Check the compaction stack'), tr('双后端、缺失后端、阈值冲突会被直接点名。', 'Duplicate backends, missing backends, and threshold conflicts are called out.')],
+        [tr('生成方案', 'Build a plan'), tr('选任务或写目标；默认只生成草稿，不会改任何插件。', 'Pick a task or goal; the default is a draft only and changes nothing.')],
+        [tr('应用', 'Apply'), tr('先写还原点，再应用低风险项。', 'Write a restore point first, then apply low-risk items.')],
+        [tr('重启后看实测', 'Measure after restart'), tr('重启后打开体检自动结算实测收益；需要时回滚。', 'Reopen the checkup after a restart to settle the measured change; roll back if needed.')],
       ]
       return h(
         'section',
@@ -1325,7 +1328,7 @@ window.__ModuleLoader__.load({
           h('div', { className: 'eo-activation-icon' }, h(Icon, { name: 'gauge', size: 20 })),
           h('div', null,
             h('h3', null, tr('插件体检已启用', 'Plugin checkup is enabled')),
-            h('p', null, tr('先量成本，再决定关什么。5 步上手：', 'Measure first, then decide what to close. Five steps:')),
+            h('p', null, tr('先看结论，再决定关什么。5 步上手：', 'Read the verdict first, then decide what to close. Five steps:')),
           ),
         ),
         h(
@@ -2008,9 +2011,9 @@ window.__ModuleLoader__.load({
         ]
         const steps = [
           ['先看结论。', 'Read the verdict.', ' 顶部四维结论：加载 / 兼容 / 上下文 / 压缩链路；先知道有没有事，再决定动不动插件。', ' The four-check verdict covers load, compatibility, context, and compaction before you touch anything.'],
-          ['看压缩链路。', 'Check compaction.', ' 只读列出后端、裁剪、图像、命令和阈值；双后端、缺失后端会直接提示。', ' Read-only backends, pruners, image offload, commands, and thresholds; duplicate or missing backends are flagged.'],
-          ['再生成方案。', 'Build a plan.', ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。', ' Pick a task or write a goal, then Build plan. It only creates a draft; no plugin is changed.'],
-          ['确认后应用。', 'Confirm and apply.', ' 勾选低风险项，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
+          ['看压缩链路。', 'Check the compaction stack.', ' 只读列出后端、裁剪、图像、命令和阈值；双后端、缺失后端会直接提示。', ' Read-only backends, pruners, image offload, commands, and thresholds; duplicate or missing backends are flagged.'],
+          ['生成方案。', 'Build a plan.', ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。', ' Pick a task or write a goal, then Build plan. It only creates a draft; no plugin is changed.'],
+          ['应用。', 'Apply.', ' 勾选低风险项，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
           ['重启后看实测。', 'Measure after restart.', ' 重启后打开体检，自动结算实测收益；同窗口其他插件变化会标记“仅供参考”。', ' Reopen the checkup after a restart to settle the measured result; unrelated changes are marked indicative.'],
         ]
         const faq = [
@@ -2026,7 +2029,7 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: tr('5 分钟上手', 'Five-minute guide'),
-              subtitle: tr('从扫描到应用，每一步都可恢复', 'From scan to apply, every step is recoverable'),
+              subtitle: tr('从结论到实测，每一步都可恢复', 'From verdict to measurement, every step is recoverable'),
               extra: h(Badge, { tone: 'info' }, tr('5 步', '5 steps')),
             },
             h(

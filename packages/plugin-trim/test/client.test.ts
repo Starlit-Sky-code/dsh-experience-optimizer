@@ -172,6 +172,15 @@ describe('client onboarding and pages', () => {
 
   it('shows onboarding once and exposes tutorial/about/settings', async () => {
     await waitFor('新手引导')
+    expect(container.querySelectorAll('.eo-progress-dot').length).toBe(4)
+    const next = () => [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '下一步')
+    await act(async () => { next()?.click(); await sleep(20) })
+    expect(container.textContent).toContain('看压缩链路')
+    await act(async () => { next()?.click(); await sleep(20) })
+    expect(container.textContent).toContain('生成方案')
+    await act(async () => { next()?.click(); await sleep(20) })
+    expect(container.textContent).toContain('应用并验证')
+    expect(container.textContent).toContain('重启后看实测')
     const skip = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '跳过')
     expect(skip).toBeDefined()
     await act(async () => { skip?.click(); await sleep(30) })
@@ -211,6 +220,10 @@ describe('client onboarding and pages', () => {
     expect(tutorial).toBeDefined()
     await act(async () => { tutorial?.click(); await sleep(30) })
     expect(container.textContent).toContain('5 分钟上手')
+    expect(container.textContent).toContain('先看结论')
+    expect(container.textContent).toContain('看压缩链路')
+    expect(container.textContent).toContain('重启后看实测')
+    expect(container.querySelectorAll('.eo-tutorial-step').length).toBe(5)
 
     const about = tabs.find((button) => button.textContent?.trim() === '关于')
     await act(async () => { about?.click(); await sleep(30) })
@@ -307,6 +320,46 @@ describe('client onboarding and pages', () => {
     })
     expect(container.textContent).toContain('Plugin checkup is enabled')
     expect(container.textContent).toContain('Five steps')
+    expect(container.textContent).toContain('Build a plan')
+    expect(container.textContent).toContain('Measure after restart')
+    expect(container.querySelectorAll('.eo-activation-steps li').length).toBe(5)
+  })
+
+  it('renders the activation guide with the shared five-step path', async () => {
+    await act(async () => { root.unmount() })
+    const Activation = slotComponents['plugins.bundle.activation']
+    expect(Activation).toBeDefined()
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(Activation as React.ComponentType, {
+        onDismiss: () => undefined,
+        onOpenDetails: () => undefined,
+      }))
+    })
+    expect(container.textContent).toContain('5 步上手')
+    expect(container.textContent).toContain('先看结论')
+    expect(container.textContent).toContain('看压缩链路')
+    expect(container.textContent).toContain('生成方案')
+    expect(container.textContent).toContain('重启后看实测')
+    expect(container.querySelectorAll('.eo-activation-steps li').length).toBe(5)
+  })
+
+  it('renders the main guide with navigation plus the eight-step path', async () => {
+    await act(async () => { root.unmount() })
+    const MainGuide = slotComponents['shell.overlay']
+    expect(MainGuide).toBeDefined()
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(MainGuide as React.ComponentType))
+    })
+    expect(container.textContent).toContain('打开后会先出现新手引导')
+    expect(container.textContent).toContain('看结论 → 看压缩链路 → 生成方案 → 应用 → 重启后看实测')
+    expect(container.querySelectorAll('.eo-guide-steps li').length).toBe(8)
+    const toggle = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '收起步骤')
+    expect(toggle).toBeDefined()
+    await act(async () => { toggle?.click(); await sleep(20) })
+    const reopen = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '查看 8 步路径')
+    expect(reopen).toBeDefined()
   })
 
   it('warns in the composer when the checkup verdict needs attention', async () => {

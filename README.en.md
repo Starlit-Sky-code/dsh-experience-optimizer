@@ -11,27 +11,33 @@
 </p>
 
 <p align="center"><strong>Plugin checkup · compatibility checks · safe trimming</strong><br>
-Read-only context and conflict analysis; low-risk actions apply only after confirmation, with snapshots and rollback.</p>
+Answers: which plugin is expensive at rest, is the compaction stack coherent, and what did an apply actually save?</p>
+
+- **Four-check verdict**: load / compatibility / context / compaction stack, with evidence one click away.
+- **Read-only compaction audit**: duplicate backends, a missing backend, and threshold conflicts are flagged; active backends are protected from disable suggestions.
+- **Measured result after apply**: baseline before apply, delta settled on the next checkup after restart; unrelated changes are marked indicative.
 
 ## Not another context dashboard
 
-| Tool | Answers |
-|---|---|
-| `dsh-context` | What did this request/session cost in tokens, money, and cache hits? |
-| `dsh-plugin-health` | Which plugin broke, and can it be repaired? |
-| `dsh-plugin-trim` | **Which plugin is expensive at rest, is the compaction stack coherent, and what did an apply actually save?** |
+| Tool | Answers | Boundary |
+|---|---|---|
+| `dsh-context` | What did this request/session cost in tokens, money, and cache hits? | Not responsible for per-plugin resting cost or the compaction stack. |
+| `dsh-plugin-health` | Which plugin broke, and can it be repaired? | Not responsible for cost attribution or measured savings. |
+| `dsh-plugin-trim` | **Which plugin is expensive at rest, is the compaction stack coherent, and what did an apply actually save?** | Does not replace them; no 0–100 health score; not a security audit. |
+
+> Token costs are character-based estimates, not billing amounts.
 
 ## Install
 
 ```bash
-# npm
-npm i dsh-plugin-trim
+# npm (pinned to this release)
+npm i dsh-plugin-trim@0.5.4
 
 # DSH CLI / plugin market:
-dsh plugin --profile web add dsh-plugin-trim
+dsh plugin --profile web add dsh-plugin-trim@0.5.4
 ```
 
-> No `@version` means latest.
+> Omit `@0.5.4` to use latest; this release is `0.5.4`.
 > If the plugin does not appear in Settings, reload DSH and confirm the dependency is installed in the current workspace; use the Release tarball below if npm CDN returns 404.
 
 Open **Settings → Plugin checkup** after installing.
@@ -49,9 +55,13 @@ For source development, see [Development](#development).
 
 ## What it does
 
+![Two-frame walkthrough: verdict → compaction stack (real UI)](assets/walkthrough.gif)
+
+<p align="center"><sub>Two-frame walkthrough: verdict → read-only compaction stack (real UI, 4-second loop).</sub></p>
+
 ![Plugin checkup console](assets/ui-preview.png)
 
-- **`dsh-plugin-trim`** scans plugin context cost and compatibility, then builds an explainable keep/enable/disable plan. Low-risk items are applied only after explicit confirmation and host approval; a restore point is written first.
+- **`dsh-plugin-trim`** scans plugin context cost and compatibility, then builds an explainable keep/enable/disable plan. Low-risk items apply only after explicit confirmation; the agent tool path also asks the host by default. A restore point is written first.
 - `dsh-plugin-recipe` is **temporarily deprecated**. Existing installs keep working, but no new features are planned; DSH native workflow tools cover execution.
 - **Guide / About / Settings** tabs make the first run explicit instead of hiding safety rules in documentation; About includes an inline hero SVG, real links, copyright, QQ group `1134419871`, and clearly marked donation placeholders.
 - Settings includes layout/density/collapse preferences, editable plugin policy fields with an Apply button that appears after changes, an npm update check, and Issue shortcuts. A first-run activation card shows the five-step tutorial after enabling; a one-time main-screen guide also points to More → Settings → Plugin checkup.
@@ -69,7 +79,8 @@ For source development, see [Development](#development).
 The settings page opens with a four-check verdict: **load**, **compatibility**,
 **context**, and **compaction stack**. Each check has a status dot, a count, and
 an action that scrolls to the evidence. There is deliberately no 0–100 health
-score: different severities are not compressed into one scary number.
+score: different severities are not compressed into one scary number. Token
+costs are character-based estimates, not billing amounts.
 
 The compaction card classifies backends, tool-result pruners, image offload,
 `/compact`, threshold owners, archives, and other participants. It warns on
@@ -143,6 +154,8 @@ pnpm verify
 - Design: [architecture](docs/architecture.md)
 - Compatibility rules: [compatibility](docs/compatibility.md)
 - UI and API: [UI](docs/ui.md)
+- Marketing copy: [docs/marketing.md](docs/marketing.md)
+- Promo copy: [docs/promo-copy.md](docs/promo-copy.md)
 
 ## Temporarily deprecated: workflow recipe
 

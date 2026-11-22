@@ -3,6 +3,22 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Unified the four first-run paths around one story: read the verdict, check
+  the compaction stack, build a plan, apply, then measure after restart.
+- Refreshed the tutorial/main guide/activation counts and copy so they no longer
+  point at the old “scan first” or workflow-recipe path.
+- The first-run guide now sizes its step list to the number of steps, so the
+  eight-step path is not clipped in a 180px scroll box.
+
+### Docs
+
+- Added a two-frame (4-second loop, 800×900) walkthrough GIF, a sharper README
+  positioning section, and a complete promotional copy pack.
+
 ## [0.5.4] - 2026-11-22
 
 ### Fixed

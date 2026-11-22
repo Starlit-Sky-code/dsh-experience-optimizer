@@ -32,7 +32,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ### 新手引导
 
-- 首次在浏览器打开时自动弹出 3 步引导：先量成本 → 再生成方案 → 最后安全确认；
+- 首次在浏览器打开时自动弹出 4 步引导：看结论 → 看压缩链路 → 生成方案 → 应用并验证（含重启后实测）；
 - 支持跳过、查看完整教程、重看；
 - 已读状态保存在浏览器 `localStorage`，不写入 DSH profile。
 
@@ -51,7 +51,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ### 教程
 
-- 5 分钟上手：扫描 → 生成方案 → 看判断依据 → 确认应用 → 回滚；
+- 5 分钟上手：先看结论 → 看压缩链路 → 生成方案 → 应用 → 重启后看实测；
 - 按任务快速开始：代码审查、修复问题、整理周报；
 - 常见问题：为什么没有建议关闭、周期插件保护、应用后回滚、确认与审批的区别。
 
@@ -65,7 +65,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 - 设置页提供认证的 npm 最新版本检查，不会自动升级；旧版本缺少 `/update` 时显示更新提示，而不是原始 404；
 - 提供新建 Issue / 问题列表快捷入口；
-- 初次启用 bundle 后由 `plugins.bundle.activation` 显示 5 步教程卡；主界面右下角还有一次性路径引导。
+- 初次启用 bundle 后由 `plugins.bundle.activation` 显示 5 步教程卡；主界面左下角还有一次性 8 步路径引导（更多 → 设置 → 插件体检 → 看结论 → 看压缩链路 → 生成方案 → 应用 → 重启后看实测）。
 
 ### 设置
 
@@ -158,7 +158,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
-| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` + `categories` + `host` |
+| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的只读画像 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` + `categories` + `host` |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |
