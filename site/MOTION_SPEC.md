@@ -10,7 +10,7 @@
 
 ## 2. Choreography
 
-- **Opening beat**: a 12s five-scene sequence — boot radar → resident cost → evidence gates → workflow recipe → ready lockup — then wipes upward. It is skippable at any point.
+- **Opening beat**: a 12s four-scene sequence — boot radar → resident cost → evidence gates → ready lockup — then wipes upward. It is skippable at any point.
 - **Hero beat**: four-line mask-in with a drawn amber underline, constellation nodes appear, scan beam passes once, HUD counts 2,417 → 1,105.
 - **Scroll rhythm**: ticker strip → poster interlude → paper problem statement → dark evidence gates → full-screen dual-lens interlude → paper product → dark safety → paper install/FAQ → dark about.
 - **Interaction rhythm**: intro skip, language toggle, copy command, node tooltips, pointer spotlight, instrument tilt, bidirectional hero depth, dual-lens counter-scroll, back-to-top, FAQ details, terminal typing.
@@ -22,7 +22,7 @@
 - Fast interaction: 160ms
 - Standard transition: 280ms
 - Slow reveal: 600–900ms
-- Intro: 12s five-scene sequence; exit wipe: 600ms
+- Intro: 12s four-scene sequence; exit wipe: 600ms
 - Hero line stagger: 80ms
 - Hero scan: 1700ms
 - Cost count-up: 1500ms
@@ -48,7 +48,7 @@
 
 | Section | Trigger | Animation | Failure mode |
 |---|---|---|---|
-| Intro | load | five scenes: radar, cost bars, evidence gates, recipe graph, ready lockup; upward wipe | skipped immediately |
+| Intro | load | four scenes: radar, cost bars, evidence gates, ready lockup; upward wipe | skipped immediately |
 | Hero | intro exit + canvas visible | four-line masks, underline draw, scan, HUD count | static final if reduced motion |
 | Ticker | load | 34s marquee; pause on hover | static strip |
 | Poster | scroll | image parallax ±22px | no transform if reduced/mobile |
@@ -98,9 +98,9 @@
 
 ## 10. Acceptance
 
-- [x] A five-scene, skippable opening sequence establishes the observatory metaphor and shows cost, evidence, recipe, and approval.
+- [x] A four-scene, skippable opening sequence establishes the observatory metaphor and shows cost, evidence, and approval.
 - [x] Hero has a distinct mechanic, not a stock hero.
-- [x] Five-scene intro plus seven hero/section motion beats.
+- [x] Four-scene intro plus seven hero/section motion beats.
 - [x] Ticker, scroll progress, spotlight, instrument tilt, ambient aurora, and slow orbit add a second motion layer.
 - [x] A full-screen dual-lens chapter counter-scrolls; the animation reverses when scrolling up.
 - [x] A back-to-top ring appears after 50% and returns to the top without scroll hijacking.

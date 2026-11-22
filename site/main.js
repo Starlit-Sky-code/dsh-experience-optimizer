@@ -94,11 +94,10 @@
   const introOff = !intro || reduce || new URLSearchParams(location.search).get('intro') === 'off'
   const pageRegions = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')]
   const scenePlan = [
-    { key: 'boot', label: 'BOOT / 01', duration: 2400 },
-    { key: 'cost', label: 'COST / 02', duration: 2600 },
-    { key: 'evidence', label: 'EVIDENCE / 03', duration: 2700 },
-    { key: 'recipe', label: 'RECIPE / 04', duration: 2500 },
-    { key: 'close', label: 'READY / 05', duration: 1800 },
+    { key: 'boot', label: 'BOOT / 01', duration: 2600 },
+    { key: 'cost', label: 'COST / 02', duration: 3200 },
+    { key: 'evidence', label: 'EVIDENCE / 03', duration: 3400 },
+    { key: 'close', label: 'READY / 04', duration: 2800 },
   ]
   const introTotal = scenePlan.reduce((sum, scene) => sum + scene.duration, 0)
   let heroStarted = false
@@ -401,7 +400,7 @@
   // Terminal typing
   const terminal = document.getElementById('terminal')
   const terminalText = document.getElementById('terminal-text')
-  const command = 'npm i dsh-plugin-trim\nnpm i dsh-plugin-recipe'
+  const command = 'npm i dsh-plugin-trim'
   if (terminal && terminalText) {
     const runTerminal = () => {
       if (terminal.dataset.done === '1') return
