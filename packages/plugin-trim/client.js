@@ -553,6 +553,7 @@ window.__ModuleLoader__.load({
         .eo-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--eo-primary);cursor:pointer;min-height:30px}
         .eo-check input{width:14px;height:14px;accent-color:var(--eo-primary);cursor:pointer}
         .eo-param{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:220px}
+        .eo-preset-summary{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
         .eo-param-section{margin-top:14px;padding-top:12px;border-top:.5px solid var(--eo-border)}
         .eo-param-section summary{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;list-style:none}
         .eo-param-section summary::-webkit-details-marker{display:none}
@@ -2327,6 +2328,27 @@ window.__ModuleLoader__.load({
         return h(
           'div',
           { className: 'eo-stack' },
+          h(
+            Card,
+            {
+              title: tr('快速配置', 'Quick setup'),
+              subtitle: tr('默认值适合大多数用户；需要细调再展开下方参数范围', 'Defaults fit most users; expand the parameter ranges below only when needed'),
+            },
+            h(
+              'div',
+              { className: 'eo-preset-summary' },
+              h(Badge, { tone: 'ok' }, tr('建议模式', 'Advisory')),
+              h(Badge, { tone: 'neutral' }, tr('保守策略', 'Conservative')),
+              h(Badge, { tone: 'neutral' }, tr('审批 ≥ ', 'Approval ≥ ') + form.approvalThreshold + tr(' 项', ' items')),
+              h(Badge, { tone: 'neutral' }, Number(form.contextBudget) > 0 ? tr('预算 ', 'Budget ') + formatNumber(form.contextBudget) : tr('预算关闭', 'Budget off')),
+            ),
+            h(
+              'div',
+              { className: 'eo-inline' },
+              h(Button, { variant: 'accent', onClick: loadRecommendedSettings }, tr('恢复推荐默认值', 'Restore recommended defaults')),
+              h('span', { className: 'eo-muted' }, tr('只改页面草稿，仍需点击应用。', 'Only changes the page draft; Apply is still required.')),
+            ),
+          ),
           h(
             Card,
             {

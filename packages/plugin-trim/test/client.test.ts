@@ -277,6 +277,8 @@ describe('client onboarding and pages', () => {
     await act(async () => { settings?.click(); await sleep(80) })
     const settingsText = container.textContent || ''
     expect(settingsText).toContain('修改后点击应用')
+    expect(settingsText).toContain('快速配置')
+    expect(settingsText).toContain('恢复推荐默认值')
     expect(container.querySelector('details.eo-param-section')).not.toBeNull()
     expect(container.querySelector('details.eo-param-section')?.hasAttribute('open')).toBe(false)
     expect(container.querySelector('.eo-help')).not.toBeNull()

@@ -19,6 +19,8 @@ All notable changes to this repository are documented here. Versions follow
 - All install guidance uses the single command `npm i dsh-plugin-trim`.
 - “Parameter ranges” is now a collapsed optional section; each field has a
   hover/focus explanation, and the read-only slider chrome was removed.
+- The settings page opens with a **Quick setup** card (current policy chips +
+  restore recommended defaults) instead of raw fields first.
 - The top verdict is now a **cockpit**: large status headline, four clickable
   check cards, and primary actions; it replaces the thin verdict strip.
 - The post-apply measurement treats a positive delta as a regression
