@@ -205,6 +205,12 @@ pnpm verify
 - 数据写入 `$DSH_HOME/experience-optimizer/`，目录 `0700`、文件 `0600`。
 - 版本豁免、插件升级、patch 编辑只报告，不自动执行。
 
+## Star
+
+如果它帮你少踩一次插件冲突、或者看清了上下文成本，欢迎点个 Star ⭐：
+
+<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
+
 ## 许可证
 
 [AGPL-3.0-only](LICENSE)。修改后通过网络向用户提供服务时，需要按 AGPL 提供对应源代码。

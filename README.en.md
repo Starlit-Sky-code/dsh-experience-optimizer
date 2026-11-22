@@ -120,6 +120,12 @@ pnpm verify
 - Issues: <https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues>
 - Docs: [architecture](docs/architecture.md) · [compatibility](docs/compatibility.md) · [UI](docs/ui.md)
 
+## Star
+
+If it helps you avoid a plugin conflict or see where your context budget goes, a Star is appreciated ⭐:
+
+<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
+
 ## License
 
 [AGPL-3.0-only](LICENSE). If you modify and provide this software over a network, you must offer the corresponding source.
