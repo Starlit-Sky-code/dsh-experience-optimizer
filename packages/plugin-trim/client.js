@@ -2746,13 +2746,14 @@ window.__ModuleLoader__.load({
           ? null
           : Number(last.deltaPercent)
         const good = delta < 0
+        const worse = delta > 0
         return h(
           'div',
           { className: 'eo-verification ' + (good ? 'is-good' : delta === 0 ? 'is-neutral' : 'is-warn') },
           h(
             'div',
             { className: 'eo-verification-main' },
-            h('b', null, tr('上次实测', 'Last measured')),
+            h('b', null, worse ? tr('优化后反而增加', 'Optimized, but grew') : delta === 0 ? tr('没有可测变化', 'No measurable change') : tr('上次实测', 'Last measured')),
             h(
               'span',
               null,
@@ -2770,8 +2771,19 @@ window.__ModuleLoader__.load({
             { className: 'eo-muted' },
             last.confounded
               ? tr('期间检测到其他插件变化，差值仅供参考。', 'Other plugin changes were detected; treat the delta as indicative.')
-              : tr('期间没有检测到其他插件变化。', 'No other plugin changes were detected in the same window.'),
+              : worse
+                ? tr('这次变更没有带来上下文收益，反而增加；建议回滚这次变更。', 'This change did not reduce context; roll back this change.')
+                : delta === 0
+                  ? tr('这次变更没有可测量的上下文收益；如需恢复可回滚。', 'No measurable context benefit; roll back if you want the previous state.')
+                  : tr('期间没有检测到其他插件变化。', 'No other plugin changes were detected in the same window.'),
           ),
+          (worse || delta === 0) && last.applied.length > 0
+            ? h(
+                'div',
+                { className: 'eo-inline', style: { marginTop: '8px' } },
+                h(Button, { variant: 'ghost', onClick: openRollback }, tr('回滚这次变更', 'Roll back this change')),
+              )
+            : null,
         )
       }
 
