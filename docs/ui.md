@@ -121,7 +121,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 指标卡带渐变进度条；上下文卡有可归属/未归属环形图与 owner 横向柱状图；清单“占比”列有迷你条；兼容性分布带图例。
 - 兼容性矩阵：按 `plugin-plugin`、`plugin-runtime`、`profile`、`workspace`
   展示发现、证据与建议修复；默认隐藏 info。
-- 上下文成本：按 owner / section / tool 展示 token 估算。
+- 上下文成本：按 owner / section / tool 展示 token 估算；未归属可展开到具体来源，并提示可通过 `toolOwners` 补充归属。
 - 精简方案：
   - 选择任务类型（或自动识别）与可选目标；
   - 生成 keep / enable / disable / review 建议；
@@ -158,7 +158,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
-| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的只读画像 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` + `categories` + `host` |
+| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的只读画像 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` + `categories` + `host` + `context.unattributedTop` |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |

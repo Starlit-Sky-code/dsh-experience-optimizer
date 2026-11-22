@@ -61,7 +61,8 @@ pnpm market:check
   - <https://dshbase.com/plugins/dsh-plugin-trim/>
   - 页面仍显示 0.2.4，安装命令仍指向 `github:Starlit-Sky-code/dsh-experience-optimizer`（根包无 `dsh.bundle`，不会挂载插件）
   - recipe 页面保留但不再推广（已冻结）
-- **awesome-dsh-plugin：条目仍在，数据滞后（2026-11-22 复核）**
+- **awesome-dsh-plugin：已提交版本更新 PR [#17688](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17688)（v0.3.1 → v0.5.4，等待合并）**
+- 原条目仍在，数据滞后（2026-11-22 复核）
   - README 已列出 `#plugin-trim`；`data/plugins/Starlit-Sky-code__dsh-experience-optimizer--packages-plugin-trim.yml` 的 tarball 仍指 **0.3.1**，未跟到 0.5.4
   - 已合并 [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)；后续版本更新待提交
 

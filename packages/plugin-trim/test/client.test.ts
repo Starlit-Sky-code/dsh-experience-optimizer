@@ -40,7 +40,17 @@ const overview = {
       criticalModules: ['@deepseek-ai/dsh-compaction-basic'],
     },
     findings: [],
-    context: { totalTokens: 1000, unattributedTokens: 400, topSections: [], topTools: [], byOwner: [] },
+    context: {
+      totalTokens: 1000,
+      unattributedTokens: 400,
+      topSections: [],
+      topTools: [],
+      byOwner: [],
+      unattributedTop: {
+        sections: [{ name: 'mystery-section', tokens: 300, source: 'section' }],
+        tools: [{ name: 'mystery_tool', tokens: 100 }],
+      },
+    },
     bundles: [
       {
         name: 'demo-plugin',
@@ -212,6 +222,8 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('bash')
     expect(container.textContent).toContain('自上次体检')
     expect(container.querySelector('.eo-history-spark')).not.toBeNull()
+    expect(container.textContent).toContain('mystery-section')
+    expect(container.querySelector('.eo-unattributed')).not.toBeNull()
     expect(container.querySelector('.eo-category-bar')).not.toBeNull()
     expect(container.textContent).toContain('宿主进程 RSS 412 MB')
 

@@ -5609,6 +5609,17 @@ async function overview(ctx, config, ledger) {
 			unattributedTokens: scan.context.unattributedTokens,
 			topSections: [...scan.context.sections].sort((a, b) => b.tokens - a.tokens).slice(0, 12),
 			topTools: [...scan.context.tools].sort((a, b) => b.tokens - a.tokens).slice(0, 12),
+			unattributedTop: {
+				sections: scan.context.sections.filter((section) => section.owner === "unattributed").sort((a, b) => b.tokens - a.tokens).slice(0, 6).map((section) => ({
+					name: section.name,
+					tokens: section.tokens,
+					source: section.source
+				})),
+				tools: scan.context.tools.filter((tool) => tool.owner === "unattributed").sort((a, b) => b.tokens - a.tokens).slice(0, 6).map((tool) => ({
+					name: tool.name,
+					tokens: tool.tokens
+				}))
+			},
 			byOwner
 		},
 		bundles: [...scan.bundles].sort((a, b) => b.contextTokens - a.contextTokens).slice(0, 80).map((bundle) => ({

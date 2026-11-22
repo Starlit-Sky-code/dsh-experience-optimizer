@@ -350,7 +350,13 @@ window.__ModuleLoader__.load({
         .eo-layout-two .eo-finding{padding:8px 0}
         .eo-layout-two .eo-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
         .eo-layout-two .eo-item{padding:8px 0}
-        .eo-layout-two .eo-owner-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+        .eo-layout-two .eo-unattributed{margin-top:10px;border-top:.5px solid var(--eo-border);padding-top:8px}
+.eo-unattributed summary{cursor:pointer;color:var(--eo-tertiary);font-size:11px;line-height:17px}
+.eo-unattributed-list{display:flex;flex-direction:column;gap:4px;margin:7px 0}
+.eo-unattributed-row{display:flex;justify-content:space-between;gap:10px;font-size:11px;line-height:17px}
+.eo-unattributed-row code{font:400 11px/17px var(--eo-code);color:var(--eo-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.eo-unattributed-row span{color:var(--eo-tertiary);flex:0 0 auto}
+.eo-owner-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
         .eo-inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
         .eo-inventory-card{border:.5px solid var(--eo-border);border-radius:8px;padding:9px 10px;min-width:0}
         .eo-inventory-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
@@ -2813,6 +2819,7 @@ window.__ModuleLoader__.load({
       }
 
       function renderTrim() {
+        const unattributedTop = overview.context.unattributedTop || { sections: [], tools: [] }
         const shareOf = (bundle) => totalContextTokens > 0
           ? Math.min(100, Math.max(0, (bundle.contextTokens / totalContextTokens) * 100))
           : 0
@@ -3111,6 +3118,40 @@ window.__ModuleLoader__.load({
                 ),
               ),
             ),
+            unattributedTop.sections.length > 0 || unattributedTop.tools.length > 0
+              ? h(
+                  'details',
+                  { className: 'eo-unattributed' },
+                  h(
+                    'summary',
+                    null,
+                    tr(
+                      '未归属 ' + formatNumber(overview.context.unattributedTokens) + ' tokens · 查看来源',
+                      'Unattributed ' + formatNumber(overview.context.unattributedTokens) + ' tokens · see sources',
+                    ),
+                  ),
+                  h(
+                    'div',
+                    { className: 'eo-unattributed-list' },
+                    [...unattributedTop.sections, ...unattributedTop.tools].slice(0, 8).map((item, index) =>
+                      h(
+                        'div',
+                        { className: 'eo-unattributed-row', key: item.name + ':' + index },
+                        h('code', { title: item.name }, item.name),
+                        h('span', null, formatNumber(item.tokens)),
+                      ),
+                    ),
+                  ),
+                  h(
+                    'div',
+                    { className: 'eo-muted' },
+                    tr(
+                      '未归属部分不参与建议关闭；可在配置 toolOwners 中补充归属。',
+                      'Unattributed tokens never become close suggestions; add mappings in toolOwners if needed.',
+                    ),
+                  ),
+                )
+              : null,
             showContext
               ? h(
               'table',

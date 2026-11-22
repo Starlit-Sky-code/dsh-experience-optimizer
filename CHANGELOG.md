@@ -13,6 +13,9 @@ All notable changes to this repository are documented here. Versions follow
   point at the old “scan first” or workflow-recipe path.
 - The first-run guide now sizes its step list to the number of steps, so the
   eight-step path is not clipped in a 180px scroll box.
+- The context card can expand “unattributed” into its top sections/tools, with a
+  note that unattributed tokens never become close suggestions and can be mapped
+  through `toolOwners`.
 
 ### Docs
 

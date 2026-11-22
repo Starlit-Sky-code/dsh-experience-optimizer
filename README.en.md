@@ -96,6 +96,8 @@ interrupts when the verdict needs attention.
 - **Host baseline** shows RSS and uptime, explicitly process-level and not
   attributable to one plugin.
 
+Unattributed context can be expanded into its top sections/tools; it never becomes a close suggestion and can be mapped through `toolOwners`.
+
 ## Did it actually save anything?
 
 Before an apply, trim records attributable tokens and the enabled bundle/entry
