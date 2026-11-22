@@ -144,6 +144,8 @@ interface SlimItem {
   usageState?: 'used' | 'unused' | 'unknown';
   /** Strength of the evidence behind a disable suggestion. */
   evidenceLevel?: 'strong' | 'weak' | 'insufficient';
+  /** Character-estimated tokens this item would release if applied. */
+  estimatedTokens?: number;
   reason: string;
   findings: CompatFinding[];
 }
@@ -256,6 +258,8 @@ interface CompactionStack {
   health: 'ok' | 'warn' | 'error' | 'absent';
   roles: Record<CompactionRole, number>;
   backendCount: number;
+  /** The only active backend, or null when none/multiple are active. */
+  effectiveModule: string | null;
   participants: CompactionParticipant[];
   findings: string[];
   notes: string[];

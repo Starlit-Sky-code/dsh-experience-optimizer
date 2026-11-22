@@ -1,19 +1,19 @@
 # 发布状态
 
-更新时间：2026-11-22（版本 0.5.6；复核市场收录与视觉素材）
+更新时间：2026-11-22（版本 0.5.7；复核市场收录与视觉素材）
 
 ## GitHub
 
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.5.6>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.5.7>
 - Release assets：
-  - `dsh-plugin-trim-0.5.6.tgz`
+  - `dsh-plugin-trim-0.5.7.tgz`
   - `dsh-plugin-recipe-0.3.11.tgz`（冻结线，仅废弃说明）
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
-- 安装验证：`dsh plugin add dsh-plugin-trim@0.5.6` 成功；recipe 已冻结，不再作为默认安装项
+- 安装验证：`dsh plugin add dsh-plugin-trim@0.5.7` 成功；recipe 已冻结，不再作为默认安装项
 
 ## 自定义 DSH 插件市场索引
 
@@ -31,7 +31,7 @@ pnpm market:check
 ## DSH Plugin Hub（dsh-plugin.org）
 
 - 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/880>（**OPEN**，2026-11-22 10:17 创建，等待扫描/收录）
-- 当前 release：`dsh-plugin-trim@0.5.6`（npm latest 与 GitHub Release 一致）
+- 当前 release：`dsh-plugin-trim@0.5.7`（npm latest 与 GitHub Release 一致）
 - 站点 listing 仍 **404**：<https://dsh-plugin.org/plugins/dsh-plugin-trim>（扫描/收录未完成，与 npm 发布状态无关）
 - issue 评论时间线（5 条，均为我方补版本信息，maintainer 尚未回复）：
   - 0.5.0 · 10:23 · 首次发布验证 + 安装命令 + 四维体检说明
@@ -56,24 +56,24 @@ pnpm market:check
 - 完整审计：[`DISTRIBUTION.md`](DISTRIBUTION.md)
 - **dshopen.org：已上线，但版本滞后（2026-11-22 复核）**
   - <https://dshopen.org/zh/plugins/dsh-plugin-trim/>
-  - 页面仍写“最新版本 0.3.9”，未跟随 npm 0.5.6；等待索引刷新，不另行提交。
+  - 页面仍写“最新版本 0.3.9”，未跟随 npm 0.5.7；等待索引刷新，不另行提交。
   - recipe 页面保留但不再推广（已冻结）
 - **dshbase.com：页面已上线，版本与安装命令均滞后（2026-11-22 复核）**
   - <https://dshbase.com/plugins/dsh-plugin-trim/>
   - 页面仍显示 0.2.4，安装命令仍指向 `github:Starlit-Sky-code/dsh-experience-optimizer`（根包无 `dsh.bundle`，不会挂载插件）
   - recipe 页面保留但不再推广（已冻结）
-- **awesome-dsh-plugin：已提交版本更新 PR [#17688](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17688)（v0.3.1 → v0.5.6，等待合并）**
+- **awesome-dsh-plugin：已提交版本更新 PR [#17688](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/17688)（v0.3.1 → v0.5.7，等待合并）**
 - 原条目仍在，数据滞后（2026-11-22 复核）
-  - README 已列出 `#plugin-trim`；`data/plugins/Starlit-Sky-code__dsh-experience-optimizer--packages-plugin-trim.yml` 的 tarball 仍指 **0.3.1**，未跟到 0.5.6
+  - README 已列出 `#plugin-trim`；`data/plugins/Starlit-Sky-code__dsh-experience-optimizer--packages-plugin-trim.yml` 的 tarball 仍指 **0.3.1**，未跟到 0.5.7
   - 已合并 [PR #15271](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/15271)；后续版本更新待提交
 
 ## npm
 
-- **活跃线**：`dsh-plugin-trim@0.5.6` — <https://www.npmjs.com/package/dsh-plugin-trim>
+- **活跃线**：`dsh-plugin-trim@0.5.7` — <https://www.npmjs.com/package/dsh-plugin-trim>
 - **冻结线**：`dsh-plugin-recipe@0.3.11` — <https://www.npmjs.com/package/dsh-plugin-recipe>
 - 安装：`npm i dsh-plugin-trim`（新用户不再安装 recipe）
 - recipe 已在 registry 标记 deprecated；现有安装继续可用，仅接收安全/兼容修复。
-- `latest` 应指向 `0.5.6`；发布后以 `npm view` 为准。
+- `latest` 应指向 `0.5.7`；发布后以 `npm view` 为准。
 - GitHub Release 工作流已配置 `NPM_TOKEN` secret；后续 tag 会自动 npm 发布。
 
 ## Web 控制台

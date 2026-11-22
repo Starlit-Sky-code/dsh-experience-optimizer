@@ -45,7 +45,7 @@
 | `PP_CAPABILITY_OVERLAP` | info | 两个 bundle 描述高度重叠 | 建议保留一个 |
 | `PP_PROMPT_OVERLAP` | info/warn | prompt 段落重复/冲突 | 保留权威来源 |
 | `PP_PACKAGE_VERSION_DUPLICATE` | warn | lockfile 中同一非 DSH 包多版本 | pnpm dedupe/overrides |
-| `PP_COMPACTION_BACKEND_DUPLICATE` | warn | >1 个活跃压缩后端 | 保留一个后端 |
+| `PP_COMPACTION_BACKEND_DUPLICATE` | warn | >1 个活跃压缩后端；`effectiveModule` 为 null | 保留一个后端；体检不猜测实际生效者 |
 | `PP_COMPACTION_BACKEND_MISSING` | warn | profile 有 base/web-app 但无活跃压缩后端 | 重新启用内置行或挂载一个替代后端 |
 | `PP_COMPACTION_THRESHOLD_CONFLICT` | warn | ≥2 个活跃组件显式配置不同阈值 | 保留一个阈值控制面或对齐取值 |
 | `PP_COMPACTION_THRESHOLD_OUT_OF_RANGE` | warn | 显式阈值 <0.2 或 >0.95 | 调整到安全区间 |

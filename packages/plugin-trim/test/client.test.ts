@@ -32,6 +32,7 @@ const overview = {
       health: 'ok',
       roles: { backend: 1, pruner: 1, image: 0, command: 1, threshold: 0, archive: 0, participant: 0 },
       backendCount: 1,
+      effectiveModule: '@deepseek-ai/dsh-compaction-basic',
       participants: [
         { id: 'compaction-basic', moduleName: '@deepseek-ai/dsh-compaction-basic', role: 'backend', enabled: true, confidence: 'high', evidence: [] },
       ],
@@ -216,6 +217,7 @@ describe('client onboarding and pages', () => {
     expect(fullView).toBeDefined()
     await act(async () => { fullView?.click(); await sleep(40) })
     expect(container.querySelector('.eo-mode-simple')).toBeNull()
+    expect(container.textContent).toContain('生效后端')
     expect(container.querySelector('.eo-compat-footer')).not.toBeNull()
     expect(container.querySelector('.eo-verdict')).not.toBeNull()
     expect(container.textContent).toContain('体检结论')

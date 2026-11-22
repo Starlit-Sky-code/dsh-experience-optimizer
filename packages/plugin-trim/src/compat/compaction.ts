@@ -210,6 +210,7 @@ export function inspectCompactionStack(context: CompatContext): CompactionInspec
           : 'ok',
     roles,
     backendCount: roles.backend,
+    effectiveModule: activeBackends.length === 1 ? activeBackends[0].moduleName : null,
     participants,
     findings: findings.map((finding) => finding.code),
     notes,

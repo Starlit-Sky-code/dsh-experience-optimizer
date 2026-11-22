@@ -316,6 +316,7 @@ function scoreCommon(policy: Config['suggestionPolicy'], input: ScoreInput): Sli
     periodic,
     usageState,
     evidenceLevel,
+    estimatedTokens: action === 'suggest-disable' || action === 'disable-if-unused' ? input.contextTokens : 0,
     reason: reasonFor(action, input, taskMatch, usage, cost, guard),
     findings: [],
   }

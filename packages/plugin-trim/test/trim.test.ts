@@ -129,6 +129,7 @@ describe('bundle scoring', () => {
     )
     expect(item.action).toBe('suggest-disable')
     expect(item.risk).toBe('low')
+    expect(item.estimatedTokens).toBe(6000)
   })
 
   it('defaults to review when there is no usage ledger evidence', () => {

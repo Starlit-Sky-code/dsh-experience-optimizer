@@ -5,6 +5,19 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.5.7] - 2026-11-22
+
+### Changed
+
+- The compaction card names the single **effective backend** and explicitly says
+  “undetermined” when multiple backends are active instead of guessing from load
+  order.
+- The draft summary and apply confirmation show the **estimated token release**
+  for selected low-risk items (character estimate, clearly labelled).
+- The settings page defaults to a **simple view**: healthy/advanced cards
+  (inventory, empty compatibility, capability with no items, diagnostics) are
+  hidden until “完整视图” is enabled; the choice persists locally.
+
 ## [0.5.6] - 2026-11-22
 
 ### Changed
@@ -13,10 +26,6 @@ All notable changes to this repository are documented here. Versions follow
   instead of only scrolling to the draft card.
 - The copied checkup report follows the current UI language; English reports no
   longer contain Chinese headings.
-
-- The settings page defaults to a **simple view**: healthy/advanced cards
-  (inventory, empty compatibility, capability with no items, diagnostics) are
-  hidden until “完整视图” is enabled; the choice persists locally.
 
 ### Fixed
 

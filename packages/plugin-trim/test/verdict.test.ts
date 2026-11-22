@@ -31,6 +31,7 @@ const compaction = (health: CompactionStack['health'], backendCount = 1): Compac
   health,
   roles: { backend: backendCount, pruner: 1, image: 1, command: 1, threshold: 0, archive: 0, participant: 0 },
   backendCount,
+  effectiveModule: backendCount === 1 ? '@deepseek-ai/dsh-compaction-basic' : null,
   participants: [],
   findings: [],
   notes: [],

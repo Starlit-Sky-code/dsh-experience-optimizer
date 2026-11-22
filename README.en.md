@@ -31,13 +31,13 @@ Answers: which plugin is expensive at rest, is the compaction stack coherent, an
 
 ```bash
 # npm (pinned to this release)
-npm i dsh-plugin-trim@0.5.6
+npm i dsh-plugin-trim@0.5.7
 
 # DSH CLI / plugin market:
-dsh plugin --profile web add dsh-plugin-trim@0.5.6
+dsh plugin --profile web add dsh-plugin-trim@0.5.7
 ```
 
-> Omit `@0.5.6` to use latest; this release is `0.5.6`.
+> Omit `@0.5.7` to use latest; this release is `0.5.7`.
 > If the plugin does not appear in Settings, reload DSH and confirm the dependency is installed in the current workspace; use the Release tarball below if npm CDN returns 404.
 
 Open **Settings → Plugin checkup** after installing.
@@ -46,7 +46,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.6/dsh-plugin-trim-0.5.6.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.7/dsh-plugin-trim-0.5.7.tgz"
 ```
 
 For source development, see [Development](#development).
@@ -84,7 +84,7 @@ an action that scrolls to the evidence. There is deliberately no 0–100 health
 score: different severities are not compressed into one scary number. Token
 costs are character-based estimates, not billing amounts.
 
-The compaction card classifies backends, tool-result pruners, image offload,
+The compaction card names the single active backend as the **effective backend** and says **undetermined** when several are active instead of guessing. It classifies backends, tool-result pruners, image offload,
 `/compact`, threshold owners, archives, and other participants. It warns on
 duplicate backends, a missing backend, conflicting explicit thresholds, and
 out-of-range thresholds. Active backends are protected, so the checkup never

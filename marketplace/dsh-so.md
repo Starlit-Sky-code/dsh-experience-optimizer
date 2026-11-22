@@ -72,7 +72,7 @@ License: AGPL-3.0. DSH: `>=0.2.2-rc.1 <0.3.0`; Node: `>=20`.
 **安装命令**
 
 ```bash
-npm i dsh-plugin-trim@0.5.6
+npm i dsh-plugin-trim@0.5.7
 ```
 
 **Topics**

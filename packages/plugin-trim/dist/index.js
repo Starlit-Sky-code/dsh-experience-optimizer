@@ -2412,6 +2412,7 @@ function inspectCompactionStack(context) {
 			health: participants.length === 0 ? "absent" : findings.some((finding) => finding.severity === "error") ? "error" : findings.some((finding) => finding.severity === "warn") ? "warn" : "ok",
 			roles,
 			backendCount: roles.backend,
+			effectiveModule: activeBackends.length === 1 ? activeBackends[0].moduleName : null,
 			participants,
 			findings: findings.map((finding) => finding.code),
 			notes,
@@ -2999,6 +3000,7 @@ function scoreCommon(policy, input) {
 		periodic,
 		usageState,
 		evidenceLevel,
+		estimatedTokens: action === "suggest-disable" || action === "disable-if-unused" ? input.contextTokens : 0,
 		reason: reasonFor(action, input, taskMatch, usage, cost, guard),
 		findings: []
 	};
@@ -5335,7 +5337,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.6";
+const CURRENT_VERSION = "0.5.7";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",

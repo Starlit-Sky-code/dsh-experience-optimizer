@@ -34,10 +34,10 @@ DSH Plugin Checkup — 插件体检：常驻成本、压缩链路与实测收益
 
 ```bash
 # DSH CLI / 插件市场（固定本次发布版本）
-dsh plugin --profile web add dsh-plugin-trim@0.5.6
+dsh plugin --profile web add dsh-plugin-trim@0.5.7
 
 # npm
-npm i dsh-plugin-trim@0.5.6
+npm i dsh-plugin-trim@0.5.7
 ```
 
 **长描述**
@@ -90,7 +90,7 @@ https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main
 **版本 / 许可证 / 兼容性**
 
 ```text
-版本：0.5.6
+版本：0.5.7
 许可证：AGPL-3.0
 DSH：>=0.2.2-rc.1 <0.3.0
 Node：>=20
