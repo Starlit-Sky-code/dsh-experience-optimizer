@@ -448,7 +448,7 @@ export interface CheckResult {
 export interface VerdictAction {
   id: string
   label: string
-  target: 'compat' | 'compaction' | 'draft'
+  target: 'compat' | 'compaction' | 'context' | 'draft'
 }
 
 export interface Verdict {

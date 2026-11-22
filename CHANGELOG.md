@@ -5,13 +5,22 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
-## [0.5.7] - 2026-11-22
+## [0.5.8] - 2026-11-22
 
 ### Added
 
 - A user-owned **context budget** (`contextBudget`, default 0 = off): when
   attributable context exceeds the budget, the context verdict turns amber and
   the metric shows budget usage. No arbitrary score is introduced.
+
+### Changed
+
+- Over-budget context now adds a “查看上下文” action to the verdict, and the
+  copied report includes budget usage.
+- The settings apply bar is sticky at the bottom, so it stays reachable after
+  editing fields near the top.
+
+## [0.5.7] - 2026-11-22
 
 ### Changed
 

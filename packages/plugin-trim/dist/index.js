@@ -4969,6 +4969,11 @@ function actionsFor(checks) {
 		label: "查看压缩链路",
 		target: "compaction"
 	});
+	if (checks.some((check) => check.id === "context" && (check.status === "error" || check.status === "warn"))) actions.push({
+		id: "context",
+		label: "查看上下文",
+		target: "context"
+	});
 	if (actions.length < 3) actions.push({
 		id: "draft",
 		label: "生成瘦身方案",
@@ -5349,7 +5354,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.7";
+const CURRENT_VERSION = "0.5.8";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",

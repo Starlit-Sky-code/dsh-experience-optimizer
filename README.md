@@ -31,13 +31,13 @@
 
 ```bash
 # npm（固定本次发布版本）
-npm i dsh-plugin-trim@0.5.7
+npm i dsh-plugin-trim@0.5.8
 
 # DSH CLI / 插件市场：
-dsh plugin --profile web add dsh-plugin-trim@0.5.7
+dsh plugin --profile web add dsh-plugin-trim@0.5.8
 ```
 
-> 省略 `@0.5.7` 即取 latest；本次发布以 `0.5.7` 为准。
+> 省略 `@0.5.8` 即取 latest；本次发布以 `0.5.8` 为准。
 > 安装后如果设置页没有出现，重新加载 DSH，并确认当前工作区已安装该依赖；npm CDN 返回 404 时请使用下方 Release tarball。
 
 安装后打开 **设置 → 插件体检**（Agent 预设下方），或 **设置 → 插件 → 插件体检**。
@@ -47,7 +47,7 @@ dsh plugin --profile web add dsh-plugin-trim@0.5.7
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.7/dsh-plugin-trim-0.5.7.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.8/dsh-plugin-trim-0.5.8.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。
@@ -181,7 +181,7 @@ DSH 插件装得越多，越容易出现三类问题：
 
 ## 网页控制台
 
-- **上下文预算**：可设一个可归属 token 上限（默认关闭），超预算时结论转琥珀色，指标显示已用比例
+- **上下文预算**：可设一个可归属 token 上限（默认关闭），超预算时结论转琥珀色、给出“查看上下文”动作，指标与报告显示已用比例
 - **简洁 / 完整视图**：默认只显示结论、问题卡、上下文与方案；插件清单、空兼容卡、诊断等收进“完整视图”
 - **体检结论**：四维状态灯、待办、复制报告；点击按钮滚动到对应卡片
 - **体检与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、压缩链路、能力面、实测收益、精简方案、应用/回滚

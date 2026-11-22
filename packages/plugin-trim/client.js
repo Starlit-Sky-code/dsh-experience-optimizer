@@ -440,6 +440,7 @@ window.__ModuleLoader__.load({
 .eo-item-side{display:none}
 .eo-lock{display:none}
 .eo-applybar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:.5px solid var(--eo-border)}
+.eo-applybar.is-sticky{position:sticky;bottom:8px;z-index:4;background:var(--dsw-alias-bg-layer-1,#fff);padding:10px 12px;border:.5px solid var(--eo-border);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
 .eo-applybar-text{font-size:12px;line-height:18px;color:var(--eo-tertiary)}
 .eo-findings{display:flex;flex-direction:column;gap:0}
 .eo-finding{display:flex;gap:8px;padding:10px 0;border-bottom:.5px solid var(--eo-border)}
@@ -1477,6 +1478,9 @@ window.__ModuleLoader__.load({
         lines.push('', tr('## 上下文', '## Context'))
         lines.push(tr('- 总 token: ', '- Total tokens: ') + formatNumber(overview.context.totalTokens))
         lines.push(tr('- 未归属: ', '- Unattributed: ') + formatNumber(overview.context.unattributedTokens))
+        if (overview.context.budget > 0) {
+          lines.push(tr('- 预算: ', '- Budget: ') + formatNumber(overview.context.budget) + tr(' · 已用 ', ' · used ') + Math.round((Math.max(0, overview.context.totalTokens - overview.context.unattributedTokens) / Math.max(1, overview.context.budget)) * 100) + '%')
+        }
         if (Array.isArray(overview.context.byOwner)) {
           for (const owner of overview.context.byOwner.slice(0, 5)) {
             lines.push('- ' + owner.owner + ': ' + formatNumber(owner.tokens))
@@ -1694,7 +1698,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.7',
+            current: '0.5.8',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2342,7 +2346,7 @@ window.__ModuleLoader__.load({
             h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('配置目录：', 'Config directory: ') + form.profileDir),
             settingsError ? h('div', { className: 'eo-error', style: { marginTop: '10px' } }, h('span', null, settingsError)) : null,
             dirty
-              ? h('div', { className: 'eo-applybar' },
+              ? h('div', { className: 'eo-applybar is-sticky' },
                   h('span', null, tr('有未应用的修改', 'Unapplied changes')),
                   h('div', { className: 'eo-inline' },
                     h(Button, { variant: 'ghost', onClick: discardSettings, disabled: settingsApplying }, tr('撤销', 'Discard')),
@@ -2354,7 +2358,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.7')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.8')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2412,7 +2416,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('先体检，再决定关什么。', 'Measure first. Then decide what to close.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.7 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.8 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2518,6 +2522,7 @@ window.__ModuleLoader__.load({
         }
         const actionLabel = (action) => {
           if (action.target === 'compaction') return tr('查看压缩链路', 'View compaction stack')
+          if (action.target === 'context') return tr('查看上下文', 'View context')
           if (action.target === 'draft') return tr('生成瘦身方案', 'Build slim plan')
           if (action.id === 'load') return tr('查看加载问题', 'View load issues')
           return tr('处理兼容性', 'Fix compatibility')

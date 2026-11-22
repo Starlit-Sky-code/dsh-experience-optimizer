@@ -1,6 +1,6 @@
-# dsh-plugin-trim 0.5.7 宣传语料
+# dsh-plugin-trim 0.5.8 宣传语料
 
-本文件面向 `dsh-plugin-trim@0.5.7`，内容可直接用于 README、dsh-plugin.org、dsh.so、短视频与社交平台。
+本文件面向 `dsh-plugin-trim@0.5.8`，内容可直接用于 README、dsh-plugin.org、dsh.so、短视频与社交平台。
 
 口径约定：
 
@@ -121,10 +121,10 @@ token 成本按字符估算，不是账单金额。54% 是示例降幅，不是�
 
 ```bash
 # DSH CLI / 插件市场（固定本次发布版本）
-dsh plugin --profile web add dsh-plugin-trim@0.5.7
+dsh plugin --profile web add dsh-plugin-trim@0.5.8
 
 # npm
-npm i dsh-plugin-trim@0.5.7
+npm i dsh-plugin-trim@0.5.8
 ```
 
 **分类**
@@ -149,7 +149,7 @@ https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main
 **版本 / 许可证 / 兼容性**
 
 ```text
-版本：0.5.7
+版本：0.5.8
 许可证：AGPL-3.0
 DSH：>=0.2.2-rc.1 <0.3.0
 Node：>=20
@@ -192,7 +192,7 @@ Token costs are character-based estimates, not billing amounts. 54% is sample da
 **Install**
 
 ```bash
-npm i dsh-plugin-trim@0.5.7
+npm i dsh-plugin-trim@0.5.8
 ```
 
 **Topics**
@@ -223,14 +223,14 @@ compaction
 | 5–13s | 2. 结论条 + 双后端告警 | 四维结论条变为“需处理”；压缩卡标出 2 个后端，兼容卡出现冲突提示 | 双后端 / 缺后端 / 阈值冲突 | 加载、兼容、上下文、压缩链路，一屏四维。双后端、缺后端、阈值打架，直接标出来；活跃后端不会被建议关掉。 |
 | 13–21s | 3. 应用低风险项 | 勾选低风险项 → 点应用 → 确认弹窗 → 出现还原点 token | 只应用低风险项 / 网页确认 · Agent 审批 | 只应用低风险项。网页点应用就是确认；Agent 工具默认还要宿主审批。先写快照，随时回滚。 |
 | 21–28s | 4. 重启后实测收益 | 重启 DSH，重新打开体检；实测收益卡显示差值，旁边出现“仅供参考”标记 | 重启后，看实测 | 重启后再体检，结算实测差值；同窗口有别的插件变化，标“仅供参考”。 |
-| 28–30s | 尾卡 | 产品名、版本、仓库、安装命令 | dsh-plugin-trim 0.5.7 / 先体检，再决定关什么 | （无旁白，轻音乐收尾） |
+| 28–30s | 尾卡 | 产品名、版本、仓库、安装命令 | dsh-plugin-trim 0.5.8 / 先体检，再决定关什么 | （无旁白，轻音乐收尾） |
 
 **尾卡文字**
 
 ```text
-dsh-plugin-trim 0.5.7
+dsh-plugin-trim 0.5.8
 先体检，再决定关什么
-dsh plugin --profile web add dsh-plugin-trim@0.5.7
+dsh plugin --profile web add dsh-plugin-trim@0.5.8
 github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```
 
@@ -242,7 +242,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 | 5–13s | Load, compatibility, context, compaction: four checks, one verdict. Duplicate or missing backends and threshold conflicts are flagged; active backends stay protected. |
 | 13–21s | Apply only low-risk items. The web button is your confirmation; agent tools ask the host by default. A snapshot is written first. |
 | 21–28s | Restart, reopen, and settle the measured delta. If other plugins changed, the result is marked indicative. |
-| 28–30s | dsh-plugin-trim 0.5.7. Measure first, then decide what to close. |
+| 28–30s | dsh-plugin-trim 0.5.8. Measure first, then decide what to close. |
 
 **拍摄注意**
 
@@ -267,7 +267,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```text
 别急着删。打开设置 → 插件体检，先看压缩链路：几个后端、谁在管阈值、有没有缺失。活跃后端会被保护，不会建议你把唯一的压缩引擎关掉。先量，再决定。
 
-安装：dsh plugin --profile web add dsh-plugin-trim@0.5.7
+安装：dsh plugin --profile web add dsh-plugin-trim@0.5.8
 ```
 
 **配图**
@@ -293,7 +293,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```text
 别拿别人的 54% 当目标——那只是示例。体检会在应用前记录基线，重启后结算可归属 token 差值；同窗口其他插件有变化，会标“仅供参考”，不把别人的变化算成你的收益。先量，再关。
 
-安装：dsh plugin --profile web add dsh-plugin-trim@0.5.7
+安装：dsh plugin --profile web add dsh-plugin-trim@0.5.8
 ```
 
 **配图**
@@ -306,21 +306,21 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 #DSH #上下文成本 #插件管理 #可观测性
 ```
 
-### 文案 3：0.5.7 真实控制台截图
+### 文案 3：0.5.8 真实控制台截图
 
 **钩子**
 
 ```text
-0.5.7 真实控制台截图
+0.5.8 真实控制台截图
 ```
 
 **正文**
 
 ```text
-四维结论、压缩链路、能力面、实测收益在同一页。截图来自 0.5.7 真实控制台；token 数为字符估算，不是账单。
+四维结论、压缩链路、能力面、实测收益在同一页。截图来自 0.5.8 真实控制台；token 数为字符估算，不是账单。
 
-安装：npm i dsh-plugin-trim@0.5.7
-或：dsh plugin --profile web add dsh-plugin-trim@0.5.7
+安装：npm i dsh-plugin-trim@0.5.8
+或：dsh plugin --profile web add dsh-plugin-trim@0.5.8
 ```
 
 **配图**
@@ -351,7 +351,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 | 历史只存插件名、启用 bundle 名与 token 计数等元数据，不存对话/提示词/工具参数 | `packages/plugin-trim/src/history.ts` 的 `snapshotRecord()`；`docs/ui.md` 的“自上次体检”一节 |
 | 一键复制 Markdown 体检报告 | `packages/plugin-trim/client.js` 的 `copyCheckupReport()` 与「复制报告」按钮 |
 | 网页应用/回滚是用户操作；Agent 工具路径默认走宿主审批 | `README.md` 的“网页控制台”一节；`packages/plugin-trim/src/tools.ts` 的 `trim_apply_profile` / `trim_rollback_profile`；`packages/plugin-trim/src/api.ts` 的 `/apply`、`/rollback` |
-| 版本 0.5.7，npm 已发布 | `packages/plugin-trim/package.json` 的 `version`；`marketplace/STATUS.md` 的 npm 段；`npm view dsh-plugin-trim dist-tags.latest` → `0.5.7` |
+| 版本 0.5.8，npm 已发布 | `packages/plugin-trim/package.json` 的 `version`；`marketplace/STATUS.md` 的 npm 段；`npm view dsh-plugin-trim dist-tags.latest` → `0.5.8` |
 | 54% 是示例降幅，不是关闭目标 | `packages/plugin-trim/client.js` 的 54% 提示；`README.md` 的“建议关闭怎么判断”一节 |
 | token 成本按字符估算 | `packages/shared-meta/src/text.ts` 的 `estimateTokens()`；`packages/plugin-trim/src/config.ts` 的 `tokenRatio` |
 | `dsh-plugin-recipe` 已暂时废弃，不宣传 | `README.md` 的“暂时废弃：工作流配方”一节；`marketplace/STATUS.md` |
@@ -380,7 +380,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 | 12.4k tokens | 某次演示的上下文估算 | 标注“字符估算”，不要写成账单 |
 | 10 分钟 / 60 条 | 体检快照节流与上限 | 可直接写，属于产品行为 |
 | 2 个后端 / 需处理 2 项 | 演示 profile 的状态 | 标注“演示状态”，不要写成普遍现象 |
-| 0.5.7 | 当前发布版本 | 安装命令固定 `@0.5.7` |
+| 0.5.8 | 当前发布版本 | 安装命令固定 `@0.5.8` |
 | 30 秒 | 视频时长（脚本，未成片） | 成片控制在 28–30 秒，尾卡不抢旁白 |
 
 ### 发布前检查
@@ -390,5 +390,5 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 - [ ] 没有用户量、下载量、排名、奖项等未核验数据。
 - [ ] 没有把能力面写成安全审计。
 - [ ] 没有把 recipe 的工作流蓝图写成当前卖点。
-- [ ] 安装命令带 `@0.5.7`，或明确说明省略版本号即取 latest。
-- [ ] 截图/GIF 均来自 0.5.7 真实控制台；发布前确认 `assets/walkthrough.gif` 已入库。
+- [ ] 安装命令带 `@0.5.8`，或明确说明省略版本号即取 latest。
+- [ ] 截图/GIF 均来自 0.5.8 真实控制台；发布前确认 `assets/walkthrough.gif` 已入库。

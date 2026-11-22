@@ -94,6 +94,7 @@ describe('checkup verdict', () => {
     const check = verdict.checks.find((item) => item.id === 'context')
     expect(check?.status).toBe('warn')
     expect(check?.detail).toContain('1,200 / 1,000')
+    expect(verdict.actions.some((action) => action.target === 'context')).toBe(true)
   })
 
   it('returns a clean verdict with a draft action', () => {
