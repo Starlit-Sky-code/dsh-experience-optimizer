@@ -127,3 +127,7 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 - minor / major 必须同时满足：用户明确同意 + 本次代码净增 ≥1000 行（或存在破坏性 API）。
 - 发布前用 `git diff --stat <last-tag>..HEAD -- '*.ts' '*.js'` 核对代码净增；文档、测试、dist 不计入。
 - 不因为“功能听起来大”升 minor；不为单个小改动 bump。
+
+## Release notes
+
+- `scripts/release-notes.mjs <tag>` 从 `CHANGELOG.md` 生成 ≤10 行的 release body；发布工作流用 `--notes-file` 写入，不再只给 Full Changelog 链接。

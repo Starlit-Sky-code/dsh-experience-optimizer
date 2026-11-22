@@ -13,6 +13,7 @@
   - `dsh-plugin-recipe-0.3.11.tgz`（冻结线，仅废弃说明）
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
+- Release body 由 `scripts/release-notes.mjs` 从 CHANGELOG 生成，≤10 行，带安装命令；不再只显示 `Full Changelog` 链接
 - 安装验证：`dsh plugin add dsh-plugin-trim@0.5.9` 成功；recipe 已冻结，不再作为默认安装项
 
 ## 自定义 DSH 插件市场索引

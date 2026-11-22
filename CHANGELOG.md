@@ -5,12 +5,15 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
-## [0.5.9] - 2026-11-22
-
 ### Changed
 
 - The post-apply measurement now treats a positive delta as a regression:
   “优化后反而增加” plus a one-click rollback; zero change is labelled neutral.
+
+## [0.5.9] - 2026-11-22
+
+### Changed
+
 - Draft items and the confirmation dialog show the exact enablement transition
   (`enabled → disabled` / `disabled → enabled`).
 - The draft toolbar can select **strong evidence only** before applying.
