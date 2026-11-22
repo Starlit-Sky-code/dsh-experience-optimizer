@@ -66,6 +66,14 @@ const overview = {
       ],
       notes: [],
     },
+    history: {
+      records: [
+        { at: '2026-11-21T00:00:00.000Z', attributed: 1000, total: 1400, owners: [], enabledBundles: [], compat: { error: 0, warn: 0, info: 0 }, counts: { bundles: 0, entries: 0, tools: 0, sections: 0 } },
+        { at: '2026-11-22T00:00:00.000Z', attributed: 800, total: 1200, owners: [], enabledBundles: [], compat: { error: 0, warn: 0, info: 0 }, counts: { bundles: 0, entries: 0, tools: 0, sections: 0 } },
+      ],
+      diff: { addedBundles: ['new-plugin'], removedBundles: [], attributedDelta: -200, totalDelta: -200, ownerDeltas: [] },
+      skipped: false,
+    },
     verification: {
       last: {
         token: 'tok',
@@ -187,6 +195,8 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('-200 tokens')
     expect(container.textContent).toContain('能力面')
     expect(container.textContent).toContain('bash')
+    expect(container.textContent).toContain('自上次体检')
+    expect(container.querySelector('.eo-history-spark')).not.toBeNull()
 
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')

@@ -3915,10 +3915,10 @@ function uniqFindings(items) {
 }
 // src/store.ts
 function draftPath(profileId) {
-	return dataDir("trim", "profiles", `${safeId$1(profileId)}.json`);
+	return dataDir("trim", "profiles", `${safeId$2(profileId)}.json`);
 }
 function snapshotPath(token) {
-	return dataDir("trim", "snapshots", `${safeId$1(token)}.json`);
+	return dataDir("trim", "snapshots", `${safeId$2(token)}.json`);
 }
 async function saveDraft(profile, maxDrafts) {
 	await writeJsonAtomic(draftPath(profile.id), profile);
@@ -3937,7 +3937,7 @@ async function loadSnapshot(token) {
 async function listSnapshots() {
 	return listJsonFiles(dataDir("trim", "snapshots"));
 }
-function safeId$1(value) {
+function safeId$2(value) {
 	return value.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
 }
 // src/apply.ts
@@ -5057,6 +5057,110 @@ function capabilitiesOf(scan, loaderEntries, patchRows) {
 		patchRows
 	});
 }
+// src/history.ts
+const MAX_RECORDS = 60;
+const THROTTLE_MS = 6e5;
+/** Record one checkup snapshot, throttled to avoid writing on every open. */
+async function recordCheckup(input) {
+	const now = input.now ?? Date.now();
+	return withLock$1(async () => {
+		const state = await readState$1(input.profile);
+		const last = state.records[state.records.length - 1];
+		if (input.force !== true && last !== void 0 && now - Date.parse(last.at) < THROTTLE_MS) return {
+			records: state.records,
+			diff: diffRecords(state.records.at(-2), last),
+			skipped: true
+		};
+		const record = snapshotRecord(input.scan, now);
+		const previous = last;
+		state.records.push(record);
+		if (state.records.length > MAX_RECORDS) state.records = state.records.slice(-60);
+		await saveState$1(state);
+		return {
+			records: state.records,
+			diff: diffRecords(previous, record),
+			skipped: false
+		};
+	});
+}
+function snapshotRecord(scan, now) {
+	const owners = Object.entries(scan.context.byOwner).filter(([owner]) => owner !== "unattributed").map(([owner, tokens]) => ({
+		owner,
+		tokens
+	})).sort((a, b) => b.tokens - a.tokens).slice(0, 8);
+	return {
+		at: new Date(now).toISOString(),
+		attributed: Math.max(0, scan.context.totalTokens - scan.context.unattributedTokens),
+		total: scan.context.totalTokens,
+		owners,
+		enabledBundles: scan.bundles.filter((bundle) => bundle.enabled).map((bundle) => bundle.name).sort(),
+		compat: {
+			error: scan.compat.summary.error,
+			warn: scan.compat.summary.warn,
+			info: scan.compat.summary.info
+		},
+		counts: {
+			bundles: scan.bundles.length,
+			entries: scan.entries.length,
+			tools: scan.context.tools.length,
+			sections: scan.context.sections.length
+		}
+	};
+}
+function diffRecords(previous, current) {
+	if (previous === void 0) return void 0;
+	const previousBundles = new Set(previous.enabledBundles);
+	const currentBundles = new Set(current.enabledBundles);
+	const ownerDelta = /* @__PURE__ */ new Map();
+	const owners = /* @__PURE__ */ new Set([...previous.owners.map((owner) => owner.owner), ...current.owners.map((owner) => owner.owner)]);
+	for (const owner of owners) {
+		const before = previous.owners.find((item) => item.owner === owner)?.tokens ?? 0;
+		const after = current.owners.find((item) => item.owner === owner)?.tokens ?? 0;
+		if (after !== before) ownerDelta.set(owner, after - before);
+	}
+	return {
+		from: previous.at,
+		to: current.at,
+		addedBundles: [...currentBundles].filter((name) => !previousBundles.has(name)).sort(),
+		removedBundles: [...previousBundles].filter((name) => !currentBundles.has(name)).sort(),
+		attributedDelta: current.attributed - previous.attributed,
+		totalDelta: current.total - previous.total,
+		ownerDeltas: [...ownerDelta.entries()].map(([owner, delta]) => ({
+			owner,
+			delta
+		})).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta)).slice(0, 5)
+	};
+}
+function pathFor$1(profile) {
+	return dataDir("trim", "history", `${safeId$1(profile)}.json`);
+}
+async function readState$1(profile) {
+	try {
+		const state = await readJson(pathFor$1(profile));
+		if (state !== void 0 && state.schemaVersion === 1 && Array.isArray(state.records)) return {
+			...state,
+			profile
+		};
+	} catch {}
+	return {
+		schemaVersion: 1,
+		profile,
+		records: []
+	};
+}
+async function saveState$1(state) {
+	await writeJsonAtomic(pathFor$1(state.profile), state);
+}
+function safeId$1(value) {
+	const safe = value.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
+	return safe.length > 0 ? safe : "default";
+}
+let queue$1 = Promise.resolve();
+function withLock$1(fn) {
+	const run = queue$1.then(fn, fn);
+	queue$1 = run.catch(() => void 0);
+	return run;
+}
 // src/verification.ts
 /** Snapshot only the numbers needed to verify one apply. */
 function snapshotOf(scan) {
@@ -5114,6 +5218,15 @@ async function settleVerification(input) {
 		return viewOf(state);
 	});
 }
+/** Clear a receipt after rollback; the measured delta no longer describes the profile. */
+async function clearVerification(profile) {
+	await withLock(async () => {
+		const state = await readState(profile);
+		state.pending = void 0;
+		state.last = void 0;
+		await saveState(state);
+	});
+}
 function viewOf(state) {
 	return {
 		...state.pending === void 0 ? {} : { pending: {
@@ -5165,7 +5278,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.1";
+const CURRENT_VERSION = "0.5.2";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -5415,6 +5528,24 @@ async function overview(ctx, config, ledger) {
 		after: snapshotOf(scan)
 	});
 	const capability = capabilitiesOf(scan, compat.context.loaderEntries, compat.context.profile.patchRows);
+	const historyDiagnostics = [];
+	let history = {
+		records: [],
+		skipped: true
+	};
+	if (config.trackUsage) try {
+		const recorded = await recordCheckup({
+			profile: profileName,
+			scan
+		});
+		history = {
+			records: recorded.records.slice(-20),
+			diff: recorded.diff,
+			skipped: recorded.skipped
+		};
+	} catch (error) {
+		historyDiagnostics.push(`history unavailable: ${error instanceof Error ? error.message : String(error)}`);
+	}
 	const byOwner = Object.entries(scan.context.byOwner).map(([owner, tokens]) => ({
 		owner,
 		tokens
@@ -5457,7 +5588,8 @@ async function overview(ctx, config, ledger) {
 		recipeAvailable: scan.bundles.some((bundle) => bundle.name === "dsh-plugin-recipe" && bundle.enabled),
 		verification,
 		capability,
-		diagnostics: scan.diagnostics
+		history,
+		diagnostics: [...scan.diagnostics, ...historyDiagnostics]
 	};
 }
 async function suggest(ctx, config, ledger, body) {
@@ -5549,12 +5681,16 @@ async function apply$1(ctx, config, ledger, body) {
 async function rollback(ctx, config, body) {
 	const manager = getPluginManager(ctx);
 	if (manager === void 0) throw new Error("pluginManager is unavailable");
-	return rollbackSlimProfile({
-		token: typeof body.token === "string" && body.token.length > 0 ? body.token : void 0,
+	const token = typeof body.token === "string" && body.token.length > 0 ? body.token : void 0;
+	const profileName = resolveProfileFacts(ctx).name;
+	const result = await rollbackSlimProfile({
+		token,
 		manager,
 		maxDrafts: config.maxDrafts,
-		profileName: resolveProfileFacts(ctx).name
+		profileName
 	});
+	await clearVerification(profileName);
+	return result;
 }
 async function inventoryOf(ctx) {
 	const adapter = getInventory(ctx);

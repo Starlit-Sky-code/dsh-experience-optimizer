@@ -96,6 +96,7 @@ src/compat/
   analyze.ts       采集 + 缓存 + 落盘 + 审计
   compaction.ts    压缩链路只读归类与 PP_COMPACTION_* 规则
   capability.ts    静态能力面（shell/写文件/网络/MCP/!!js）
+  history.ts       体检快照、节流、插件/token 差值
   tool.ts          trim_analyze_compatibility
 ```
 
@@ -112,7 +113,8 @@ GET /overview
 ```
 
 `verification.ts` 只比较 bundle 集合，避免“关闭一个 bundle 同时关掉子 entry”被误判为外部变化。
-数据文件：`<dshHome>/experience-optimizer/trim/verification/<profile>.json`。
+数据文件：`<dshHome>/experience-optimizer/trim/verification/<profile>.json`、
+`<dshHome>/experience-optimizer/trim/history/<profile>.json`。
 
 `capability.ts` 只读工具名、MCP 行与 patch 哨兵，输出五组静态能力清单；它不是安全审计，
 也不参与建议或保护逻辑。

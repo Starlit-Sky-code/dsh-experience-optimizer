@@ -280,6 +280,14 @@ window.__ModuleLoader__.load({
 .eo-check-error i{background:var(--eo-error)}
 .eo-check-info i{background:var(--eo-tertiary)}
 .eo-verdict-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eo-history{display:flex;flex-direction:column;gap:4px;padding:9px 11px;border-radius:8px;border:.5px solid var(--eo-border);background:var(--eo-card-bg)}
+.eo-history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.eo-history-head b{font-size:11px;font-weight:500;color:var(--eo-tertiary)}
+.eo-history-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.eo-history-chip{font-size:11px;line-height:16px;padding:1px 7px;border-radius:999px;border:.5px solid var(--eo-border);color:var(--eo-secondary)}
+.eo-history-chip.is-good{border-color:color-mix(in srgb,var(--eo-success) 35%,transparent);color:var(--eo-success)}
+.eo-history-chip.is-warn{border-color:color-mix(in srgb,var(--eo-warn) 35%,transparent);color:var(--eo-warn)}
+.eo-history-spark{width:100%;height:40px;color:var(--dsw-alias-state-info-primary,#4c7dd0)}
 .eo-verification{display:flex;flex-direction:column;gap:3px;padding:9px 11px;border-radius:8px;border:.5px solid var(--eo-border);background:var(--eo-card-bg);font-size:12px;line-height:18px}
 .eo-verification-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .eo-verification-main b{font-size:11px;font-weight:500;color:var(--eo-tertiary)}
@@ -1540,7 +1548,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.1',
+            current: '0.5.2',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2186,7 +2194,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.1')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.2')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2244,7 +2252,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.1 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.2 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2608,6 +2616,61 @@ window.__ModuleLoader__.load({
         )
       }
 
+      function renderHistory() {
+        const history = overview.history
+        if (!history || !Array.isArray(history.records) || history.records.length < 2) return null
+        const records = history.records.slice(-20)
+        const values = records.map((record) => Number(record.attributed) || 0)
+        const min = Math.min(...values)
+        const max = Math.max(...values)
+        const range = Math.max(1, max - min)
+        const points = values.map((value, index) => {
+          const x = values.length === 1 ? 0 : (index / (values.length - 1)) * 240
+          const y = 34 - ((value - min) / range) * 28
+          return x.toFixed(1) + ',' + y.toFixed(1)
+        }).join(' ')
+        const diff = history.diff
+        const delta = diff ? Number(diff.attributedDelta) || 0 : 0
+        return h(
+          'div',
+          { className: 'eo-history' },
+          h(
+            'div',
+            { className: 'eo-history-head' },
+            h('b', null, tr('自上次体检', 'Since last checkup')),
+            diff
+              ? h(
+                  'div',
+                  { className: 'eo-history-chips' },
+                  diff.addedBundles.length > 0
+                    ? h('span', { className: 'eo-history-chip is-warn' }, '+' + diff.addedBundles.length + tr(' 插件', ' plugins'))
+                    : null,
+                  diff.removedBundles.length > 0
+                    ? h('span', { className: 'eo-history-chip is-good' }, '−' + diff.removedBundles.length + tr(' 插件', ' plugins'))
+                    : null,
+                  h(
+                    'span',
+                    { className: 'eo-history-chip ' + (delta <= 0 ? 'is-good' : 'is-warn') },
+                    (delta > 0 ? '+' : '') + formatNumber(delta) + ' tokens',
+                  ),
+                )
+              : h('span', { className: 'eo-muted' }, tr('下次体检即可对比', 'Compare after the next checkup')),
+          ),
+          h(
+            'svg',
+            {
+              className: 'eo-history-spark',
+              viewBox: '0 0 240 40',
+              preserveAspectRatio: 'none',
+              role: 'img',
+              'aria-label': tr('可归属上下文趋势', 'Attributable context trend'),
+            },
+            h('polyline', { points, fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinejoin: 'round', strokeLinecap: 'round' }),
+          ),
+          h('div', { className: 'eo-muted' }, tr('最近 ', 'Last ') + records.length + tr(' 次体检快照 · 可归属 token', ' checkup snapshots · attributable tokens')),
+        )
+      }
+
       function renderTrim() {
         const shareOf = (bundle) => totalContextTokens > 0
           ? Math.min(100, Math.max(0, (bundle.contextTokens / totalContextTokens) * 100))
@@ -2854,6 +2917,7 @@ window.__ModuleLoader__.load({
                 showContext ? tr('收起明细', 'Collapse details') : tr('查看明细', 'View details'),
               ),
             },
+            renderHistory(),
             renderVerification(overview.verification),
             h(
               'div',

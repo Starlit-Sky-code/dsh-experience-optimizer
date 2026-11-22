@@ -33,7 +33,7 @@ dsh plugin --profile web add dsh-plugin-trim
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.1/dsh-plugin-trim-0.5.1.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.2/dsh-plugin-trim-0.5.2.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。
@@ -89,6 +89,12 @@ DSH 插件装得越多，越容易出现三类问题：
 - 需要重启的变更会保持“待结算”；重启后打开体检，自动计算**实测差值**。
 - 如果同一窗口内还有其他插件变化，会标记“差值仅供参考”，不把别人的变化算成自己的收益。
 - 只对比可归属 token，不拿会话增长后的总量冒充收益。
+
+## 一周后，谁变贵了？
+
+- 每次体检保存一条真实快照（节流 10 分钟，最多 60 条）。
+- 上下文卡显示最近 20 次的迷你趋势，以及自上次体检的 `+N 插件 / −N 插件 / ±N tokens`。
+- 只记插件名和 token 计数，不记对话、section 文本或工具参数；`trackUsage: false` 时不做自动快照。
 
 ## 能力面：只列事实
 

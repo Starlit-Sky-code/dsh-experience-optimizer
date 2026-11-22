@@ -88,6 +88,12 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 活跃后端加入保护名单，不会被建议关闭。
 - 不做自动配置修改，不执行第三方插件代码。
 
+### 自上次体检
+
+- 每次体检记录一条快照（10 分钟节流，最多 60 条）。
+- 显示最近 20 次的可归属 token 迷你趋势，以及新增/移除插件与 token 差值。
+- 只存插件名与 token 计数；`trackUsage: false` 时不自动记录。
+
 ### 实测收益
 
 - 应用前记录可归属 token、总 token、启用 bundle/entry 基线。
@@ -144,7 +150,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
-| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` |
+| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |

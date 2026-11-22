@@ -7,13 +7,13 @@
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
 - 默认分支：`main`
 - Topics：`dsh-plugin`、`deepseek-harness`、`dsh-plugin-suite`、`plugin-compatibility`
-- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.5.1>
+- Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/tag/v0.5.2>
 - Release assets：
-  - `dsh-plugin-trim-0.5.1.tgz`
+  - `dsh-plugin-trim-0.5.2.tgz`
   - `dsh-plugin-recipe-0.3.11.tgz`（冻结线，仅废弃说明）
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
-- 安装验证：`dsh plugin add dsh-plugin-trim@0.5.1` 成功；recipe 已冻结，不再作为默认安装项
+- 安装验证：`dsh plugin add dsh-plugin-trim@0.5.2` 成功；recipe 已冻结，不再作为默认安装项
 
 ## 自定义 DSH 插件市场索引
 
@@ -31,7 +31,7 @@ pnpm market:check
 ## DSH Plugin Hub（dsh-plugin.org）
 
 - 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/880>（2026-11-22 重新提交，等待扫描/收录）
-- npm 已发布 0.5.1；DSH Plugin Hub 收录仍以 dsh-plugin.org 的扫描结果为准。
+- npm 已发布 0.5.2；DSH Plugin Hub 收录仍以 dsh-plugin.org 的扫描结果为准。
 - 已在 issue 评论中补充 npm 包链接与安装命令。
 
 ## dsh.so
@@ -55,11 +55,11 @@ pnpm market:check
 
 ## npm
 
-- **活跃线**：`dsh-plugin-trim@0.5.1` — <https://www.npmjs.com/package/dsh-plugin-trim>
+- **活跃线**：`dsh-plugin-trim@0.5.2` — <https://www.npmjs.com/package/dsh-plugin-trim>
 - **冻结线**：`dsh-plugin-recipe@0.3.11` — <https://www.npmjs.com/package/dsh-plugin-recipe>
 - 安装：`npm i dsh-plugin-trim`（新用户不再安装 recipe）
 - recipe 已在 registry 标记 deprecated；现有安装继续可用，仅接收安全/兼容修复。
-- `latest` 应指向 `0.5.1`；发布后以 `npm view` 为准。
+- `latest` 应指向 `0.5.2`；发布后以 `npm view` 为准。
 - GitHub Release 工作流已配置 `NPM_TOKEN` secret；后续 tag 会自动 npm 发布。
 
 ## Web 控制台

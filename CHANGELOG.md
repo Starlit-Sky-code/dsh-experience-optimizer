@@ -5,8 +5,19 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
-- Clear the measured receipt after rollback: a rolled-back apply no longer shows an
-  outdated "saved tokens" result.
+## [0.5.2] - 2026-11-22
+
+### Added
+
+- **Checkup history**: a real sparkline and a “since last checkup” diff
+  (added/removed bundles and attributable-token delta). Snapshots are throttled
+  to one per 10 minutes, capped at 60 per profile, and stored only as plugin
+  names + token counts.
+
+### Fixed
+
+- Clear the measured receipt after rollback: a rolled-back apply no longer shows
+  an outdated “saved tokens” result.
 - Label the settled result as **上次实测 / Last measured** so it is not read as a
   live, current measurement.
 

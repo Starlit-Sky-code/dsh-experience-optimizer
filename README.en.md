@@ -32,7 +32,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.1/dsh-plugin-trim-0.5.1.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.2/dsh-plugin-trim-0.5.2.tgz"
 ```
 
 For source development, see [Development](#development).
@@ -72,6 +72,14 @@ Before an apply, trim records attributable tokens and the enabled bundle/entry
 set. Restart-required changes stay pending; the next checkup after restart
 settles the measured delta. If unrelated plugins changed in the same window, the
 delta is marked as indicative instead of claiming the whole change.
+
+## What got more expensive since last week?
+
+- Each checkup stores one real snapshot (throttled to 10 minutes, capped at 60).
+- The context card shows a 20-point trend plus a “since last checkup” diff:
+  `+N plugins / −N plugins / ±N tokens`.
+- Only plugin names and token counts are stored; no prompts, section text, or tool
+  arguments. `trackUsage: false` disables automatic snapshots.
 
 ## Capability surface: facts only
 

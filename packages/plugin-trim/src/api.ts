@@ -12,6 +12,7 @@ import { analyzeCompatibility } from './compat/analyze.ts'
 import { getInventory, getPluginManager, resolveProfileFacts } from './compat/adapters.ts'
 import { buildVerdict } from './verdict.ts'
 import { capabilitiesOf } from './capability.ts'
+import { recordCheckup } from './history.ts'
 import {
   beginVerification,
   clearVerification,
@@ -29,7 +30,7 @@ import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
-const CURRENT_VERSION = '0.5.1'
+const CURRENT_VERSION = '0.5.2'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -310,6 +311,20 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     compat.context.loaderEntries,
     compat.context.profile.patchRows,
   )
+  const historyDiagnostics: string[] = []
+  let history: { records: unknown[]; diff?: unknown; skipped: boolean } = { records: [], skipped: true }
+  if (config.trackUsage) {
+    try {
+      const recorded = await recordCheckup({ profile: profileName, scan })
+      history = {
+        records: recorded.records.slice(-20),
+        diff: recorded.diff,
+        skipped: recorded.skipped,
+      }
+    } catch (error) {
+      historyDiagnostics.push(`history unavailable: ${error instanceof Error ? error.message : String(error)}`)
+    }
+  }
   const byOwner = Object.entries(scan.context.byOwner)
     .map(([owner, tokens]) => ({ owner, tokens }))
     .sort((a, b) => b.tokens - a.tokens)
@@ -362,7 +377,8 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     ),
     verification,
     capability,
-    diagnostics: scan.diagnostics,
+    history,
+    diagnostics: [...scan.diagnostics, ...historyDiagnostics],
   }
 }
 
