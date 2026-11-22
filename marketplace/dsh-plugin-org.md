@@ -33,11 +33,7 @@ DSH Plugin Checkup — 插件体检：常驻成本、压缩链路与实测收益
 **安装命令**
 
 ```bash
-# DSH CLI / 插件市场（固定本次发布版本）
-dsh plugin --profile web add dsh-plugin-trim@0.5.9
-
-# npm
-npm i dsh-plugin-trim@0.5.9
+npm i dsh-plugin-trim
 ```
 
 **长描述**

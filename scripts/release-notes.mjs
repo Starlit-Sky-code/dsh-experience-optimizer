@@ -45,4 +45,4 @@ if (shown.length === 0) shown.push(`版本 ${version}`)
 
 console.log(shown.map((line) => `- ${line}`).join('\n'))
 console.log('')
-console.log(`安装：\`dsh plugin --profile web add dsh-plugin-trim@${version}\``)
+console.log('安装：`npm i dsh-plugin-trim`')

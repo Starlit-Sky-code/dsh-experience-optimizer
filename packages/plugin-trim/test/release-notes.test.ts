@@ -13,6 +13,6 @@ describe('release notes', () => {
     expect(lines.length).toBeLessThanOrEqual(10)
     expect(lines[0]).toMatch(/^- /)
     expect(output).not.toContain('Full Changelog')
-    expect(output).toContain('dsh plugin --profile web add dsh-plugin-trim@0.5.9')
+    expect(output).toContain('npm i dsh-plugin-trim')
   })
 })

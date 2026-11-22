@@ -30,28 +30,10 @@ Answers: which plugin is expensive at rest, is the compaction stack coherent, an
 ## Install
 
 ```bash
-# npm (pinned to this release)
-npm i dsh-plugin-trim@0.5.9
-
-# DSH CLI / plugin market:
-dsh plugin --profile web add dsh-plugin-trim@0.5.9
+npm i dsh-plugin-trim
 ```
 
-> Omit `@0.5.9` to use latest; this release is `0.5.9`.
-> If the plugin does not appear in Settings, reload DSH and confirm the dependency is installed in the current workspace; use the Release tarball below if npm CDN returns 404.
-
-Open **Settings → Plugin checkup** after installing.
-
-<details>
-<summary>GitHub Release fallback</summary>
-
-```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.9/dsh-plugin-trim-0.5.9.tgz"
-```
-
-For source development, see [Development](#development).
-
-</details>
+Open **Settings → Plugin checkup** after installing. If it does not appear, reload DSH and confirm the dependency is installed in the current workspace.
 
 ## What it does
 

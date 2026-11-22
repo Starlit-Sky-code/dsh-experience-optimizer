@@ -10,6 +10,11 @@ All notable changes to this repository are documented here. Versions follow
 - The post-apply measurement now treats a positive delta as a regression:
   “优化后反而增加” plus a one-click rollback; zero change is labelled neutral.
 
+### Changed
+
+- All install guidance uses the single command `npm i dsh-plugin-trim`.
+- The settings budget row and preset buttons wrap cleanly on narrow widths.
+
 ### Fixed
 
 - GitHub Release bodies are generated from this file by `scripts/release-notes.mjs`

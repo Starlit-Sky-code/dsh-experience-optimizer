@@ -121,10 +121,10 @@ token 成本按字符估算，不是账单金额。54% 是示例降幅，不是�
 
 ```bash
 # DSH CLI / 插件市场（固定本次发布版本）
-dsh plugin --profile web add dsh-plugin-trim@0.5.9
+npm i dsh-plugin-trim
 
 # npm
-npm i dsh-plugin-trim@0.5.9
+npm i dsh-plugin-trim
 ```
 
 **分类**
@@ -192,7 +192,7 @@ Token costs are character-based estimates, not billing amounts. 54% is sample da
 **Install**
 
 ```bash
-npm i dsh-plugin-trim@0.5.9
+npm i dsh-plugin-trim
 ```
 
 **Topics**
@@ -230,7 +230,7 @@ compaction
 ```text
 dsh-plugin-trim 0.5.9
 先体检，再决定关什么
-dsh plugin --profile web add dsh-plugin-trim@0.5.9
+npm i dsh-plugin-trim
 github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```
 
@@ -267,7 +267,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```text
 别急着删。打开设置 → 插件体检，先看压缩链路：几个后端、谁在管阈值、有没有缺失。活跃后端会被保护，不会建议你把唯一的压缩引擎关掉。先量，再决定。
 
-安装：dsh plugin --profile web add dsh-plugin-trim@0.5.9
+安装：npm i dsh-plugin-trim
 ```
 
 **配图**
@@ -293,7 +293,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```text
 别拿别人的 54% 当目标——那只是示例。体检会在应用前记录基线，重启后结算可归属 token 差值；同窗口其他插件有变化，会标“仅供参考”，不把别人的变化算成你的收益。先量，再关。
 
-安装：dsh plugin --profile web add dsh-plugin-trim@0.5.9
+安装：npm i dsh-plugin-trim
 ```
 
 **配图**
@@ -319,8 +319,7 @@ github.com/Starlit-Sky-code/dsh-experience-optimizer
 ```text
 四维结论、压缩链路、能力面、实测收益在同一页。截图来自 0.5.9 真实控制台；token 数为字符估算，不是账单。
 
-安装：npm i dsh-plugin-trim@0.5.9
-或：dsh plugin --profile web add dsh-plugin-trim@0.5.9
+安装：npm i dsh-plugin-trim
 ```
 
 **配图**

@@ -538,9 +538,10 @@ window.__ModuleLoader__.load({
         .eo-param-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
         .eo-param-section-head strong{font-size:13px;line-height:20px;color:var(--eo-primary)}
         .eo-param-section-head span{font-size:11px;line-height:17px;color:var(--eo-tertiary)}
-        .eo-param-row{display:flex;align-items:center;gap:14px;padding:8px 0;border-bottom:.5px solid var(--eo-border)}
+        .eo-param-row{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;padding:8px 0;border-bottom:.5px solid var(--eo-border)}
         .eo-param-row:last-child{border-bottom:0;padding-bottom:0}
         .eo-param-row>span{flex:0 0 120px;color:var(--eo-secondary);font-size:12px;line-height:18px}
+.eo-param-row>.eo-inline{margin-left:auto;flex-wrap:wrap}
         .eo-param-head{display:flex;align-items:center;gap:5px}
         .eo-param-input{width:70px;height:30px;padding:0 7px;text-align:center;font:500 12px/18px var(--eo-code);appearance:textfield}
         .eo-param-input::-webkit-inner-spin-button,.eo-param-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
@@ -554,7 +555,7 @@ window.__ModuleLoader__.load({
         .eo-param-track i{display:block;height:100%;min-width:3px;border-radius:6px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-success-primary,#1a7f37));transition:width .28s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
         .eo-param-track b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:var(--dsw-alias-bg-layer-1,#fff);border:1.5px solid var(--eo-primary);transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.15)}
         .eo-param-scale{display:flex;justify-content:space-between;color:var(--eo-tertiary);font:10px/14px var(--eo-code);letter-spacing:.02em}
-        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}.eo-param-row{align-items:flex-start;flex-direction:column;gap:5px}.eo-param-row>span{flex:0 0 auto}.eo-param{width:100%;min-width:0}}
+        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}.eo-param-row{align-items:flex-start;flex-direction:column;gap:5px}.eo-param-row>span{flex:0 0 auto}.eo-param-row>.eo-inline{margin-left:0;width:100%}.eo-param{width:100%;min-width:0}}
         .eo-codeblock{margin:0;padding:12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05));font:400 11px/18px var(--eo-code);color:var(--eo-secondary);white-space:pre-wrap;word-break:break-word}
         .eo-faq{border-bottom:.5px solid var(--eo-border);padding:8px 0}
         .eo-faq:last-child{border-bottom:0}
