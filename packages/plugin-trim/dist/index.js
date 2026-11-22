@@ -4588,7 +4588,8 @@ function registerCompatTool(ctx, config) {
 }
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
-const CURRENT_VERSION = "0.3.9";
+const CLIENT_HEADER = "x-dsh-trim-client";
+const CURRENT_VERSION = "0.3.10";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -4632,6 +4633,10 @@ async function handleTrimRequest(req, res, ctx, config, ledger) {
 	}
 	if (!isSameOrigin(req)) {
 		sendError(res, 403, "cross-site request rejected");
+		return;
+	}
+	if (req.headers[CLIENT_HEADER] !== "1") {
+		sendError(res, 403, "client header required");
 		return;
 	}
 	const path = new URL(req.url ?? "/", "http://localhost").pathname.slice(29) || "/";

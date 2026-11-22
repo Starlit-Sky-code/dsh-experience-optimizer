@@ -5,6 +5,21 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.3.10] - 2026-11-22
+
+### Changed
+
+- Security: Web API requests now require a private `x-dsh-trim-client: 1` header
+  in addition to DSH connection authentication and same-origin checks. This
+  blocks ordinary cross-site browser calls and forces a CORS preflight.
+- Stability: every registered UI surface is wrapped in an error boundary, so a
+  rendering exception shows a fallback instead of taking down the DSH UI.
+- Installation: host peer dependencies are marked optional, so npm/pnpm do not
+  try to install a second DSH runtime or fail on peer version ranges. DSH still
+  supplies the actual runtime.
+- Settings: added a **推荐默认值** action that stages the conservative defaults
+  without writing until the user applies.
+
 ## [0.3.9] - 2026-11-21
 
 ### Changed

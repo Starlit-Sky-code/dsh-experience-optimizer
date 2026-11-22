@@ -20,7 +20,8 @@ import type { UsageLedger } from './usage.ts'
 import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
-const CURRENT_VERSION = '0.3.9'
+const CLIENT_HEADER = 'x-dsh-trim-client'
+const CURRENT_VERSION = '0.3.10'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -86,6 +87,10 @@ export async function handleTrimRequest(
   }
   if (!isSameOrigin(req)) {
     sendError(res, 403, 'cross-site request rejected')
+    return
+  }
+  if (req.headers[CLIENT_HEADER] !== '1') {
+    sendError(res, 403, 'client header required')
     return
   }
   const url = new URL(req.url ?? '/', 'http://localhost')

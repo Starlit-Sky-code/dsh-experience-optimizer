@@ -30,8 +30,8 @@ npm i dsh-plugin-trim
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.9/dsh-plugin-trim-0.3.9.tgz"
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.9/dsh-plugin-recipe-0.3.9.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-trim-0.3.10.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-recipe-0.3.10.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。
@@ -180,6 +180,7 @@ pnpm verify
 ## 安全
 
 - 默认只建议，不自动禁用。
+- Web API 先经过 DSH 连接认证、同源检查和自定义 `x-dsh-trim-client` 请求头；不提供跨站 CORS。
 - 兼容性分析只读本地元数据，不执行 `!!js`、不 import 未加载插件、不联网。
 - 数据写入 `$DSH_HOME/experience-optimizer/`，目录 `0700`、文件 `0600`。
 - 版本豁免、插件升级、patch 编辑只报告，不自动执行。

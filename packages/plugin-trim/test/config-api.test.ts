@@ -65,6 +65,31 @@ describe('config patch', () => {
     expect(next.trackUsage).toBe(false)
   })
 
+  it('rejects API requests without the private client header', async () => {
+    const ctx = {
+      get(name: string) {
+        if (name === 'connection') return { requestRejection: () => undefined }
+        if (name === 'profileContext') return { name: 'web', dir: '/tmp/web' }
+        return undefined
+      },
+    } as unknown as Context
+    const req = Readable.from(['{}']) as unknown as Parameters<typeof handleTrimRequest>[0]
+    Object.assign(req, {
+      method: 'POST',
+      url: 'http://localhost/api/dsh-experience-optimizer/config',
+      headers: { host: 'localhost', origin: 'http://localhost' },
+    })
+    let status = 0
+    let text = ''
+    const res = {
+      writeHead(code: number) { status = code },
+      end(chunk: string) { text = chunk },
+    } as unknown as Parameters<typeof handleTrimRequest>[1]
+    await handleTrimRequest(req, res, ctx, normalizeConfig({}), {} as never)
+    expect(status).toBe(403)
+    expect(JSON.parse(text).error.message).toContain('client header')
+  })
+
   it('handles authenticated POST /config through the route', async () => {
     let updated: Record<string, unknown> | undefined
     const loader = {
@@ -87,7 +112,7 @@ describe('config patch', () => {
     Object.assign(req, {
       method: 'POST',
       url: 'http://localhost/api/dsh-experience-optimizer/config',
-      headers: { host: 'localhost', origin: 'http://localhost' },
+      headers: { host: 'localhost', origin: 'http://localhost', 'x-dsh-trim-client': '1' },
     })
     let status = 0
     let text = ''

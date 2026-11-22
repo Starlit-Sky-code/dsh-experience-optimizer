@@ -427,7 +427,8 @@ window.__ModuleLoader__.load({
 .eo-toast-error{border-color:color-mix(in srgb,var(--eo-error) 45%,transparent)}
 .eo-loading{display:flex;align-items:center;justify-content:center;gap:8px;padding:24px;color:var(--eo-tertiary);font-size:12px}
 .eo-spinner{width:13px;height:13px;border-radius:50%;border:2px solid var(--eo-border-strong);border-top-color:var(--eo-primary);animation:eo-spin .8s linear infinite}
-.eo-error{padding:10px 12px;border-radius:var(--dsw-radius-md,8px);background:color-mix(in srgb,var(--eo-error) 7%,transparent);border:.5px solid color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error);font-size:12px;line-height:18px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.eo-crash{padding:16px}
+        .eo-error{padding:10px 12px;border-radius:var(--dsw-radius-md,8px);background:color-mix(in srgb,var(--eo-error) 7%,transparent);border:.5px solid color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error);font-size:12px;line-height:18px;display:flex;gap:10px;align-items:center;justify-content:space-between}
 .eo-muted{color:var(--eo-tertiary);font-size:12px;line-height:18px}
         .eo-note{padding:9px 12px;border:1px solid var(--dsw-alias-border-l3);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--eo-secondary);font-size:12px;line-height:19px}
 .eo-code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
@@ -901,6 +902,7 @@ window.__ModuleLoader__.load({
         ...options,
         headers: { ...(options && options.headers ? options.headers : {}) },
       }
+      request.headers['x-dsh-trim-client'] = '1'
       if (request.body !== undefined) request.headers['content-type'] = 'application/json'
       const response = await fetch(path, request)
       let body = null
@@ -1000,6 +1002,31 @@ window.__ModuleLoader__.load({
         },
         h('i', { style: { width: pct + '%' } }),
       )
+    }
+
+    class PluginErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = { error: null }
+      }
+      static getDerivedStateFromError(error) {
+        return { error }
+      }
+      componentDidCatch(error) {
+        try {
+          console.error('[dsh-plugin-trim] UI render failed', error)
+        } catch {
+          // Logging must never mask the fallback.
+        }
+      }
+      render() {
+        if (this.state.error) {
+          return h('div', { className: 'eo-root eo-crash' },
+            h('div', { className: 'eo-error' }, tr('界面渲染失败；插件本身仍在运行。', 'The UI failed to render; the plugin is still running.')),
+          )
+        }
+        return this.props.children
+      }
     }
 
     function OnboardingModal({ step, setStep, onFinish, onTutorial, onClose }) {
@@ -1372,6 +1399,21 @@ window.__ModuleLoader__.load({
         setSettingsDraft((current) => current ? { ...current, [field]: value } : current)
       }, [])
 
+      const loadRecommendedSettings = useCallback(() => {
+        setSettingsDraft((current) => current ? {
+          ...current,
+          mode: 'advise',
+          approvalMode: 'always',
+          suggestionPolicy: 'conservative',
+          approvalThreshold: 5,
+          trackUsage: true,
+          usageRetentionDays: 30,
+          maxDrafts: 20,
+          protect: [],
+          pinned: [],
+        } : current)
+      }, [])
+
       const discardSettings = useCallback(() => {
         setSettingsDraft(settings ? { ...settings } : null)
         setSettingsError('')
@@ -1414,7 +1456,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.3.9',
+            current: '0.3.10',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2002,6 +2044,7 @@ window.__ModuleLoader__.load({
             {
               title: tr('插件设置', 'Plugin settings'),
               subtitle: tr('改动后才会出现应用按钮；应用会重载插件', 'The apply button appears after changes; applying reloads the plugin'),
+              extra: h(Button, { variant: 'ghost', onClick: loadRecommendedSettings }, tr('推荐默认值', 'Recommended')),
             },
             h(
               'div',
@@ -2066,7 +2109,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.9')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.10')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2125,7 +2168,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.3.9 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.3.10 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -3369,6 +3412,9 @@ window.__ModuleLoader__.load({
     function apply(ctx) {
       CURRENT_LOCALE = detectLocale()
       injectCss()
+      const guard = (Component) => function Guarded(props) {
+        return h(PluginErrorBoundary, null, h(Component, props))
+      }
       ctx.slots.inject('conversation.composer.dock', () =>
         ctx.slots.register(
           {
@@ -3376,7 +3422,7 @@ window.__ModuleLoader__.load({
             id: 'experience-optimizer-checkup',
             order: 20,
           },
-          CheckupBubble,
+          guard(CheckupBubble),
         ),
       )
       ctx.slots.inject('conversation.chat.reasoning.body', () =>
@@ -3385,7 +3431,7 @@ window.__ModuleLoader__.load({
             name: 'conversation.chat.reasoning.body',
             priority: 90,
           },
-          ReasoningCheckup,
+          guard(ReasoningCheckup),
         ),
       )
       ctx.slots.inject('plugins.bundle.activation', () =>
@@ -3394,7 +3440,7 @@ window.__ModuleLoader__.load({
             name: 'plugins.bundle.activation',
             key: 'dsh-plugin-trim',
           },
-          ActivationGuide,
+          guard(ActivationGuide),
         ),
       )
       ctx.slots.inject('shell.overlay', () =>
@@ -3404,7 +3450,7 @@ window.__ModuleLoader__.load({
             id: 'experience-optimizer-guide',
             order: 10,
           },
-          MainGuide,
+          guard(MainGuide),
         ),
       )
       ctx.slots.inject('settings.plugins.tab', () =>
@@ -3415,7 +3461,7 @@ window.__ModuleLoader__.load({
             order: 40,
             label: () => '插件体检',
           },
-          ExperiencePanel,
+          guard(ExperiencePanel),
         ),
       )
       ctx.slots.inject('settings.section', () =>
@@ -3426,7 +3472,7 @@ window.__ModuleLoader__.load({
             order: 25,
             label: () => '插件体检',
           },
-          ExperiencePanel,
+          guard(ExperiencePanel),
         ),
       )
       ctx.slots.inject('settings.section.icon', () =>

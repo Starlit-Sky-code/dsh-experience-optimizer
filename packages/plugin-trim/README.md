@@ -13,7 +13,7 @@ npm i dsh-plugin-trim
 从 GitHub Release 安装（备用）：
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.9/dsh-plugin-trim-0.3.9.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-trim-0.3.10.tgz"
 ```
 
 本地包：
@@ -50,6 +50,7 @@ npm i /absolute/path/to/packages/plugin-trim
 ## 安全边界
 
 - 默认只建议，不自动禁用。
+- Web API 需要 DSH 连接认证、同源请求和 `x-dsh-trim-client: 1` 请求头；未通过时不返回数据。
 - `trim_apply_profile` 必须 `confirm: true`，但默认还要宿主审批返回 `allowed-once` 才真正写入；`confirm` 只是提案标记。
 - `trim_rollback_profile` 始终需要宿主审批。
 - 只应用 `risk: low`、非受保护的 disable/enable 项。
