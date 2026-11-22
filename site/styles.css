@@ -562,6 +562,9 @@ section[id] { scroll-margin-top: 82px; }
 .console-bar i { width: 7px; height: 7px; border-radius: 50%; background: #d9e1e9; }
 .console-bar span { margin-left: auto; }
 .console img { width: 100%; max-height: 760px; object-fit: cover; object-position: top; }
+.walkthrough { max-width: 660px; margin: 32px auto 0; }
+.walkthrough img { width: 100%; border: 1px solid var(--line-dark); border-radius: 16px; background: var(--ink); box-shadow: 0 30px 80px rgba(15,35,56,.16); }
+.walkthrough figcaption { margin-top: 10px; color: var(--dark-muted); font: 11.5px/1.6 var(--mono); letter-spacing: .04em; text-align: center; }
 .safety {
   display: grid; grid-template-columns: 1.1fr .6fr; gap: clamp(36px, 7vw, 100px);
   align-items: center; padding: clamp(80px, 10vw, 140px) clamp(18px, 4vw, 52px);
@@ -774,6 +777,8 @@ section[id] { scroll-margin-top: 82px; }
   .to-top { width: 40px; height: 40px; }
 
   .console img { max-height: 520px; }
+  .walkthrough { margin-top: 24px; }
+  .walkthrough figcaption { font-size: 11px; }
   .terminal pre { padding: 18px 14px 50px; }
   .terminal code { font-size: 11.5px; }
   .install-footer { align-items: flex-start; flex-direction: column; gap: 10px; }
