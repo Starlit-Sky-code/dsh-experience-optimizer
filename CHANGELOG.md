@@ -14,6 +14,10 @@ All notable changes to this repository are documented here. Versions follow
 - The copied checkup report follows the current UI language; English reports no
   longer contain Chinese headings.
 
+- The settings page defaults to a **simple view**: healthy/advanced cards
+  (inventory, empty compatibility, capability with no items, diagnostics) are
+  hidden until “完整视图” is enabled; the choice persists locally.
+
 ### Fixed
 
 - About page and generated promo banners use the current “先体检，再决定关什么”

@@ -74,6 +74,8 @@ For source development, see [Development](#development).
 
 ![Two paths, one authorization boundary](assets/readme/flow.svg)
 
+The settings page defaults to a **simple view**: healthy/advanced cards are hidden until you switch to **Full view**; the choice persists locally.
+
 ## Verdict first, details second
 
 The settings page opens with a four-check verdict: **load**, **compatibility**,

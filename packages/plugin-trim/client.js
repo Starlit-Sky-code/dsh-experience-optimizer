@@ -346,6 +346,7 @@ window.__ModuleLoader__.load({
         .eo-viewbar .eo-inline{gap:4px}
         .eo-viewbar .eo-btn{height:26px;font-size:11px;padding:0 8px;border-radius:6px}
         .eo-viewbar .eo-btn-active{border-color:var(--eo-primary);color:var(--eo-primary);background:var(--dsw-alias-bg-layer-1,rgba(127,127,127,.06))}
+        .eo-mode-simple .eo-advanced:not(.is-relevant){display:none}
         .eo-density-compact .eo-card{padding:10px}
         .eo-density-compact .eo-stack,.eo-stack.eo-density-compact{gap:8px}
         .eo-density-compact .eo-item{padding:7px 0}
@@ -1369,6 +1370,7 @@ window.__ModuleLoader__.load({
       const [collapsedCards, setCollapsedCards] = useState({})
       const [layout, setLayout] = useState(() => readPref('layout', 'standard'))
       const [density, setDensity] = useState(() => readPref('density', 'comfortable'))
+      const [viewMode, setViewMode] = useState(() => readPref('view', 'simple'))
       const [overview, setOverview] = useState(null)
       const [loading, setLoading] = useState(true)
       const [error, setError] = useState('')
@@ -1596,6 +1598,11 @@ window.__ModuleLoader__.load({
       const changeLayout = useCallback((value) => {
         setLayout(value)
         writePref('layout', value)
+      }, [])
+
+      const changeViewMode = useCallback((value) => {
+        setViewMode(value)
+        writePref('view', value)
       }, [])
       const changeDensity = useCallback((value) => {
         setDensity(value)
@@ -1940,6 +1947,15 @@ window.__ModuleLoader__.load({
               'span',
               { className: 'eo-status', title: overview ? overview.profile.dir : '' },
               overview ? tr('当前配置：', 'Profile: ') + overview.profile.name : tr('读取中', 'Loading'),
+            ),
+            h(
+              Button,
+              {
+                variant: 'ghost',
+                onClick: () => changeViewMode(viewMode === 'simple' ? 'full' : 'simple'),
+                title: tr('切换简洁/完整视图', 'Toggle simple/full view'),
+              },
+              viewMode === 'simple' ? tr('完整视图', 'Full view') : tr('简洁视图', 'Simple view'),
             ),
             h(
               Button,
@@ -2720,6 +2736,7 @@ window.__ModuleLoader__.load({
           {
             title: tr('能力面', 'Capability surface'),
             subtitle: tr('只列事实：shell / 文件写入 / 网络 / MCP / 动态配置', 'Facts only: shell / file write / network / MCP / dynamic config'),
+            className: 'eo-advanced' + (total > 0 ? ' is-relevant' : ''),
             section: 'capability',
             collapsible: true,
             collapsed: collapsedCards.capability === true,
@@ -2948,7 +2965,8 @@ window.__ModuleLoader__.load({
             className:
               'eo-stack' +
               (layout === 'two' ? ' eo-layout-two' : '') +
-              (density === 'compact' ? ' eo-density-compact' : ''),
+              (density === 'compact' ? ' eo-density-compact' : '') +
+              (viewMode === 'simple' ? ' eo-mode-simple' : ''),
           },
           renderVerdict(),
           h('div', { className: 'eo-grid eo-metrics' }, [
@@ -2990,6 +3008,7 @@ window.__ModuleLoader__.load({
             {
               title: tr('兼容性检查', 'Compatibility check'),
               subtitle: tr('插件 ↔ 插件 · 插件 ↔ DSH · 当前配置 / 工作区', 'Plugin ↔ plugin · plugin ↔ DSH · profile / workspace'),
+              className: 'eo-advanced' + (compat.error + compat.warn > 0 ? ' is-relevant' : ''),
               section: 'compat', collapsible: true, collapsed: collapsedCards.compat === true, onToggle: () => toggleCard('compat'),
               extra: h(
                 'div',
@@ -3279,6 +3298,7 @@ window.__ModuleLoader__.load({
             {
               title: tr('插件清单', 'Plugin inventory'),
               subtitle: `${filteredBundles.length} / ${totalBundles} ` + tr('个匹配 · 只读', 'matched · read-only'),
+              className: 'eo-advanced',
               section: 'inventory', collapsible: true, collapsed: collapsedCards.inventory === true, onToggle: () => toggleCard('inventory'),
               extra: h(
                 Button,
@@ -3695,7 +3715,7 @@ window.__ModuleLoader__.load({
           draft && draft.dedupe && draft.dedupe.length > 0
             ? h(
                 Card,
-                { title: tr('跨插件提示词重复', 'Cross-plugin prompt duplication'), subtitle: tr('只建议，不修改第三方源码', 'Suggestion only; never edits third-party source'), section: 'dedupe', collapsible: true, collapsed: collapsedCards.dedupe === true, onToggle: () => toggleCard('dedupe') },
+                { title: tr('跨插件提示词重复', 'Cross-plugin prompt duplication'), subtitle: tr('只建议，不修改第三方源码', 'Suggestion only; never edits third-party source'), className: 'eo-advanced is-relevant', section: 'dedupe', collapsible: true, collapsed: collapsedCards.dedupe === true, onToggle: () => toggleCard('dedupe') },
                 h(
                   'div',
                   { className: 'eo-list' },
@@ -3725,7 +3745,7 @@ window.__ModuleLoader__.load({
           overview.diagnostics && overview.diagnostics.length > 0
             ? h(
                 'details',
-                { className: 'eo-card', 'data-section': 'diagnostics' },
+                { className: 'eo-card eo-advanced', 'data-section': 'diagnostics' },
                 h(
                   'summary',
                   { className: 'eo-card-title', style: { cursor: 'pointer' } },
