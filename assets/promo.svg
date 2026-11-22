@@ -47,7 +47,7 @@
   <path transform="translate(1100 118) scale(0.75)" d="M12 0l2.6 7.2L22 10l-7.2 2.6L12 20l-2.6-7.2L2 10l7.2-2.6z" fill="#f2a33a" opacity="0.7"/>
   <text x="450" y="176" font-family="JetBrains Maple Mono, monospace" font-size="19" letter-spacing="2.4" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
   <text x="450" y="253" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="48" font-weight="700" fill="#f4f7ff">DSH 插件体检</text>
-  <text x="450" y="312" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="27" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
+  <text x="450" y="312" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="27" fill="#c7d2e5">先体检，再决定关什么。</text>
   <text x="450" y="354" font-family="Noto Sans CJK SC, Noto Sans CJK JP, sans-serif" font-size="19" fill="#8fa3bd">四维体检 × 压缩链路 × 安全瘦身</text>
   
     <g transform="translate(450 395)">

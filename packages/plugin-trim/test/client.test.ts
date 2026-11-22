@@ -292,6 +292,14 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('Plugin checkup')
     expect(container.textContent).toContain('Guide')
 
+    const trimEn = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'Plugin checkup')
+    expect(trimEn).toBeDefined()
+    await act(async () => { trimEn?.click(); await sleep(40) })
+    const copyReportEn = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'Copy report')
+    expect(copyReportEn).toBeDefined()
+    await act(async () => { copyReportEn?.click(); await sleep(30) })
+    expect(clipboardWrite.mock.calls.some(([text]) => String(text).startsWith('# DSH Plugin Checkup') && String(text).includes('## Checks'))).toBe(true)
+
     await act(async () => { root.unmount() })
     const Bubble = slotComponents['conversation.composer.dock']
     const Reasoning = slotComponents['conversation.chat.reasoning.body']
@@ -374,6 +382,23 @@ describe('client onboarding and pages', () => {
     await act(async () => { toggle?.click(); await sleep(20) })
     const reopen = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '查看 8 步路径')
     expect(reopen).toBeDefined()
+  })
+
+  it('generates a draft directly from the verdict action', async () => {
+    const calls: string[] = []
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      calls.push(String(url))
+      return {
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        json: async () => ({ ok: true, data: { profile: { id: 'draft-1', items: [] } } }),
+      }
+    }))
+    const generate = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '生成瘦身方案')
+    expect(generate).toBeDefined()
+    await act(async () => { generate?.click(); await sleep(80) })
+    expect(calls.some((url) => url.endsWith('/suggest'))).toBe(true)
   })
 
   it('warns in the composer when the checkup verdict needs attention', async () => {

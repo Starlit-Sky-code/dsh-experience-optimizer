@@ -5,6 +5,18 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+### Changed
+
+- The verdict’s “Build slim plan” action now generates the draft directly
+  instead of only scrolling to the draft card.
+- The copied checkup report follows the current UI language; English reports no
+  longer contain Chinese headings.
+
+### Fixed
+
+- About page and generated promo banners use the current “先体检，再决定关什么”
+  positioning instead of the old tagline.
+
 ## [0.5.5] - 2026-11-22
 
 ### Added

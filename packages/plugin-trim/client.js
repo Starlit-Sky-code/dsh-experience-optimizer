@@ -1245,7 +1245,7 @@ window.__ModuleLoader__.load({
         h('path', { d: 'M1002 151 L1008 157 L1019 144', fill: 'none', stroke: '#fbbf24', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }),
         h('text', { x: '64', y: '72', fill: '#5eead4', fontFamily: 'ui-monospace, monospace', fontSize: '13', letterSpacing: '2.4' }, 'DSH PLUGIN SUITE · AGPL-3.0'),
         h('text', { x: '62', y: '142', fill: '#f2f7ff', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '44', fontWeight: '700' }, tr('DSH 插件体检', 'DSH Plugin Checkup')),
-        h('text', { x: '64', y: '184', fill: '#c3d3e8', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '20' }, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
+        h('text', { x: '64', y: '184', fill: '#c3d3e8', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '20' }, tr('先体检，再决定关什么。', 'Measure first. Then decide what to close.')),
         h('g', { transform: 'translate(64 220)' },
           [tr('插件体检', 'Plugin checkup'), tr('兼容性', 'Compatibility'), tr('安全瘦身', 'Safe trimming')].map((label, i) =>
             h('g', { key: label, transform: `translate(${i * 150} 0)` },
@@ -1425,64 +1425,97 @@ window.__ModuleLoader__.load({
       const copyCheckupReport = useCallback(async () => {
         if (!overview) return
         const verdict = overview.verdict
+        const checkNames = {
+          load: tr('加载', 'Load'),
+          compat: tr('兼容', 'Compat'),
+          context: tr('上下文', 'Context'),
+          compaction: tr('压缩链路', 'Compaction'),
+        }
+        const roleNames = {
+          backend: tr('后端', 'backend'),
+          pruner: tr('裁剪', 'pruner'),
+          image: tr('图像', 'image'),
+          command: tr('命令', 'command'),
+          threshold: tr('阈值', 'threshold'),
+          archive: tr('归档', 'archive'),
+          participant: tr('参与', 'participant'),
+        }
+        const headline = verdict
+          ? verdict.overall === 'ok'
+            ? tr('通过', 'Pass')
+            : verdict.overall === 'risk'
+              ? tr('有阻断项', 'Blocking issues')
+              : tr('需处理', 'Attention')
+          : '—'
         const lines = [
-          '# DSH 插件体检',
+          tr('# DSH 插件体检', '# DSH Plugin Checkup'),
           '',
-          '- 版本: ' + (overview.version || '0.5.2'),
+          tr('- 版本: ', '- Version: ') + (overview.version || '0.5.5'),
           '- Profile: ' + (overview.profile && overview.profile.name ? overview.profile.name : 'unknown'),
-          '- 结论: ' + (verdict ? verdict.headline : '—'),
+          tr('- 结论: ', '- Verdict: ') + headline,
           '',
-          '## 检查',
+          tr('## 检查', '## Checks'),
         ]
         if (verdict && Array.isArray(verdict.checks)) {
           for (const check of verdict.checks) {
-            lines.push('- ' + check.label + ': ' + check.status + ' · ' + check.detail)
+            const detail = CURRENT_LOCALE === 'en'
+              ? check.id === 'load'
+                ? (check.count > 0 ? check.count + ' load/runtime issues' : 'plugin rows loaded')
+                : check.id === 'compat'
+                  ? (check.count > 0 ? check.count + ' findings' : 'no conflicts')
+                  : check.id === 'context'
+                    ? (check.status === 'warn' ? check.count + ' duplicate prompt groups' : formatNumber(overview.context.totalTokens) + ' tokens')
+                    : check.id === 'compaction'
+                      ? (overview.compaction ? (overview.compaction.backendCount || 0) + ' backends · ' + overview.compaction.health : 'not detected')
+                      : check.detail
+              : check.detail
+            lines.push('- ' + (checkNames[check.id] || check.label) + ': ' + check.status + ' · ' + detail)
           }
         }
-        lines.push('', '## 上下文')
-        lines.push('- 总 token: ' + formatNumber(overview.context.totalTokens))
-        lines.push('- 未归属: ' + formatNumber(overview.context.unattributedTokens))
+        lines.push('', tr('## 上下文', '## Context'))
+        lines.push(tr('- 总 token: ', '- Total tokens: ') + formatNumber(overview.context.totalTokens))
+        lines.push(tr('- 未归属: ', '- Unattributed: ') + formatNumber(overview.context.unattributedTokens))
         if (Array.isArray(overview.context.byOwner)) {
           for (const owner of overview.context.byOwner.slice(0, 5)) {
             lines.push('- ' + owner.owner + ': ' + formatNumber(owner.tokens))
           }
         }
         if (overview.compaction) {
-          lines.push('', '## 压缩链路')
-          lines.push('- 状态: ' + overview.compaction.health + ' · 后端 ' + (overview.compaction.backendCount || 0))
+          lines.push('', tr('## 压缩链路', '## Compaction stack'))
+          lines.push(tr('- 状态: ', '- Status: ') + overview.compaction.health + ' · ' + tr('后端 ', 'backends ') + (overview.compaction.backendCount || 0))
           for (const participant of (overview.compaction.participants || []).slice(0, 8)) {
-            lines.push('- ' + participant.moduleName + ': ' + participant.role + (participant.enabled ? ' (on)' : ' (off)'))
+            lines.push('- ' + participant.moduleName + ': ' + (roleNames[participant.role] || participant.role) + (participant.enabled ? ' (on)' : ' (off)'))
           }
         }
         if (overview.capability) {
-          lines.push('', '## 能力面（静态，不是安全审计）')
+          lines.push('', tr('## 能力面（静态，不是安全审计）', '## Capability surface (static, not a security audit)'))
           for (const group of overview.capability.groups || []) {
             lines.push('- ' + group.label + ': ' + (group.count || 0))
           }
         }
         if (overview.findings && overview.findings.length > 0) {
-          lines.push('', '## 兼容性发现')
+          lines.push('', tr('## 兼容性发现', '## Compatibility findings'))
           for (const finding of overview.findings.slice(0, 12)) {
             lines.push('- [' + finding.severity + '] ' + finding.code + ': ' + finding.title)
           }
         }
         if (overview.history && overview.history.diff) {
           const diff = overview.history.diff
-          lines.push('', '## 自上次体检')
-          lines.push('- 新增插件: ' + (diff.addedBundles.length || 0))
-          lines.push('- 移除插件: ' + (diff.removedBundles.length || 0))
-          lines.push('- 可归属 token 差值: ' + diff.attributedDelta)
+          lines.push('', tr('## 自上次体检', '## Since last checkup'))
+          lines.push(tr('- 新增插件: ', '- Added plugins: ') + (diff.addedBundles.length || 0))
+          lines.push(tr('- 移除插件: ', '- Removed plugins: ') + (diff.removedBundles.length || 0))
+          lines.push(tr('- 可归属 token 差值: ', '- Attributable token delta: ') + diff.attributedDelta)
         }
         if (overview.verification && overview.verification.last) {
           const last = overview.verification.last
-          lines.push('', '## 上次实测')
-          lines.push('- token 差值: ' + last.deltaTokens)
+          lines.push('', tr('## 上次实测', '## Last measured'))
+          lines.push(tr('- token 差值: ', '- Token delta: ') + last.deltaTokens)
           if (last.deltaPercent !== null && last.deltaPercent !== undefined) {
-            lines.push('- 百分比: ' + Number(last.deltaPercent).toFixed(1) + '%')
+            lines.push(tr('- 百分比: ', '- Percent: ') + Number(last.deltaPercent).toFixed(1) + '%')
           }
-          if (last.confounded) lines.push('- 注意: 期间有其他插件变化，差值仅供参考')
+          if (last.confounded) lines.push(tr('- 注意: 期间有其他插件变化，差值仅供参考', '- Note: other plugins changed in the same window; treat the delta as indicative'))
         }
-        lines.push('', '> 只读体检；未修改任何插件。')
+        lines.push('', tr('> 只读体检；未修改任何插件。', '> Read-only checkup; no plugin was changed.'))
         try {
           await navigator.clipboard.writeText(lines.join('\n'))
           notify(tr('体检报告已复制', 'Checkup report copied'))
@@ -2354,7 +2387,7 @@ window.__ModuleLoader__.load({
                 'div',
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
-                h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
+                h('p', null, tr('先体检，再决定关什么。', 'Measure first. Then decide what to close.')),
                 h('p', null, tr('版本：', 'Version: ') + '0.5.5 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
@@ -2441,13 +2474,21 @@ window.__ModuleLoader__.load({
         }
         const checkDetail = (check) => {
           if (check.id === 'load') {
-            return check.count > 0 ? tr(check.count + ' 个加载/运行时问题', check.count + ' load/runtime issues') : check.detail
+            return check.count > 0 ? tr(check.count + ' 个加载/运行时问题', check.count + ' load/runtime issues') : tr('插件行已加载', 'Plugin rows loaded')
           }
           if (check.id === 'compat') {
-            return check.count > 0 ? tr(check.count + ' 项发现', check.count + ' findings') : check.detail
+            return check.count > 0 ? tr(check.count + ' 项发现', check.count + ' findings') : tr('未发现冲突', 'No conflicts')
           }
-          if (check.id === 'context' && check.status === 'warn') {
-            return tr(check.detail, check.count + ' duplicate prompt groups')
+          if (check.id === 'context') {
+            return check.status === 'warn'
+              ? tr(check.count + ' 组重复提示词', check.count + ' duplicate prompt groups')
+              : (overview.context.totalTokens > 0 ? formatNumber(overview.context.totalTokens) + ' tokens' : tr('暂无可归属上下文', 'No attributable context'))
+          }
+          if (check.id === 'compaction') {
+            const stack = overview.compaction
+            return stack && stack.health !== 'absent'
+              ? (stack.backendCount || 0) + tr(' 个后端', ' backends')
+              : tr('未检测到压缩链路', 'No compaction stack detected')
           }
           return check.detail
         }
@@ -2497,7 +2538,15 @@ window.__ModuleLoader__.load({
                 {
                   key: action.id + ':' + action.target,
                   variant: 'ghost',
-                  onClick: () => scrollToSection(action.target),
+                  disabled: action.target === 'draft' && draftBusy,
+                  onClick: () => {
+                    if (action.target === 'draft') {
+                      void generateDraft()
+                      scrollToSection('draft')
+                    } else {
+                      scrollToSection(action.target)
+                    }
+                  },
                 },
                 actionLabel(action),
               ),
