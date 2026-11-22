@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Optional smoke test: install both local bundles into a temporary DSH profile,
+ * Optional smoke test: install the active local bundle into a temporary DSH profile,
  * dump the composed config, assert the rows exist, then remove only that profile.
  *
  * Requires a `dsh` executable (set DSH_BIN if it is not on PATH).
@@ -26,8 +26,8 @@ if (probe.status !== 0) {
 const profileDir = join(dshHome, 'profiles', profile)
 const packages = [
   join(root, 'packages', 'plugin-trim'),
-  join(root, 'packages', 'plugin-recipe'),
 ]
+if (process.env.SMOKE_RECIPE === '1') packages.push(join(root, 'packages', 'plugin-recipe'))
 
 try {
   for (const packageDir of packages) {
@@ -42,10 +42,13 @@ try {
     encoding: 'utf8',
     timeout: 120_000,
   })
-  for (const name of ['dsh-plugin-trim', 'dsh-plugin-recipe']) {
+  for (const name of ['dsh-plugin-trim']) {
     if (!dump.includes(name)) throw new Error(`dump-config does not contain ${name}`)
   }
-  console.log('Profile smoke passed: both bundle rows are present.')
+  if (process.env.SMOKE_RECIPE === '1' && !dump.includes('dsh-plugin-recipe')) {
+    throw new Error('dump-config does not contain dsh-plugin-recipe')
+  }
+  console.log(process.env.SMOKE_RECIPE === '1' ? 'Profile smoke passed: trim and opted-in recipe rows are present.' : 'Profile smoke passed: trim row is present.')
 } catch (error) {
   console.error(`Profile smoke failed: ${error instanceof Error ? error.message : String(error)}`)
   process.exitCode = 1

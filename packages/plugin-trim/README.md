@@ -13,7 +13,7 @@ npm i dsh-plugin-trim
 从 GitHub Release 安装（备用）：
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-trim-0.3.10.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.4.0/dsh-plugin-trim-0.4.0.tgz"
 ```
 
 本地包：
@@ -33,7 +33,7 @@ npm i /absolute/path/to/packages/plugin-trim
 - 一键回滚；
 - 教程页：5 分钟上手、快速开始、常见问题；
 - 设置页：当前审批/建议策略、保护名单、可复制配置片段；
-- 工作流配方页签（由 `dsh-plugin-recipe` 提供 Host API）。
+- 工作流配方页签（已暂时废弃；仅当 `dsh-plugin-recipe` 仍启用时显示，且标注「已冻结」）。
 
 界面只调用同源 JSON API；API 校验 DSH 浏览器会话与 `Origin`。
 

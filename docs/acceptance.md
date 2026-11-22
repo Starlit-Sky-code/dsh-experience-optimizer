@@ -12,10 +12,13 @@ pnpm verify
 
 `pnpm verify` 会：
 
-1. 构建 shared-meta、plugin-recipe、plugin-trim；
+1. 构建 shared-meta、plugin-recipe（已冻结，仍构建以兼容现有安装）、plugin-trim；
 2. 检查两个插件的 `package.json`、`dsh.bundle.patch`、`dist` 导出；
 3. 确认 dist 不再 import `dsh-shared-meta`；
 4. 跑全部 vitest。
+
+> `dsh-plugin-recipe` 自 2026-11-22 起暂时废弃；以下 recipe 用例属于 legacy 回归，
+> 不作为新功能发布门槛。
 
 ## 临时 profile 冒烟
 
@@ -26,8 +29,8 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 脚本会：
 
 1. 创建 `dsh-exp-smoke-<pid>` profile；
-2. 用 `dsh plugin add <local package>` 安装两个插件；
-3. `dsh --profile ... --dump-config` 断言两个 bundle 行存在；
+2. 用 `dsh plugin add <local package>` 安装 `dsh-plugin-trim`（设置 `SMOKE_RECIPE=1` 时追装已冻结的 `dsh-plugin-recipe`）；
+3. `dsh --profile ... --dump-config` 断言 `dsh-plugin-trim` 的 bundle 行存在；`SMOKE_RECIPE=1` 时再断言 recipe 行；
 4. 只删除这个临时 profile。
 
 > 如果当前环境的 `pnpm` 是 shebang-less shim，需要给它一个 wrapper 或把可执行 pnpm 放入 PATH。
@@ -72,7 +75,9 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 3. 运行 `trim_suggest_profile`，期望冲突主体进入 `review` 或受保护的 disable 建议，而不是自动应用。
 4. 若用户显式选择其中一项并确认，`trim_apply_profile` 可将其标为 `fixKind: conflict`。
 
-### D. 周报蓝图
+### D. 周报蓝图（legacy，已冻结）
+
+> 仅验证现有安装不被破坏；不再新增能力。
 
 1. 安装 `dsh-plugin-recipe`。
 2. 说：“我想每周自动整理项目周报，数据来自 Git log”。
@@ -90,6 +95,6 @@ DSH_BIN=/path/to/dsh pnpm smoke:profile
 - 建议有证据、可解释、可回滚。
 - 默认不改插件；应用只改低风险项；受保护项永不改。
 - 兼容性报告能发现服务/row/MCP/运行时/ profile 漂移，并给出修复方向。
-- 周报目标能在少量对话内产出可校验蓝图，缺失能力明确列出。
+- `dsh-plugin-recipe` 冻结后，现有生成/校验/导出仍可用；未安装时不显示页签，已安装时显示冻结说明。
 - 失败时能恢复，不静默覆盖用户手动改动。
 - 不出现“为了优化而新增更多上下文/规则”的副作用。

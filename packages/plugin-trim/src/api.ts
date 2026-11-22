@@ -21,7 +21,7 @@ import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
-const CURRENT_VERSION = '0.3.10'
+const CURRENT_VERSION = '0.4.0'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -337,6 +337,9 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
       })),
     dedupe: scan.dedupe,
     managementAvailable: scan.managementAvailable,
+    recipeAvailable: scan.bundles.some(
+      (bundle) => bundle.name === 'dsh-plugin-recipe' && bundle.enabled,
+    ),
     diagnostics: scan.diagnostics,
   }
 }

@@ -4589,7 +4589,7 @@ function registerCompatTool(ctx, config) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.3.10";
+const CURRENT_VERSION = "0.4.0";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -4870,6 +4870,7 @@ async function overview(ctx, config, ledger) {
 		})),
 		dedupe: scan.dedupe,
 		managementAvailable: scan.managementAvailable,
+		recipeAvailable: scan.bundles.some((bundle) => bundle.name === "dsh-plugin-recipe" && bundle.enabled),
 		diagnostics: scan.diagnostics
 	};
 }

@@ -29,8 +29,7 @@ window.__ModuleLoader__.load({
     const ABOUT_LINKS = {
       repo: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
       npmTrim: 'https://www.npmjs.com/package/dsh-plugin-trim',
-      npmRecipe: 'https://www.npmjs.com/package/dsh-plugin-recipe',
-      releases: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases',
+            releases: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases',
       issues: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues',
       homepage: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer',
       qqGroup: '1134419871',
@@ -202,7 +201,7 @@ window.__ModuleLoader__.load({
     }
 
     const CSS = `
-.eo-root{--eo-ease:cubic-bezier(.16,1,.3,1);--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
+.eo-root{--eo-ease:cubic-bezier(.16,1,.3,1);--eo-primary:var(--dsw-alias-label-primary,#1a1a1a);--eo-secondary:var(--dsw-alias-label-secondary,#5f6b7a);--eo-tertiary:var(--dsw-alias-label-tertiary,#8b96a5);--eo-border:var(--dsw-alias-border-l2,rgba(127,127,127,.16));--eo-border-strong:var(--dsw-alias-border-l3,rgba(127,127,127,.24));--eo-card-bg:var(--dsw-alias-settings-card-fill,transparent);--eo-card-stroke:var(--dsw-alias-settings-card-stroke,var(--dsw-alias-border-l2,rgba(127,127,127,.16)));--eo-hover:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.06));--eo-error:var(--dsw-alias-state-error-primary,#c4314b);--eo-success:var(--dsw-alias-state-success-primary,#1a7f37);--eo-warn:var(--dsw-alias-state-warning-primary,#b26a00);--eo-code:var(--ds-font-family-code,"JetBrains Maple Mono",ui-monospace,monospace);--eo-radius:var(--dsw-radius-lg,12px);max-width:760px;color:var(--eo-primary);font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:14px}
 .eo-root *{box-sizing:border-box}
 .eo-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:0 0 2px}
 .eo-hero-copy{min-width:0}
@@ -429,6 +428,11 @@ window.__ModuleLoader__.load({
 .eo-spinner{width:13px;height:13px;border-radius:50%;border:2px solid var(--eo-border-strong);border-top-color:var(--eo-primary);animation:eo-spin .8s linear infinite}
 .eo-crash{padding:16px}
         .eo-error{padding:10px 12px;border-radius:var(--dsw-radius-md,8px);background:color-mix(in srgb,var(--eo-error) 7%,transparent);border:.5px solid color-mix(in srgb,var(--eo-error) 35%,transparent);color:var(--eo-error);font-size:12px;line-height:18px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+        .eo-deprecated-banner{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:10px 12px;border-radius:var(--dsw-radius-md,8px);background:color-mix(in srgb,var(--eo-warn,#b26a00) 8%,transparent);border:.5px solid color-mix(in srgb,var(--eo-warn,#b26a00) 35%,transparent);font-size:12px;line-height:18px}
+        .eo-deprecated-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+        .eo-deprecated-copy b{font-weight:600}
+        .eo-deprecated-copy span{color:var(--eo-secondary)}
+        .eo-deprecated-close{appearance:none;border:0;background:transparent;color:var(--eo-tertiary);font-size:18px;line-height:1;padding:0 2px;cursor:pointer}
 .eo-muted{color:var(--eo-tertiary);font-size:12px;line-height:18px}
         .eo-note{padding:9px 12px;border:1px solid var(--dsw-alias-border-l3);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--eo-secondary);font-size:12px;line-height:19px}
 .eo-code{font:400 11px/16px var(--eo-code);color:var(--eo-secondary);word-break:break-all}
@@ -1143,7 +1147,7 @@ window.__ModuleLoader__.load({
         h('text', { x: '62', y: '142', fill: '#f2f7ff', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '44', fontWeight: '700' }, tr('DSH 插件体检', 'DSH Plugin Checkup')),
         h('text', { x: '64', y: '184', fill: '#c3d3e8', fontFamily: 'Noto Sans SC, sans-serif', fontSize: '20' }, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
         h('g', { transform: 'translate(64 220)' },
-          [tr('插件体检', 'Plugin checkup'), tr('兼容性', 'Compatibility'), tr('工作流配方', 'Workflow recipe')].map((label, i) =>
+          [tr('插件体检', 'Plugin checkup'), tr('兼容性', 'Compatibility'), tr('安全瘦身', 'Safe trimming')].map((label, i) =>
             h('g', { key: label, transform: `translate(${i * 150} 0)` },
               h('rect', { width: '138', height: '30', rx: '15', fill: 'rgba(94,234,212,.08)', stroke: 'rgba(94,234,212,.35)' }),
               h('circle', { cx: '16', cy: '15', r: '3', fill: ['#5eead4','#60a5fa','#fbbf24'][i] }),
@@ -1283,6 +1287,13 @@ window.__ModuleLoader__.load({
       const [confirmState, setConfirmState] = useState(null)
       const [applyResult, setApplyResult] = useState(null)
       const [rollbackToken, setRollbackToken] = useState('')
+      const [recipeNoticeHidden, setRecipeNoticeHidden] = useState(() => {
+        try {
+          return typeof localStorage !== 'undefined' && localStorage.getItem('dsh-experience-optimizer.recipe-deprecated.v1') === '1'
+        } catch {
+          return false
+        }
+      })
       const [recipeForm, setRecipeForm] = useState({
         goal: '我想每周自动整理项目周报，数据来自 Git log',
         scope: '当前工作区',
@@ -1330,6 +1341,10 @@ window.__ModuleLoader__.load({
       useEffect(() => {
         void refresh()
       }, [refresh])
+
+      useEffect(() => {
+        if (tab === 'recipe' && overview && overview.recipeAvailable !== true) setTab('trim')
+      }, [tab, overview])
 
       useEffect(() => {
         if (typeof document !== 'undefined') document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en'
@@ -1456,7 +1471,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.3.10',
+            current: '0.4.0',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -1703,7 +1718,7 @@ window.__ModuleLoader__.load({
             'div',
             { className: 'eo-hero-copy' },
             h('h2', { className: 'eo-title' }, tr('插件体检', 'Plugin checkup')),
-            h('p', { className: 'eo-sub' }, tr('先量常驻成本，再判断该不该关；兼容性与工作流一起看。', 'Measure resident cost first, then decide what to close. Compatibility and workflows included.')),
+            h('p', { className: 'eo-sub' }, tr('先量常驻成本，再判断该不该关；兼容性与成本一起看。', 'Measure resident cost first, then decide what to close. Compatibility and cost in one view.')),
           ),
           h(
             'div',
@@ -1727,7 +1742,7 @@ window.__ModuleLoader__.load({
         h(
           'div',
           { className: 'eo-tabs', role: 'tablist' },
-          TABS.map((item) =>
+          TABS.filter((item) => item.id !== 'recipe' || (overview && overview.recipeAvailable === true)).map((item) =>
             h(
               'button',
               {
@@ -1743,6 +1758,7 @@ window.__ModuleLoader__.load({
               },
               h(Icon, { name: item.icon, size: 15 }),
               tr(item.zh, item.en),
+              item.id === 'recipe' ? h(Badge, { tone: 'info' }, tr('已冻结', 'Frozen')) : null,
             ),
           ),
         ),
@@ -1772,7 +1788,7 @@ window.__ModuleLoader__.load({
               : tab === 'about'
                 ? renderAbout()
                 : overview
-                  ? tab === 'trim'
+                  ? tab === 'trim' || (tab === 'recipe' && overview.recipeAvailable !== true)
                     ? renderTrim()
                     : renderRecipe()
                   : null,
@@ -1822,21 +1838,13 @@ window.__ModuleLoader__.load({
               notify(tr('已填入修复任务，点击“生成方案”继续', 'Bugfix task filled; click “Build plan” to continue'))
             },
           },
-          {
-            zhLabel: '整理周报', enLabel: 'Weekly report',
-            zhDesc: '进入工作流配方，生成可导出的周报蓝图', enDesc: 'Open the recipe builder for an exportable report blueprint',
-            run: () => {
-              setTab('recipe')
-              notify(tr('已打开工作流配方，按表单确认范围与交付方式', 'Recipe builder opened; confirm scope and delivery'))
-            },
-          },
         ]
         const steps = [
           ['先扫描。', 'Scan first.', ' 打开「插件体检」，看可归属上下文、兼容性和插件清单；清单里的“占比”就是常驻成本的可见化。', ' Open Plugin checkup to see attributable context, compatibility, and inventory. The Share column makes resident cost visible.'],
           ['再生成方案。', 'Build a plan.', ' 选任务类型或写一句目标，点击“生成方案”。默认只生成草稿，不会改任何插件。', ' Pick a task or write a goal, then Build plan. It only creates a draft; no plugin is changed.'],
           ['看判断依据。', 'Read the evidence.', ' 只有“窗口内 0 调用 + 有上下文成本 + 非周期 + 任务高置信”才会标为建议关闭；其余进入人工复核。', ' Only zero calls in the window, attributable cost, no schedule/trigger hint, and high task confidence produce a close candidate. Everything else goes to review.'],
           ['确认后应用。', 'Confirm and apply.', ' 勾选低风险项，点击“应用选中”，核对弹窗后写入还原点并应用；需要时可一键恢复。', ' Select low-risk items, apply, review the dialog, then write a restore point and apply. Recover in one click if needed.'],
-          ['需要工作流时。', 'Need a workflow?', ' 打开「工作流配方」，生成带审批级别的蓝图，导出 Markdown/JSON 运行手册。', ' Open Workflow recipe to generate a blueprint with approval levels and export Markdown/JSON.'],
+          ['确认能回滚。', 'Confirm you can roll back.', ' 每次应用前都会写入还原点；应用后可在精简方案底部恢复最近一次状态。', ' Every apply writes a restore point; restore the latest state from the slim-plan card.'],
         ]
         const faq = [
           [tr('为什么我几乎没有“建议关闭”？', 'Why do I see almost no close candidates?'), tr('这是默认的保守策略：没有使用账本、当前任务置信度不够、插件带周期/触发器语义，或已经有调用记录时，只会进入人工复核。', 'This is the conservative default: no usage ledger, low task confidence, schedule/trigger hints, or existing calls all route to review.')],
@@ -2109,7 +2117,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.3.10')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.4.0')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2134,7 +2142,7 @@ window.__ModuleLoader__.load({
 
       async function copyInstall() {
         try {
-          await navigator.clipboard.writeText('npm i dsh-plugin-trim\nnpm i dsh-plugin-recipe')
+          await navigator.clipboard.writeText('npm i dsh-plugin-trim')
           notify(tr('安装命令已复制', 'Install commands copied'))
         } catch {
           notify(tr('无法访问剪贴板，请手动复制安装命令', 'Clipboard unavailable; copy the commands manually'), 'warn')
@@ -2145,7 +2153,6 @@ window.__ModuleLoader__.load({
         const links = [
           ['GitHub', ABOUT_LINKS.repo],
           [tr('npm · 插件体检', 'npm · plugin checkup'), ABOUT_LINKS.npmTrim],
-          [tr('npm · 工作流配方', 'npm · workflow recipe'), ABOUT_LINKS.npmRecipe],
           [tr('发布记录', 'Releases'), ABOUT_LINKS.releases],
           [tr('问题反馈', 'Issues'), ABOUT_LINKS.issues],
         ]
@@ -2156,7 +2163,7 @@ window.__ModuleLoader__.load({
             Card,
             {
               title: tr('关于项目', 'About the project'),
-              subtitle: tr('插件体检、兼容性检查与工作流蓝图', 'Plugin checkup, compatibility checks, and workflow recipes'),
+              subtitle: tr('插件体检、兼容性检查与安全瘦身', 'Plugin checkup, compatibility checks, and safe trimming'),
               section: 'about',
             },
             h(AboutHero),
@@ -2168,7 +2175,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.3.10 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.4.0 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -3043,6 +3050,35 @@ window.__ModuleLoader__.load({
         return h(
           'div',
           { className: 'eo-stack' },
+          !recipeNoticeHidden
+            ? h(
+                'div',
+                { className: 'eo-deprecated-banner', role: 'status' },
+                h(
+                  'div',
+                  { className: 'eo-deprecated-copy' },
+                  h('b', null, tr('暂时废弃（2026-11-22）', 'Temporarily deprecated (2026-11-22)')),
+                  h('span', null, tr('不再新增功能；现有生成/导出仍可用。DSH 原生 workflow 已覆盖执行层。', 'No new features; existing generation/export still works. DSH native workflow covers execution.')),
+                ),
+                h(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'eo-deprecated-close',
+                    'aria-label': tr('关闭说明', 'Dismiss'),
+                    onClick: () => {
+                      setRecipeNoticeHidden(true)
+                      try {
+                        if (typeof localStorage !== 'undefined') localStorage.setItem('dsh-experience-optimizer.recipe-deprecated.v1', '1')
+                      } catch {
+                        // Dismissal is best-effort.
+                      }
+                    },
+                  },
+                  '×',
+                ),
+              )
+            : null,
           h(
             Card,
             {

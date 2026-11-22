@@ -33,6 +33,7 @@ const overview = {
     entries: [],
     dedupe: [],
     managementAvailable: true,
+    recipeAvailable: false,
     diagnostics: [],
   },
 }
@@ -101,6 +102,7 @@ describe('client onboarding and pages', () => {
   })
 
   afterEach(async () => {
+    overview.data.recipeAvailable = false
     await act(async () => { root.unmount() })
     vi.unstubAllGlobals()
   })
@@ -149,7 +151,7 @@ describe('client onboarding and pages', () => {
     const copyInstall = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '复制安装命令')
     expect(copyInstall).toBeDefined()
     await act(async () => { copyInstall?.click(); await sleep(30) })
-    expect(clipboardWrite).toHaveBeenCalledWith('npm i dsh-plugin-trim\nnpm i dsh-plugin-recipe')
+    expect(clipboardWrite).toHaveBeenCalledWith('npm i dsh-plugin-trim')
 
     const settings = tabs.find((button) => button.textContent?.trim() === '设置')
     await act(async () => { settings?.click(); await sleep(80) })
@@ -223,5 +225,35 @@ describe('client onboarding and pages', () => {
     })
     expect(container.textContent).toContain('Plugin checkup is enabled')
     expect(container.textContent).toContain('Five steps')
+  })
+
+  it('hides the frozen recipe tab when recipe is not installed', async () => {
+    await waitFor('新手引导')
+    const skip = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '跳过')
+    await act(async () => { skip?.click(); await sleep(40) })
+    const recipeTab = [...container.querySelectorAll('button')].find((button) => button.textContent?.includes('工作流配方'))
+    expect(recipeTab).toBeUndefined()
+  })
+
+  it('marks the recipe tab frozen and shows the deprecation banner', async () => {
+    overview.data.recipeAvailable = true
+    await waitFor('新手引导')
+    const skip = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '跳过')
+    await act(async () => { skip?.click(); await sleep(40) })
+
+    const Panel = slotComponents['settings.plugins.tab']
+    expect(Panel).toBeDefined()
+    await act(async () => { root.unmount() })
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(Panel as React.ComponentType))
+      await sleep(140)
+    })
+
+    const recipeTab = [...container.querySelectorAll('button')].find((button) => button.textContent?.includes('工作流配方'))
+    expect(recipeTab).toBeDefined()
+    expect(recipeTab?.textContent).toContain('已冻结')
+    await act(async () => { recipeTab?.click(); await sleep(60) })
+    expect(container.textContent).toContain('暂时废弃（2026-11-22）')
   })
 })

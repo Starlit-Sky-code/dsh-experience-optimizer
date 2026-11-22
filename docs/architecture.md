@@ -5,11 +5,12 @@
 ```text
 packages/shared-meta/   私有共享包：类型、原子存储、审计、文本估算
 packages/plugin-trim/   体检 + 兼容性检查（Host，工具面）
-packages/plugin-recipe/ 业务目标 → 工作流蓝图（Host，工具面）
+packages/plugin-recipe/ 业务目标 → 工作流蓝图（暂时废弃，保留现有安装）
 ```
 
 `dsh-shared-meta` 在构建时被 tsdown 内联进两个插件（`noExternal`/`alwaysBundle`），
 不进入 profile 的运行时依赖。两个插件都只依赖 DSH 的公开 peer 包。
+`plugin-recipe` 自 2026-11-22 起冻结，仅接收安全/兼容修复；代码与测试保留，避免破坏已有安装。
 
 ## 数据流
 
@@ -55,7 +56,9 @@ trim_rollback_profile({ token? })
   → 当前状态既非 applied 也非 previous 的项标 externally-changed，不覆盖
 ```
 
-### recipe
+### recipe（legacy，暂时废弃）
+
+> 2026-11-22 起冻结；以下流程仅用于说明现有安装的行为，不再新增功能。
 
 ```text
 recipe_plan_workflow({ goal, answers })

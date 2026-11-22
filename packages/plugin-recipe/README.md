@@ -1,10 +1,14 @@
 # dsh-plugin-recipe
 
+> ⚠️ **暂时废弃（2026-11-22）**
+> 不再新增功能；现有生成/校验/导出仍可用。仅接收安全/兼容修复。
+> 替代：DSH 原生 `workflow` / `dsh-tool-workflow`；需要可视化执行可看 `xuanling-dsh-blueprint`。
+
 把业务目标翻译成可校验、可导出的 DSH 工作流蓝图。
 
 ## 安装
 
-从 npm 安装（推荐）：
+从 npm 安装（仅限已有用户；新用户不建议安装）：
 
 ```bash
 npm i dsh-plugin-recipe
@@ -13,7 +17,7 @@ npm i dsh-plugin-recipe
 从 GitHub Release 安装（备用）：
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-recipe-0.3.10.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.11/dsh-plugin-recipe-0.3.11.tgz"
 ```
 
 本地包：
@@ -24,8 +28,9 @@ npm i /absolute/path/to/packages/plugin-recipe
 
 ## Web 控制台
 
-`dsh-plugin-trim` 的 Web 控制台包含「工作流配方」页签；本插件提供其 Host API，
-用于生成和导出蓝图。安装两个插件后即可在 **设置 → 插件 → 插件体检** 使用。
+`dsh-plugin-trim` 的 Web 控制台只在本插件已启用时显示「工作流配方」页签；本插件提供其
+Host API，用于生成和导出蓝图。新用户无需安装本插件——未安装时页签不会渲染；已有安装
+仍可在 **设置 → 插件 → 插件体检** 使用，页签标注「已冻结」并显示废弃说明。
 
 ## 工具
 
@@ -80,3 +85,26 @@ npm i /absolute/path/to/packages/plugin-recipe
 - 没有发送工具时只报告 `uncertainties`，不编造步骤。
 - 兼容性报告存在 error 的主体不会进入蓝图；validate 会给出 `COMPAT_CONFLICT`。
 - agent preset 自带工具由 preset 提供，蓝图按“当前可用”生成，不承诺 trim 可开关。
+
+## 生命周期：暂时废弃
+
+2026-11-22 起进入**暂时冻结**状态：
+
+- 保留：三个工具、Host API、Markdown/JSON 导出、现有测试，全部继续工作。
+- 停止：新功能、新能力模板、市场推广；仅接收安全/兼容修复。
+- 标记：根 README、本 README、npm deprecation、设置页「已冻结」徽章。
+- 未安装本插件时，trim 设置页不显示「工作流配方」页签。
+
+### 为什么冻结
+
+DSH `dsh-base` 已内置 `dsh-workflow-ptc` 与 `dsh-tool-workflow`，模型可以直接执行 `ctx.workflows` 编排；本插件的静态蓝图不执行，处于“计划”与“运行”之间。继续投入的边际收益低于把 trim 的插件体检做深。
+
+### 复活条件
+
+满足任一再恢复功能开发：
+
+1. DSH 原生 workflow 仍缺少「业务目标 → 追问 → 校验 → 审批点」的规划层，且用户持续提出需求。
+2. 本插件能直接生成可执行的 `ctx.workflows` 脚本/原生蓝图，而不只是 Markdown/JSON。
+3. 出现明确的集成需求（例如把蓝图交给 `dsh-tool-workflow` 执行）。
+
+在此之前：只修安全/兼容问题，不加功能。

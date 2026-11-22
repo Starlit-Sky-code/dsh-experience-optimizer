@@ -87,14 +87,14 @@ const promo = `<?xml version="1.0" encoding="UTF-8"?>
   ${sparkle(1050, 72, 34, '#f2a33a', 0.9)}
   ${sparkle(1100, 118, 18, '#f2a33a', 0.7)}
   <text x="450" y="176" font-family="${mono}" font-size="19" letter-spacing="2.4" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
-  <text x="450" y="253" font-family="${font}" font-size="48" font-weight="700" fill="#f4f7ff">DSH 体验优化套件</text>
+  <text x="450" y="253" font-family="${font}" font-size="48" font-weight="700" fill="#f4f7ff">DSH 插件体检</text>
   <text x="450" y="312" font-family="${font}" font-size="27" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
-  <text x="450" y="354" font-family="${font}" font-size="19" fill="#8fa3bd">插件减负 × 兼容性体检 × 工作流蓝图</text>
+  <text x="450" y="354" font-family="${font}" font-size="19" fill="#8fa3bd">插件减负 × 兼容性体检 × 安全瘦身</text>
   ${chip(450, 395, '兼容性体检', '#f2a33a')}
   ${chip(610, 395, '插件减负', '#8fb7ff')}
-  ${chip(740, 395, '工作流蓝图', '#9fe0c0')}
+  ${chip(740, 395, '安全瘦身', '#9fe0c0')}
   <rect x="450" y="470" width="600" height="1" fill="url(#rule)"/>
-  <text x="450" y="512" font-family="${mono}" font-size="20" fill="#cfd9ea">dsh-plugin-trim  ·  dsh-plugin-recipe</text>
+  <text x="450" y="512" font-family="${mono}" font-size="20" fill="#cfd9ea">dsh-plugin-trim</text>
   <text x="450" y="548" font-family="${mono}" font-size="17" fill="#7f92aa">github.com/${repo}</text>
   <text x="450" y="582" font-family="${mono}" font-size="15" fill="#5f728a">v${pkg.version}  ·  AGPL-3.0  ·  DSH 0.2.2-rc.1</text>
 </svg>`
@@ -105,12 +105,12 @@ const banner = `<?xml version="1.0" encoding="UTF-8"?>
   ${iconPanel(76, 118, 260)}
   ${sparkle(1450, 62, 32, '#f2a33a', 0.9)}
   <text x="390" y="158" font-family="${mono}" font-size="18" letter-spacing="2.2" fill="#f2a33a">DSH EXPERIENCE OPTIMIZER</text>
-  <text x="390" y="228" font-family="${font}" font-size="42" font-weight="700" fill="#f4f7ff">DSH 体验优化套件</text>
+  <text x="390" y="228" font-family="${font}" font-size="42" font-weight="700" fill="#f4f7ff">DSH 插件体检</text>
   <text x="390" y="282" font-family="${font}" font-size="24" fill="#c7d2e5">少一点插件负担，多一点兼容确定性。</text>
   ${chip(390, 320, '兼容性体检', '#f2a33a')}
   ${chip(550, 320, '插件减负', '#8fb7ff')}
-  ${chip(680, 320, '工作流蓝图', '#9fe0c0')}
-  <text x="390" y="424" font-family="${mono}" font-size="17" fill="#8fa3bd">dsh-plugin-trim  ·  dsh-plugin-recipe</text>
+  ${chip(680, 320, '安全瘦身', '#9fe0c0')}
+  <text x="390" y="424" font-family="${mono}" font-size="17" fill="#8fa3bd">dsh-plugin-trim</text>
   <text x="390" y="454" font-family="${mono}" font-size="15" fill="#62758d">github.com/${repo}</text>
   <g transform="translate(1172 108)">
     <rect width="340" height="286" rx="22" fill="#ffffff" fill-opacity="0.035" stroke="#ffffff" stroke-opacity="0.12"/>

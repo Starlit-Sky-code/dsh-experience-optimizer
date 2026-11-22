@@ -5,7 +5,7 @@
 ## 1. 自定义 DSH 插件市场索引
 
 `index.json` 是 [DSH Plugin Market](../../docs/compatibility.md) 可读取的格式 1 索引。
-它把两个插件都列在同一个 `plugin-suite` 分类下，并使用当前 Git commit 作为 Git 安装源。
+它只列出活跃的 `dsh-plugin-trim`（`dsh-plugin-recipe` 已暂时废弃并从索引移除），并使用当前 Git commit 作为 Git 安装源。
 
 生成（必须在插件源码提交之后运行）：
 
@@ -19,7 +19,7 @@ pnpm market:index
 - 或在 GitHub Pages 上提供同样的 JSON 文件。
 
 在 DSH 的「设置 → 插件市场」中加入该索引 URL，用户即可搜索并安装
-`dsh-plugin-trim` / `dsh-plugin-recipe`。
+`dsh-plugin-trim`。
 
 > 索引里的 `commit` 是生成时的 `HEAD`。发布新版本后重新运行 `pnpm market:index`，
 > 提交并推送新的索引。
@@ -56,23 +56,21 @@ pnpm market:index
 
 ## 4. npm
 
-两个插件包已配置 `publishConfig.access: public`，并通过 tag 触发的 Release 工作流发布。
+`dsh-plugin-trim` 通过 tag 触发的 Release 工作流发布；`dsh-plugin-recipe` 已冻结，仅保留现有版本。
 首次发布需要：
 
 1. 在 GitHub 仓库 Settings → Secrets 中配置 `NPM_TOKEN`；
 2. 推送 `v0.2.7` tag；
-3. 工作流运行 `pnpm verify` 后依次发布 `dsh-plugin-trim`、`dsh-plugin-recipe`。
+3. 工作流运行 `pnpm verify` 后发布 `dsh-plugin-trim`；recipe 默认跳过（`PUBLISH_RECIPE=0`）。
 
 发布后，dsh-plugin.org / dsh.so 可以直接用 npm 包名收录，用户也可以：
 
 ```bash
 npm i dsh-plugin-trim
-npm i dsh-plugin-recipe
 ```
 
 ## 5. GitHub Release tarball
 
 当前未发布 npm 时，推荐直接安装 release tarball：
 
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-trim-0.3.10.tgz"
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-recipe-0.3.10.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.4.0/dsh-plugin-trim-0.4.0.tgz"

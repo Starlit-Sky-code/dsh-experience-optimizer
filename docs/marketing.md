@@ -8,7 +8,7 @@
 
 **副标语**
 
-> 让 DSH 插件生态更轻、更兼容、更可编排。
+> 让 DSH 插件生态更轻、更兼容、更可验证。
 
 **英文**
 
@@ -16,23 +16,21 @@
 
 **一句话介绍**
 
-> 插件体检 × 兼容性检查 × 工作流蓝图：给装了很多 DSH 插件的开发者的一套“体检”工具。
+> 插件体检 × 兼容性检查 × 安全瘦身：给装了很多 DSH 插件的开发者的一套“体检”工具。
 
 ## 短描述（≤ 120 字符）
 
-> 扫描 DSH 插件成本与兼容性冲突，生成可回滚的精简方案，并把业务目标翻译成可校验的工作流蓝图。
+> 扫描 DSH 插件成本与兼容性冲突，生成可回滚的精简方案；关闭前后可实测对比。
 
 ## 长描述
 
-`dsh-experience-optimizer` 面向已安装多个 DSH 插件、但被上下文成本、插件冲突和
-编排门槛困扰的开发者。它由两个可独立安装的插件组成：
+`dsh-experience-optimizer` 面向已安装多个 DSH 插件、但被上下文成本和插件冲突困扰的
+开发者。核心是 `dsh-plugin-trim`：扫描插件与当前 prompt 的真实上下文成本，按任务给出
+可解释的保留/启用/禁用建议；对插件↔插件、插件↔DSH 运行时、Profile/工作区之间的冲突
+生成兼容性矩阵；所有变更默认只是建议，显式确认后才应用，并可一键回滚。
 
-- `dsh-plugin-trim`：扫描插件与当前 prompt 的真实上下文成本，按任务给出可解释的
-  保留/启用/禁用建议；对插件↔插件、插件↔DSH 运行时、Profile/工作区之间的冲突生成
-  兼容性矩阵；所有变更默认只是建议，显式确认后才应用，并可一键回滚。
-- `dsh-plugin-recipe`：把“我想每周自动整理项目周报”这类业务目标翻译成步骤、能力、
-  最小插件集、权限、失败策略、验收清单和回滚说明，并校验依赖、循环、人工确认和
-  兼容性冲突。
+`dsh-plugin-recipe`（工作流配方）已自 2026-11-22 起暂时废弃：不再新增功能，现有安装
+仍可生成/校验/导出蓝图；DSH 原生 `workflow` / `dsh-tool-workflow` 已覆盖执行层。
 
 设计原则是“建议而非擅自执行”：受保护的核心/preset/用户锁定项永不改动；版本豁免、
 插件升级和 patch 编辑只报告，不自动执行；只读分析不联网、不执行 `!!js`、不修改
@@ -41,7 +39,7 @@
 ## 关键词
 
 `dsh`, `dsh-plugin`, `deepseek-harness`, `plugin-manager`, `compatibility`,
-`workflow`, `context`, `plugin-suite`, `plugin-diet`, `plugin-conflict`
+`context`, `plugin-suite`, `plugin-diet`, `plugin-conflict`
 
 ## 宣传图
 
@@ -83,4 +81,5 @@ raw.githubusercontent.com 后，在 DSH 的插件市场设置中加入索引 URL
 pnpm market:index
 ```
 
-生成后会在 `marketplace/index.json` 写入两个插件的条目。
+生成后会在 `marketplace/index.json` 写入 `dsh-plugin-trim` 的条目；`dsh-plugin-recipe`
+已暂时废弃，不再进入索引。

@@ -22,28 +22,25 @@ const rawBase = `https://raw.githubusercontent.com/${repo}/main`
 const indexUrl = `https://raw.githubusercontent.com/${repo}/main/marketplace/index.json`
 
 const trim = readPackage('packages/plugin-trim')
-const recipe = readPackage('packages/plugin-recipe')
 
 const index = {
   format: 1,
   title: {
     en: 'DSH Plugin Checkup',
-    zh: 'DSH 插件体检套件',
+    zh: 'DSH 插件体检',
   },
   description: {
-    en: 'Plugin checkup, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.',
-    zh: 'DSH 插件体检、兼容性检查与工作流蓝图套件。',
+    en: 'Read-only plugin context cost and compatibility diagnostics for DeepSeek Harness.',
+    zh: 'DSH 插件上下文成本与兼容性体检。',
   },
   metadata: {
     categories: {
       'plugin-suite': { title: { en: 'Plugin Suite', zh: '插件套件' } },
       compatibility: { title: { en: 'Compatibility', zh: '兼容性' } },
-      workflow: { title: { en: 'Workflow', zh: '工作流' } },
     },
     labels: {
       compatibility: { title: { en: 'Compatibility diagnostics', zh: '兼容性诊断' } },
       diet: { title: { en: 'Context checkup', zh: '上下文体检' } },
-      workflow: { title: { en: 'Workflow planning', zh: '工作流规划' } },
     },
     sortKeys: {},
   },
@@ -58,17 +55,6 @@ const index = {
       },
       keywords: ['dsh', 'dsh-plugin', 'compatibility', 'plugin-manager', 'context', 'diet'],
       labels: ['compatibility', 'diet'],
-    }),
-    pluginEntry({
-      pkg: recipe,
-      directory: 'packages/plugin-recipe',
-      title: { en: 'DSH Workflow Recipe', zh: 'DSH 工作流配方' },
-      description: {
-        en: 'Turn a business goal into a validated workflow blueprint with steps, capabilities, minimum plugin set, permissions, failure policy, acceptance, and rollback.',
-        zh: '把业务目标翻译成可校验的工作流蓝图，包含步骤、能力、最小插件集、权限、失败策略、验收与回滚。',
-      },
-      keywords: ['dsh', 'dsh-plugin', 'workflow', 'planning', 'automation', 'compatibility'],
-      labels: ['workflow', 'compatibility'],
     }),
   ],
 }

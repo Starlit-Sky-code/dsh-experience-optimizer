@@ -2,11 +2,11 @@
   "format": 1,
   "title": {
     "en": "DSH Plugin Checkup",
-    "zh": "DSH 插件体检套件"
+    "zh": "DSH 插件体检"
   },
   "description": {
-    "en": "Plugin checkup, compatibility diagnostics, and workflow blueprints for DeepSeek Harness.",
-    "zh": "DSH 插件体检、兼容性检查与工作流蓝图套件。"
+    "en": "Read-only plugin context cost and compatibility diagnostics for DeepSeek Harness.",
+    "zh": "DSH 插件上下文成本与兼容性体检。"
   },
   "metadata": {
     "categories": {
@@ -21,12 +21,6 @@
           "en": "Compatibility",
           "zh": "兼容性"
         }
-      },
-      "workflow": {
-        "title": {
-          "en": "Workflow",
-          "zh": "工作流"
-        }
       }
     },
     "labels": {
@@ -40,12 +34,6 @@
         "title": {
           "en": "Context checkup",
           "zh": "上下文体检"
-        }
-      },
-      "workflow": {
-        "title": {
-          "en": "Workflow planning",
-          "zh": "工作流规划"
         }
       }
     },
@@ -87,54 +75,8 @@
       },
       "versions": [
         {
-          "version": "0.3.10",
-          "publishTimestamp": 1795230857,
-          "source": {
-            "type": "npm"
-          },
-          "engines": {
-            "dsh": ">=0.2.2-rc.1 <0.3.0"
-          }
-        }
-      ]
-    },
-    {
-      "name": "dsh-plugin-recipe",
-      "title": {
-        "en": "DSH Workflow Recipe",
-        "zh": "DSH 工作流配方"
-      },
-      "description": {
-        "en": "Turn a business goal into a validated workflow blueprint with steps, capabilities, minimum plugin set, permissions, failure policy, acceptance, and rollback.",
-        "zh": "把业务目标翻译成可校验的工作流蓝图，包含步骤、能力、最小插件集、权限、失败策略、验收与回滚。"
-      },
-      "icon": "https://raw.githubusercontent.com/Starlit-Sky-code/dsh-experience-optimizer/main/packages/plugin-recipe/icon.png",
-      "author": "Starlit-Sky-code",
-      "homepage": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/tree/main/packages/plugin-recipe#readme",
-      "repository": {
-        "url": "https://github.com/Starlit-Sky-code/dsh-experience-optimizer",
-        "directory": "packages/plugin-recipe"
-      },
-      "metadata": {
-        "category": "plugin-suite",
-        "keywords": [
-          "dsh",
-          "dsh-plugin",
-          "workflow",
-          "planning",
-          "automation",
-          "compatibility"
-        ],
-        "labels": [
-          "workflow",
-          "compatibility"
-        ],
-        "sortKeys": {}
-      },
-      "versions": [
-        {
-          "version": "0.3.10",
-          "publishTimestamp": 1795230857,
+          "version": "0.4.0",
+          "publishTimestamp": 1795309552,
           "source": {
             "type": "npm"
           },

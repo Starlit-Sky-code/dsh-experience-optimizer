@@ -7,20 +7,23 @@
 <p align="center">
   <a href="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml"><img alt="持续集成" src="https://github.com/Starlit-Sky-code/dsh-experience-optimizer/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://www.npmjs.com/package/dsh-plugin-trim"><img alt="npm dsh-plugin-trim" src="https://img.shields.io/npm/v/dsh-plugin-trim?label=dsh-plugin-trim"></a>
-  <a href="https://www.npmjs.com/package/dsh-plugin-recipe"><img alt="npm dsh-plugin-recipe" src="https://img.shields.io/npm/v/dsh-plugin-recipe?label=dsh-plugin-recipe"></a>
   <a href="LICENSE"><img alt="许可证：AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg"></a>
 </p>
 
-<p align="center"><strong>插件体检 × 兼容性检查 × 工作流蓝图</strong><br>
-两个插件可独立安装，也可同时使用；共用同一个网页控制台与审批边界。</p>
+<p align="center"><strong>插件体检 × 兼容性检查 × 安全瘦身</strong><br>
+只读扫描插件常驻成本与冲突；低风险项经确认后应用，支持快照回滚。</p>
 
 ## 安装
 
 ```bash
+# npm
 npm i dsh-plugin-trim
+
+# DSH CLI / 插件市场：
+dsh plugin --profile web add dsh-plugin-trim
 ```
 
-> 省略版本号即取 latest。工作流配方是可选的：`npm i dsh-plugin-recipe`。
+> 省略版本号即取 latest。
 > 安装后如果设置页没有出现，重新加载 DSH，并确认当前工作区已安装该依赖；npm CDN 返回 404 时请使用下方 Release tarball。
 
 安装后打开 **设置 → 插件体检**（Agent 预设下方），或 **设置 → 插件 → 插件体检**。
@@ -30,8 +33,7 @@ npm i dsh-plugin-trim
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-trim-0.3.10.tgz"
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.3.10/dsh-plugin-recipe-0.3.10.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.4.0/dsh-plugin-trim-0.4.0.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。
@@ -42,24 +44,23 @@ npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/dow
 
 ![插件体检网页控制台](assets/ui-preview.png)
 
-<p align="center"><sub>设置 → 插件体检：上下文、兼容性、精简方案与工作流配方在同一个原生设置页里。</sub></p>
+<p align="center"><sub>设置 → 插件体检：上下文、兼容性、精简方案在同一个原生设置页里。</sub></p>
 
 ![两条路径，一个授权边界](assets/readme/flow.svg)
 
 ## 它解决什么
 
-DSH 插件装得越多，越容易出现三类问题：
+DSH 插件装得越多，越容易出现两类问题：
 
 - **上下文变贵**：插件提示词、工具描述和重复段落持续占用 token。
 - **兼容性变脆**：插件↔插件、插件↔DSH 运行时、配置集/工作区之间互相冲突。
-- **工作流难落地**：知道“想自动化什么”，但不知道需要哪些工具、权限和人工确认点。
 
-`dsh-experience-optimizer` 把这三件事放进一个套件：
+`dsh-experience-optimizer` 把这两件事放进一个套件：
 
 | 插件 | 职责 |
 |---|---|
 | [`dsh-plugin-trim`](packages/plugin-trim) | 只读扫描上下文成本与兼容性，生成可解释的保留/启用/禁用建议；低风险项经用户确认与宿主审批后应用，支持快照回滚 |
-| [`dsh-plugin-recipe`](packages/plugin-recipe) | 把业务目标翻译成可校验、可导出的工作流蓝图，标注每步审批级别 |
+| `dsh-plugin-recipe` | **暂时废弃**：工作流蓝图规划器，保留现有安装，不再新增功能 |
 
 `dsh-shared-meta` 是私有共享包，构建时内联，不增加运行时安装负担。
 
@@ -110,20 +111,13 @@ DSH 插件装得越多，越容易出现三类问题：
 | 配置集 | 多个配置集的启用差异、锁文件漂移 |
 | 工作区 | `AGENTS.md`/`CLAUDE.md` 与插件规则重叠 |
 
-### 工作流蓝图
+### 工作流蓝图（暂时废弃）
 
-`dsh-plugin-recipe` 生成步骤、能力、最小插件集、权限、失败策略、验收和回滚；每个步骤带：
-
-```text
-approvalLevel: none | suggested | required
-```
-
-Markdown/JSON 运行手册与网页控制台都会展示，供下游执行者继续遵守人工确认（HITL）边界。
+`dsh-plugin-recipe` 自 2026-11-22 起暂时冻结，不再新增功能。现有安装仍可生成、校验和导出蓝图；DSH 原生 `workflow` 工具已覆盖执行层。详见[暂时废弃说明](#暂时废弃工作流配方)。
 
 ## 网页控制台
 
 - **体检与兼容**：摘要指标、兼容性搜索/级别过滤、上下文成本、插件清单搜索/筛选/排序、精简方案、应用/回滚
-- **工作流配方**：目标表单、蓝图步骤、审批级别、校验问题、Markdown/JSON 导出
 - **教程**：5 分钟上手、按任务快速开始、常见问题
 - **关于**：Hero SVG、项目链接、版本、许可证、版权、QQ 群 `1134419871`、捐赠占位
 - **设置**：界面偏好（内容排列/密度/折叠）、可编辑的插件策略（改动后才出现「应用修改」）、检查更新、新建 Issue、保护名单与配置片段
@@ -143,16 +137,23 @@ Markdown/JSON 运行手册与网页控制台都会展示，供下游执行者继
 | `trim_suggest_profile` | 按任务生成精简方案草稿，不修改插件 |
 | `trim_apply_profile` | 提案 + 宿主审批 `allowed-once` 后应用低风险项 |
 | `trim_rollback_profile` | 宿主审批后恢复上一次精简方案 |
-| `recipe_plan_workflow` | 对话式向导，输出工作流蓝图 |
-| `recipe_validate_workflow` | 校验依赖、权限、循环、兼容性 |
-| `recipe_export_workflow` | 导出 Markdown/JSON 蓝图到 DSH 数据目录 |
+
+## 暂时废弃：工作流配方
+
+`dsh-plugin-recipe` 自 **2026-11-22** 起暂时废弃（temporarily deprecated），不再新增功能。
+
+- 现有安装仍可生成、校验和导出蓝图；仅接收安全/兼容修复。
+- DSH 原生 `workflow` / `dsh-tool-workflow` 已覆盖执行层；纯静态蓝图不再是最高杠杆。
+- 未安装 recipe 时，设置页不再显示「工作流配方」页签；已安装时页签会标注「已冻结」并显示说明。
+- npm 包不会被删除；安装旧版本会看到 deprecation 提示。
+- 复活条件见 [`packages/plugin-recipe/README.md`](packages/plugin-recipe/README.md)。
 
 ## 市场与发布
 
-- npm：<https://www.npmjs.com/package/dsh-plugin-trim> · <https://www.npmjs.com/package/dsh-plugin-recipe>
+- npm：<https://www.npmjs.com/package/dsh-plugin-trim>
 - Release：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases>
-- dshopen.org：<https://dshopen.org/zh/plugins/dsh-plugin-trim/> · <https://dshopen.org/zh/plugins/dsh-plugin-recipe/>
-- dshbase.com：<https://dshbase.com/plugins/dsh-plugin-trim/> · <https://dshbase.com/plugins/dsh-plugin-recipe/>
+- dshopen.org：<https://dshopen.org/zh/plugins/dsh-plugin-trim/>
+- dshbase.com：<https://dshbase.com/plugins/dsh-plugin-trim/>
 - dsh.so：<https://www.dsh.so/artifact/dsh-experience-optimizer/>
 - DSH 自定义索引：
   ```text

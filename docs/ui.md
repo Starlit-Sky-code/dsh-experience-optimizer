@@ -8,7 +8,7 @@
 
 ## 打开
 
-安装 `dsh-plugin-trim` 与 `dsh-plugin-recipe` 后，有两个入口：
+安装 `dsh-plugin-trim` 后即可使用。`dsh-plugin-recipe` 已暂时废弃；仅当它仍启用时，才会显示「工作流配方」页签。
 
 ```text
 设置 → 插件体检          # 左侧导航，Agent 预设下方，滑杆图标（order 25）
@@ -49,7 +49,7 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 
 ### 教程
 
-- 5 分钟上手：扫描 → 生成方案 → 看判断依据 → 确认应用 → 工作流配方；
+- 5 分钟上手：扫描 → 生成方案 → 看判断依据 → 确认应用 → 回滚；
 - 按任务快速开始：代码审查、修复问题、整理周报；
 - 常见问题：为什么没有建议关闭、周期插件保护、应用后回滚、确认与审批的区别。
 
@@ -89,14 +89,17 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
   - 确认弹窗后调用应用；显示逐项结果、回滚 token 与重启提示；
   - 「回滚最近」恢复上一次应用快照。
 
-### 工作流配方
+### 工作流配方（暂时废弃）
 
+- 2026-11-22 起暂时冻结；现有表单、生成、校验与导出继续可用，仅接收安全/兼容修复。
+- 未安装 `dsh-plugin-recipe` 时，页签不渲染；已安装时页签带「已冻结」徽章，顶部显示可关闭的废弃说明。
 - 表单覆盖业务目标、范围、频率、来源、输出格式、交付、失败处理和验收标准；
 - 生成后展示步骤、最小插件集、权限、失败策略、回滚、验收清单；
 - 展示校验 error/warn 与蓝图不确定性；
 - 可导出 Markdown + JSON 运行手册到 DSH 数据目录。
 
-> UI 预览按内置能力目录判断工具可用性；精确的 agent-scope 校验仍以
+> 替代：DSH 原生 `workflow` / `dsh-tool-workflow`。复活条件见
+> `packages/plugin-recipe/README.md`。现有安装如需精确的 agent-scope 校验，仍以
 > `recipe_plan_workflow` 工具为准。
 
 ## 架构
@@ -105,8 +108,8 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 packages/plugin-trim/
   client.js                 # 浏览器半身：__ModuleLoader__ 包装 + React 面板
   src/api.ts                # /api/dsh-experience-optimizer/*
-packages/plugin-recipe/
-  src/api.ts                # /api/dsh-experience-optimizer/recipe/*
+packages/plugin-recipe/       # 暂时废弃；保留 Host API 供现有安装
+  src/api.ts                  # /api/dsh-experience-optimizer/recipe/*
 packages/shared-meta/
   src/http.ts               # 同源检查、限量 JSON body、JSON 响应
 ```
@@ -120,8 +123,11 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |
 | `POST` | `/api/dsh-experience-optimizer/rollback` | 恢复最近快照 |
-| `POST` | `/api/dsh-experience-optimizer/recipe/plan` | 生成并校验蓝图 |
-| `POST` | `/api/dsh-experience-optimizer/recipe/export` | 导出运行手册 |
+| `POST` | `/api/dsh-experience-optimizer/recipe/plan` | 生成并校验蓝图（recipe 已暂时废弃，保留兼容） |
+| `POST` | `/api/dsh-experience-optimizer/recipe/export` | 导出运行手册（recipe 已暂时废弃，保留兼容） |
+
+`GET /overview` 额外返回 `recipeAvailable`：仅当 `dsh-plugin-recipe` 启用时为
+`true`，客户端据此决定是否显示已冻结的「工作流配方」页签。
 
 `registerTrimApi` / `registerRecipeApi` 使用 `ctx.inject(['webServer'], ...)`，
 因此启动时和 HMR 重载时都能正确等待 Web 载体；存在 `webServer` 但不存在
@@ -151,7 +157,8 @@ pnpm verify
 
 ```bash
 dsh plugin --profile tmp-web add "$PWD/packages/plugin-trim"
-dsh plugin --profile tmp-web add "$PWD/packages/plugin-recipe"
+# 仅在验证已冻结的 recipe 页签时追加：
+# dsh plugin --profile tmp-web add "$PWD/packages/plugin-recipe"
 dsh --profile tmp-web --port 3091 --no-open
 ```
 

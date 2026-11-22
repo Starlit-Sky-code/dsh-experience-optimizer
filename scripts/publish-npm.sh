@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Publish both plugins with a user-supplied npm Granular Access Token.
+# Publish dsh-plugin-trim with a user-supplied npm Granular Access Token.
+# dsh-plugin-recipe is frozen; set PUBLISH_RECIPE=1 only for a security/compat fix.
 # The token is read from ~/.npm-token (or NPM_TOKEN_FILE); it is never printed.
 set -euo pipefail
 
@@ -35,19 +36,26 @@ fi
 
 trim_version="$(node -p "require('$root/packages/plugin-trim/package.json').version")"
 recipe_version="$(node -p "require('$root/packages/plugin-recipe/package.json').version")"
+publish_recipe="${PUBLISH_RECIPE:-0}"
 
 echo "publishing dsh-plugin-trim@$trim_version"
 (cd "$root/packages/plugin-trim" && npm publish "${publish_args[@]}")
 
-echo "publishing dsh-plugin-recipe@$recipe_version"
-(cd "$root/packages/plugin-recipe" && npm publish "${publish_args[@]}")
+if [[ "$publish_recipe" == "1" ]]; then
+  echo "publishing dsh-plugin-recipe@$recipe_version"
+  (cd "$root/packages/plugin-recipe" && npm publish "${publish_args[@]}")
+else
+  echo "skipping dsh-plugin-recipe@$recipe_version (deprecated; set PUBLISH_RECIPE=1 only for a security fix)"
+fi
 
 echo "verifying npm registry (new packages can take a few minutes)"
 for attempt in $(seq 1 18); do
   if npm view "dsh-plugin-trim@$trim_version" version >/dev/null 2>&1 &&
-     npm view "dsh-plugin-recipe@$recipe_version" version >/dev/null 2>&1; then
+     { [[ "$publish_recipe" != "1" ]] || npm view "dsh-plugin-recipe@$recipe_version" version >/dev/null 2>&1; }; then
     npm view "dsh-plugin-trim@$trim_version" version
-    npm view "dsh-plugin-recipe@$recipe_version" version
+    if [[ "$publish_recipe" == "1" ]]; then
+      npm view "dsh-plugin-recipe@$recipe_version" version
+    fi
     echo "done"
     exit 0
   fi

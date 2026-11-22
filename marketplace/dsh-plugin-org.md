@@ -13,41 +13,41 @@ dsh-plugin
 deepseek-harness
 dsh-plugin-suite
 plugin-compatibility
-workflow
+context
 ```
 
 **标题**
 
 ```text
-DSH Plugin Checkup — 插件体检、兼容性检查与工作流蓝图
+DSH Plugin Checkup — 插件体检、兼容性检查与安全瘦身
 ```
 
 **短描述**
 
 ```text
-扫描 DSH 插件上下文成本与兼容性冲突，生成可回滚的精简方案，并把业务目标翻译成可校验的工作流蓝图。
+扫描 DSH 插件上下文成本与兼容性冲突，生成可回滚的精简方案；只在用户确认后应用低风险项。
 ```
 
 **安装命令**
 
 ```bash
-npm i dsh-plugin-trim
-npm i dsh-plugin-recipe
+dsh plugin --profile web add dsh-plugin-trim
 ```
 
 **长描述**
 
-`dsh-experience-optimizer` 面向已安装多个 DSH 插件、但被上下文成本、插件冲突和编排门槛
-困扰的开发者。它由两个可独立安装的插件组成：
+`dsh-experience-optimizer` 面向已安装多个 DSH 插件、但被上下文成本和插件冲突困扰的
+开发者。核心是 `dsh-plugin-trim`：
 
-- `dsh-plugin-trim`：扫描插件与当前 prompt 的真实上下文成本；对插件↔插件、插件↔DSH
-  运行时、Profile/工作区之间的冲突生成兼容性矩阵；按任务给出可解释的保留/启用/禁用建议。
-  默认只建议，显式确认后才应用，并可一键回滚；核心、preset、用户锁定项永不改动。
-- `dsh-plugin-recipe`：把“每周自动整理项目周报”这类业务目标翻译成步骤、能力、最小插件集、
-  权限、失败策略、验收清单和回滚说明，并校验依赖、循环、人工确认和兼容性冲突。
+- 扫描插件与当前 prompt 的真实上下文成本；对插件↔插件、插件↔DSH 运行时、
+  Profile/工作区之间的冲突生成兼容性矩阵；按任务给出可解释的保留/启用/禁用建议。
+- 默认只建议，显式确认后才应用，并可一键回滚；核心、preset、用户锁定项永不改动。
+- 分析只读、不联网、不执行 `!!js`、不修改第三方插件源码；版本豁免和插件升级只报告，
+  不自动执行。
 
-分析只读、不联网、不执行 `!!js`、不修改第三方插件源码；版本豁免和插件升级只报告，
-不自动执行。许可证 AGPL-3.0。
+`dsh-plugin-recipe`（工作流配方）已自 2026-11-22 起暂时废弃：不再新增功能，现有安装
+仍可生成/校验/导出蓝图；DSH 原生 `workflow` / `dsh-tool-workflow` 已覆盖执行层。
+许可证 AGPL-3.0。
 
 **许可证**
 

@@ -5,6 +5,28 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-22
+
+### Deprecated
+
+- `dsh-plugin-recipe` is temporarily deprecated as of 2026-11-22. Existing
+  installs keep generating, validating, and exporting blueprints; the package
+  only receives security and compatibility fixes. DSH native
+  `workflow` / `dsh-tool-workflow` now covers execution, so the static
+  blueprint layer is no longer the highest-leverage investment.
+- The recipe tab is hidden when the package is not installed. When installed,
+  it shows a **已冻结 / Frozen** badge and a dismissible deprecation notice.
+- `dsh-plugin-recipe` is removed from the bundled market index and root install
+  guidance. The npm package stays published and is marked deprecated in the
+  registry, so existing installs are not broken.
+
+### Changed
+
+- Root README and English README now present `dsh-plugin-trim` as the active
+  product; the workflow recipe moved to a clearly labelled deprecation section.
+- `scripts/publish-npm.sh` supports `PUBLISH_RECIPE=0` so the frozen recipe is
+  not published with every trim release.
+
 ## [0.3.10] - 2026-11-22
 
 ### Changed

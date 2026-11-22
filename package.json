@@ -1,9 +1,9 @@
 {
   "name": "dsh-experience-optimizer",
-  "version": "0.3.10",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
-  "description": "DSH plugin checkup, compatibility analysis, and workflow planning suite",
+  "description": "DSH plugin checkup and compatibility analysis suite",
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@12.8.1",
   "engines": {
@@ -47,7 +47,6 @@
     "deepseek-harness",
     "plugin-manager",
     "compatibility",
-    "workflow",
     "context",
     "plugin-suite"
   ]
