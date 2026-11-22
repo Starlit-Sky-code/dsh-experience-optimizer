@@ -5074,7 +5074,7 @@ async function recordCheckup(input) {
 			diff: diffRecords(state.records.at(-2), last),
 			skipped: true
 		};
-		const record = snapshotRecord(input.scan, now);
+		const record = snapshotRecord(input.scan, input.capability, now);
 		const previous = last;
 		state.records.push(record);
 		if (state.records.length > MAX_RECORDS) state.records = state.records.slice(-60);
@@ -5086,7 +5086,7 @@ async function recordCheckup(input) {
 		};
 	});
 }
-function snapshotRecord(scan, now) {
+function snapshotRecord(scan, capability, now) {
 	const owners = Object.entries(scan.context.byOwner).filter(([owner]) => owner !== "unattributed").map(([owner, tokens]) => ({
 		owner,
 		tokens
@@ -5107,7 +5107,9 @@ function snapshotRecord(scan, now) {
 			entries: scan.entries.length,
 			tools: scan.context.tools.length,
 			sections: scan.context.sections.length
-		}
+		},
+		bundleTokens: Object.fromEntries(scan.bundles.filter((bundle) => bundle.enabled).map((bundle) => [bundle.name, Math.max(0, bundle.contextTokens)])),
+		capabilities: Object.fromEntries((capability?.groups ?? []).map((group) => [group.id, Math.max(0, group.count)]))
 	};
 }
 function diffRecords(previous, current) {
@@ -5121,17 +5123,26 @@ function diffRecords(previous, current) {
 		const after = current.owners.find((item) => item.owner === owner)?.tokens ?? 0;
 		if (after !== before) ownerDelta.set(owner, after - before);
 	}
+	const addedBundles = [...currentBundles].filter((name) => !previousBundles.has(name)).sort();
 	return {
 		from: previous.at,
 		to: current.at,
-		addedBundles: [...currentBundles].filter((name) => !previousBundles.has(name)).sort(),
+		addedBundles,
 		removedBundles: [...previousBundles].filter((name) => !currentBundles.has(name)).sort(),
 		attributedDelta: current.attributed - previous.attributed,
 		totalDelta: current.total - previous.total,
 		ownerDeltas: [...ownerDelta.entries()].map(([owner, delta]) => ({
 			owner,
 			delta
-		})).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta)).slice(0, 5)
+		})).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta)).slice(0, 5),
+		newBundleCosts: addedBundles.map((name) => ({
+			name,
+			tokens: current.bundleTokens?.[name] ?? 0
+		})).filter((item) => item.tokens > 0),
+		newCapabilities: [.../* @__PURE__ */ new Set([...Object.keys(previous.capabilities ?? {}), ...Object.keys(current.capabilities ?? {})])].map((id) => ({
+			id,
+			delta: (current.capabilities?.[id] ?? 0) - (previous.capabilities?.[id] ?? 0)
+		})).filter((item) => item.delta > 0).sort((a, b) => b.delta - a.delta)
 	};
 }
 function pathFor$1(profile) {
@@ -5324,7 +5335,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.4";
+const CURRENT_VERSION = "0.5.5";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -5582,7 +5593,8 @@ async function overview(ctx, config, ledger) {
 	if (config.trackUsage) try {
 		const recorded = await recordCheckup({
 			profile: profileName,
-			scan
+			scan,
+			capability
 		});
 		history = {
 			records: recorded.records.slice(-20),

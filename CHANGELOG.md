@@ -5,6 +5,18 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-11-22
+
+### Added
+
+- The checkup history now includes an **install receipt**: newly added bundles
+  are shown with their current attributable token cost, and newly added
+  capability groups are called out. Backed by `bundleTokens` and
+  `capabilities` in each history snapshot.
+- The context card can expand “unattributed” into its top sections/tools, with a
+  note that unattributed tokens never become close suggestions and can be mapped
+  through `toolOwners`.
+
 ### Changed
 
 - Unified the four first-run paths around one story: read the verdict, check
@@ -13,9 +25,6 @@ All notable changes to this repository are documented here. Versions follow
   point at the old “scan first” or workflow-recipe path.
 - The first-run guide now sizes its step list to the number of steps, so the
   eight-step path is not clipped in a 180px scroll box.
-- The context card can expand “unattributed” into its top sections/tools, with a
-  note that unattributed tokens never become close suggestions and can be mapped
-  through `toolOwners`.
 
 ### Docs
 

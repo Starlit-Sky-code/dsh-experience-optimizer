@@ -9,6 +9,8 @@ export interface CheckupRecord {
   enabledBundles: string[]
   compat: { error: number; warn: number; info: number }
   counts: { bundles: number; entries: number; tools: number; sections: number }
+  bundleTokens: Record<string, number>
+  capabilities: Record<string, number>
 }
 
 export interface HistoryDiff {
@@ -19,6 +21,8 @@ export interface HistoryDiff {
   attributedDelta: number
   totalDelta: number
   ownerDeltas: Array<{ owner: string; delta: number }>
+  newBundleCosts: Array<{ name: string; tokens: number }>
+  newCapabilities: Array<{ id: string; delta: number }>
 }
 
 export interface CheckupHistory {
@@ -40,6 +44,7 @@ const THROTTLE_MS = 10 * 60 * 1000
 export async function recordCheckup(input: {
   profile: string
   scan: ScanResult
+  capability?: { groups: Array<{ id: string; count: number }> }
   force?: boolean
   now?: number
 }): Promise<HistoryResult> {
@@ -55,7 +60,7 @@ export async function recordCheckup(input: {
       return { records: state.records, diff: diffRecords(state.records.at(-2), last), skipped: true }
     }
 
-    const record = snapshotRecord(input.scan, now)
+    const record = snapshotRecord(input.scan, input.capability, now)
     const previous = last
     state.records.push(record)
     if (state.records.length > MAX_RECORDS) state.records = state.records.slice(-MAX_RECORDS)
@@ -69,7 +74,11 @@ export async function readHistory(profile: string): Promise<CheckupHistory> {
   return readState(profile)
 }
 
-function snapshotRecord(scan: ScanResult, now: number): CheckupRecord {
+function snapshotRecord(
+  scan: ScanResult,
+  capability: { groups: Array<{ id: string; count: number }> } | undefined,
+  now: number,
+): CheckupRecord {
   const owners = Object.entries(scan.context.byOwner)
     .filter(([owner]) => owner !== 'unattributed')
     .map(([owner, tokens]) => ({ owner, tokens }))
@@ -92,6 +101,14 @@ function snapshotRecord(scan: ScanResult, now: number): CheckupRecord {
       tools: scan.context.tools.length,
       sections: scan.context.sections.length,
     },
+    bundleTokens: Object.fromEntries(
+      scan.bundles
+        .filter((bundle) => bundle.enabled)
+        .map((bundle) => [bundle.name, Math.max(0, bundle.contextTokens)]),
+    ),
+    capabilities: Object.fromEntries(
+      (capability?.groups ?? []).map((group) => [group.id, Math.max(0, group.count)]),
+    ),
   }
 }
 
@@ -109,10 +126,11 @@ function diffRecords(previous: CheckupRecord | undefined, current: CheckupRecord
     const after = current.owners.find((item) => item.owner === owner)?.tokens ?? 0
     if (after !== before) ownerDelta.set(owner, after - before)
   }
+  const addedBundles = [...currentBundles].filter((name) => !previousBundles.has(name)).sort()
   return {
     from: previous.at,
     to: current.at,
-    addedBundles: [...currentBundles].filter((name) => !previousBundles.has(name)).sort(),
+    addedBundles,
     removedBundles: [...previousBundles].filter((name) => !currentBundles.has(name)).sort(),
     attributedDelta: current.attributed - previous.attributed,
     totalDelta: current.total - previous.total,
@@ -120,6 +138,16 @@ function diffRecords(previous: CheckupRecord | undefined, current: CheckupRecord
       .map(([owner, delta]) => ({ owner, delta }))
       .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
       .slice(0, 5),
+    newBundleCosts: addedBundles
+      .map((name) => ({ name, tokens: current.bundleTokens?.[name] ?? 0 }))
+      .filter((item) => item.tokens > 0),
+    newCapabilities: [...new Set([
+      ...Object.keys(previous.capabilities ?? {}),
+      ...Object.keys(current.capabilities ?? {}),
+    ])]
+      .map((id) => ({ id, delta: (current.capabilities?.[id] ?? 0) - (previous.capabilities?.[id] ?? 0) }))
+      .filter((item) => item.delta > 0)
+      .sort((a, b) => b.delta - a.delta),
   }
 }
 

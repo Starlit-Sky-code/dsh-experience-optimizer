@@ -31,7 +31,7 @@ import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
-const CURRENT_VERSION = '0.5.4'
+const CURRENT_VERSION = '0.5.5'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -316,7 +316,7 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
   let history: { records: unknown[]; diff?: unknown; skipped: boolean } = { records: [], skipped: true }
   if (config.trackUsage) {
     try {
-      const recorded = await recordCheckup({ profile: profileName, scan })
+      const recorded = await recordCheckup({ profile: profileName, scan, capability })
       history = {
         records: recorded.records.slice(-20),
         diff: recorded.diff,

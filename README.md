@@ -31,13 +31,13 @@
 
 ```bash
 # npm（固定本次发布版本）
-npm i dsh-plugin-trim@0.5.4
+npm i dsh-plugin-trim@0.5.5
 
 # DSH CLI / 插件市场：
-dsh plugin --profile web add dsh-plugin-trim@0.5.4
+dsh plugin --profile web add dsh-plugin-trim@0.5.5
 ```
 
-> 省略 `@0.5.4` 即取 latest；本次发布以 `0.5.4` 为准。
+> 省略 `@0.5.5` 即取 latest；本次发布以 `0.5.5` 为准。
 > 安装后如果设置页没有出现，重新加载 DSH，并确认当前工作区已安装该依赖；npm CDN 返回 404 时请使用下方 Release tarball。
 
 安装后打开 **设置 → 插件体检**（Agent 预设下方），或 **设置 → 插件 → 插件体检**。
@@ -47,7 +47,7 @@ dsh plugin --profile web add dsh-plugin-trim@0.5.4
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.4/dsh-plugin-trim-0.5.4.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.5/dsh-plugin-trim-0.5.5.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。

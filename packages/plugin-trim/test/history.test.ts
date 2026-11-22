@@ -20,7 +20,7 @@ afterEach(async () => {
   await rm(home, { recursive: true, force: true })
 })
 
-function bundle(name: string, enabled = true): BundleProfile {
+function bundle(name: string, enabled = true, contextTokens = 0): BundleProfile {
   return {
     name,
     version: '1.0.0',
@@ -32,7 +32,7 @@ function bundle(name: string, enabled = true): BundleProfile {
     removable: true,
     guardStatus: 'ok',
     rowModuleNames: [name],
-    contextTokens: 0,
+    contextTokens,
     usage: { calls: 0, successes: 0, sessionCalls: 0 },
     protected: false,
     findings: [],
@@ -87,6 +87,21 @@ describe('checkup history', () => {
     expect(next.diff?.addedBundles).toEqual(['b'])
     expect(next.diff?.attributedDelta).toBe(-300)
     expect(next.diff?.totalDelta).toBe(-300)
+  })
+
+  it('reports the marginal cost and capability of newly added plugins', async () => {
+    const firstScan = scan({ bundles: [bundle('a')] })
+    await recordCheckup({ profile: 'web', scan: firstScan, capability: { groups: [{ id: 'shell', count: 0 }] }, now: 1_000_000 })
+    const nextScan = scan({ bundles: [bundle('a'), bundle('b', true, 300)] })
+    const next = await recordCheckup({
+      profile: 'web',
+      scan: nextScan,
+      capability: { groups: [{ id: 'shell', count: 2 }] },
+      force: true,
+      now: 2_000_000,
+    })
+    expect(next.diff?.newBundleCosts).toEqual([{ name: 'b', tokens: 300 }])
+    expect(next.diff?.newCapabilities).toEqual([{ id: 'shell', delta: 2 }])
   })
 
   it('reports removed plugins', async () => {

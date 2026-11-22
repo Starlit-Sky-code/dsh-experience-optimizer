@@ -294,6 +294,10 @@ window.__ModuleLoader__.load({
 .eo-history-chip{font-size:11px;line-height:16px;padding:1px 7px;border-radius:999px;border:.5px solid var(--eo-border);color:var(--eo-secondary)}
 .eo-history-chip.is-good{border-color:color-mix(in srgb,var(--eo-success) 35%,transparent);color:var(--eo-success)}
 .eo-history-chip.is-warn{border-color:color-mix(in srgb,var(--eo-warn) 35%,transparent);color:var(--eo-warn)}
+.eo-history-receipt{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;line-height:16px;color:var(--eo-secondary)}
+.eo-history-receipt span{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:5px;border:.5px solid var(--eo-border)}
+.eo-history-receipt code{font:400 11px/16px var(--eo-code);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eo-history-receipt.is-warn{color:var(--eo-warn)}
 .eo-history-spark{width:100%;height:40px;color:var(--dsw-alias-state-info-primary,#4c7dd0)}
 .eo-verification{display:flex;flex-direction:column;gap:3px;padding:9px 11px;border-radius:8px;border:.5px solid var(--eo-border);background:var(--eo-card-bg);font-size:12px;line-height:18px}
 .eo-verification-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -1647,7 +1651,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.4',
+            current: '0.5.5',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2293,7 +2297,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.4')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.5')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2351,7 +2355,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.4 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.5 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2814,6 +2818,24 @@ window.__ModuleLoader__.load({
             },
             h('polyline', { points, fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinejoin: 'round', strokeLinecap: 'round' }),
           ),
+          diff && diff.newBundleCosts && diff.newBundleCosts.length > 0
+            ? h(
+                'div',
+                { className: 'eo-history-receipt' },
+                diff.newBundleCosts.slice(0, 3).map((item) =>
+                  h('span', { key: item.name }, tr('新装 ', 'New ') + h('code', null, item.name) + ' +' + formatNumber(item.tokens) + ' tokens'),
+                ),
+              )
+            : null,
+          diff && diff.newCapabilities && diff.newCapabilities.length > 0
+            ? h(
+                'div',
+                { className: 'eo-history-receipt is-warn' },
+                diff.newCapabilities.slice(0, 3).map((item) =>
+                  h('span', { key: item.id }, tr('新增能力 ', 'New capability ') + item.id + ' +' + item.delta),
+                ),
+              )
+            : null,
           h('div', { className: 'eo-muted' }, tr('最近 ', 'Last ') + records.length + tr(' 次体检快照 · 可归属 token', ' checkup snapshots · attributable tokens')),
         )
       }

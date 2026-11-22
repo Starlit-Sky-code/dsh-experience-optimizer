@@ -87,7 +87,7 @@ const overview = {
         { at: '2026-11-21T00:00:00.000Z', attributed: 1000, total: 1400, owners: [], enabledBundles: [], compat: { error: 0, warn: 0, info: 0 }, counts: { bundles: 0, entries: 0, tools: 0, sections: 0 } },
         { at: '2026-11-22T00:00:00.000Z', attributed: 800, total: 1200, owners: [], enabledBundles: [], compat: { error: 0, warn: 0, info: 0 }, counts: { bundles: 0, entries: 0, tools: 0, sections: 0 } },
       ],
-      diff: { addedBundles: ['new-plugin'], removedBundles: [], attributedDelta: -200, totalDelta: -200, ownerDeltas: [] },
+      diff: { addedBundles: ['new-plugin'], removedBundles: [], attributedDelta: -200, totalDelta: -200, ownerDeltas: [], newBundleCosts: [{ name: 'new-plugin', tokens: 600 }], newCapabilities: [{ id: 'shell', delta: 1 }] },
       skipped: false,
     },
     verification: {
@@ -224,6 +224,8 @@ describe('client onboarding and pages', () => {
     expect(container.querySelector('.eo-history-spark')).not.toBeNull()
     expect(container.textContent).toContain('mystery-section')
     expect(container.querySelector('.eo-unattributed')).not.toBeNull()
+    expect(container.textContent).toContain('新装 ')
+    expect(container.textContent).toContain('新增能力 shell')
     expect(container.querySelector('.eo-category-bar')).not.toBeNull()
     expect(container.textContent).toContain('宿主进程 RSS 412 MB')
 
