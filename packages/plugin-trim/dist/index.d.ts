@@ -324,6 +324,14 @@ interface PluginManagerLike {
   };
   setPluginEnabled?(id: string, enabled: boolean): Promise<ChangeResultLike>;
   setBundleEnabled?(name: string, enabled: boolean): Promise<ChangeResultLike>;
+  updateBundle?(name: string, version: string, options?: Record<string, unknown>): Promise<PluginUpdateResultLike>;
+}
+/** Minimal structural view of a plugin-manager update result. */
+interface PluginUpdateResultLike {
+  from: string;
+  to: string;
+  result: ChangeResultLike;
+  restore?: ChangeResultLike;
 }
 /** Minimal structural view of a plugin-manager change result. */
 interface ChangeResultLike {
@@ -714,4 +722,4 @@ export declare const name = "dsh-plugin-trim";
 export declare const inject: string[];
 /** Register trim tools and the local usage observer. */
 export declare function apply(ctx: Context, config?: Partial<Config>): void;
-export type { BundleInfoLike, ChangeResultLike, CompatAnalysisResult, CompatConfigLike, CompatContext, CompatRuntimeInfo, Config as TrimConfig, JsSentinel, LoaderEntryLike, LoaderEntrySnapshot, LoaderLike, LockfileSummary, PatchLayerRow, PluginForm, PluginInfoLike, PluginInventoryLike, PluginInventorySnapshotLike, PluginManagerLike, PluginManifest, ProfileRaw, PromptAdapterLike, PromptAssemblyLike, WorkspaceRaw };
+export type { BundleInfoLike, ChangeResultLike, CompatAnalysisResult, CompatConfigLike, CompatContext, CompatRuntimeInfo, Config as TrimConfig, JsSentinel, LoaderEntryLike, LoaderEntrySnapshot, LoaderLike, LockfileSummary, PatchLayerRow, PluginForm, PluginInfoLike, PluginInventoryLike, PluginInventorySnapshotLike, PluginManagerLike, PluginManifest, PluginUpdateResultLike, ProfileRaw, PromptAdapterLike, PromptAssemblyLike, WorkspaceRaw };

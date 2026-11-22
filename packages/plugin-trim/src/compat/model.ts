@@ -31,6 +31,15 @@ export interface PluginManagerLike {
   }
   setPluginEnabled?(id: string, enabled: boolean): Promise<ChangeResultLike>
   setBundleEnabled?(name: string, enabled: boolean): Promise<ChangeResultLike>
+  updateBundle?(name: string, version: string, options?: Record<string, unknown>): Promise<PluginUpdateResultLike>
+}
+
+/** Minimal structural view of a plugin-manager update result. */
+export interface PluginUpdateResultLike {
+  from: string
+  to: string
+  result: ChangeResultLike
+  restore?: ChangeResultLike
 }
 
 /** Minimal structural view of a plugin-manager change result. */

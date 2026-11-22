@@ -1442,6 +1442,9 @@ window.__ModuleLoader__.load({
       const [settingsError, setSettingsError] = useState('')
       const [updateInfo, setUpdateInfo] = useState(null)
       const [updateBusy, setUpdateBusy] = useState(false)
+      const [updateApplying, setUpdateApplying] = useState(false)
+      const [updateApplyResult, setUpdateApplyResult] = useState(null)
+      const [autoUpdate, setAutoUpdate] = useState(() => readPref('autoUpdate', '0') === '1')
       CURRENT_LOCALE = locale
 
       const notify = useCallback((message, kind) => {
@@ -1714,14 +1717,39 @@ window.__ModuleLoader__.load({
         }
       }, [settingsDraft, notify])
 
+      const applyUpdate = useCallback(async (version) => {
+        setUpdateApplying(true)
+        setUpdateApplyResult(null)
+        try {
+          const result = await fetchJson(API + '/update/apply', {
+            method: 'POST',
+            body: JSON.stringify({ version, confirm: true }),
+          })
+          setUpdateApplyResult(result)
+          notify(
+            result.restartRequired
+              ? tr('更新已应用；重启 DSH 后生效', 'Update applied; restart DSH to load it')
+              : tr('更新已应用', 'Update applied'),
+          )
+        } catch (err) {
+          setUpdateApplyResult({ error: err instanceof Error ? err.message : String(err) })
+          notify(tr('后台更新失败，请用 DSH 插件管理器更新', 'Background update failed; use the DSH plugin manager'), 'warn')
+        } finally {
+          setUpdateApplying(false)
+        }
+      }, [notify])
+
       const checkUpdate = useCallback(async () => {
         setUpdateBusy(true)
+        setUpdateApplyResult(null)
         try {
-          setUpdateInfo(await fetchJson(API + '/update'))
+          const info = await fetchJson(API + '/update')
+          setUpdateInfo(info)
+          if (autoUpdate && info.updateAvailable && info.latest) void applyUpdate(info.latest)
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.9',
+            current: overview?.version || '—',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -1731,7 +1759,7 @@ window.__ModuleLoader__.load({
         } finally {
           setUpdateBusy(false)
         }
-      }, [])
+      }, [applyUpdate, autoUpdate, overview?.version])
 
       const findings = useMemo(() => {
         if (!overview) return []
@@ -2410,7 +2438,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.9')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || overview?.version || '—')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2419,8 +2447,30 @@ window.__ModuleLoader__.load({
                 : updateInfo && updateInfo.error
                   ? h('div', { className: 'eo-issue eo-issue-warn' }, h('span', null, tr('检查失败：', 'Check failed: ') + updateInfo.error))
                   : null,
+            updateInfo && updateInfo.updateAvailable
+              ? h('div', { className: 'eo-inline', style: { marginTop: '8px' } },
+                  h('label', { className: 'eo-check' },
+                    h('input', {
+                      type: 'checkbox',
+                      checked: autoUpdate,
+                      onChange: (event) => {
+                        const next = event.target.checked
+                        setAutoUpdate(next)
+                        writePref('autoUpdate', next ? '1' : '0')
+                      },
+                    }),
+                    h('span', null, tr('发现更新后自动下载并应用', 'Auto-download and apply updates')),
+                  ),
+                  h(Button, { variant: 'accent', onClick: () => void applyUpdate(updateInfo.latest), disabled: updateApplying || updateBusy }, updateApplying ? tr('后台下载中…', 'Downloading…') : tr('后台下载并应用', 'Download and apply')),
+                )
+              : null,
+            updateApplyResult && updateApplyResult.error
+              ? h('div', { className: 'eo-issue eo-issue-warn' }, h('span', null, tr('更新失败：', 'Update failed: ') + updateApplyResult.error))
+              : updateApplyResult
+                ? h('div', { className: 'eo-issue' }, h('span', null, tr('已下载 ', 'Downloaded ') + updateApplyResult.to + tr('，重启 DSH 后生效。', '; restart DSH to load it.')))
+                : null,
             h('div', { className: 'eo-inline', style: { marginTop: '10px' } },
-              h(Button, { variant: 'accent', onClick: () => void checkUpdate(), disabled: updateBusy }, updateBusy ? tr('检查中…', 'Checking…') : tr('检查更新', 'Check for updates')),
+              h(Button, { variant: 'accent', onClick: () => void checkUpdate(), disabled: updateBusy || updateApplying }, updateBusy ? tr('检查中…', 'Checking…') : tr('检查更新', 'Check for updates')),
               h('a', { className: 'eo-btn eo-btn-ghost', href: 'https://github.com/Starlit-Sky-code/dsh-experience-optimizer/issues/new/choose', target: '_blank', rel: 'noreferrer' }, tr('新建 Issue', 'New issue')),
               h('a', { className: 'eo-btn eo-btn-ghost', href: ABOUT_LINKS.issues, target: '_blank', rel: 'noreferrer' }, tr('问题列表', 'Issues')),
             ),
@@ -2468,7 +2518,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('先体检，再决定关什么。', 'Measure first. Then decide what to close.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.9 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + (overview?.version || '—') + ' · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(

@@ -1,4 +1,5 @@
 import type { Context } from '@deepseek-ai/cordis'
+import { readFileSync } from 'node:fs'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import {
   isSameOrigin,
@@ -32,6 +33,20 @@ import type { TaskTag } from 'dsh-shared-meta'
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
 const CURRENT_VERSION = '0.5.9'
+let resolvedVersion: string | undefined
+
+/** Read the installed package version; fall back to the bundled constant. */
+function installedVersion(): string {
+  if (resolvedVersion !== undefined) return resolvedVersion
+  try {
+    const raw = readFileSync(new URL('../package.json', import.meta.url), 'utf8')
+    const pkg = JSON.parse(raw) as { version?: unknown }
+    if (typeof pkg.version === 'string' && pkg.version.length > 0) resolvedVersion = pkg.version
+  } catch {
+    // keep the bundled fallback
+  }
+  return resolvedVersion ?? CURRENT_VERSION
+}
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -125,6 +140,11 @@ export async function handleTrimRequest(
       sendJson(res, 200, { ok: true, data: publicConfig(ctx, normalizeConfig(next)) })
       return
     }
+    if (req.method === 'POST' && path === '/update/apply') {
+      const body = await readJsonBody<Record<string, unknown>>(req)
+      sendJson(res, 200, { ok: true, data: await applyUpdate(ctx, body) })
+      return
+    }
     if (req.method === 'POST' && path === '/suggest') {
       const body = await readJsonBody<Record<string, unknown>>(req)
       sendJson(res, 200, { ok: true, data: await suggest(ctx, config, ledger, body) })
@@ -161,7 +181,7 @@ export function compareVersions(left: string, right: string): number {
 async function checkForUpdate(): Promise<Record<string, unknown>> {
   if (updateCache !== undefined && Date.now() - updateCache.at < 60_000) return updateCache.value
   const base = {
-    current: CURRENT_VERSION,
+    current: installedVersion(),
     package: 'dsh-plugin-trim',
     url: 'https://www.npmjs.com/package/dsh-plugin-trim',
   }
@@ -177,7 +197,7 @@ async function checkForUpdate(): Promise<Record<string, unknown>> {
     const value = {
       ...base,
       latest,
-      updateAvailable: compareVersions(latest, CURRENT_VERSION) > 0,
+      updateAvailable: compareVersions(latest, installedVersion()) > 0,
       checkedAt: new Date().toISOString(),
     }
     updateCache = { at: Date.now(), value }
@@ -337,7 +357,7 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     .sort((a, b) => b.tokens - a.tokens)
     .slice(0, 12)
   return {
-    version: CURRENT_VERSION,
+    version: installedVersion(),
     verdict: buildVerdict(compat, scan),
     compaction: scan.compaction,
     runtime: compat.report.runtime,
@@ -449,6 +469,26 @@ async function suggest(
       managementAvailable: scan.managementAvailable,
     },
     findings: compat.findings.map(toFinding),
+  }
+}
+
+export async function applyUpdate(ctx: Context, body: Record<string, unknown>): Promise<unknown> {
+  if (body.confirm !== true) throw new Error('confirm must be true')
+  const version = typeof body.version === 'string' ? body.version.trim() : ''
+  if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error('invalid version')
+  const manager = getPluginManager(ctx)
+  if (manager?.updateBundle === undefined) {
+    throw new Error('pluginManager.updateBundle is unavailable; update from the DSH plugin manager')
+  }
+  const result = await manager.updateBundle('dsh-plugin-trim', version)
+  const application = result.result?.application ?? 'unknown'
+  return {
+    from: result.from,
+    to: result.to,
+    application,
+    restartRequired: application === 'restart-required',
+    restartReason: result.result?.restartReason,
+    error: result.result?.error?.diagnostic,
   }
 }
 

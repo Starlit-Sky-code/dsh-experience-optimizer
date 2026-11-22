@@ -5,17 +5,22 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+### Added
+
+- **Background update**: `POST /update/apply` calls the DSH plugin manager's
+  `updateBundle`, and the update card can download/apply directly. An opt-in
+  checkbox remembers “auto-download and apply after check”; DSH still needs a
+  restart to load the new code.
+
 ### Changed
 
-- The post-apply measurement now treats a positive delta as a regression:
-  “优化后反而增加” plus a one-click rollback; zero change is labelled neutral.
-
-### Changed
-
+- Version display now reads the **installed package.json** instead of a bundled
+  constant, so the checkup, update check, and About page agree.
 - All install guidance uses the single command `npm i dsh-plugin-trim`.
-- The settings budget row and preset buttons wrap cleanly on narrow widths.
 - “Parameter ranges” is now a collapsed optional section; each field has a
   hover/focus explanation, and the read-only slider chrome was removed.
+- The post-apply measurement treats a positive delta as a regression
+  (“优化后反而增加”) with a one-click rollback.
 
 ### Fixed
 
