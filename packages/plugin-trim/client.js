@@ -261,25 +261,25 @@ window.__ModuleLoader__.load({
 .eo-stack>[data-section="dedupe"]{order:8}
 .eo-stack>[data-section="diagnostics"]{order:9}
 .eo-grid{display:grid;gap:10px}
-.eo-verdict{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:.5px solid var(--eo-border-strong);border-radius:var(--eo-radius);background:var(--eo-card-bg);font-size:12px;line-height:18px}
+.eo-verdict{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"main actions" "checks checks";align-items:center;gap:8px 12px;padding:10px 12px;border:.5px solid var(--eo-border-strong);border-radius:var(--eo-radius);background:var(--eo-card-bg);font-size:12px;line-height:18px}
 .eo-verdict-ok{border-color:color-mix(in srgb,var(--eo-success) 35%,transparent);background:color-mix(in srgb,var(--eo-success) 5%,transparent)}
 .eo-verdict-attention{border-color:color-mix(in srgb,var(--eo-warn) 38%,transparent);background:color-mix(in srgb,var(--eo-warn) 6%,transparent)}
 .eo-verdict-risk{border-color:color-mix(in srgb,var(--eo-error) 38%,transparent);background:color-mix(in srgb,var(--eo-error) 6%,transparent)}
-.eo-verdict-main{display:flex;align-items:center;gap:8px;min-width:170px}
+.eo-verdict-main{grid-area:main;display:flex;align-items:center;gap:8px;min-width:0}
 .eo-verdict-dot{width:8px;height:8px;border-radius:50%;background:var(--eo-success);flex:none}
 .eo-verdict-attention .eo-verdict-dot{background:var(--eo-warn)}
 .eo-verdict-risk .eo-verdict-dot{background:var(--eo-error)}
 .eo-verdict-copy{display:flex;flex-direction:column;gap:1px;min-width:0}
 .eo-verdict-copy b{font-size:11px;font-weight:500;color:var(--eo-tertiary);letter-spacing:.02em}
 .eo-verdict-copy span{font-size:13px;font-weight:600;line-height:19px}
-.eo-verdict-checks{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.eo-verdict-checks{grid-area:checks;display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
 .eo-check{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:999px;border:.5px solid var(--eo-border);color:var(--eo-secondary);white-space:nowrap}
 .eo-check i{width:6px;height:6px;border-radius:50%;background:var(--eo-tertiary);flex:none}
 .eo-check-ok i{background:var(--eo-success)}
 .eo-check-warn i{background:var(--eo-warn)}
 .eo-check-error i{background:var(--eo-error)}
 .eo-check-info i{background:var(--eo-tertiary)}
-.eo-verdict-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eo-verdict-actions{grid-area:actions;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .eo-categories{display:flex;flex-direction:column;gap:5px}
 .eo-category-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.06));border:.5px solid var(--eo-border)}
 .eo-category-bar i{display:block;height:100%}
@@ -1631,7 +1631,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.3',
+            current: '0.5.4',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2277,7 +2277,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.3')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.4')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2335,7 +2335,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.3 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.4 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(

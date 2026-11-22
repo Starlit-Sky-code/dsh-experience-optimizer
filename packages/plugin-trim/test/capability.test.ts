@@ -63,6 +63,19 @@ describe('static capability surface', () => {
     expect(byId['dynamic-config'].items.map((item) => item.name)).toEqual(['bundle:dynamic-row'])
   })
 
+  it('does not list official base-layer !!js wiring as a capability', () => {
+    const surface = inspectCapabilities({
+      tools: [],
+      loaderEntries: [],
+      patchRows: [
+        patch({ layer: '@deepseek-ai/dsh-base', id: 'core-row', config: { value: { __js: 'ctx.get("x")' } } }),
+        patch({ layer: 'my-plugin-bundle', id: 'plugin-row', config: { value: { __js: 'ctx.get("y")' } } }),
+      ],
+    })
+    const dynamic = surface.groups.find((group) => group.id === 'dynamic-config')
+    expect(dynamic?.items.map((item) => item.name)).toEqual(['my-plugin-bundle:plugin-row'])
+  })
+
   it('caps each group at 20 items', () => {
     const tools = Array.from({ length: 30 }, (_, index) => tool(`bash_${index}`))
     const surface = inspectCapabilities({ tools, loaderEntries: [], patchRows: [] })

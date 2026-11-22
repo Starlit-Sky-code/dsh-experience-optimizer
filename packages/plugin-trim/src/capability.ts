@@ -80,6 +80,9 @@ function dynamicItems(rows: readonly PatchLayerRow[]): CapabilityItem[] {
   const items: CapabilityItem[] = []
   const seen = new Set<string>()
   for (const row of rows) {
+    // Official patch layers use !!js for host wiring; that is not a third-party
+    // plugin capability and would otherwise drown the useful entries.
+    if (row.layer.startsWith('@deepseek-ai/')) continue
     if (!containsJs(row.config) && !isJsSentinel(row.disabled)) continue
     const key = `${row.layer}:${row.id}`
     if (seen.has(key)) continue

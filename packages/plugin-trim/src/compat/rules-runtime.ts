@@ -53,7 +53,7 @@ export async function runRuntimeRules(context: CompatContext): Promise<CompatFin
           makeFinding({
             domain: 'plugin-runtime',
             code: 'RT_PLATFORM_UNSUPPORTED',
-            severity: 'error',
+            severity: bundle.optional ? 'warn' : 'error',
             title: `${name} does not support this platform`,
             subjects,
             confidence: 'high',
@@ -196,7 +196,7 @@ export async function runRuntimeRules(context: CompatContext): Promise<CompatFin
         makeFinding({
           domain: 'plugin-runtime',
           code: 'RT_PLATFORM_UNSUPPORTED',
-          severity: 'error',
+          severity: bundle.optional ? 'warn' : 'error',
           title: `${name} does not support ${context.runtime.platform}`,
           subjects,
           confidence: 'high',

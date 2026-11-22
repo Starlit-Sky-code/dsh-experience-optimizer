@@ -6,6 +6,8 @@
 
 ![插件体检控制台](../assets/ui-preview.png)
 
+![压缩链路体检](../assets/ui-compaction.png)
+
 ## 打开
 
 安装 `dsh-plugin-trim` 后即可使用。`dsh-plugin-recipe` 已暂时废弃；仅当它仍启用时，才会显示「工作流配方」页签。

@@ -1360,7 +1360,7 @@ async function runRuntimeRules(context) {
 			if (bundle.error?.code === "unsupported-platform") findings.push(makeFinding({
 				domain: "plugin-runtime",
 				code: "RT_PLATFORM_UNSUPPORTED",
-				severity: "error",
+				severity: bundle.optional ? "warn" : "error",
 				title: `${name} does not support this platform`,
 				subjects,
 				confidence: "high",
@@ -1464,7 +1464,7 @@ async function runRuntimeRules(context) {
 		if (platforms !== void 0) findings.push(makeFinding({
 			domain: "plugin-runtime",
 			code: "RT_PLATFORM_UNSUPPORTED",
-			severity: "error",
+			severity: bundle.optional ? "warn" : "error",
 			title: `${name} does not support ${context.runtime.platform}`,
 			subjects,
 			confidence: "high",
@@ -1846,8 +1846,10 @@ async function runPluginRules(context) {
 		const manifest = context.manifests.get(rootPackageName(bundle.name));
 		if (manifest === void 0) continue;
 		const bundleNames = new Set(context.bundles.map((item) => rootPackageName(item.name)));
+		const optionalPeers = manifest.peerDependenciesMeta ?? {};
 		for (const [peer, range] of Object.entries(manifestPeers(manifest))) {
 			if (peer === "@deepseek-ai/dsh") continue;
+			if (optionalPeers[peer]?.optional === true) continue;
 			if (!peer.startsWith("@deepseek-ai/dsh-")) continue;
 			if (bundleNames.has(peer)) continue;
 			if (knownModules.has(peer)) continue;
@@ -5030,6 +5032,7 @@ function dynamicItems(rows) {
 	const items = [];
 	const seen = /* @__PURE__ */ new Set();
 	for (const row of rows) {
+		if (row.layer.startsWith("@deepseek-ai/")) continue;
 		if (!containsJs(row.config) && !isJsSentinel(row.disabled)) continue;
 		const key = `${row.layer}:${row.id}`;
 		if (seen.has(key)) continue;
@@ -5321,7 +5324,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.3";
+const CURRENT_VERSION = "0.5.4";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",

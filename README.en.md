@@ -32,7 +32,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.3/dsh-plugin-trim-0.5.3.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.4/dsh-plugin-trim-0.5.4.tgz"
 ```
 
 For source development, see [Development](#development).
@@ -49,6 +49,10 @@ For source development, see [Development](#development).
 - Settings includes layout/density/collapse preferences, editable plugin policy fields with an Apply button that appears after changes, an npm update check, and Issue shortcuts. A first-run activation card shows the five-step tutorial after enabling; a one-time main-screen guide also points to More → Settings → Plugin checkup.
 - In conversation: a brief “Measure first, then decide what to close” reminder above the composer, and a token strip in expanded reasoning. Read-only, once per session, dismissible.
 - **English and Chinese UI** can be switched at runtime.
+
+![Compaction stack audit](assets/ui-compaction.png)
+
+<p align="center"><sub>Read-only compaction stack: backend / pruner / image / command / threshold in one view; duplicate backends are flagged.</sub></p>
 
 ![Two paths, one authorization boundary](assets/readme/flow.svg)
 

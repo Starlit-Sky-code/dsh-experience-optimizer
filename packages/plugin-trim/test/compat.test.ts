@@ -115,6 +115,22 @@ describe('runtime compatibility', () => {
     expect(checkNodeEngine({ engines: { node: '>=99' } }, '26.10.0')).toBe('>=99')
   })
 
+  it('downgrades an unsupported optional bundle to a warning', async () => {
+    const findings = await runRuntimeRules(
+      context({
+        bundles: [
+          bundle({
+            name: 'optional-bundle',
+            optional: true,
+            error: { code: 'unsupported-platform' },
+          }),
+        ],
+      }),
+    )
+    const finding = findings.find((item) => item.code === 'RT_PLATFORM_UNSUPPORTED')
+    expect(finding?.severity).toBe('warn')
+  })
+
   it('reports RT_ENGINE_UNMET from a manifest', async () => {
     const findings = await runRuntimeRules(
       context({
@@ -129,6 +145,26 @@ describe('runtime compatibility', () => {
 })
 
 describe('plugin compatibility', () => {
+  it('does not warn for optional peer bundles that are absent', async () => {
+    const findings = await runPluginRules(
+      context({
+        bundles: [bundle()],
+        manifests: new Map([
+          [
+            'dsh-plugin-extra',
+            {
+              name: 'dsh-plugin-extra',
+              version: '1.0.0',
+              peerDependencies: { '@deepseek-ai/dsh-app-boot': '^0.2.2-rc.1' },
+              peerDependenciesMeta: { '@deepseek-ai/dsh-app-boot': { optional: true } },
+            },
+          ],
+        ]),
+      }),
+    )
+    expect(findings.some((finding) => finding.code === 'PP_MISSING_PEER_BUNDLE')).toBe(false)
+  })
+
   it('detects duplicate service providers in one scope', async () => {
     const findings = await runPluginRules(
       context({

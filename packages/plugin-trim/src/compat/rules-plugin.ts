@@ -358,8 +358,10 @@ export async function runPluginRules(context: CompatContext): Promise<CompatFind
     const manifest = context.manifests.get(rootPackageName(bundle.name))
     if (manifest === undefined) continue
     const bundleNames = new Set(context.bundles.map((item) => rootPackageName(item.name)))
+    const optionalPeers = manifest.peerDependenciesMeta ?? {}
     for (const [peer, range] of Object.entries(manifestPeers(manifest))) {
       if (peer === '@deepseek-ai/dsh') continue
+      if (optionalPeers[peer]?.optional === true) continue
       if (!peer.startsWith('@deepseek-ai/dsh-')) continue
       if (bundleNames.has(peer)) continue
       if (knownModules.has(peer)) continue

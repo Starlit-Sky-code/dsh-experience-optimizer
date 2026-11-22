@@ -33,7 +33,7 @@ dsh plugin --profile web add dsh-plugin-trim
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.3/dsh-plugin-trim-0.5.3.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.4/dsh-plugin-trim-0.5.4.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。
@@ -44,7 +44,11 @@ npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/dow
 
 ![插件体检网页控制台](assets/ui-preview.png)
 
-<p align="center"><sub>设置 → 插件体检：上下文、兼容性、精简方案在同一个原生设置页里。</sub></p>
+<p align="center"><sub>设置 → 插件体检：结论、上下文、压缩链路、能力面与精简方案在同一个原生设置页里。</sub></p>
+
+![压缩链路体检](assets/ui-compaction.png)
+
+<p align="center"><sub>只读压缩链路：后端 / 裁剪 / 图像 / 命令 / 阈值一屏看清；双后端会直接标冲突。</sub></p>
 
 ![两条路径，一个授权边界](assets/readme/flow.svg)
 

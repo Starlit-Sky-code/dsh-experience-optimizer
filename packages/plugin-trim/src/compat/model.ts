@@ -10,6 +10,7 @@ export interface PluginManifest {
   version?: string
   engines?: Record<string, unknown>
   peerDependencies?: Record<string, string>
+  peerDependenciesMeta?: Record<string, { optional?: boolean }>
   dependencies?: Record<string, string>
   dsh?: {
     bundle?: {

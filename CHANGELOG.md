@@ -3,6 +3,24 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.5.4] - 2026-11-22
+
+### Fixed
+
+- Optional peer dependencies no longer produce `PP_MISSING_PEER_BUNDLE`
+  warnings when the user has not installed them.
+- An unsupported optional bundle is now a warning instead of a blocking error;
+  it no longer turns the whole verdict red on platforms that simply skip it.
+- The capability surface no longer lists official base-layer `!!js` wiring as a
+  third-party capability; only non-core patch layers are shown.
+- The verdict banner is a two-row grid, keeping the check pills horizontal and
+  the action buttons aligned at 760px panel width.
+
+### Docs
+
+- Replaced the stale console preview with real screenshots of the current
+  verdict, compaction stack, capability, and context view.
+
 ## [0.5.3] - 2026-11-22
 
 ### Added

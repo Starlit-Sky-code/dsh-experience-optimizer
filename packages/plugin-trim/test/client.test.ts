@@ -13,7 +13,7 @@ const source = readFileSync(resolve(process.cwd(), 'packages/plugin-trim/client.
 const overview = {
   ok: true,
   data: {
-    version: '0.5.3',
+    version: '0.5.4',
     runtime: { dshVersion: '0.2.2-rc.1' },
     profile: { name: 'web', dir: '/tmp/web' },
     compat: { error: 0, warn: 0, info: 0, byDomain: {} },
