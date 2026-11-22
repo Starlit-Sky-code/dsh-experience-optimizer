@@ -30,7 +30,7 @@ pnpm market:check
 
 ## DSH Plugin Hub（dsh-plugin.org）
 
-- 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/677>（已关闭，等待定时扫描）
+- 提交 issue：<https://github.com/dshplugin/dsh-plugin-hub/issues/880>（2026-11-22 重新提交，等待扫描/收录）
 - npm 已发布 0.5.0；DSH Plugin Hub 收录仍以 dsh-plugin.org 的扫描结果为准。
 - 已在 issue 评论中补充 npm 包链接与安装命令。
 
