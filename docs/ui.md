@@ -88,6 +88,12 @@ section id 为 `experience-optimizer`，图标是 16px 的三段滑杆 SVG。
 - 活跃后端加入保护名单，不会被建议关闭。
 - 不做自动配置修改，不执行第三方插件代码。
 
+### 类别与报告
+
+- 上下文卡按核心 / 界面 / 上下文记忆 / 工具 / 工作流 / 集成 / 其他汇总 token 与占比。
+- 结论条提供「复制报告」：Markdown 包含结论、上下文、压缩链路、能力面、兼容发现、历史与实测收益。
+- 上下文卡底部显示宿主 RSS / uptime，标注为进程级，不归因到单个插件。
+
 ### 自上次体检
 
 - 每次体检记录一条快照（10 分钟节流，最多 60 条）。
@@ -150,7 +156,7 @@ Host 端在两个插件里分别注册同源 JSON 路由：
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
-| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` |
+| `GET` | `/api/dsh-experience-optimizer/overview` | 当前 profile 的扫描 + 兼容性 + 上下文 + `verdict` + `compaction` + `verification` + `capability` + `history` + `categories` + `host` |
 | `POST` | `/api/dsh-experience-optimizer/suggest` | 生成并保存精简草稿 |
 | `GET` | `/api/dsh-experience-optimizer/config` | 当前生效的审批/建议策略与保护名单（只读） |
 | `POST` | `/api/dsh-experience-optimizer/apply` | 用户点击后应用低风险项；`confirm: true` 由 UI 提交 |

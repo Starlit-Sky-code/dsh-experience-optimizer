@@ -5161,6 +5161,49 @@ function withLock$1(fn) {
 	queue$1 = run.catch(() => void 0);
 	return run;
 }
+// src/categories.ts
+/** Group bundles into coarse ecosystem categories for a composition view. */
+function summarizeCategories(bundles) {
+	const byId = /* @__PURE__ */ new Map();
+	for (const bundle of bundles) {
+		if (!bundle.enabled) continue;
+		const id = categoryOf(bundle);
+		const current = byId.get(id) ?? {
+			id,
+			label: LABELS[id],
+			bundles: 0,
+			tokens: 0,
+			share: 0
+		};
+		current.bundles += 1;
+		current.tokens += Math.max(0, bundle.contextTokens);
+		byId.set(id, current);
+	}
+	const total = [...byId.values()].reduce((sum, item) => sum + item.tokens, 0);
+	return [...byId.values()].map((item) => ({
+		...item,
+		share: total > 0 ? item.tokens / total * 100 : 0
+	})).sort((a, b) => b.tokens - a.tokens || a.id.localeCompare(b.id));
+}
+const LABELS = {
+	core: "核心",
+	ui: "界面",
+	memory: "上下文/记忆",
+	tools: "工具",
+	workflow: "工作流",
+	integration: "集成",
+	other: "其他"
+};
+function categoryOf(bundle) {
+	const text = `${bundle.name} ${bundle.description ?? ""}`.toLowerCase();
+	if (/(client-ui|ui-|theme|icon|style|widget)/.test(text)) return "ui";
+	if (/(context|memory|compact|recall|rag|knowledge|history)/.test(text)) return "memory";
+	if (/(workflow|recipe|schedule|automation|task|goal)/.test(text)) return "workflow";
+	if (/(tool|bash|fs|web|mcp|skill|terminal)/.test(text)) return "tools";
+	if (/(remote|connect|notify|matrixmedia|integration|api-)/.test(text)) return "integration";
+	if (bundle.official && bundle.name.startsWith("@deepseek-ai/")) return "core";
+	return "other";
+}
 // src/verification.ts
 /** Snapshot only the numbers needed to verify one apply. */
 function snapshotOf(scan) {
@@ -5278,7 +5321,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.2";
+const CURRENT_VERSION = "0.5.3";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",
@@ -5551,6 +5594,7 @@ async function overview(ctx, config, ledger) {
 		tokens
 	})).sort((a, b) => b.tokens - a.tokens).slice(0, 12);
 	return {
+		version: CURRENT_VERSION,
 		verdict: buildVerdict(compat, scan),
 		compaction: scan.compaction,
 		runtime: compat.report.runtime,
@@ -5589,6 +5633,12 @@ async function overview(ctx, config, ledger) {
 		verification,
 		capability,
 		history,
+		categories: summarizeCategories(scan.bundles),
+		host: {
+			rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
+			heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+			uptimeSec: Math.round(process.uptime())
+		},
 		diagnostics: [...scan.diagnostics, ...historyDiagnostics]
 	};
 }
@@ -5641,12 +5691,15 @@ async function apply$1(ctx, config, ledger, body) {
 		force: true
 	});
 	const profileName = resolveProfileFacts(ctx).name;
-	const beforeScan = await scanPlugins({
-		config,
-		compat,
-		pluginManager: manager,
-		inventory: await inventoryOf(ctx)
-	});
+	let beforeScan;
+	try {
+		beforeScan = await scanPlugins({
+			config,
+			compat,
+			pluginManager: manager,
+			inventory: await inventoryOf(ctx)
+		});
+	} catch {}
 	const result = await applySlimProfile(profileId, {
 		confirm: true,
 		items,
@@ -5660,7 +5713,7 @@ async function apply$1(ctx, config, ledger, body) {
 		kind: item.kind,
 		name: item.name
 	}));
-	if (result.token !== void 0 && applied.length > 0 && result.rolledBack !== true) {
+	if (result.token !== void 0 && applied.length > 0 && result.rolledBack !== true && beforeScan !== void 0) try {
 		await beginVerification({
 			profile: profileName,
 			token: result.token,
@@ -5675,7 +5728,7 @@ async function apply$1(ctx, config, ledger, body) {
 				needsRestart: result.restartRequired === true
 			}
 		};
-	}
+	} catch {}
 	return result;
 }
 async function rollback(ctx, config, body) {

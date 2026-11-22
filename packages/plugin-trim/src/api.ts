@@ -13,6 +13,7 @@ import { getInventory, getPluginManager, resolveProfileFacts } from './compat/ad
 import { buildVerdict } from './verdict.ts'
 import { capabilitiesOf } from './capability.ts'
 import { recordCheckup } from './history.ts'
+import { summarizeCategories } from './categories.ts'
 import {
   beginVerification,
   clearVerification,
@@ -30,7 +31,7 @@ import type { TaskTag } from 'dsh-shared-meta'
 
 const API_PREFIX = '/api/dsh-experience-optimizer'
 const CLIENT_HEADER = 'x-dsh-trim-client'
-const CURRENT_VERSION = '0.5.2'
+const CURRENT_VERSION = '0.5.3'
 let updateCache: { at: number; value: Record<string, unknown> } | undefined
 const TASK_TAGS: TaskTag[] = [
   'bugfix',
@@ -330,6 +331,7 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     .sort((a, b) => b.tokens - a.tokens)
     .slice(0, 12)
   return {
+    version: CURRENT_VERSION,
     verdict: buildVerdict(compat, scan),
     compaction: scan.compaction,
     runtime: compat.report.runtime,
@@ -378,6 +380,12 @@ async function overview(ctx: Context, config: Config, ledger: UsageLedger): Prom
     verification,
     capability,
     history,
+    categories: summarizeCategories(scan.bundles),
+    host: {
+      rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
+      heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      uptimeSec: Math.round(process.uptime()),
+    },
     diagnostics: [...scan.diagnostics, ...historyDiagnostics],
   }
 }

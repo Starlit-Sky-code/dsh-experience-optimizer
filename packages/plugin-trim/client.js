@@ -280,6 +280,13 @@ window.__ModuleLoader__.load({
 .eo-check-error i{background:var(--eo-error)}
 .eo-check-info i{background:var(--eo-tertiary)}
 .eo-verdict-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eo-categories{display:flex;flex-direction:column;gap:5px}
+.eo-category-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.06));border:.5px solid var(--eo-border)}
+.eo-category-bar i{display:block;height:100%}
+.eo-category-legend{display:flex;gap:8px;flex-wrap:wrap;font-size:11px;line-height:16px;color:var(--eo-tertiary)}
+.eo-category-legend span{display:inline-flex;align-items:center;gap:4px}
+.eo-category-legend i{width:7px;height:7px;border-radius:2px;display:inline-block}
+.eo-cat-core{background:#8fb7ff}.eo-cat-ui{background:#c4a7ff}.eo-cat-memory{background:#5eead4}.eo-cat-tools{background:#f2a33a}.eo-cat-workflow{background:#9fe0c0}.eo-cat-integration{background:#ff9fb2}.eo-cat-other{background:#8b96a5}
 .eo-history{display:flex;flex-direction:column;gap:4px;padding:9px 11px;border-radius:8px;border:.5px solid var(--eo-border);background:var(--eo-card-bg)}
 .eo-history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .eo-history-head b{font-size:11px;font-weight:500;color:var(--eo-tertiary)}
@@ -768,6 +775,13 @@ window.__ModuleLoader__.load({
       const n = Number(value) || 0
       if (n >= 10000) return (n / 1000).toFixed(1) + 'k'
       return formatNumber(n)
+    }
+
+    function formatDuration(seconds) {
+      const value = Math.max(0, Number(seconds) || 0)
+      if (value >= 3600) return (value / 3600).toFixed(1) + 'h'
+      if (value >= 60) return Math.round(value / 60) + 'm'
+      return Math.round(value) + 's'
     }
 
     function CheckupBubble({ sessionId }) {
@@ -1388,6 +1402,75 @@ window.__ModuleLoader__.load({
         setToast({ message, kind: kind || 'ok', id: Date.now() })
       }, [])
 
+      const copyCheckupReport = useCallback(async () => {
+        if (!overview) return
+        const verdict = overview.verdict
+        const lines = [
+          '# DSH 插件体检',
+          '',
+          '- 版本: ' + (overview.version || '0.5.2'),
+          '- Profile: ' + (overview.profile && overview.profile.name ? overview.profile.name : 'unknown'),
+          '- 结论: ' + (verdict ? verdict.headline : '—'),
+          '',
+          '## 检查',
+        ]
+        if (verdict && Array.isArray(verdict.checks)) {
+          for (const check of verdict.checks) {
+            lines.push('- ' + check.label + ': ' + check.status + ' · ' + check.detail)
+          }
+        }
+        lines.push('', '## 上下文')
+        lines.push('- 总 token: ' + formatNumber(overview.context.totalTokens))
+        lines.push('- 未归属: ' + formatNumber(overview.context.unattributedTokens))
+        if (Array.isArray(overview.context.byOwner)) {
+          for (const owner of overview.context.byOwner.slice(0, 5)) {
+            lines.push('- ' + owner.owner + ': ' + formatNumber(owner.tokens))
+          }
+        }
+        if (overview.compaction) {
+          lines.push('', '## 压缩链路')
+          lines.push('- 状态: ' + overview.compaction.health + ' · 后端 ' + (overview.compaction.backendCount || 0))
+          for (const participant of (overview.compaction.participants || []).slice(0, 8)) {
+            lines.push('- ' + participant.moduleName + ': ' + participant.role + (participant.enabled ? ' (on)' : ' (off)'))
+          }
+        }
+        if (overview.capability) {
+          lines.push('', '## 能力面（静态，不是安全审计）')
+          for (const group of overview.capability.groups || []) {
+            lines.push('- ' + group.label + ': ' + (group.count || 0))
+          }
+        }
+        if (overview.findings && overview.findings.length > 0) {
+          lines.push('', '## 兼容性发现')
+          for (const finding of overview.findings.slice(0, 12)) {
+            lines.push('- [' + finding.severity + '] ' + finding.code + ': ' + finding.title)
+          }
+        }
+        if (overview.history && overview.history.diff) {
+          const diff = overview.history.diff
+          lines.push('', '## 自上次体检')
+          lines.push('- 新增插件: ' + (diff.addedBundles.length || 0))
+          lines.push('- 移除插件: ' + (diff.removedBundles.length || 0))
+          lines.push('- 可归属 token 差值: ' + diff.attributedDelta)
+        }
+        if (overview.verification && overview.verification.last) {
+          const last = overview.verification.last
+          lines.push('', '## 上次实测')
+          lines.push('- token 差值: ' + last.deltaTokens)
+          if (last.deltaPercent !== null && last.deltaPercent !== undefined) {
+            lines.push('- 百分比: ' + Number(last.deltaPercent).toFixed(1) + '%')
+          }
+          if (last.confounded) lines.push('- 注意: 期间有其他插件变化，差值仅供参考')
+        }
+        lines.push('', '> 只读体检；未修改任何插件。')
+        try {
+          await navigator.clipboard.writeText(lines.join('\n'))
+          notify(tr('体检报告已复制', 'Checkup report copied'))
+        } catch {
+          notify(tr('无法访问剪贴板', 'Clipboard unavailable'), 'warn')
+        }
+      }, [notify, overview])
+
       const scrollToSection = useCallback((target) => {
         if (typeof document === 'undefined') return
         const element = document.querySelector('[data-section="' + target + '"]')
@@ -1548,7 +1631,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.2',
+            current: '0.5.3',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -2194,7 +2277,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.2')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.3')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2252,7 +2335,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('少一点插件负担，多一点兼容确定性。', 'Less plugin overhead, more compatibility certainty.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.2 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.3 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -2399,6 +2482,7 @@ window.__ModuleLoader__.load({
                 actionLabel(action),
               ),
             ),
+            h(Button, { variant: 'ghost', onClick: () => void copyCheckupReport() }, tr('复制报告', 'Copy report')),
           ),
         )
       }
@@ -2611,6 +2695,53 @@ window.__ModuleLoader__.load({
             tr(
               '静态能力面：按工具名、MCP 行和 !!js patch 推断，不是安全审计；插件代码仍可在运行时做任何事。',
               'Static capability surface from tool names, MCP rows, and !!js patch sentinels; this is not a security audit. Plugin code can still do anything at runtime.',
+            ),
+          ),
+        )
+      }
+
+      function renderCategories() {
+        const categories = overview.categories
+        if (!Array.isArray(categories) || categories.length === 0) return null
+        const labels = {
+          core: ['核心', 'Core'],
+          ui: ['界面', 'UI'],
+          memory: ['上下文/记忆', 'Context'],
+          tools: ['工具', 'Tools'],
+          workflow: ['工作流', 'Workflow'],
+          integration: ['集成', 'Integration'],
+          other: ['其他', 'Other'],
+        }
+        return h(
+          'div',
+          { className: 'eo-categories' },
+          h(
+            'div',
+            { className: 'eo-category-bar', 'aria-label': tr('按生态类别划分的可归属上下文', 'Attributable context by ecosystem category') },
+            categories.map((category) =>
+              h('i', {
+                key: category.id,
+                className: 'eo-cat-' + category.id,
+                style: { width: Math.max(1, category.share) + '%' },
+                title: (labels[category.id] ? tr(labels[category.id][0], labels[category.id][1]) : category.label) + ' · ' + formatNumber(category.tokens),
+              }),
+            ),
+          ),
+          h(
+            'div',
+            { className: 'eo-category-legend' },
+            categories.slice(0, 6).map((category) =>
+              h(
+                'span',
+                { key: category.id },
+                h('i', { className: 'eo-cat-' + category.id }),
+                (labels[category.id] ? tr(labels[category.id][0], labels[category.id][1]) : category.label) +
+                  ' · ' +
+                  formatNumber(category.tokens) +
+                  ' · ' +
+                  Math.round(category.share) +
+                  '%',
+              ),
             ),
           ),
         )
@@ -2917,8 +3048,19 @@ window.__ModuleLoader__.load({
                 showContext ? tr('收起明细', 'Collapse details') : tr('查看明细', 'View details'),
               ),
             },
+            renderCategories(),
             renderHistory(),
             renderVerification(overview.verification),
+            overview.host
+              ? h(
+                  'div',
+                  { className: 'eo-muted' },
+                  tr(
+                    '宿主进程 RSS ' + overview.host.rssMb + ' MB · uptime ' + formatDuration(overview.host.uptimeSec) + '（进程级，不可归因到单个插件）',
+                    'Host process RSS ' + overview.host.rssMb + ' MB · uptime ' + formatDuration(overview.host.uptimeSec) + ' (process-level, not per plugin)',
+                  ),
+                )
+              : null,
             h(
               'div',
               { className: 'eo-context-mix' },

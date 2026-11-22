@@ -32,7 +32,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.2/dsh-plugin-trim-0.5.2.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.3/dsh-plugin-trim-0.5.3.tgz"
 ```
 
 For source development, see [Development](#development).
@@ -65,6 +65,13 @@ duplicate backends, a missing backend, conflicting explicit thresholds, and
 out-of-range thresholds. Active backends are protected, so the checkup never
 suggests disabling the only compaction engine. The composer reminder only
 interrupts when the verdict needs attention.
+
+- **Copy report** turns the verdict, context, compaction, capability, findings,
+  and measured result into Markdown for an issue or a teammate.
+- **Category rollup** groups attributable tokens into core / UI / context /
+  tools / workflow / integration.
+- **Host baseline** shows RSS and uptime, explicitly process-level and not
+  attributable to one plugin.
 
 ## Did it actually save anything?
 

@@ -13,6 +13,7 @@ const source = readFileSync(resolve(process.cwd(), 'packages/plugin-trim/client.
 const overview = {
   ok: true,
   data: {
+    version: '0.5.3',
     runtime: { dshVersion: '0.2.2-rc.1' },
     profile: { name: 'web', dir: '/tmp/web' },
     compat: { error: 0, warn: 0, info: 0, byDomain: {} },
@@ -56,6 +57,11 @@ const overview = {
     dedupe: [],
     managementAvailable: true,
     recipeAvailable: false,
+    categories: [
+      { id: 'memory', label: '上下文/记忆', bundles: 1, tokens: 600, share: 60 },
+      { id: 'tools', label: '工具', bundles: 1, tokens: 400, share: 40 },
+    ],
+    host: { rssMb: 412, heapUsedMb: 120, uptimeSec: 3600 },
     capability: {
       groups: [
         { id: 'shell', label: 'Shell', count: 1, items: [{ name: 'bash', owner: 'demo-plugin', evidence: '工具名推断' }] },
@@ -197,6 +203,8 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('bash')
     expect(container.textContent).toContain('自上次体检')
     expect(container.querySelector('.eo-history-spark')).not.toBeNull()
+    expect(container.querySelector('.eo-category-bar')).not.toBeNull()
+    expect(container.textContent).toContain('宿主进程 RSS 412 MB')
 
     const tabs = [...container.querySelectorAll('button')]
     const tutorial = tabs.find((button) => button.textContent?.trim() === '教程')
@@ -219,6 +227,13 @@ describe('client onboarding and pages', () => {
     expect(copyInstall).toBeDefined()
     await act(async () => { copyInstall?.click(); await sleep(30) })
     expect(clipboardWrite).toHaveBeenCalledWith('npm i dsh-plugin-trim')
+    const trimTab = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '插件体检')
+    expect(trimTab).toBeDefined()
+    await act(async () => { trimTab?.click(); await sleep(40) })
+    const copyReport = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '复制报告')
+    expect(copyReport).toBeDefined()
+    await act(async () => { copyReport?.click(); await sleep(30) })
+    expect(clipboardWrite.mock.calls.some(([text]) => String(text).includes('# DSH 插件体检'))).toBe(true)
 
     const settings = tabs.find((button) => button.textContent?.trim() === '设置')
     await act(async () => { settings?.click(); await sleep(80) })

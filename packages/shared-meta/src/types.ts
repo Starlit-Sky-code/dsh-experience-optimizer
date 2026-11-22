@@ -369,6 +369,14 @@ export interface WorkspaceCompatSummary {
   findings: CompatFinding[]
 }
 
+export interface EcosystemCategory {
+  id: 'core' | 'ui' | 'memory' | 'tools' | 'workflow' | 'integration' | 'other'
+  label: string
+  bundles: number
+  tokens: number
+  share: number
+}
+
 /** One static capability fact (tool name, MCP row, or !!js patch). */
 export interface CapabilityItem {
   name: string

@@ -97,6 +97,7 @@ src/compat/
   compaction.ts    压缩链路只读归类与 PP_COMPACTION_* 规则
   capability.ts    静态能力面（shell/写文件/网络/MCP/!!js）
   history.ts       体检快照、节流、插件/token 差值
+  categories.ts    按生态类别汇总可归属 token
   tool.ts          trim_analyze_compatibility
 ```
 
@@ -117,7 +118,8 @@ GET /overview
 `<dshHome>/experience-optimizer/trim/history/<profile>.json`。
 
 `capability.ts` 只读工具名、MCP 行与 patch 哨兵，输出五组静态能力清单；它不是安全审计，
-也不参与建议或保护逻辑。
+也不参与建议或保护逻辑。`categories.ts` 只做展示性归类，不影响建议；`/overview` 同时返回
+宿主进程级 `rssMb/heapUsedMb/uptimeSec`，不归因到单个插件。
 
 ## 体检结论与压缩链路
 

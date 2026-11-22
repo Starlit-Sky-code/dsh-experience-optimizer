@@ -3,7 +3,20 @@
 All notable changes to this repository are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.5.3] - 2026-11-22
+
+### Added
+
+- **Ecosystem category rollup**: the context card groups attributable tokens by
+  core / UI / context-memory / tools / workflow / integration / other, so users
+  can see which category is actually expensive.
+- **Copy checkup report**: one click copies a Markdown summary (verdict, context,
+  compaction stack, capability surface, findings, history, measured result) for
+  sharing in an issue or chat.
+- **Host baseline**: the context card shows host RSS and uptime, explicitly
+  labelled process-level and not attributable to a single plugin.
+
+### Fixed
 
 - An apply no longer fails if the baseline scan or the verification receipt
   cannot be written; verification is best-effort and never rolls back a
