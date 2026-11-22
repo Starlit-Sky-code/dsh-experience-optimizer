@@ -5,6 +5,11 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+- Clear the measured receipt after rollback: a rolled-back apply no longer shows an
+  outdated "saved tokens" result.
+- Label the settled result as **上次实测 / Last measured** so it is not read as a
+  live, current measurement.
+
 ## [0.5.1] - 2026-11-22
 
 ### Added

@@ -6,6 +6,7 @@ import type { BundleProfile, PluginProfile } from 'dsh-shared-meta'
 import type { ScanResult } from '../src/scan.ts'
 import {
   beginVerification,
+  clearVerification,
   readVerification,
   settleVerification,
   snapshotOf,
@@ -163,6 +164,22 @@ describe('apply verification', () => {
     })
     expect(view.last?.confounded).toBe(true)
     expect(view.last?.unexpectedChanges).toContain('c')
+  })
+
+  it('clears the receipt after a rollback', async () => {
+    const before = snapshotOf(scan())
+    await beginVerification({
+      profile: 'web',
+      token: 'tok',
+      applied: [{ id: 'bundle:b', kind: 'bundle', name: 'b' }],
+      before,
+      needsRestart: false,
+    })
+    await settleVerification({ profile: 'web', after: snapshotOf(scan({ attributed: 600 })) })
+    await clearVerification('web')
+    const view = await readVerification('web')
+    expect(view.last).toBeUndefined()
+    expect(view.pending).toBeUndefined()
   })
 
   it('reads the last settled verification without clearing it', async () => {

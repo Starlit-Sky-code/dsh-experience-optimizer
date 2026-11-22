@@ -2526,7 +2526,7 @@ window.__ModuleLoader__.load({
           h(
             'div',
             { className: 'eo-verification-main' },
-            h('b', null, tr('实测收益', 'Measured result')),
+            h('b', null, tr('上次实测', 'Last measured')),
             h(
               'span',
               null,

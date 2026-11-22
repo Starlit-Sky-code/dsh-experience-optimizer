@@ -14,6 +14,7 @@ import { buildVerdict } from './verdict.ts'
 import { capabilitiesOf } from './capability.ts'
 import {
   beginVerification,
+  clearVerification,
   settleVerification,
   snapshotOf,
 } from './verification.ts'
@@ -469,12 +470,15 @@ async function rollback(
   const manager = getPluginManager(ctx)
   if (manager === undefined) throw new Error('pluginManager is unavailable')
   const token = typeof body.token === 'string' && body.token.length > 0 ? body.token : undefined
-  return rollbackSlimProfile({
+  const profileName = resolveProfileFacts(ctx).name
+  const result = await rollbackSlimProfile({
     token,
     manager,
     maxDrafts: config.maxDrafts,
-    profileName: resolveProfileFacts(ctx).name,
+    profileName,
   })
+  await clearVerification(profileName)
+  return result
 }
 
 async function inventoryOf(ctx: Context) {

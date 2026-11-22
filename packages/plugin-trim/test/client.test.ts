@@ -183,7 +183,7 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('体检结论')
     expect(container.textContent).toContain('压缩链路')
     expect(container.querySelector('.eo-compaction-row')).not.toBeNull()
-    expect(container.textContent).toContain('实测收益')
+    expect(container.textContent).toContain('上次实测')
     expect(container.textContent).toContain('-200 tokens')
     expect(container.textContent).toContain('能力面')
     expect(container.textContent).toContain('bash')

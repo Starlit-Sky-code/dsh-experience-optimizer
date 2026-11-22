@@ -139,6 +139,16 @@ export async function readVerification(profile: string): Promise<VerificationVie
   return viewOf(await readState(profile))
 }
 
+/** Clear a receipt after rollback; the measured delta no longer describes the profile. */
+export async function clearVerification(profile: string): Promise<void> {
+  await withLock(async () => {
+    const state = await readState(profile)
+    state.pending = undefined
+    state.last = undefined
+    await saveState(state)
+  })
+}
+
 function viewOf(state: VerificationState): VerificationView {
   return {
     ...(state.pending === undefined
