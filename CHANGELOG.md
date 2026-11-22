@@ -14,6 +14,8 @@ All notable changes to this repository are documented here. Versions follow
 
 - All install guidance uses the single command `npm i dsh-plugin-trim`.
 - The settings budget row and preset buttons wrap cleanly on narrow widths.
+- “Parameter ranges” is now a collapsed optional section; each field has a
+  hover/focus explanation, and the read-only slider chrome was removed.
 
 ### Fixed
 

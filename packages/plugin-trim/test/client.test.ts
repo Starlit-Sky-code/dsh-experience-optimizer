@@ -276,6 +276,10 @@ describe('client onboarding and pages', () => {
     await act(async () => { settings?.click(); await sleep(80) })
     const settingsText = container.textContent || ''
     expect(settingsText).toContain('修改后点击应用')
+    expect(container.querySelector('details.eo-param-section')).not.toBeNull()
+    expect(container.querySelector('details.eo-param-section')?.hasAttribute('open')).toBe(false)
+    expect(container.querySelector('.eo-help')).not.toBeNull()
+    expect(container.querySelector('.eo-help-pop')).not.toBeNull()
     expect(settingsText).toContain('审批与保护逻辑不会因为改设置而跳过')
     expect(settingsText.indexOf('修改后点击应用')).toBeLessThan(settingsText.indexOf('插件设置'))
     expect(settingsText).not.toContain('守卫')
@@ -294,7 +298,7 @@ describe('client onboarding and pages', () => {
     const previousValue = numeric.value
     await act(async () => { stepper.click(); await sleep(40) })
     expect(Number((container.querySelector('.eo-param-input') as HTMLInputElement).value)).toBe(Number(previousValue) + 1)
-    expect(container.querySelector('.eo-param-track i')).not.toBeNull()
+    expect(container.querySelector('.eo-help')).not.toBeNull()
 
     const language = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'EN')
     expect(language).toBeDefined()

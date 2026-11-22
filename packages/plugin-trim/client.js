@@ -534,7 +534,17 @@ window.__ModuleLoader__.load({
         .eo-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--eo-primary);cursor:pointer;min-height:30px}
         .eo-check input{width:14px;height:14px;accent-color:var(--eo-primary);cursor:pointer}
         .eo-param{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:220px}
-        .eo-param-section{display:flex;flex-direction:column;gap:0;margin-top:14px;padding-top:12px;border-top:.5px solid var(--eo-border)}
+        .eo-param-section{margin-top:14px;padding-top:12px;border-top:.5px solid var(--eo-border)}
+        .eo-param-section summary{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;list-style:none}
+        .eo-param-section summary::-webkit-details-marker{display:none}
+        .eo-param-section summary:after{content:"▾";font:500 14px/17px var(--eo-code);color:var(--eo-tertiary);margin-left:auto;transition:transform .15s ease}
+        .eo-param-section[open] summary:after{transform:rotate(180deg)}
+        .eo-param-body{padding-top:2px}
+        .eo-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;margin-left:5px;border-radius:50%;border:.5px solid var(--eo-border-strong);color:var(--eo-tertiary);cursor:help;vertical-align:-2px}
+        .eo-help:hover,.eo-help:focus-visible{color:var(--eo-primary);border-color:var(--eo-primary);outline:none}
+        .eo-help-pop{position:absolute;left:50%;bottom:calc(100% + 8px);z-index:20;width:min(280px,72vw);transform:translateX(-50%) translateY(3px);padding:8px 10px;border-radius:8px;border:.5px solid var(--eo-border-strong);background:var(--dsw-alias-bg-layer-1,#fff);color:var(--eo-primary);font:400 12px/18px var(--ds-font-family-text, -apple-system, "Segoe UI", sans-serif);box-shadow:0 8px 24px rgba(0,0,0,.16);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s ease,transform .12s ease,visibility .12s}
+        .eo-help:hover .eo-help-pop,.eo-help:focus-visible .eo-help-pop{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);pointer-events:auto}
+        @media(max-width:560px){.eo-help-pop{left:0;transform:translateY(3px);width:min(260px,78vw)}.eo-help:hover .eo-help-pop,.eo-help:focus-visible .eo-help-pop{transform:translateY(0)}}
         .eo-param-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
         .eo-param-section-head strong{font-size:13px;line-height:20px;color:var(--eo-primary)}
         .eo-param-section-head span{font-size:11px;line-height:17px;color:var(--eo-tertiary)}
@@ -551,11 +561,7 @@ window.__ModuleLoader__.load({
         .eo-stepper-btn:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--eo-primary));outline-offset:1px}
         .eo-stepper-btn .eo-icon{display:block}
         .eo-stepper-up .eo-icon{transform:rotate(180deg)}
-        .eo-param-track{position:relative;height:6px;border-radius:6px;background:var(--eo-border)}
-        .eo-param-track i{display:block;height:100%;min-width:3px;border-radius:6px;background:linear-gradient(90deg,var(--eo-primary),var(--dsw-alias-state-success-primary,#1a7f37));transition:width .28s var(--eo-ease,cubic-bezier(.16,1,.3,1))}
-        .eo-param-track b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:var(--dsw-alias-bg-layer-1,#fff);border:1.5px solid var(--eo-primary);transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.15)}
-        .eo-param-scale{display:flex;justify-content:space-between;color:var(--eo-tertiary);font:10px/14px var(--eo-code);letter-spacing:.02em}
-        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}.eo-param-row{align-items:flex-start;flex-direction:column;gap:5px}.eo-param-row>span{flex:0 0 auto}.eo-param-row>.eo-inline{margin-left:0;width:100%}.eo-param{width:100%;min-width:0}}
+                                        @media(max-width:560px){.eo-settings-control{width:100%;flex:1 1 100%}.eo-param-row{align-items:flex-start;flex-direction:column;gap:5px}.eo-param-row>span{flex:0 0 auto}.eo-param-row>.eo-inline{margin-left:0;width:100%}.eo-param{width:100%;min-width:0}}
         .eo-codeblock{margin:0;padding:12px;border:.5px solid var(--eo-border-strong);border-radius:var(--dsw-radius-md,8px);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.05));font:400 11px/18px var(--eo-code);color:var(--eo-secondary);white-space:pre-wrap;word-break:break-word}
         .eo-faq{border-bottom:.5px solid var(--eo-border);padding:8px 0}
         .eo-faq:last-child{border-bottom:0}
@@ -665,6 +671,15 @@ window.__ModuleLoader__.load({
 
     function Badge({ children, tone = 'neutral' }) {
       return h('span', { className: 'eo-badge eo-badge-' + tone }, children)
+    }
+
+    function InfoTip({ text }) {
+      return h(
+        'span',
+        { className: 'eo-help', tabIndex: 0, role: 'note', 'aria-label': text },
+        h(Icon, { name: 'info', size: 12 }),
+        h('span', { className: 'eo-help-pop', role: 'tooltip' }, text),
+      )
     }
 
     function Metric({ label, value, hint, tone = 'neutral', progress, progressTone = 'neutral' }) {
@@ -2235,10 +2250,8 @@ window.__ModuleLoader__.load({
         const form = settingsDraft || settings
         const dirty = settingsChanged
         const option = (labelZh, labelEn, value) => h('option', { key: value, value }, tr(labelZh, labelEn))
-        const inputNumber = (field, min, max, displayMax = max, step = 1) => {
+        const inputNumber = (field, min, max, step = 1) => {
           const current = Math.min(max, Math.max(min, Number(form[field]) || min))
-          const visualMax = Math.min(max, Math.max(min + 1, displayMax))
-          const percent = Math.min(100, Math.max(0, ((current - min) / (visualMax - min)) * 100))
           const setValue = (value) => updateSettingsField(field, Math.min(max, Math.max(min, Number(value) || min)))
           return h(
             'div',
@@ -2262,8 +2275,6 @@ window.__ModuleLoader__.load({
                 h('button', { type: 'button', className: 'eo-stepper-btn', onClick: () => setValue(current - step), 'aria-label': tr('减少', 'Decrease') }, h(Icon, { name: 'chevron', size: 11 })),
               ),
             ),
-            h('div', { className: 'eo-param-track', 'aria-hidden': 'true' }, h('i', { style: { width: percent + '%' } }), h('b', { style: { left: percent + '%' } })),
-            h('div', { className: 'eo-param-scale' }, h('span', null, String(min)), h('span', null, String(visualMax) + (max > visualMax ? ' · ' + tr('上限 ', 'max ') + max : ''))),
           )
         }
         return h(
@@ -2346,30 +2357,43 @@ window.__ModuleLoader__.load({
               ),
             ),
             h(
-              'div',
+              'details',
               { className: 'eo-param-section' },
               h(
-                'div',
-                { className: 'eo-param-section-head' },
-                h('strong', null, tr('参数范围', 'Parameter ranges')),
-                h('span', null, tr('上下箭头微调；进度条按推荐范围显示，右侧标注配置上限', 'Use the arrows to tune; the bar shows the recommended range, with the config cap on the right')),
+                'summary',
+                null,
+                h('strong', null, tr('参数范围（可选）', 'Parameter ranges (optional)')),
+                h('span', null, tr('默认值适合大多数用户；悬停 ⓘ 查看说明', 'Defaults fit most users; hover ⓘ for details')),
               ),
-              h('div', { className: 'eo-param-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), inputNumber('approvalThreshold', 1, 100, 20)),
-              h('div', { className: 'eo-param-row' },
-                h('span', null, tr('上下文预算', 'Context budget')),
-                inputNumber('contextBudget', 0, 1000000, 20000),
-                h('div', { className: 'eo-inline' },
-                  [0, 20000, 50000, 100000].map((value) =>
-                    h(Button, {
-                      key: value,
-                      variant: 'ghost',
-                      onClick: () => updateSettingsField('contextBudget', value),
-                    }, value === 0 ? tr('关闭', 'Off') : formatNumber(value)),
+              h(
+                'div',
+                { className: 'eo-param-body' },
+                h('div', { className: 'eo-param-row' },
+                  h('span', null, tr('审批阈值', 'Approval threshold'), h(InfoTip, { text: tr('超过这个数量的低风险草稿，应用前需要宿主审批。默认 5；调大审批更少，但一次变更也更大。', 'Drafts with more low-risk items than this need host approval. Default 5; larger means fewer prompts but bigger batches.') })),
+                  inputNumber('approvalThreshold', 1, 100),
+                ),
+                h('div', { className: 'eo-param-row' },
+                  h('span', null, tr('上下文预算', 'Context budget'), h(InfoTip, { text: tr('可归属 token 的软上限；超过只提示，不自动关闭插件。0 表示关闭。', 'Soft cap for attributable tokens; over-budget only warns and never closes plugins. 0 disables it.') })),
+                  inputNumber('contextBudget', 0, 1000000, 1000),
+                  h('div', { className: 'eo-inline' },
+                    [0, 20000, 50000, 100000].map((value) =>
+                      h(Button, {
+                        key: value,
+                        variant: 'ghost',
+                        onClick: () => updateSettingsField('contextBudget', value),
+                      }, value === 0 ? tr('关闭', 'Off') : formatNumber(value)),
+                    ),
                   ),
                 ),
+                h('div', { className: 'eo-param-row' },
+                  h('span', null, tr('账本保留', 'Ledger retention'), h(InfoTip, { text: tr('本地工具调用记录保留天数；越短越省磁盘，但历史判断会变弱。', 'Days to keep the local tool-usage ledger; shorter saves disk but weakens historical evidence.') })),
+                  inputNumber('usageRetentionDays', 1, 365),
+                ),
+                h('div', { className: 'eo-param-row' },
+                  h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit'), h(InfoTip, { text: tr('保留的草稿与还原点数量；越少越省磁盘，但可回滚的历史更少。', 'Number of drafts and restore points to keep; fewer saves disk but leaves less rollback history.') })),
+                  inputNumber('maxDrafts', 1, 200),
+                ),
               ),
-              h('div', { className: 'eo-param-row' }, h('span', null, tr('账本保留', 'Ledger retention')), inputNumber('usageRetentionDays', 1, 365, 90)),
-              h('div', { className: 'eo-param-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), inputNumber('maxDrafts', 1, 200, 50)),
             ),
             h('div', { className: 'eo-muted', style: { marginTop: '10px' } }, tr('配置目录：', 'Config directory: ') + form.profileDir),
             settingsError ? h('div', { className: 'eo-error', style: { marginTop: '10px' } }, h('span', null, settingsError)) : null,
