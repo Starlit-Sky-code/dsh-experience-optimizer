@@ -2,6 +2,19 @@
 
 更新时间：2026-11-22（版本 0.5.9；复核市场收录与视觉素材）
 
+## 市场快照（2026-11-22 13:30）
+
+| 渠道 | 状态 | 版本 / 证据 | 待处理 |
+|---|---|---|---|
+| npm | ✅ 可安装 | `dsh-plugin-trim@0.5.9`；近 7 天下载 996 | 无 |
+| GitHub Release | ✅ 可下载 | `v0.5.9`；正文 ≤10 行 | 无 |
+| 自定义市场索引 | ✅ 有效 | `marketplace/index.json` → 0.5.9 | 无 |
+| dsh-plugin.org | ❌ 404 | issue #880 OPEN，6 条评论，无 maintainer 回复 | 确认 monorepo 扫描；必要时独立根包仓库 |
+| dshopen.org | ⚠️ 版本滞后 | 页面仍 0.3.9 | 等索引刷新或 issue #495 跟进 |
+| dshbase.com | ⚠️ 版本与命令错误 | `softwareVersion: 0.2.4`；安装仍指向 github 根仓库 | issue #332 已关闭但未修；需重新反馈 |
+| dsh.so | ⚠️ 仅 ecosystem | 根仓库 artifact 200；不是可安装插件 | 等 npm 子包被索引或提交 meta-bundle |
+| awesome-dsh-plugin | ⚠️ PR 待合并 | PR #17688 OPEN，目标 0.5.9；当前数据仍 0.3.1 | 等维护者合并 |
+
 ## GitHub
 
 - 仓库：<https://github.com/Starlit-Sky-code/dsh-experience-optimizer>
@@ -14,7 +27,7 @@
 - CI：`.github/workflows/ci.yml`
 - Release 工作流：`.github/workflows/release.yml`（已配置 `NPM_TOKEN`；tag 自动 npm 发布并上传 release tarball）
 - Release body 由 `scripts/release-notes.mjs` 从 CHANGELOG 生成，≤10 行，带安装命令；不再只显示 `Full Changelog` 链接
-- 安装验证：`dsh plugin add dsh-plugin-trim@0.5.9` 成功；recipe 已冻结，不再作为默认安装项
+- 安装验证：`npm i dsh-plugin-trim`（0.5.9）成功；recipe 已冻结，不再作为默认安装项
 
 ## 自定义 DSH 插件市场索引
 
