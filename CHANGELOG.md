@@ -5,6 +5,15 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.5.9] - 2026-11-22
+
+### Changed
+
+- Draft items and the confirmation dialog show the exact enablement transition
+  (`enabled → disabled` / `disabled → enabled`).
+- The draft toolbar can select **strong evidence only** before applying.
+- The context-budget field has quick presets (Off / 20k / 50k / 100k).
+
 ## [0.5.8] - 2026-11-22
 
 ### Added

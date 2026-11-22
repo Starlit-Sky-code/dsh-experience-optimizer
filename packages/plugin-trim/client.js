@@ -904,6 +904,13 @@ window.__ModuleLoader__.load({
       return pair ? tr(pair[0], pair[1]) : action
     }
 
+    function transitionLabel(item) {
+      const disabling = item.action === 'suggest-disable' || item.action === 'disable-if-unused'
+      if (disabling && item.observedEnabled === true) return tr('启用 → 停用', 'Enabled → disabled')
+      if (item.action === 'enable' && item.observedEnabled === false) return tr('禁用 → 启用', 'Disabled → enabled')
+      return null
+    }
+
     function actionTone(action) {
       return (
         {
@@ -1698,7 +1705,7 @@ window.__ModuleLoader__.load({
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           setUpdateInfo({
-            current: '0.5.8',
+            current: '0.5.9',
             latest: null,
             updateAvailable: false,
             error: /unknown endpoint/i.test(message)
@@ -1818,6 +1825,14 @@ window.__ModuleLoader__.load({
       const selectAll = useCallback(() => {
         const next = {}
         for (const item of draftItems) if (isEligible(item)) next[item.id] = true
+        setSelected(next)
+      }, [draftItems])
+
+      const selectStrong = useCallback(() => {
+        const next = {}
+        for (const item of draftItems) {
+          if (isEligible(item) && item.evidenceLevel === 'strong') next[item.id] = true
+        }
         setSelected(next)
       }, [draftItems])
 
@@ -2339,7 +2354,19 @@ window.__ModuleLoader__.load({
                 h('span', null, tr('上下箭头微调；进度条按推荐范围显示，右侧标注配置上限', 'Use the arrows to tune; the bar shows the recommended range, with the config cap on the right')),
               ),
               h('div', { className: 'eo-param-row' }, h('span', null, tr('审批阈值', 'Approval threshold')), inputNumber('approvalThreshold', 1, 100, 20)),
-              h('div', { className: 'eo-param-row' }, h('span', null, tr('上下文预算', 'Context budget')), inputNumber('contextBudget', 0, 1000000, 20000)),
+              h('div', { className: 'eo-param-row' },
+                h('span', null, tr('上下文预算', 'Context budget')),
+                inputNumber('contextBudget', 0, 1000000, 20000),
+                h('div', { className: 'eo-inline' },
+                  [0, 20000, 50000, 100000].map((value) =>
+                    h(Button, {
+                      key: value,
+                      variant: 'ghost',
+                      onClick: () => updateSettingsField('contextBudget', value),
+                    }, value === 0 ? tr('关闭', 'Off') : formatNumber(value)),
+                  ),
+                ),
+              ),
               h('div', { className: 'eo-param-row' }, h('span', null, tr('账本保留', 'Ledger retention')), inputNumber('usageRetentionDays', 1, 365, 90)),
               h('div', { className: 'eo-param-row' }, h('span', null, tr('草稿/还原点上限', 'Draft/snapshot limit')), inputNumber('maxDrafts', 1, 200, 50)),
             ),
@@ -2358,7 +2385,7 @@ window.__ModuleLoader__.load({
           h(
             Card,
             { title: tr('更新与反馈', 'Updates & feedback'), subtitle: tr('检查 npm 最新版本；反馈请走 GitHub Issues', 'Check the latest npm version; feedback via GitHub Issues') },
-            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.8')),
+            h('div', { className: 'eo-settings-row' }, h('span', null, tr('当前版本', 'Current version')), h('code', null, updateInfo?.current || '0.5.9')),
             h('div', { className: 'eo-settings-row' }, h('span', null, tr('最新版本', 'Latest version')), h('code', null, updateInfo ? (updateInfo.latest || tr('检查失败', 'Check failed')) : tr('未检查', 'Not checked'))),
             updateInfo && updateInfo.updateAvailable
               ? h('div', { className: 'eo-issue' }, h('span', null, tr('发现新版本：', 'New version available: ') + updateInfo.latest + ' · '), h('a', { href: updateInfo.url, target: '_blank', rel: 'noreferrer' }, tr('查看 npm', 'View npm')))
@@ -2416,7 +2443,7 @@ window.__ModuleLoader__.load({
                 { className: 'eo-about-card' },
                 h('div', { className: 'eo-inline', style: { marginBottom: '8px' } }, h(Icon, { name: 'shield', size: 24 }), h('strong', null, 'DSH Plugin Checkup')),
                 h('p', null, tr('先体检，再决定关什么。', 'Measure first. Then decide what to close.')),
-                h('p', null, tr('版本：', 'Version: ') + '0.5.8 · AGPL-3.0-only'),
+                h('p', null, tr('版本：', 'Version: ') + '0.5.9 · AGPL-3.0-only'),
                 h('p', null, tr('作者：Starlit Sky', 'Author: Starlit Sky')),
               ),
               h(
@@ -3554,6 +3581,9 @@ window.__ModuleLoader__.load({
                                 { tone: actionTone(item.action) },
                                 actionLabel(item.action),
                               ),
+                              transitionLabel(item)
+                                ? h(Badge, { tone: 'neutral' }, transitionLabel(item))
+                                : null,
                               h(Badge, { tone: riskTone(item.risk) }, tr('风险：', 'Risk: ') + riskLabel(item.risk)),
                               item.protected ? h(Badge, { tone: 'neutral' }, tr('受保护', 'Protected')) : null,
                               item.periodic ? h(Badge, { tone: 'warn' }, tr('周期/触发器', 'Scheduled / trigger')) : null,
@@ -3610,6 +3640,9 @@ window.__ModuleLoader__.load({
                     h(
                       'div',
                       { className: 'eo-inline' },
+                      strongDraftCount > 0
+                        ? h(Button, { variant: 'ghost', onClick: selectStrong }, tr('只选强证据', 'Strong evidence only'))
+                        : null,
                       h(Button, { variant: 'ghost', onClick: selectAll }, tr('全选低风险', 'Select low-risk')),
                       h(Button, { variant: 'ghost', onClick: clearSelection }, tr('清空', 'Clear')),
                       h(
@@ -4146,6 +4179,7 @@ window.__ModuleLoader__.load({
                         { className: 'eo-item-title' },
                         h('span', { className: 'eo-item-name' }, item.name),
                         h(Badge, { tone: actionTone(item.action) }, actionLabel(item.action)),
+                        transitionLabel(item) ? h(Badge, { tone: 'neutral' }, transitionLabel(item)) : null,
                         h(Badge, { tone: riskTone(item.risk) }, tr('风险：', 'Risk: ') + riskLabel(item.risk)),
                       ),
                       h('div', { className: 'eo-item-reason' }, item.reason),

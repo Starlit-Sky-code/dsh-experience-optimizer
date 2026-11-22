@@ -73,4 +73,4 @@ npm i dsh-plugin-trim
 
 当前未发布 npm 时，推荐直接安装 release tarball：
 
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.8/dsh-plugin-trim-0.5.8.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.9/dsh-plugin-trim-0.5.9.tgz"

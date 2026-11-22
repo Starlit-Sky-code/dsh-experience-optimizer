@@ -31,13 +31,13 @@
 
 ```bash
 # npm（固定本次发布版本）
-npm i dsh-plugin-trim@0.5.8
+npm i dsh-plugin-trim@0.5.9
 
 # DSH CLI / 插件市场：
-dsh plugin --profile web add dsh-plugin-trim@0.5.8
+dsh plugin --profile web add dsh-plugin-trim@0.5.9
 ```
 
-> 省略 `@0.5.8` 即取 latest；本次发布以 `0.5.8` 为准。
+> 省略 `@0.5.9` 即取 latest；本次发布以 `0.5.9` 为准。
 > 安装后如果设置页没有出现，重新加载 DSH，并确认当前工作区已安装该依赖；npm CDN 返回 404 时请使用下方 Release tarball。
 
 安装后打开 **设置 → 插件体检**（Agent 预设下方），或 **设置 → 插件 → 插件体检**。
@@ -47,7 +47,7 @@ dsh plugin --profile web add dsh-plugin-trim@0.5.8
 
 ```bash
 # Release tarball
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.8/dsh-plugin-trim-0.5.8.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.9/dsh-plugin-trim-0.5.9.tgz"
 ```
 
 源码开发见下方[开发](#开发)一节。
@@ -103,7 +103,7 @@ DSH 插件装得越多，越容易出现三类问题：
 - **上下文**：可归属 token（字符估算）、Top 1 owner、重复提示词；未归属可展开到具体 section/tool，避免一个 97% 的黑箱。
 - **压缩链路**：只读识别压缩后端、工具结果裁剪、图像卸载、`/compact`、阈值控制面；单一后端会标出“生效后端”，多后端则明确写“未确定”，不猜测加载顺序；发现双引擎、缺失后端、阈值冲突会直接告警，并把活跃后端加入保护名单，避免体检把唯一压缩后端建议关掉。
 
-对话上方只在结论需要处理时出提醒（例如“压缩链路：2 个后端同时启用”）；没事时不打扰。结论条里的“生成瘦身方案”会直接生成草稿，不再多一步滚动。
+对话上方只在结论需要处理时出提醒（例如“压缩链路：2 个后端同时启用”）；没事时不打扰。结论条里的“生成瘦身方案”会直接生成草稿，不再多一步滚动。草稿支持“只选强证据”、显示每项“启用 → 停用 / 禁用 → 启用”的变化，以及预计释放 token。
 
 - **一键复制报告**：把结论、上下文、压缩链路、能力面、兼容发现和实测收益复制成 Markdown，方便贴 Issue 或发给同事。
 - **按类别看构成**：核心 / 界面 / 上下文记忆 / 工具 / 工作流 / 集成，直接看哪类最贵。

@@ -402,13 +402,41 @@ describe('client onboarding and pages', () => {
         ok: true,
         status: 200,
         statusText: 'OK',
-        json: async () => ({ ok: true, data: { profile: { id: 'draft-1', items: [] } } }),
+        json: async () => ({
+          ok: true,
+          data: {
+            profile: {
+              id: 'draft-1',
+              items: [{
+                id: 'bundle:demo-plugin',
+                kind: 'bundle',
+                name: 'demo-plugin',
+                action: 'suggest-disable',
+                risk: 'low',
+                score: 0.1,
+                evidence: [],
+                observedEnabled: true,
+                protected: false,
+                evidenceLevel: 'strong',
+                estimatedTokens: 600,
+                reason: 'demo',
+                findings: [],
+              }],
+              summary: { keep: 0, enable: 0, disable: 1, review: 0, protected: 0 },
+              task: { tag: 'unknown', confidence: 1, keywords: [] },
+              dedupe: [],
+            },
+          },
+        }),
       }
     }))
     const generate = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '生成瘦身方案')
     expect(generate).toBeDefined()
     await act(async () => { generate?.click(); await sleep(80) })
     expect(calls.some((url) => url.endsWith('/suggest'))).toBe(true)
+    expect(container.textContent).toContain('启用 → 停用')
+    expect(container.textContent).toContain('只选强证据')
+    expect(container.textContent).toContain('预计释放')
   })
 
   it('warns in the composer when the checkup verdict needs attention', async () => {
