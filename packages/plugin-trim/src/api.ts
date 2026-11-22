@@ -445,12 +445,17 @@ async function apply(
     force: true,
   })
   const profileName = resolveProfileFacts(ctx).name
-  const beforeScan = await scanPlugins({
-    config,
-    compat,
-    pluginManager: manager,
-    inventory: await inventoryOf(ctx),
-  })
+  let beforeScan: Awaited<ReturnType<typeof scanPlugins>> | undefined
+  try {
+    beforeScan = await scanPlugins({
+      config,
+      compat,
+      pluginManager: manager,
+      inventory: await inventoryOf(ctx),
+    })
+  } catch {
+    // A failed baseline must not block an apply the user already confirmed.
+  }
   const result = await applySlimProfile(profileId, {
     confirm: true,
     items,
@@ -462,17 +467,26 @@ async function apply(
   const applied = result.items
     .filter((item) => item.status === 'applied' || item.status === 'applied-pending-restart')
     .map((item) => ({ id: item.id, kind: item.kind, name: item.name }))
-  if (result.token !== undefined && applied.length > 0 && result.rolledBack !== true) {
-    await beginVerification({
-      profile: profileName,
-      token: result.token,
-      applied,
-      before: snapshotOf(beforeScan),
-      needsRestart: result.restartRequired === true,
-    })
-    return {
-      ...result,
-      verification: { pending: true, needsRestart: result.restartRequired === true },
+  if (
+    result.token !== undefined &&
+    applied.length > 0 &&
+    result.rolledBack !== true &&
+    beforeScan !== undefined
+  ) {
+    try {
+      await beginVerification({
+        profile: profileName,
+        token: result.token,
+        applied,
+        before: snapshotOf(beforeScan),
+        needsRestart: result.restartRequired === true,
+      })
+      return {
+        ...result,
+        verification: { pending: true, needsRestart: result.restartRequired === true },
+      }
+    } catch {
+      // The apply already succeeded; a receipt write failure must not turn it into an error.
     }
   }
   return result

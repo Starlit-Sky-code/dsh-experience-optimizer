@@ -5,6 +5,10 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+- An apply no longer fails if the baseline scan or the verification receipt
+  cannot be written; verification is best-effort and never rolls back a
+  successful apply.
+
 ## [0.5.2] - 2026-11-22
 
 ### Added
