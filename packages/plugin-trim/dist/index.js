@@ -5335,7 +5335,7 @@ function withLock(fn) {
 // src/api.ts
 const API_PREFIX = "/api/dsh-experience-optimizer";
 const CLIENT_HEADER = "x-dsh-trim-client";
-const CURRENT_VERSION = "0.5.5";
+const CURRENT_VERSION = "0.5.6";
 let updateCache;
 const TASK_TAGS = [
 	"bugfix",

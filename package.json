@@ -1,6 +1,6 @@
 {
   "name": "dsh-experience-optimizer",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "private": true,
   "type": "module",
   "description": "DSH plugin checkup and compatibility analysis suite",

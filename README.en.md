@@ -31,13 +31,13 @@ Answers: which plugin is expensive at rest, is the compaction stack coherent, an
 
 ```bash
 # npm (pinned to this release)
-npm i dsh-plugin-trim@0.5.5
+npm i dsh-plugin-trim@0.5.6
 
 # DSH CLI / plugin market:
-dsh plugin --profile web add dsh-plugin-trim@0.5.5
+dsh plugin --profile web add dsh-plugin-trim@0.5.6
 ```
 
-> Omit `@0.5.5` to use latest; this release is `0.5.5`.
+> Omit `@0.5.6` to use latest; this release is `0.5.6`.
 > If the plugin does not appear in Settings, reload DSH and confirm the dependency is installed in the current workspace; use the Release tarball below if npm CDN returns 404.
 
 Open **Settings → Plugin checkup** after installing.
@@ -46,7 +46,7 @@ Open **Settings → Plugin checkup** after installing.
 <summary>GitHub Release fallback</summary>
 
 ```bash
-npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.5/dsh-plugin-trim-0.5.5.tgz"
+npm i "https://github.com/Starlit-Sky-code/dsh-experience-optimizer/releases/download/v0.5.6/dsh-plugin-trim-0.5.6.tgz"
 ```
 
 For source development, see [Development](#development).

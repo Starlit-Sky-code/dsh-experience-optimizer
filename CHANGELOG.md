@@ -5,6 +5,8 @@ All notable changes to this repository are documented here. Versions follow
 
 ## [Unreleased]
 
+## [0.5.6] - 2026-11-22
+
 ### Changed
 
 - The verdict’s “Build slim plan” action now generates the draft directly
