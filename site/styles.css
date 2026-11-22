@@ -742,8 +742,9 @@ section[id] { scroll-margin-top: 82px; }
   .display { font-size: clamp(48px, 14vw, 76px); line-height: 1.06; }
   .lede { font-size: 15px; margin-top: 18px; }
   .hero-actions { margin-top: 22px; }
-  .install-inline { flex-direction: column; align-items: stretch; }
-  .install-inline .copy { align-self: flex-start; }
+  .install-inline { flex-direction: row; align-items: center; }
+  .install-inline code { overflow-x: auto; }
+  .install-inline .copy { align-self: center; flex: 0 0 auto; }
   .hero-foot { display: flex; margin-top: 28px; align-items: flex-start; gap: 14px; flex-direction: column; }
   .instrument { min-height: 420px; }
   .instrument-hud { left: 12px; right: 12px; bottom: 38px; }
