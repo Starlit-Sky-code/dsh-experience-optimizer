@@ -5,9 +5,15 @@
   "type": "module",
   "description": "DSH plugin checkup and compatibility analysis suite",
   "license": "AGPL-3.0-only",
+  "dsh": {
+    "bundle": {
+      "patch": "./packages/plugin-trim/cordis.patch.yml"
+    }
+  },
   "packageManager": "pnpm@12.8.1",
   "engines": {
-    "node": ">=20"
+    "node": ">=20",
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
   },
   "scripts": {
     "build": "pnpm -r --workspace-concurrency=1 build",
@@ -49,5 +55,16 @@
     "compatibility",
     "context",
     "plugin-suite"
-  ]
+  ],
+  "dependencies": {
+    "dsh-plugin-trim": "^0.5.9"
+  },
+  "files": [
+    "packages/plugin-trim/cordis.patch.yml",
+    "icon.png",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "icon": "./icon.png"
 }

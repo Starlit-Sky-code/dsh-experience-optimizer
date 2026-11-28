@@ -2,6 +2,13 @@
 
 更新时间：2026-11-22（版本 0.5.9；复核市场收录与视觉素材）
 
+## 根包别名 bundle（2026-11-28）
+
+- 根 `package.json` 增加 `dsh.bundle.patch: ./packages/plugin-trim/cordis.patch.yml`，保持 `private: true`；
+- 根 `dependencies` 增加 `dsh-plugin-trim: ^0.5.9`；
+- `files` 包含该 patch；临时 profile 执行 `dsh plugin add .` 后，`--dump-config` 出现 `dsh-plugin-trim` row；
+- 仍等待 dsh-plugin.org 重新抓取根清单。
+
 ## 市场快照（2026-11-22 13:30）
 
 | 渠道 | 状态 | 版本 / 证据 | 待处理 |

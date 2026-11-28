@@ -14,6 +14,9 @@ All notable changes to this repository are documented here. Versions follow
 
 ### Changed
 
+- The repository root now declares `dsh.bundle.patch` (pointing at
+  `packages/plugin-trim/cordis.patch.yml`) and depends on `dsh-plugin-trim`, so
+  root-manifest marketplace scanners can identify the alias bundle.
 - Version display now reads the **installed package.json** instead of a bundled
   constant, so the checkup, update check, and About page agree.
 - All install guidance uses the single command `npm i dsh-plugin-trim`.

@@ -170,3 +170,8 @@ src/verdict.ts
 - `fixedExtension: false` 输出 `dist/index.js` / `index.d.ts`。
 - `pnpm build` 先构建 shared-meta，再构建两个插件。
 - `pnpm verify` = build + 打包契约检查 + vitest。
+
+## Root alias bundle
+
+- 根 `package.json` 用 `dsh.bundle.patch` 指向 `packages/plugin-trim/cordis.patch.yml`，让只读取仓库根清单的市场扫描器识别插件；根包保持 private，不发布 npm。
+- 根 `dependencies` 声明 `dsh-plugin-trim`，确保从 Git 安装根包时模块可解析。
