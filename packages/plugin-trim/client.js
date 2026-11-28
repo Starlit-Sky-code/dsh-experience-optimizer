@@ -280,7 +280,7 @@ window.__ModuleLoader__.load({
 .eo-check-error i{background:var(--eo-error)}
 .eo-check-info i{background:var(--eo-tertiary)}
 .eo-verdict-actions{grid-area:actions;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.eo-cockpit{display:flex;flex-direction:column;gap:14px;padding:16px 18px}
+.eo-cockpit{display:flex;flex-direction:column;gap:14px;padding:16px 18px;border-radius:16px}
 .eo-cockpit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .eo-cockpit-status{display:flex;align-items:flex-start;gap:10px;min-width:0}
 .eo-cockpit-status small{display:block;font:500 11px/16px var(--eo-code);letter-spacing:.08em;color:var(--eo-tertiary);text-transform:uppercase}
@@ -288,7 +288,7 @@ window.__ModuleLoader__.load({
 .eo-cockpit-status p{margin:4px 0 0;color:var(--eo-tertiary);font-size:12px;line-height:18px}
 .eo-cockpit-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}
 .eo-cockpit-checks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.eo-check-card{appearance:none;text-align:left;padding:10px 11px;border-radius:10px;border:.5px solid var(--eo-border);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.03));color:var(--eo-primary);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0;transition:border-color .15s ease,background .15s ease,transform .15s ease}
+.eo-check-card{appearance:none;text-align:left;padding:11px 12px;border-radius:13px;border:.5px solid var(--eo-border);background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.03));color:var(--eo-primary);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0;transition:border-color .15s ease,background .15s ease,transform .15s ease}
 .eo-check-card:hover{border-color:var(--eo-border-strong);background:var(--eo-hover);transform:translateY(-1px)}
 .eo-check-card:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--eo-primary));outline-offset:2px}
 .eo-check-card-top{display:flex;align-items:center;gap:6px;color:var(--eo-secondary);font-size:11px;line-height:16px;font-weight:500}
@@ -298,6 +298,12 @@ window.__ModuleLoader__.load({
 .eo-check-card-info .eo-check-card-top i{background:var(--eo-tertiary)}
 .eo-check-card strong{font-size:12px;line-height:18px;font-weight:500;color:var(--eo-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .eo-check-card small{font-size:10px;line-height:15px;color:var(--eo-tertiary)}
+.eo-section-nav{position:sticky;top:0;z-index:6;display:flex;gap:4px;overflow-x:auto;padding:6px;border:.5px solid var(--eo-border);border-radius:999px;background:color-mix(in srgb,var(--dsw-alias-bg-layer-1,#fff) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);scrollbar-width:none}
+.eo-section-nav::-webkit-scrollbar{display:none}
+.eo-section-nav button{appearance:none;flex:none;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:0;border-radius:999px;background:transparent;color:var(--eo-secondary);font:500 11px/17px var(--ds-font-family-text, -apple-system, "Segoe UI", sans-serif);cursor:pointer;white-space:nowrap;transition:background .15s ease,color .15s ease}
+.eo-section-nav button:hover{background:var(--eo-hover);color:var(--eo-primary)}
+.eo-section-nav button:focus-visible{outline:2px solid var(--eo-primary);outline-offset:1px}
+.eo-section-nav small{padding:1px 5px;border-radius:999px;background:color-mix(in srgb,var(--eo-primary) 8%,transparent);color:var(--eo-tertiary);font:500 10px/14px var(--eo-code)}
 @media(max-width:700px){.eo-cockpit-checks{grid-template-columns:repeat(2,minmax(0,1fr))}.eo-cockpit-actions{justify-content:flex-start}}
 .eo-categories{display:flex;flex-direction:column;gap:5px}
 .eo-category-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--dsw-alias-bg-module-platform,rgba(127,127,127,.06));border:.5px solid var(--eo-border)}
@@ -3095,6 +3101,28 @@ window.__ModuleLoader__.load({
         )
       }
 
+      function renderSectionNav() {
+        const items = [
+          ['context', tr('上下文', 'Context'), formatTokens(attributedContext)],
+          ['compaction', tr('压缩链路', 'Compaction'), (overview.compaction?.backendCount || 0) + tr(' 后端', ' backends')],
+          ['compat', tr('兼容性', 'Compat'), compat.error + compat.warn > 0 ? String(compat.error + compat.warn) + tr(' 项', ' items') : tr('通过', 'Pass')],
+          ['draft', tr('精简方案', 'Slim plan'), draft ? String(draft.summary.disable) + tr(' 项可关', ' to close') : tr('未生成', 'Not built')],
+          ...(viewMode === 'full' ? [['inventory', tr('插件清单', 'Inventory'), String(totalBundles) + tr(' 个', ' plugins')]] : []),
+        ]
+        return h(
+          'nav',
+          { className: 'eo-section-nav', 'aria-label': tr('页面分区', 'Page sections') },
+          items.map(([target, label, meta]) =>
+            h(
+              'button',
+              { key: target, type: 'button', onClick: () => scrollToSection(target) },
+              label,
+              h('small', null, meta),
+            ),
+          ),
+        )
+      }
+
       function renderTrim() {
         const unattributedTop = overview.context.unattributedTop || { sections: [], tools: [] }
         const shareOf = (bundle) => totalContextTokens > 0
@@ -3158,6 +3186,7 @@ window.__ModuleLoader__.load({
               (viewMode === 'simple' ? ' eo-mode-simple' : ''),
           },
           renderVerdict(),
+          renderSectionNav(),
           h('div', { className: 'eo-grid eo-metrics' }, [
             h(Metric, {
               key: 'tokens',

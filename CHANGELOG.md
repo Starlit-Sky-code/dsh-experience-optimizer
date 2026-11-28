@@ -24,6 +24,9 @@ All notable changes to this repository are documented here. Versions follow
   hover/focus explanation, and the read-only slider chrome was removed.
 - The settings page opens with a **Quick setup** card (current policy chips +
   restore recommended defaults) instead of raw fields first.
+- Adopted the monochrome, pill-and-card visual language (inspired by
+  `guanmo-ai/ui-moments`): sticky section pills, 13–16px card radii, hover lift,
+  and clearer status hierarchy.
 - The top verdict is now a **cockpit**: large status headline, four clickable
   check cards, and primary actions; it replaces the thin verdict strip.
 - The post-apply measurement treats a positive delta as a regression
