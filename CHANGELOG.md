@@ -24,6 +24,9 @@ All notable changes to this repository are documented here. Versions follow
   hover/focus explanation, and the read-only slider chrome was removed.
 - The settings page opens with a **Quick setup** card (current policy chips +
   restore recommended defaults) instead of raw fields first.
+- All checkup cards start collapsed on every open; the duplicate four-metric
+  row was removed (its profile/write state moved into the cockpit subtitle).
+- The DSH settings entry now uses the project logo as its icon.
 - Adopted the monochrome, pill-and-card visual language (inspired by
   `guanmo-ai/ui-moments`): sticky section pills, 13–16px card radii, hover lift,
   and clearer status hierarchy.

@@ -203,7 +203,6 @@ describe('client onboarding and pages', () => {
     expect(planToggle).toBeDefined()
     const planCard = planToggle?.closest('.eo-card')
     const planBody = planCard?.querySelector('.eo-collapse')
-    await act(async () => { (planToggle as HTMLButtonElement).click(); await sleep(30) })
     expect(planBody?.classList.contains('is-collapsed')).toBe(true)
     expect(planBody?.getAttribute('aria-hidden')).toBe('true')
     expect(planBody?.hasAttribute('inert')).toBe(true)
@@ -212,7 +211,6 @@ describe('client onboarding and pages', () => {
     expect(planBody?.getAttribute('aria-hidden')).toBeNull()
     expect(planBody?.hasAttribute('inert')).toBe(false)
     expect(container.textContent).toContain('任务类型')
-    expect(container.querySelector('.eo-progress-track')).not.toBeNull()
     expect(container.querySelectorAll('.eo-share-bar').length).toBeGreaterThan(0)
     expect(container.querySelector('.eo-mode-simple')).not.toBeNull()
     const fullView = [...container.querySelectorAll('button')].find((button) => button.textContent?.trim() === '完整视图')
@@ -221,7 +219,6 @@ describe('client onboarding and pages', () => {
     expect(container.querySelector('.eo-mode-simple')).toBeNull()
     expect(container.querySelectorAll('.eo-section-nav button').length).toBe(5)
     expect(container.textContent).toContain('生效后端')
-    expect(container.textContent).toContain('预算 ')
     expect(container.querySelector('.eo-compat-footer')).not.toBeNull()
     expect(container.querySelector('.eo-verdict')).not.toBeNull()
     expect(container.querySelectorAll('.eo-check-card').length).toBe(4)
@@ -446,6 +443,18 @@ describe('client onboarding and pages', () => {
     expect(container.textContent).toContain('启用 → 停用')
     expect(container.textContent).toContain('只选强证据')
     expect(container.textContent).toContain('预计释放')
+  })
+
+  it('uses the project logo for the settings entry icon', async () => {
+    const SettingsIcon = slotComponents['settings.section.icon']
+    expect(SettingsIcon).toBeDefined()
+    root = createRoot(container)
+    await act(async () => {
+      root.render(React.createElement(SettingsIcon as React.ComponentType))
+    })
+    const logo = container.querySelector('img.eo-settings-logo') as HTMLImageElement
+    expect(logo).not.toBeNull()
+    expect(logo.src.startsWith('data:image/png;base64,')).toBe(true)
   })
 
   it('warns in the composer when the checkup verdict needs attention', async () => {

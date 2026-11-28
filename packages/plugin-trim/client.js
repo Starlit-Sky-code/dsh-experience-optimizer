@@ -416,6 +416,7 @@ window.__ModuleLoader__.load({
         .eo-guide-beacon .eo-icon{color:var(--eo-primary);animation:eo-guide-bob 1.6s ease-in-out infinite}
         @keyframes eo-guide-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
         .eo-guide-arrow{display:none}}
+        .eo-settings-logo{display:block;border-radius:4px;object-fit:cover}
         .eo-about-hero{display:block;width:100%;height:auto;border-radius:12px;background:#0b1422;margin:0 0 10px}
 .eo-card-title{margin:0;font-size:14px;line-height:22px;font-weight:500;letter-spacing:0}
 .eo-card-sub{margin:2px 0 0;font-size:12px;line-height:18px;color:var(--eo-tertiary)}
@@ -1417,7 +1418,7 @@ window.__ModuleLoader__.load({
       const [locale, setLocale] = useState(detectLocale)
       const [showOnboarding, setShowOnboarding] = useState(false)
       const [onboardingStep, setOnboardingStep] = useState(0)
-      const [collapsedCards, setCollapsedCards] = useState({})
+      const [collapsedCards, setCollapsedCards] = useState(() => ({ compaction: true, compat: true, capability: true, context: true, inventory: true, draft: true, result: true, dedupe: true, diagnostics: true }))
       const [layout, setLayout] = useState(() => readPref('layout', 'standard'))
       const [density, setDensity] = useState(() => readPref('density', 'comfortable'))
       const [viewMode, setViewMode] = useState(() => readPref('view', 'simple'))
@@ -1649,7 +1650,7 @@ window.__ModuleLoader__.load({
         setCollapsedCards((current) => ({ ...current, [id]: !current[id] }))
       }, [])
       const collapseAllCards = useCallback(() => {
-        setCollapsedCards({ draft: true, inventory: true, compat: true, context: true, result: true, dedupe: true, diagnostics: true })
+        setCollapsedCards({ compaction: true, compat: true, capability: true, context: true, inventory: true, draft: true, result: true, dedupe: true, diagnostics: true })
       }, [])
       const expandAllCards = useCallback(() => setCollapsedCards({}), [])
       const changeLayout = useCallback((value) => {
@@ -2697,7 +2698,15 @@ window.__ModuleLoader__.load({
                 null,
                 h('small', null, tr('体检结论', 'Checkup verdict')),
                 h('h2', null, headline),
-                h('p', null, (overview.profile?.name || 'profile') + ' · ' + tr('加载 / 兼容 / 上下文 / 压缩链路', 'Load / compatibility / context / compaction')),
+                h(
+                  'p',
+                  null,
+                  (overview.profile?.name || 'profile') +
+                    ' · ' +
+                    enabledBundles + '/' + totalBundles + tr(' 插件启用', ' plugins enabled') +
+                    ' · ' +
+                    (overview.managementAvailable ? tr('可写', 'writable') : tr('只读', 'read-only')),
+                ),
               ),
             ),
             h(
@@ -3187,41 +3196,6 @@ window.__ModuleLoader__.load({
           },
           renderVerdict(),
           renderSectionNav(),
-          h('div', { className: 'eo-grid eo-metrics' }, [
-            h(Metric, {
-              key: 'tokens',
-              label: tr('可归属上下文', 'Attributable context'),
-              value: formatTokens(attributedContext),
-              hint: overview.context.budget > 0
-                ? tr('预算 ', 'Budget ') + formatTokens(overview.context.budget) + tr(' · 已用 ', ' · used ') + Math.round((attributedContext / Math.max(1, overview.context.budget)) * 100) + '%'
-                : Math.round(contextPct) + tr('% 占比 · 未归属 ', '% share · unattributed ') + formatTokens(overview.context.unattributedTokens),
-              progress: overview.context.budget > 0 ? Math.min(100, (attributedContext / Math.max(1, overview.context.budget)) * 100) : contextPct,
-              progressTone: overview.context.budget > 0 && attributedContext > overview.context.budget ? 'warn' : 'ok',
-            }),
-            h(Metric, {
-              key: 'bundles',
-              label: tr('启用插件', 'Enabled plugins'),
-              value: enabledBundles + ' / ' + totalBundles,
-              hint: tr('已启用 / 全部插件', 'enabled / total plugins'),
-              progress: enabledPct,
-            }),
-            h(Metric, {
-              key: 'compat',
-              label: tr('兼容性', 'Compatibility'),
-              value: compat.error + tr(' 错 · ', ' err · ') + compat.warn + tr(' 警', ' warn'),
-              hint: tr('错误 / 警告 · 信息 ', 'errors / warnings · info ') + compat.info,
-              tone: compat.error > 0 ? 'danger' : compat.warn > 0 ? 'warn' : 'ok',
-              progress: compatPct,
-              progressTone: compat.error > 0 ? 'danger' : compat.warn > 0 ? 'warn' : 'ok',
-            }),
-            h(Metric, {
-              key: 'manage',
-              label: tr('写操作', 'Write access'),
-              value: overview.managementAvailable ? tr('可应用', 'Ready') : tr('只读', 'Read-only'),
-              hint: overview.managementAvailable ? tr('插件管理器可用', 'Plugin manager available') : tr('缺少插件管理器', 'Plugin manager unavailable'),
-              tone: overview.managementAvailable ? 'ok' : 'danger',
-            }),
-          ]),
           renderCompaction(),
           h(
             Card,
@@ -4371,27 +4345,18 @@ window.__ModuleLoader__.load({
       )
     }
 
-    function ExperienceOptimizerIcon({ size = 16, active = false }) {
-      return h(
-        'svg',
-        {
-          width: size,
-          height: size,
-          viewBox: '0 0 16 16',
-          fill: 'none',
-          stroke: 'currentColor',
-          strokeWidth: active ? 1.6 : 1.4,
-          strokeLinecap: 'round',
-          strokeLinejoin: 'round',
-          'aria-hidden': 'true',
-        },
-        h('path', { d: 'M2.8 4h10.4' }),
-        h('circle', { cx: 6, cy: 4, r: 1.45 }),
-        h('path', { d: 'M2.8 8h10.4' }),
-        h('circle', { cx: 10.2, cy: 8, r: 1.45 }),
-        h('path', { d: 'M2.8 12h10.4' }),
-        h('circle', { cx: 7.2, cy: 12, r: 1.45 }),
-      )
+    const SETTINGS_LOGO = 'data:image/png;base64,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'
+
+    function ExperienceOptimizerIcon({ size = 16 }) {
+      return h('img', {
+        src: SETTINGS_LOGO,
+        width: size,
+        height: size,
+        alt: '',
+        className: 'eo-settings-logo',
+        'aria-hidden': 'true',
+        draggable: 'false',
+      })
     }
 
     function apply(ctx) {
